@@ -1,0 +1,14 @@
+Package: fda.usc
+Type: Package
+Title: The fda.usc package: summary information
+Version: 0.8
+Date: 2011-01-10
+Author: Febrero-Bande, M. and Oviedo de la Fuente, M.
+Maintainer: Oviedo de la Fuente, M.  <manuel.oviedo@usc.es>
+Depends: fda, splines, MASS, e1071
+Description: This package implements functional data methods.
+License: GPL-2
+LazyLoad: yes
+Packaged: 2011-01-10 11:18:14 UTC; moviedo
+Repository: CRAN
+Date/Publication: 2011-01-10 14:37:28

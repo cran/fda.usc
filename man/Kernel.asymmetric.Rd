@@ -1,0 +1,67 @@
+\name{Kernel.asymmetric}
+\Rdversion{1.1}
+\alias{AKer.norm}
+\alias{AKer.cos}
+\alias{AKer.epa}
+\alias{AKer.tri}
+\alias{AKer.tri}
+\alias{AKer.quar}
+\alias{AKer.unif}
+\alias{Kernel.asymmetric}
+
+\title{ Asymmetric Smoothing Kernel}
+\description{ Represent   Asymmetric Smoothing Kernels: normal,  cosine,  triweight, quartic and uniform.
+\tabular{ll}{
+\tab		 AKer.norm=ifelse(u>=0,2*dnorm(u),0)\cr
+\tab		 AKer.cos=ifelse(u>=0,pi/2*(cos(pi*u/2)),0)\cr
+\tab     AKer.epa=ifelse(u>=0 & u<=1,3/2*(1-u^2),0)\cr
+\tab     AKer.tri=ifelse(u>=0 & u<=1,35/16*(1-u^2)^3,0)\cr
+\tab     AKer.quar=ifelse(u>=0 & u<=1,15/8*(1-u^2)^2,0)\cr
+\tab     AKer.unif=ifelse(u>=0 & u<=1,1,0)\cr
+ }
+}
+\usage{
+Kernel.asymmetric(u,type.Ker="AKer.norm")
+AKer.norm(u)
+AKer.cos(u)
+AKer.epa(u)
+AKer.tri(u)
+AKer.quar(u)
+AKer.unif(u)
+}
+
+\arguments{
+  \item{type.Ker}{ Type of asymmetric metric kernel, by default asymmetric normal kernel.}
+  \item{u}{ Data.}
+}
+\details{  
+Type of Asymmetric kernel:
+\tabular{ll}{
+\tab		 Asymmetric Normal Kernel: \code{IKer.norm}\cr
+\tab		 Asymmetric Cosine Kernel: \code{IKer.cos}\cr
+\tab     Asymmetric Epanechnikov Kernel: \code{IKer.epa}\cr
+\tab     Asymmetric Triweight Kernel: \code{IKer.tri}\cr
+\tab     Asymmetric Quartic Kernel: \code{IKer.quar}\cr
+\tab     Asymmetric Uniform Kernel: \code{IKer.unif}\cr
+ } 
+}
+
+\value{
+\item{res}{ Returns asymmetric kernel.} 
+}
+\references{
+Ferraty, F. and Vieu, P. (2006). \emph{Nonparametric functional data analysis.}
+Springer Series in Statistics, New York. \cr
+
+Hardle, W. \emph{Applied Nonparametric Regression}. Cambridge University Press, 1994.
+}
+\author{
+Febrero-Bande, M. and Oviedo de la Fuente, M.
+}
+\examples{
+y=qnorm(seq(.1,.9,len=100))
+a<-Kernel.asymmetric(u=y)
+b<-Kernel.asymmetric(type.Ker="AKer.tri",u=y)
+c=AKer.cos(y)
+}
+\keyword{ kernel} 

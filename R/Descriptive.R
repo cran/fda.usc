@@ -1,0 +1,47 @@
+func.mean<-function(fdataobj){
+if (!is.fdata(fdataobj)) fdataobj<-fdata(fdataobj)
+fdataobj[["data"]]<-matrix(apply(fdataobj[["data"]],2,mean,na.rm=TRUE),nrow=1)
+fdataobj$names$main<-"mean"
+fdataobj
+}
+
+
+func.var<-function(fdataobj){
+if (!is.fdata(fdataobj)) fdataobj<-fdata(fdataobj)
+n<-dim(fdataobj)[1]
+fdataobj[["data"]]<-(n-1)*apply(fdataobj[["data"]],2,var)/n
+fdataobj[["data"]]<-matrix(fdataobj[["data"]],nrow=1)
+fdataobj$names$main<-"var"
+fdataobj
+}
+
+func.trim.FM=function(fdataobj,...){depth.FM(fdataobj,...)$mtrim}
+func.trim.mode=function(fdataobj,...){depth.mode(fdataobj,...)$mtrim}
+func.trim.RP=function(fdataobj,...){depth.RP(fdataobj,...)$mtrim} #
+func.trim.RPD=function(fdataobj,...){depth.RPD(fdataobj,...)$mtrim}
+
+func.med.FM=function(fdataobj,...){depth.FM(fdataobj,...)$median} #
+func.med.mode=function(fdataobj,...){depth.mode(fdataobj,...)$median}
+func.med.RP=function(fdataobj,...){ depth.RP(fdataobj,...)$median}
+func.med.RPD=function(fdataobj,...){ depth.RPD(fdataobj,...)$median}
+
+func.trimvar.FM=function(fdataobj,...){
+  lista=depth.FM(fdataobj,...)$ltrim
+  func.var(fdataobj[lista,])
+}
+
+
+func.trimvar.mode=function(fdataobj,...){
+  lista=depth.mode(fdataobj,...)$ltrim
+  func.var(fdataobj[lista,])
+  }
+
+func.trimvar.RP=function(fdataobj,...){
+ lista=depth.RP(fdataobj,...)$ltrim
+ func.var(fdataobj[lista,])}
+
+func.trimvar.RPD=function(fdataobj,...){
+ lista=depth.RPD(fdataobj,...)$ltrim
+ func.var(fdataobj[lista,])}
+
+
