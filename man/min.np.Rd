@@ -6,10 +6,10 @@
 Smoothing of functional data using nonparametric kernel estimation with cross-validation (CV) or generalized cross-validation (GCV) methods. 
 }
 \usage{
-%min.np(fdataobj,h=NULL,W=diag(1,nrow=np,ncol=np),Ker=Ker.norm,
-%type.CV=GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),...)}
-\method{min}{np}(fdataobj,h=NULL,W=diag(1,nrow=np,ncol=np),Ker=Ker.norm,
-type.CV=GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),\dots)
+min.np(fdataobj,h=NULL,W=diag(1,nrow=np,ncol=np),Ker=Ker.norm,
+type.CV=GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),...)
+%\method{min}{np}(fdataobj,h=NULL,W=diag(1,nrow=np,ncol=np),Ker=Ker.norm,
+%type.CV=GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),\dots)
 }
 
 \arguments{

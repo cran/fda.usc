@@ -2,7 +2,31 @@ classif.kernel.fb<-function(fdataobj,group,h=NULL,metric=metric.lp,
 type.basis="bspline",par.basis=list(rangeval=NULL,nbasis=NULL),...)
 {
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
-data<-fdataobj[["data"]]
+if (is.null(names(group))) names(group)<-1:length(group)
+nas<-apply(fdataobj$data,1,count.na)
+nas.g<-is.na(group)
+if (any(nas) & !any(nas.g)) {
+   bb<-!nas
+   cat("Warning: ",sum(nas)," curves with NA are omited\n")
+   fdataobj$data<-fdataobj$data[bb,]
+   group<-group[bb]
+   }
+else {
+if (!any(nas) & any(nas.g)) {
+   cat("Warning: ",sum(nas.g)," values of group with NA are omited \n")
+   bb<-!nas.g
+   fdataobj$data<-fdataobj$data[bb,]
+   group<-group[bb]
+   }
+else {
+if (any(nas) & any(nas.g))  {
+   bb<-!nas & !nas.g
+   cat("Warning: ",sum(!bb)," curves  and values of group with NA are omited \n")
+   fdataobj$data<-fdataobj$data[bb,]
+   group<-group[bb]
+   }
+}}
+data<-fdataobj$data
 nn=ncol(data)
 numgr=nrow(data)
 tt =fdataobj[["argvals"]]
@@ -111,6 +135,4 @@ h=h,C=C,m=m)
 class(output)="classif.fd"
 return(output)
 }
-
-
 

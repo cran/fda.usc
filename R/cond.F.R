@@ -1,7 +1,14 @@
 cond.F=function(fdata0,y0,fdataobj,y,h=0.15,g=0.15,metric=metric.lp,
 Ker=list(AKer=AKer.epa,IKer=IKer.epa),...){
-if (!is.fdata(fdataobj))  fdataobj=fdata(fdataobj)
-if (!is.fdata(fdata0))  fdata0=fdata(fdata0)
+ if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
+  nas1<-apply(fdataobj$data,1,count.na)
+tt<-fdataobj$argvals
+ if (any(nas1))  stop("fdataobj contain ",sum(nas1)," curves with some NA value \n")
+if (!is.fdata(fdata0))  fdata0=fdata(fdata0,tt)
+  nas2<-apply(fdata0$data,1,count.na)
+ if (any(nas2))  stop("fdata0 contain ",sum(nas2)," curves with some NA value \n")
+ if (any(is.na(y0)))  stop("y0 contain ",sum(is.na(y0)),"  NA values \n")
+ if (any(is.na(y)))   stop("y contain ",sum(is.na(y)),"  NA values \n")
 data<-fdataobj[["data"]]
 n = nrow(data)
 m = ncol(data)

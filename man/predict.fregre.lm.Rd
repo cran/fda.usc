@@ -6,8 +6,8 @@
  	 Computes predictions for regression between functional (and no functional) explanatory variables and scalar response using: basis representation.
 }
 \usage{
-%predict.fregre.lm(object,newx=NULL,...)
-\method{predict}{fregre.lm}(object,newx=NULL,\dots)
+predict.fregre.lm(object,newx=NULL,...)
+%\method{predict}{fregre.lm}(object,newx=NULL,\dots)
 }
 \arguments{
    \item{object}{ \code{fregre.lm} object.}

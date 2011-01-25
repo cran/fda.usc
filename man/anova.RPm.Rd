@@ -10,12 +10,12 @@
   The procedure is based on the analysis of randomly chosen one-dimensional projections. The function tests ANOVA models for functional data with continuous covariates and perform special contrasts for the factors in the formula.
  	}
 \usage{
-%anova.RPm(object,formula,data.fac,RP=min(30,ncol(object)),
-%alpha=0.95,hetero=TRUE,pr=FALSE,w=rep(1,ncol(object)),
-%nboot=0,contrast=NULL,...)
-\method{anova}{RPm}(object,formula,data.fac,RP=min(30,ncol(object)),
+anova.RPm(object,formula,data.fac,RP=min(30,ncol(object)),
 alpha=0.95,hetero=TRUE,pr=FALSE,w=rep(1,ncol(object)),
-nboot=0,contrast=NULL,\dots)
+nboot=0,contrast=NULL,...)
+%\method{anova}{RPm}(object,formula,data.fac,RP=min(30,ncol(object)),
+%alpha=0.95,hetero=TRUE,pr=FALSE,w=rep(1,ncol(object)),
+%nboot=0,contrast=NULL,\dots)
 
 }
 \arguments{

@@ -5,11 +5,10 @@
 \description{Estimate the quantile of measures of influence for each observation.
 }
 \usage{
-\method{influence}{quan}(model,out.influ,mue.boot=500,
-smo=0.1,smoX=0.05,alpha=0.95,\dots)
-%influence.quan(out.fregre,out.influ,mue.boot=500,
-%smo=0.1,smoX=0.05,alpha=0.95,...)
-}
+%\method{influence}{quan}(model,out.influ,mue.boot=500,
+%smo=0.1,smoX=0.05,alpha=0.95,kmax.fix=FALSE,\dots)
+influence.quan(model,out.influ,mue.boot=500,
+                 smo=0.1,smoX=0.05,alpha=0.95,kmax.fix=FALSE,...)}
 \arguments{
   \item{model}{ \code{fregre.pc}, \code{fregre.basis} or \code{fregre.basis.cv} object.}	
  \item{out.influ}{ \code{inflluence.fd} bject}	
@@ -17,6 +16,7 @@ smo=0.1,smoX=0.05,alpha=0.95,\dots)
  \item{smo}{ Smoothing parameter as a proportion of response variance.}	
  \item{smoX}{  Smoothing parameter for \code{fdata} object as a proportion of variance-covariance matrix of the explanatory functional variable.}	
  \item{alpha}{ Significance level. }	
+ \item{kmax.fix}{ The maximum number of principal comoponents or number of basis is fixed by \code{model} object.}	 
  \item{\dots}{ Further arguments passed to or from other methods.}	    
 }
 \details{

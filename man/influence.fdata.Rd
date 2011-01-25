@@ -6,8 +6,8 @@
 	  Once estimated the functional regression model with scalar response, influence.fd function is used to obtain the functional influence measures.
 	  }
 \usage{
-%influence.fdata(model)
-\method{influence}{fdata}(model,...)
+influence.fdata(model,...)
+%\method{influence}{fdata}(model,...)
 }
 \arguments{
   \item{model}{ \code{fregre.pc}, \code{fregre.basis} or \code{fregre.basis.cv} object.}	

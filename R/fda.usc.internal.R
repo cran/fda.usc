@@ -177,4 +177,5 @@ c.fdata<-function(...) {
     concatfdata <- fdata(data, argvals,rangeval, names)
     return(concatfdata)
 }
-
+################################################################################
+count.na<-function(A){any(is.na(A))}

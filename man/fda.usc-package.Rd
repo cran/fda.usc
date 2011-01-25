@@ -1,9 +1,9 @@
 \name{fda.usc-package}
-\Rdversion{0.8}
+\Rdversion{0.9}
 \alias{fda.usc-package}
 \alias{fda.usc}
 \docType{package}
-\title{The fda.usc package: summary information}
+\title{Functional Data Analisis and Utilities for Statistical Computing (fda.usc)}
 \description{
  %\emph{texto en cursiva}. ...
 This package carries out exploratory and descriptive analysis of functional data exploring its most important features: such as depth measurements or functional outliers detection, among others. \cr
@@ -14,7 +14,7 @@ Sections of fda.usc-package: \cr
 \tabular{ll}{
 \tab A.- Functional Data Representation  \cr
 \tab B.- Functional Outlier Detection \cr
-\tab C.- Functional Regresion with Scalar Response	\cr
+\tab C.- Functional Regression with Scalar Response	\cr
 \tab D.- Functional Supervised Classification	\cr
 \tab E.- Functional Non-Supervised Classification	\cr
 \tab F.- Functional ANOVA	\cr
@@ -61,7 +61,7 @@ B.2-Functional Outliers detection methods:\cr
 \tab \code{\link{quantile.outliers.trim}} \cr
 \tab \code{\link{quantile.outliers.pond}} \cr
 }
-  C.- Functional Regresion with Scalar Response	\cr
+  C.- Functional Regression with Scalar Response	\cr
 
 C.1. Functional explanatory covariate \cr
 The functions included in this section allow the estimation of different functional regression models with a scalar response and a single functional explicative covariate.\cr
@@ -139,8 +139,8 @@ This section allows the estimation of the groups in a  functional data set \code
 \tabular{ll}{
 Package: \tab fda.usc\cr
 Type: \tab Package\cr
-Version: \tab 0.5\cr
-Date: \tab 2011-01-10\cr
+Version: \tab 0.9\cr
+Date: \tab 2011-01-25\cr
 License: \tab GPL-2 \cr
 LazyLoad: \tab yes\cr
 }

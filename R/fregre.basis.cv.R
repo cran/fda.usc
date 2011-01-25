@@ -2,6 +2,31 @@ fregre.basis.cv=function(fdataobj,y,basis.x=NULL,basis.b=NULL,type.basis=NULL,la
 Lfdobj=vec2Lfd(c(0,0),rtt),type.CV=GCV.S,par.CV=list(trim=0),...){
 call<-match.call()
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
+
+nas<-apply(fdataobj$data,1,count.na)
+nas.g<-is.na(y)
+if (is.null(names(y))) names(y)<-1:length(y)
+if (any(nas) & !any(nas.g)) {
+   bb<-!nas
+   cat("Warning: ",sum(nas)," curves with NA are omited\n")
+   fdataobj$data<-fdataobj$data[bb,]
+  y<-y[bb]
+   }
+else {
+if (!any(nas) & any(nas.g)) {
+   cat("Warning: ",sum(nas.g)," values of group with NA are omited \n")
+   bb<-!nas.g
+   fdataobj$data<-fdataobj$data[bb,]
+     y<-y[bb]
+   }
+else {
+if (any(nas) & any(nas.g))  {
+   bb<-!nas & !nas.g
+   cat("Warning: ",sum(!bb)," curves  and values of group with NA are omited \n")
+   fdataobj$data<-fdataobj$data[bb,]
+   y<-y[bb]
+   }
+}}
 x<-fdataobj[["data"]]
 tt<-fdataobj[["argvals"]]
 rtt<-fdataobj[["rangeval"]]

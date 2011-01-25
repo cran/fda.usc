@@ -1,0 +1,7 @@
+Release 0.9 introduces a new function h.default that 
+simplifies the calculation of the bandwidth parameter
+"h" in the functions: fregre.np, fregre.np.cv and fregre.plm.  
+In most of the functions has added a stop control when the
+dataset has missing data (NA's). It adds the attribute "call"
+to the distance  matrix calculated in metric.lp, 
+semimetric.basis  and semimetric.NPFDA functions.

@@ -1,6 +1,8 @@
 outliers.depth.pond<-function(fdataobj,nb=200,smo=0.05,dfunc=depth.mode,...){
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
-x<-fdataobj[["data"]]
+ nas1<-apply(fdataobj$data,1,count.na)
+ if (any(nas1))  stop("fdataobj contain ",sum(nas1)," curves with some NA value \n")
+ x<-fdataobj[["data"]]
 tt<-fdataobj[["argvals"]]
 rtt<-fdataobj[["rangeval"]]
 n<-nrow(fdataobj)

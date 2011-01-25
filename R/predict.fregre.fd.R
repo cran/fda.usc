@@ -2,6 +2,17 @@ predict.fregre.fd<-function(object,new.fdataobj=NULL,...){
 if (is.null(object)) stop("No fregre.fd object entered")
 if (is.null(new.fdataobj)) stop("No newx entered")
 if (!is.fdata(new.fdataobj)) new.fdataobj=fdata(new.fdataobj,object$fdataobj[["argvals"]],object$fdataobj[["rangeval"]],object$fdataobj[["names"]])
+
+gg<-1:nrow(new.fdataobj)
+nas<-apply(new.fdataobj$data,1,count.na)
+if (any(nas)) {
+   bb<-!nas
+   cat("Warning: ",sum(nas)," curves with NA are omited\n")
+   new.fdataobj$data<-new.fdataobj$data[bb,]
+   gg<-gg[bb]
+   }
+
+
 newx<-new.fdataobj[["data"]]
 tt<-new.fdataobj[["argvals"]]
 rtt<-new.fdataobj[["rangeval"]]
@@ -9,7 +20,7 @@ nn <- nrow(new.fdataobj)
  if (is.null(rownames(newx)))         rownames(newx) <- 1:nn
  if (object$call[[1]]=="fregre.pc") {
  a1<-object$coefficients[1]*rep(1,len=nrow(newx))
- b2<-newx%*%(object$beta.est[["data"]])/(ncol(newx)-1)
+# b2<-newx%*%(object$beta.est[["data"]])/(ncol(newx)-1)
  object$beta.est$data<-matrix(object$beta.est$data,nrow=1)
  b1<-inprod.fdata(new.fdataobj,object$beta.est)#/(ncol(newx)-1)
  yp<- a1+b1
@@ -74,6 +85,8 @@ if (C[ii]!='NULL()')     {
  }}
  }
 #rownames(yp)=rownames(newx)
+yp<-drop(yp)
+names(yp)<-gg
 return(yp)
 }
 

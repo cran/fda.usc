@@ -6,8 +6,8 @@
  	 Computes predictions for  functional (and non functional) explanatory variables and scalar response using asymmetric kernel estimation.
 }
 \usage{
-%predict.fregre.plm(object,newx=NULL,...)
-\method{predict}{fregre.plm}(object,newx=NULL,\dots)
+predict.fregre.plm(object,newx=NULL,...)
+%\method{predict}{fregre.plm}(object,newx=NULL,\dots)
 }
 \arguments{
    \item{object}{ \code{fregre.plm} object.}

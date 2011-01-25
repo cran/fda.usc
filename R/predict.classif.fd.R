@@ -1,8 +1,16 @@
-
 predict.classif.fd <-function(object,new.fdataobj,probs.group=FALSE,...) {
 if (!is.fdata(new.fdataobj)) new.fdataobj=fdata(new.fdataobj)
-new.fdata<-new.fdataobj[["data"]]
+gg<-1:nrow(new.fdataobj)
+nas<-apply(new.fdataobj$data,1,count.na)
+if (any(nas)) {
+   bb<-!nas
+   cat("Warning: ",sum(nas)," curves with NA are omited\n")
+   new.fdataobj$data<-new.fdataobj$data[bb,]
+   gg<-gg[bb]
+   }
+   
 tt =new.fdataobj[["argvals"]]
+new.fdata<-new.fdataobj[["data"]]
 mdatos=object$fdataobj[["data"]]
 nn=ncol(mdatos)
 numgr=nrow(mdatos)
@@ -215,6 +223,7 @@ for (k in 1:numgrn) {
     }
 pgrup<-pgrup/object$knn.opt
 }}}
+names(group.pred)<-gg
 if (!probs.group) return(list(group.pred=as.factor(group.pred)))
 else  {
       colnames(pgrup)<-rownames(new.fdataobj$data)

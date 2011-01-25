@@ -21,25 +21,25 @@ if (model$call[[1]]=="fregre.pc") {
    kn=model$kn
    l=model$l
    lambdas=model$svd.fdata$lambdas
-for (i in 1:n){
-    oo <- fregre.pc(fdataobj[-i,],y[-i],l)
-    G <- oo$svd.fdata$x[,l]
-    I <- diag(1/((n-1)*oo$svd.fdata$lambdas[l]),ncol=kn)
-    best <- oo$beta.est #/(ncol(fdata)-1)
-    aest <- oo$a.est
+   for (i in 1:n){
+     oo <- fregre.pc(fdataobj[-i,],y[-i],l)
+     G <- oo$svd.fdata$x[,l]
+     I <- diag(1/((n-1)*oo$svd.fdata$lambdas[l]),ncol=kn)
+     best <- oo$beta.est #/(ncol(fdata)-1)
+     aest <- oo$a.est
 #    ypi <-   aest * rep(1,n) + fdata %*% best
-    ypi<-predict(oo,fdataobj)
-    S[i,] <- t(fitted.values-ypi[,1])
-    dist.cook.for[i] <- t(S[i,]) %*% S[i,] / sr2
-    dist.cook.est[i] <- sum((beta.est$data-best$data)^2)/(sr2/n*(sum(1/lambdas[l])))
-    bb<-beta.est-best
-    betas<- c(betas,best)
+     ypi<-predict(oo,fdataobj)
+     S[i,] <- t(fitted.values-ypi)
+     dist.cook.for[i] <- t(S[i,]) %*% S[i,] / sr2
+     dist.cook.est[i] <- sum((beta.est$data-best$data)^2)/(sr2/n*(sum(1/lambdas[l])))
+     bb<-beta.est-best
+     betas<- c(betas,best)
 #    a<-sum((beta.est$data-best$data)^2)
-    b<-norm.fdata(fdata(beta.est$data-best$data,tt,rtt))
+       b<-norm.fdata(fdata(beta.est$data-best$data,tt,rtt))
 #    dd<-a/b
-    dist.cook.est[i] <- as.numeric(norm.fdata(bb))/(sr2/n*(sum(1/lambdas[l])))
-   }
-betas$data<-betas$data[-1,]
+     dist.cook.est[i] <- as.numeric(norm.fdata(bb))/(sr2/n*(sum(1/lambdas[l])))
+    }
+    betas$data<-betas$data[-1,]
 }
 if (model$call[[1]]=="fregre.basis" || model$call[[1]]=="fregre.basis.cv") {
 beta.est<-model$beta.est #/(ncol(fdata)-1)
@@ -51,7 +51,7 @@ for (i in 1:n){
     best <- oo$beta.est
     aest <- oo$a.est
     ypi<-predict(oo,fdataobj)
-    S[i,] <- t(fitted.values-ypi[,1])
+    S[i,] <- t(fitted.values-ypi)
     dist.cook.for[i] <- t(S[i,]) %*% S[i,] / sr2
     b1<-eval.fd(tt,best)
     bb<-best-beta.est
@@ -66,4 +66,3 @@ for (i in 1:n){dist.pena[i] <- t(S[,i]) %*% S[,i] / (sr2 * diag(H)[i])}
 return(list("H"=diag(H),"DCP"=dist.cook.for,"DCE"=dist.cook.est,"DP"=dist.pena,
 betas=betas))
 }
-

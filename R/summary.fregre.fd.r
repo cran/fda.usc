@@ -15,7 +15,8 @@ summary.fregre.fd=function(object,times.influ=3,times.sigma=3,draw=TRUE,...){
      cat(" *** Summary Functional Data Regression with Principal Components *** \n\n")
      object$lm$call<-object$call
      print(summary(object$lm))
-     pr.x= apply(object$pc$x, 2, var)/sum(var(object$pc$x))
+     var.1<-apply(object$pc$x, 2, var)
+     pr.x= var.1/sum(var.1)
  cat("\n-With",length(object$l),"Principal Components is  explained ",round(sum(pr.x[object$l])*100
  ,2),"%\n of the variability of explicative variables. \n
 -Variability for each  principal components -PC- (%):\n")

@@ -6,8 +6,8 @@
  	 Computes predictions for  regression between functional explanatory variables and scalar response using: basis representation, Principal Components Analysis or nonparametric kernel estimation.
 }
 \usage{
-%predict.fregre.fd(object,new.fdataobj=NULL,...)
-\method{predict}{fregre.fd}(object,new.fdataobj=NULL,\dots)
+predict.fregre.fd(object,new.fdataobj=NULL,...)
+%\method{predict}{fregre.fd}(object,new.fdataobj=NULL,\dots)
 }
 \arguments{
    \item{object}{ \code{fregre.fd} object.}

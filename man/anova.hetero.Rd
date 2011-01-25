@@ -6,12 +6,12 @@
   Univariate ANOVA for heteroscedastic data.
 }
 \usage{
-%anova.hetero(formula,object=NULL,pr=FALSE,contrast=NULL)
-\method{anova}{hetero}(object=NULL,formula,pr=FALSE,contrast=NULL,...)
+anova.hetero(object=NULL,formula,pr=FALSE,contrast=NULL,...)
+%\method{anova}{hetero}(object=NULL,formula,pr=FALSE,contrast=NULL,...)
 }
 \arguments{
- \item{formula}{ as \link[stats]{formula}.}
- \item{object}{ A data frame with  dimension (\code{n} x \code{p+1}).  In the first column contains the \code{n} response values and on the following \code{p} columns the explanatory variables specified in the formula.}
+  \item{object}{ A data frame with  dimension (\code{n} x \code{p+1}).  In the first column contains the \code{n} response values and on the following \code{p} columns the explanatory variables specified in the formula.}
+  \item{formula}{ as \link[stats]{formula}.}
   \item{pr}{ If TRUE, print intermediate results. } 
   \item{contrast}{ List of special contrast  to be used, by default no special contrasts are used (\code{contrast}=\code{NULL}).}
   \item{\dots}{ Further arguments passed to or from other methods.} 

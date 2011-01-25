@@ -6,17 +6,17 @@
 Aproximates semi-metric distances for functional data of class \code{fdata} or \code{fd}.
 }
 \usage{
-semimetric.basis(DATA1, DATA2 = DATA1,nderiv=0,type.basis1=NULL,
+semimetric.basis(fdata1, fdata2 = fdata1,nderiv=0,type.basis1=NULL,
 nbasis1=NULL,type.basis2=NULL,nbasis2=NULL,...)
 }
 \arguments{  
-  \item{DATA1}{Functional data 1 or curve 1.}
-  \item{DATA2}{Functional data 2 or curve 2.}
+  \item{fdata1}{Functional data 1 or curve 1.}
+  \item{fdata2}{Functional data 2 or curve 2.}
   \item{nderiv}{  Order of derivation, used in \code{deriv.fd}}
-  \item{type.basis1}{ Type of Basis for \code{DATA1}.}  
-  \item{nbasis1}{ Number of Basis for \code{DATA1}.}  
-  \item{type.basis2}{ Type of Basis for \code{DATA2}.}  
-  \item{nbasis2}{ Number of Basis for \code{DATA2.}}    
+  \item{type.basis1}{ Type of Basis for \code{fdata1}.}  
+  \item{nbasis1}{ Number of Basis for \code{fdata1}.}  
+  \item{type.basis2}{ Type of Basis for \code{fdata2}.}  
+  \item{nbasis2}{ Number of Basis for \code{fdata2.}}    
   \item{\dots}{ Further arguments passed to or from other methods.}    
 }
 \details{
@@ -35,14 +35,18 @@ Springer Series in Statistics, New York.
 See also  \code{\link{metric.lp}}, \code{\link{semimetric.NPFDA}} and \code{\link{deriv.fd}}  
 }
 \examples{
+
 data(phoneme)
-DATA1<-phoneme$learn
-DATA2<-phoneme$test
+DATA1<-phoneme$learn[c(30:50,210:230),]
+DATA2<-phoneme$test[231:250,]
 a1=semimetric.basis(DATA1,DATA2)
-a2=semimetric.basis(DATA1,DATA2,type.basis1="fourier",
-nbasis1=11,type.basis2="fourier",nbasis2=11)
+a2=semimetric.basis(DATA1,DATA2,type.basis1="fourier",nbasis1=11,
+type.basis2="fourier",nbasis2=11)
 fd1 <- fdata2fd(DATA1)
 fd2 <- fdata2fd(DATA2)
 a3=semimetric.basis(fd1,fd2)
+a4=semimetric.basis(fd1,fd2,nderiv=1)
+
+
 }
 \keyword{ cluster }

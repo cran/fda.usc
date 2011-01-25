@@ -1,5 +1,29 @@
 fregre.pc=function (fdataobj, y, l = 1:3,norm=TRUE){
-    if (!is.fdata(fdataobj))    fdataobj = fdata(fdataobj)
+if (!is.fdata(fdataobj))    fdataobj = fdata(fdataobj)
+nas<-apply(fdataobj$data,1,count.na)
+nas.g<-is.na(y)
+if (is.null(names(y))) names(y)<-1:length(y)
+if (any(nas) & !any(nas.g)) {
+   bb<-!nas
+   cat("Warning: ",sum(nas)," curves with NA are omited\n")
+   fdataobj$data<-fdataobj$data[bb,]
+   y<-y[bb]
+   }
+else {
+if (!any(nas) & any(nas.g)) {
+   cat("Warning: ",sum(nas.g)," values of group with NA are omited \n")
+   bb<-!nas.g
+   fdataobj$data<-fdataobj$data[bb,]
+   y<-y[bb]
+   }
+else {
+if (any(nas) & any(nas.g))  {
+   bb<-!nas & !nas.g
+   cat("Warning: ",sum(!bb)," curves  and values of group with NA are omited \n")
+   fdataobj$data<-fdataobj$data[bb,]
+   y<-y[bb]
+   }
+}}
     x <- fdataobj[["data"]]
     tt <- fdataobj[["argvals"]]
     rtt <- fdataobj[["rangeval"]]
@@ -30,7 +54,7 @@ fregre.pc=function (fdataobj, y, l = 1:3,norm=TRUE){
     beta.est<-object.lm$coefficients[2:(lenl+1)]*pc$rotation[l,]
     beta.est$data<-apply(beta.est$data,2,sum)
     beta.est$names$main<-"beta.est"
-    beta.est$data <- as.numeric(beta.est$data)
+    beta.est$data <- matrix(as.numeric(beta.est$data),nrow=1)
 #    H<-diag(hat(Z, intercept = TRUE),ncol=n)
 # H<-lm.influence(object.lm, do.coef = FALSE)$hat o bien
 #    I <- diag(1/(n*pc$lambdas[l]), ncol = lenl) #1/n

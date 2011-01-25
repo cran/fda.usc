@@ -40,8 +40,8 @@ if (is.null(nbasis)) {
   }
  b1.1<- do.call(a1, as)
  class(DATA)="matrix"
- fd1.1 <- Data2fd(argvals=tt,y=t(DATA),basisobj=b1.1)
- if (nderiv>0) fd1.1=deriv.fd(fd1.1,nderiv)
+ fd1.1 <- Data2fd(argvals=tt,y=t(DATA),basisobj=b1.1) ######
+ if (nderiv>0) fd1.1=deriv.fd(fd1.1,int2Lfd(nderiv)) #######
  fd1.1
 }
 

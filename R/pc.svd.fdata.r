@@ -1,5 +1,8 @@
 pc.svd.fdata<- function(fdataobj,norm=TRUE){
 if (!is.fdata(fdataobj)) stop("No fdata class")
+ if (!is.fdata(fdataobj)) fdataobj<-fdata(fdataobj)
+ nas1<-apply(fdataobj$data,1,count.na)
+ if (any(nas1))  stop("fdataobj contain ",sum(nas1)," curves with some NA value \n")
 X<-fdataobj[["data"]]
 tt<-fdataobj[["argvals"]]
 rtt<-fdataobj[["rangeval"]]

@@ -12,6 +12,7 @@
 \alias{nrow.fdata}
 \alias{traza}
 \alias{is.fdata}
+\alias{count.na}
 
 \title{ fda.usc internal functions}
 \description{Internal undocumentation functions for fda.usc package}
@@ -27,6 +28,7 @@
 \method{nrow}{fdata}(fdataobj)
 \method{ncol}{fdata}(fdataobj)
 \method{is}{fdata}(fdataobj)
+count.na(A)
 traza(A) 
 }
 \arguments{
@@ -36,4 +38,4 @@ traza(A)
    \item{A}{  Matrix  of  set cases with dimension (\code{n} x \code{m}), where \code{n} is the number of curves and \code{m} are the points observed in each curve. \code{traza}, return the trace of a functional data matrix.}
   \item{\dots}{ \code{fdata} objects to be concatenated. }
 }
-\keyword{math} 
+\keyword{math}  

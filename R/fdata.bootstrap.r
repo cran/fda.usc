@@ -26,6 +26,7 @@ for (i in 1:nb){
   distboot[i]<-metric.lp(center,aux,...)
   }
 dist<-max(distboot[rank(distboot)<=floor((1-alpha)*nb)])
+
 if (draw){
 if (is.null(draw.control)) draw.control=list("col"=c("grey","blue","cyan"),"lty"=c(2,1,1),"lwd"=c(1,2,1))
  plot(fdataobj,main="Bootstrap replies",lwd=draw.control$lwd[1],
@@ -42,5 +43,4 @@ legend(x=min(tt),y=0.99*max(data),legend=c("fdata",stat$names$main,"IN"),
 return(list("statistic"=estmues,"dband"= dist,"rep.dist"=distboot,
     "resample"=fdata(estboot,tt,rtt,names),fdataobj=fdataobj))
 }
-#"center"=center,
 

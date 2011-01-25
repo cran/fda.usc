@@ -1,6 +1,31 @@
 fregre.np.cv=function(fdataobj,y,h=NULL,Ker=AKer.norm,metric=metric.lp,
 type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0),...){
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
+nas<-apply(fdataobj$data,1,count.na)
+nas.g<-is.na(y)
+if (is.null(names(y))) names(y)<-1:length(y)
+if (any(nas) & !any(nas.g)) {
+   bb<-!nas
+   cat("Warning: ",sum(nas)," curves with NA are omited\n")
+   fdataobj$data<-fdataobj$data[bb,]
+  y<-y[bb]
+   }
+else {
+if (!any(nas) & any(nas.g)) {
+   cat("Warning: ",sum(nas.g)," values of group with NA are omited \n")
+   bb<-!nas.g
+   fdataobj$data<-fdataobj$data[bb,]
+     y<-y[bb]
+   }
+else {
+if (any(nas) & any(nas.g))  {
+   bb<-!nas & !nas.g
+   cat("Warning: ",sum(!bb)," curves  and values of group with NA are omited \n")
+   fdataobj$data<-fdataobj$data[bb,]
+   y<-y[bb]
+   }
+}}
+
 x<-fdataobj[["data"]]
 tt<-fdataobj[["argvals"]]
 rtt<-fdataobj[["rangeval"]]
@@ -13,65 +38,12 @@ rtt<-fdataobj[["rangeval"]]
    if (n != (length(y)))         stop("ERROR IN THE DATA DIMENSIONS")
    if (is.null(rownames(x)))         rownames(x) <- 1:n
    if (is.null(colnames(x)))         colnames(x) <- 1:np
-   mdist=metric(x,x,...)
 types=FALSE
-if (is.null(h)) {
-if (m[7]==0){
-     mdist2=mdist
-     diag(mdist2)=Inf
-     h0<-apply(mdist2,1,min,na.rm=TRUE)
-     h.max=max(h0)
-     h.med=median(h0)
-     q.min=quantile(mdist2,probs=0.025,na.rm=TRUE)
-     q.max=quantile(mdist2,probs=0.2,na.rm=TRUE)
-     h.min=max(q.min,h.med)
-     h.max=max(q.max,h.max)
-     if (m[4]!=0) {
-       i=1
-       lenC=length(C)
-    while (i<=lenC) {
-        if (C[[i]]!="AKer.norm") {
-                h.max=min(q.max,h.max)
-                h.min=min(q.min,h.med)
-                i=lenC+1
-                 }
-        else i=i+1        }
-}
-else {h.max=min(q.max,h.max)
-                h.min=min(q.min,h.med)}
-h = seq(h.min, h.max, len = 51)
-}
-else if (C[[m[7]]]=="S.KNN") {
-          h.min=2
-          h.max=floor(quantile(1:n,probs=0.10,na.rm=TRUE,type=4))
-          h=h.min:h.max
-     }
-else {
-     mdist2=mdist
-     diag(mdist2)=Inf
-     h0<-apply(mdist2,1,min,na.rm=TRUE)
-     h.max=max(h0)
-     h.med=median(h0)
-     q.min=quantile(mdist2,probs=0.025,na.rm=TRUE)
-     q.max=quantile(mdist2,probs=0.2,na.rm=TRUE)
-     h.min=max(q.min,h.med)
-     h.max=max(q.max,h.max)
-     if (m[4]!=0) {
-       i=1
-       lenC=length(C)
-  while (i<=lenC) {
-        if (C[[i]]!="AKer.norm") {
-
-                h.max=min(q.max,h.max)
-                h.min=min(q.min,h.med)
-                i=lenC+1
-                 }
-        else i=i+1        }
-}
-else {h.max=min(q.max,h.max)
-                h.min=min(q.min,h.med)}
-h = seq(h.min, h.max, len = 51)
-}}
+mdist=metric(fdataobj,fdataobj,...)
+ke<-deparse(substitute(Ker))
+ty<-deparse(substitute(type.S))
+if (is.null(h)) h=h.default(fdataobj,probs=c(0.025,0.25),len=25,metric = mdist,Ker =ke,
+ type.S =ty,...)
 else {if   (any(h<=0)) stop("Error: Invalid range for h")}
   lenh <- length(h)
 gcv=cv.error <- array(NA, dim = c(lenh))
@@ -108,3 +80,4 @@ out<-list("call"=C,"fitted.values"=yp,"H"=H,"residuals"=e,"df"=df,"r2"=r2,"sr2"=
  class(out)="fregre.fd"
 return(out)
 }
+

@@ -1,6 +1,30 @@
 classif.knn.fd<-function(fdataobj,group,
 knn=seq(3,floor(min(table(group))/3),by=2),metric=metric.lp,...) {
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
+if (is.null(names(group))) names(group)<-1:length(group)
+nas<-apply(fdataobj$data,1,count.na)
+nas.g<-is.na(group)
+if (any(nas) & !any(nas.g)) {
+   bb<-!nas
+   cat("Warning: ",sum(nas)," curves with NA are omited\n")
+   fdataobj$data<-fdataobj$data[bb,]
+   group<-group[bb]
+   }
+else {
+if (!any(nas) & any(nas.g)) {
+   cat("Warning: ",sum(nas.g)," values of group with NA are omited \n")
+   bb<-!nas.g
+   fdataobj$data<-fdataobj$data[bb,]
+   group<-group[bb]
+   }
+else {
+if (any(nas) & any(nas.g))  {
+   bb<-!nas & !nas.g
+   cat("Warning: ",sum(!bb)," curves  and values of group with NA are omited \n")
+   fdataobj$data<-fdataobj$data[bb,]
+   group<-group[bb]
+   }
+}}
 data<-fdataobj[["data"]]
 nn=ncol(data)
 numgr=nrow(data)

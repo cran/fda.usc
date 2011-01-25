@@ -1,11 +1,22 @@
 metric.lp=function (fdata1, fdata2 = NULL, p = 2, w = 1, ...)
 {
+C1<-match.call()
 same<-FALSE
 if (!is.fdata(fdata1)) {fdata1<-fdata(fdata1)}
-DATA1<-fdata1[["data"]]
 tt1<-fdata1[["argvals"]]
+nas1<-apply(fdata1$data,1,count.na)
+if (any(nas1)) {
+   stop("fdata1 contain ",sum(nas1)," curves with some NA value \n")
+   }
+
 if (is.null(fdata2)) {fdata2<-fdata1;same<-TRUE}
-else  if (!is.fdata(fdata2))  {fdata2<-fdata(fdata2) }
+else  if (!is.fdata(fdata2))  {fdata2<-fdata(fdata2,tt1) }
+nas2<-apply(fdata2$data,1,count.na)
+if (any(nas2)) {
+   stop("fdata2 contain ",sum(nas2)," curves with some NA value \n")
+   }
+   
+DATA1<-fdata1[["data"]]
 DATA2<-fdata2[["data"]]
 tt2<-fdata2[["argvals"]]
 rtt<-fdata1[["rangeval"]]
@@ -65,8 +76,9 @@ if (predi) {
 }}}
 mdist<-mdist*(sqrt(diff(rtt))) ##produce NAs
 }
-#print("end metric.lp")
+attr(mdist,"call")<-C1
 return(mdist)
 }
+
 
 

@@ -6,8 +6,8 @@
   Classifier of Functional Data by kernel method using Functional Data Object of class \code{classif.fd}. 
 }
 \usage{
-\method{predict}{classif.fd}(object,new.fdataobj,probs.group=FALSE, \dots)
-%predict.classif.fd(object, new.fdataobj,probs.group=FALSE,...)
+%\method{predict}{classif.fd}(object,new.fdataobj,probs.group=FALSE, \dots)
+predict.classif.fd(object, new.fdataobj,probs.group=FALSE,...)
 }
 \arguments{
   \item{object}{ Object \code{object} estimated by: k nearest neighbors method \code{classif.knn.fd}, kernel method  \code{classif.kernel.fd} or  kernel method  with fucntional basis representation \code{classif.kernel.fb}.  } 

@@ -1,6 +1,11 @@
 depth.RPD=function(fdataobj,nproj=50,deriv=c(0,1),trim=0.25,dfunc2=depth.mode,
 method="bspline",draw=FALSE,...){
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
+nas<-apply(fdataobj$data,1,count.na)
+if (any(nas))  {
+   fdataobj$data<-fdataobj$data[!nas,]
+   cat("Warning: ",sum(nas)," curves with NA are not used in the calculations \n")
+   }
 data<-fdataobj[["data"]]
 names1<-names2<-names<-fdataobj[["names"]]
 names1$main<-"depth.RPD median"
@@ -9,7 +14,7 @@ n<-nrow(data)
 m<-ncol(data)
 modulo=function(z){sqrt(sum(z^2))}
 if (is.null(n) || is.null(m)) stop("Input must be a matrix")
-t=fdataobj[["argvals"]]
+tt=fdataobj[["argvals"]]
 rtt<-fdataobj[["rangeval"]]
 newfunc=array(NA,dim=c(n,m,length(deriv)))
 for (ider in 1:length(deriv)){
@@ -45,28 +50,23 @@ dep=dep/nproj
 k=which.max(dep)
 med=data[k,]
 lista=which(dep>=quantile(dep,probs=trim))
-mtrim=apply(data[lista,],2,mean)
+mtrim=apply(data[lista,],2,mean,na.rm=TRUE)
 tr<-paste("RPD.tr",trim*100,"\u0025",sep="")
-if (draw){
- dev.new()
- cgray=1-(dep-min(dep))/(max(dep)-min(dep))
- if (m==2){
-  plot(range(data[,1]),range(data[,2]),type="n",
-     xlab=colnames(data)[1],ylab=colnames(data)[2])
-  points(data[,1],data[,2],col=gray(cgray))
-  points(rbind(mtrim),pch=19,col=gray(2*trim),cex=2)
-  points(rbind(med),col=3,pch=20,cex=2)}
-else {
-plot(range(t),range(data),type="n",xlab="t",ylab="X(t)",main="RPD Depth")
-for (i in 1:n) {lines(t,data[i,],col=gray(cgray[i]))}
-lines(t,mtrim,lwd=2,col="yellow")
-lines(t,med,col="red",lwd=2)
-legend("topleft",legend=c(tr,"Median"),
-     lwd=2,col=c("yellow","red"))
- }}
-med<-fdata(med,t,rtt,names1)
-mtrim<-fdata(mtrim,t,rtt,names2)
+med<-fdata(med,tt,rtt,names1)
+mtrim<-fdata(mtrim,tt,rtt,names2)
 rownames(med$data)<-"RPD.med"
 rownames(mtrim$data)<-tr
-return(invisible(list("median"=med,"lmed"=k,"mtrim"=mtrim,"ltrim"=lista,"dep"=dep,"proj"=z)))
+if (draw){
+   ans<-dep
+   ind1<-!is.nan(ans)
+   ans[is.nan(ans)]=NA
+   cgray=1-(ans-min(ans,na.rm=TRUE))/(max(ans,na.rm=TRUE)-min(ans,na.rm=TRUE))
+   plot(fdataobj[ind1,],col=gray(cgray[ind1]),main="RPD Depth")
+   lines(mtrim,lwd=2,col="yellow")
+   lines(med,col="red",lwd=2)
+   legend("topleft",legend=c(tr,"Median"),lwd=2,col=c("yellow","red"))
+ }
+return(invisible(list(median = med, lmed = k, mtrim = mtrim,
+                      ltrim = lista, dep = dep, proj = z)))
 }
+

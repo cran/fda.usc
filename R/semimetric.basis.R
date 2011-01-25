@@ -1,27 +1,30 @@
-semimetric.basis=function(DATA1, DATA2 = DATA1,nderiv=0,type.basis1=NULL,
+semimetric.basis=function(fdata1, fdata2 = fdata1,nderiv=0,type.basis1=NULL,
 nbasis1=NULL,type.basis2=NULL,nbasis2=NULL,...) {
 
- if (any(class(DATA1)=="fd")) {
+ if (any(class(fdata1)=="fd")) {
    print("fd class")
-   r=DATA1$basis[[3]]
-   tt=seq(r[1],r[2],len=length(DATA1$fdnames$time))
-   df1=deriv.fd(DATA1,nderiv)
-   df2=deriv.fd(DATA2,nderiv)
-   fd1=t(eval.fd(tt,df1))
-   fd2=t(eval.fd(tt,df2))
+   r=fdata1$basis[[3]]
+   tt=seq(r[1],r[2],len=length(fdata1$fdnames$time))
+   df1=deriv.fd(fdata1,nderiv)
+   df2=deriv.fd(fdata2,nderiv)
+   fd1=fdata(t(eval.fd(tt,df1)),tt)
+   fd2=fdata(t(eval.fd(tt,df2)),tt)
    mdist=metric.lp(fd1,fd2,...)
   }
  else {
- if (!is.fdata(DATA1)) DATA1=fdata(DATA1)
- if (!is.fdata(DATA2)) DATA2=fdata(DATA2)
-  tt=DATA1[["argvals"]]
-  rtt<-DATA1[["rangeval"]]
-  DATA1<-DATA1[["data"]]
-  DATA2<-DATA2[["data"]]
+
+ if (!is.fdata(fdata1)) fdata1<-fdata(fdata1)
+ tt<-fdata1[["argvals"]]
+ nas1<-apply(fdata1$data,1,count.na)
+ if (any(nas1))  stop("fdata1 contain ",sum(nas1)," curves with some NA value \n")
+ else  if (!is.fdata(fdata2))  {fdata2<-fdata(fdata2,tt) }
+ nas2<-apply(fdata2$data,1,count.na)
+ if (any(nas2))  stop("fdata2 contain ",sum(nas2)," curves with some NA value \n")
+
+  rtt<-fdata1[["rangeval"]]
 #   print("Raw class")
-   np=ncol(DATA1)
+   np=ncol(fdata1)
    if (is.null(nbasis1)) {
-#       nbasis1=floor(np/6)
        nbasis1=ifelse(floor(np/3) > floor((np - nderiv - 4)/2),
        floor((np - nderiv - 4)/2), floor(np/3))
        }
@@ -36,7 +39,7 @@ nbasis1=NULL,type.basis2=NULL,nbasis2=NULL,...) {
    names(as)[[2]]<-"nbasis"
    C <- match.call()
    mf <- match.call(expand.dots = FALSE)
-   m<-match(c("DATA1", "DATA2","nderiv","type.basis1","nbasis1","type.basis2","nbasis2"),names(mf),0L)
+   m<-match(c("fdata1", "fdata2","nderiv","type.basis1","nbasis1","type.basis2","nbasis2"),names(mf),0L)
    imetric <- m[4]
    imetric2 <- m[6]
    if (imetric == 0) {
@@ -86,19 +89,17 @@ else {  b1 <- paste('create.',type.basis2,'.basis',sep="")
    bs[[2]] <- nbasis2
    names(bs)[[2]]<-'nbasis'
    b1.2<- do.call(b1, bs)
-   class(DATA1)="matrix"
-   class(DATA2)="matrix"
-   fd1.1 <- Data2fd(argvals=tt,y=t(DATA1),basisobj=b1.1)
-   fd1.2 <- Data2fd(argvals=tt,y=t(DATA2),basisobj=b1.2)
-   r=range(tt)
+   fd1.1 <- Data2fd(argvals=tt,y=t(fdata1$data),basisobj=b1.1)
+   fd1.2 <- Data2fd(argvals=tt,y=t(fdata2$data),basisobj=b1.2)
    df1=deriv.fd(fd1.1,nderiv)
    df2=deriv.fd(fd1.2,nderiv)
-   fd1=t(eval.fd(tt,df1))
-   fd2=t(eval.fd(tt,df2))
+   fd1=fdata(t(eval.fd(tt,df1)),tt)
+   fd2=fdata(t(eval.fd(tt,df2)),tt)
    mdist=metric.lp(fd1,fd2,...)
 }
 mdist
 }
+
 
 
 

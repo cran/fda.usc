@@ -1,9 +1,14 @@
 influence.quan<-function(model,out.influ,mue.boot=500,
-                 smo=0.1,smoX=0.05,alpha=0.95,...){
+                 smo=0.1,smoX=0.05,alpha=0.95,kmax.fix=FALSE,...){
 DCP=out.influ$DCP
 DCE=out.influ$DCE
 DP=out.influ$DP
 fdataobj=model$fdataobj
+nas<-apply(fdataobj$data,1,count.na)
+if (any(nas))  {
+   fdataobj$data<-fdataobj$data[!nas,]
+   cat("Warning: ",sum(nas)," curves with NA are not used in the calculations \n")
+   }
 dat<-fdataobj[["data"]]
 tt<-fdataobj[["argvals"]]
 rtt<-fdataobj[["rangeval"]]
@@ -29,54 +34,75 @@ IDCE=IDP=IDCP <- c()
 cb.num <- round(alpha * mue.boot)
 betas.boot <- array(NA,dim=c(mue.boot,J))
 betas.boot2<-model$beta.est
-norm.boot <- array(NA,dim=c(n,1))
+norm.boot <- array(NA,dim=c(mue.boot,1))
+ncoefs<-100
+if (!pc) ncoefs<-nrow(model$beta.est$coefs)
+coefs.boot <- array(NA,dim=c(mue.boot,ncoefs))
 pb=txtProgressBar(min=1,max=mue.boot,width=50,style=3)
+knn.fix=NULL
 for (i in 1:mue.boot){
    setTxtProgressBar(pb,i-0.5)
    muee <- sample(1:n,n,replace=TRUE)
    mueX <- sample(1:n,n,replace=TRUE)
    residuals.mue <- as.matrix(residuals[muee]) + rnorm(n,0,sqrt(smo * sr2))
-   fdata.mue <-dat + mvrnorm(n,rep(0,J),smoX * var(dat))
+#   fdata.mue <-dat[mueX,] + mvrnorm(n,rep(0,J),smoX * var(dat))
+   fdata.mue <-fdataobj[mueX,] + fdata(mvrnorm(n,rep(0,J),smoX * var(dat)),tt,rtt)
    if (pc)   {
 #       y.mue <- a.est * rep(1,len=n) + fdata.mue%*%(beta.est)/(J-1)+ residuals.mue #t(beta.est)
-       y.mue <- a.est * rep(1,len=n) + fdata.mue%*%(beta.est)+ residuals.mue #t(beta.est)
-#       print(y.mue-model$y)
+#inp<-fdata.mue%*%(beta.est[1,])/(J-1)
+#       y.mue <- a.est * rep(1,len=n) + inp+ residuals.mue #t(beta.est)
+      inp<-inprod.fdata(fdata.mue,model$beta.est,...)
+      y.mue <- a.est * rep(1,len=n) + inp+ residuals.mue
 
-       aa<-fdata(fdata.mue,tt,rtt,nam)
-       funcregpc.mue <- fregre.pc(aa,y.mue,model$l,...)
+       if (kmax.fix)    funcregpc.mue <- fregre.pc(fdata.mue,y.mue,model$l,...)
+       else     {
+                        fpc <- fregre.pc.cv(fdata.mue,y.mue,max(model$l,8))
+                        knn.fix[[i]]<-fpc$pc.opt
+                        funcregpc.mue<-fpc$fregre.pc
+                        }
        inflfun.mue <- influence.fdata(funcregpc.mue) #####
        IDCP <- c(IDCP,inflfun.mue$DCP)
        IDCE <- c(IDCE,inflfun.mue$DCE)
        IDP <- c(IDP,inflfun.mue$DP)
-       betas.boot[i,] <- funcregpc.mue$beta.est$data#/diff(rtt)
-#       norm.boot[i] <- sum((beta.est-betas.boot[,i])^2)
+       betas.boot[i,] <- funcregpc.mue$beta.est$data#/J*diff(rtt) #####
+       bb<-model$beta.est-funcregpc.mue$beta.est
+       norm.boot[i] <- norm.fdata(bb)
              }
    else  {
-       y.mue <- a.est * rep(1,n) + fdata.mue%*%(beta.est) + residuals.mue
-       aa<-fdata(fdata.mue,tt,rtt,nam)
-       funcregpc.mue <-fregre.basis(aa,y.mue,model$basis.x.opt,model$basis.b.opt,...)
+       bett<-fdata(t(beta.est),tt,rtt)
+       inp<-inprod.fdata(fdata.mue,bett,...)
+       y.mue <- a.est * rep(1,len=n) + inp+ residuals.mue
+       if (kmax.fix) funcregpc.mue <-fregre.basis(fdata.mue,y.mue,model$basis.x.opt,model$basis.b.opt,...)
+       else {
+              funcregpc.mue <-fregre.basis.cv(fdata.mue,y.mue,model$basis.x.opt,model$basis.b.opt,...)
+              knn.fix[[i]]<-c(funcregpc.mue$basis.x.opt$nbasis,funcregpc.mue$basis.b.opt$nbasis)
+                        }
        inflfun.mue <- influence.fdata(funcregpc.mue)
        IDCP <- c(IDCP,inflfun.mue$DCP)
        IDCE <- c(IDCE,inflfun.mue$DCE)
        IDP <- c(IDP,inflfun.mue$DP)
-       betas.boot[i,] <- eval.fd(tt,funcregpc.mue$beta.est)#/J*diff(range(tt))
+       betas.boot[i,] <- eval.fd(tt,funcregpc.mue$beta.est)#/J#*diff(range(tt))
        bb<-model$beta.est-funcregpc.mue$beta.est
 #       norm.boot[i] <- sum((beta.est-betas.boot[,i])^2)
-       norm.boot[i]<-  norm.fd(bb)         }
+       norm.boot[i]<-  norm.fd(bb)
+       coefs.boot[i,]<-funcregpc.mue$beta.est$coefs[,1]
+       }
    setTxtProgressBar(pb,i)             }
 close(pb)
 for (j in 1:n){
     quan.cook.for[j] <- sum(IDCP<=DCP[j])/(n * mue.boot)
     quan.cook.est[j] <- sum(IDCE<=DCE[j])/(n * mue.boot)
     quan.pena[j] <- sum(IDP<=DP[j])/(n * mue.boot)}
-if (pc)   {   aa<-model$beta.est$data-t(betas.boot)
-              norm.boot<-norm.fdata(fdata(t(aa),tt,rtt))[,1] }
+#if (pc)   {
+#print(betas.boot)
+#              aa<-model$beta.est$data-t(betas.boot)
+#              norm.boot<-norm.fdata(fdata(t(aa),tt,rtt))[,1] }
 #betas.boot<- fdata(betas.boot[order(norm.boot)[1:cb.num],],tt,rtt,nam)
 betas.boot<- fdata(betas.boot,tt,rtt,nam)
 betas.boot$names$main<-"beta.est bootstrap"
 return(list("quan.cook.for"=quan.cook.for,"quan.cook.est"=quan.cook.est,
 "quan.pena"=quan.pena,"mues.for"=IDCP,"mues.est"=IDCE,"mues.pena"=IDP,
-"betas.boot"=betas.boot))
+"betas.boot"=betas.boot,"norm.boot"=norm.boot,"coefs.boot"=coefs.boot,
+"knn.fix"=knn.fix))
 }
-
 

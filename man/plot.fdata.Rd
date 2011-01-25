@@ -9,11 +9,12 @@
 Plot object of class \code{fdata}.
 }
 \usage{
-%plot.fdata(fdataobj,type,main,xlab,ylab,...)
-%lines.fdata(fdataobj,...)
-\method{plot}{fdata}(x,type,main,xlab,ylab,\dots)
-\method{lines}{fdata}(x,\dots)
-\method{title}{fdata}(x,main=NULL,xlab=NULL,ylab=NULL,rownames=NULL) 
+plot.fdata(x,type,main,xlab,ylab,...)
+lines.fdata(x,...)
+title.fdata(x,main=NULL,xlab=NULL,ylab=NULL,rownames=NULL) 
+%\method{plot}{fdata}(x,type,main,xlab,ylab,\dots)
+%\method{lines}{fdata}(x,\dots)
+%\method{title}{fdata}(x,main=NULL,xlab=NULL,ylab=NULL,rownames=NULL) 
 }
 \arguments{
   \item{x}{ \code{fdata} class object with:  i.- \code{"data"}: matrix  of  set cases with dimension (\code{n} x \code{m}), where \code{n} is the number of curves and \code{m} are the discretization points observed in each curve, ii.- \code{"argvals"}: the discretizations points values, iii.- \code{"rangeval"}: range of the discretizations points values, iv.- \code{"names"} (optional) list with  \code{main} an overall title, \code{xlab} title for \code{x} axis and \code{ylab} title for \code{y} axis.}   

@@ -21,6 +21,8 @@ type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),...){
  kterms=1
  z=list()
  lenvnf=length(vnf)
+ ty<-deparse(substitute(type.S))
+ ke<-deparse(substitute(Ker))
  if (lenvnf>0) {
 # cat(" Non functional variables: ",vnf,"\n")
  for ( i in 1:length(vnf)){
@@ -42,82 +44,22 @@ type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),...){
 #  if (is.data.frame(x.fd))  x.fd=as.matrix(x.fd)
 #  cat(" ",class(data[[vfunc[1]]])[1]," object: ",vfunc[1],"\n")
    mdist=metric(x.fd,x.fd,...)
-if (is.null(h)) {
-if (m[7]==0){
-     mdist2=mdist
-#     diag(mdist2)=NA
-    diag(mdist2)=Inf
-     h0<-apply(mdist2,1,min,na.rm=TRUE)
-     h.max=max(h0)
-     h.med=median(h0)
-     q.min=quantile(mdist2,probs=0.025,na.rm=TRUE)
-     q.max=quantile(mdist2,probs=0.2,na.rm=TRUE)
-     h.min=max(q.min,h.med)
-     h.max=max(q.max,h.max)
-     if (m[4]!=0) {
-       i=1
-       lenC=length(C)
-       while (i<=lenC) {
-        if (C[[i]]!="AKer.norm") {
-                 h.max=min(q.max,h.max)
-                 h.min=min(q.min,h.med)
-                 i=lenC+1
-                 }
-        else i=i+1        }
-       }
-       else {h.max=min(q.max,h.max)
-                h.min=min(q.min,h.med)}
-     h=seq(h.min,h.max,len=51)
-}
-else if (C[[m[7]]]=="S.KNN") {
-          h.min=2
-          h.max=floor(quantile(1:n,probs=0.10,na.rm=TRUE,type=4))
-          h=h.min:h.max     }
-else {
-     mdist2=mdist
-     diag(mdist2)=NA
-#    diag(mdist2)=Inf
-     h0<-apply(mdist2,1,min,na.rm=TRUE)
-     h.max=max(h0)
-     h.med=median(h0)
-     q.min=quantile(mdist2,probs=0.025,na.rm=TRUE)
-     q.max=quantile(mdist2,probs=0.2,na.rm=TRUE)
-     h.min=max(q.min,h.med)
-     h.max=max(q.max,h.max)
-     if (m[4]!=0) {
-       i=1
-       lenC=length(C)
-       while (i<=lenC) {
-        if (C[[i]]!="AKer.norm") {
-                h.max=min(q.max,h.max)
-                h.min=min(q.min,h.med)
-                i=lenC+1
-                 }
-        else i=i+1        }
-       }
-       else {h.max=min(q.max,h.max)
-                h.min=min(q.min,h.med)}
-     h=seq(h.min,h.max,len=51)
-}
- }
- lenh <- length(h)
-
-
-
- df=gcv<- array(NA, dim = c(lenh))
- yph <- array(NA, dim = c(nrow(y),lenh))
- H <- array(NA, dim = c(nrow(yph),nrow(y),lenh))
- I=diag(1,ncol=nrow(x.fd),nrow=nrow(x.fd))
- pb=txtProgressBar(min=0,max=lenh,style=3)
- XX=as.matrix(data[[1]][,vnf2])
- colnames(XX)=vnf2
- for (i in 1:lenh) {
-    setTxtProgressBar(pb,i-0.5)
+   if (is.null(h))  h<-h.default(data[[vfunc[1]]],type.S=ty,metric=mdist,Ker=ke)
+   lenh <- length(h)
+   df=gcv<- array(NA, dim = c(lenh))
+   yph <- array(NA, dim = c(nrow(y),lenh))
+   H <- array(NA, dim = c(nrow(yph),nrow(y),lenh))
+   I=diag(1,ncol=nrow(x.fd),nrow=nrow(x.fd))
+   pb=txtProgressBar(min=0,max=lenh,style=3)
+   XX=as.matrix(data[[1]][,vnf2])
+   colnames(XX)=vnf2
+   for (i in 1:lenh) {
+        setTxtProgressBar(pb,i-0.5)
 ####  antes:
 ##    kmdist=Ker(mdist/h[i])
 ##    ww=kmdist/apply(kmdist, 1, sum)
 ####
-   ww=type.S(mdist,h[i],Ker,cv=FALSE)
+    ww=type.S(mdist,h[i],Ker,cv=FALSE)
     wh=(I-ww)
     yh=wh%*%y
     xh=wh%*%XX
@@ -172,7 +114,8 @@ else {
 else {
  print("Warning: fregre.np.cv done, only functional data in the formula")
  if (m[5]==0) {
-  z=fregre.np.cv(data[[vfunc[1]]],matrix(data[[1]][,response],ncol=1),
+  if (is.null(h)) h<-h.default(data[[vfunc[1]]],type.S=ty,Ker=ke)
+  z=fregre.np.cv(data[[vfunc[1]]],matrix(data[[1]][,response],ncol=1),h=h,
   Ker=Ker,metric=metric,type.CV=type.CV,type.S=type.S,par.CV=par.CV,...)
  }
  else {

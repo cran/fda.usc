@@ -13,7 +13,7 @@ type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0),...)
   \item{fdataobj}{ \code{\link{fdata}} class object.}  
   \item{y}{ Scalar response with length \code{n}.}
   \item{h}{ Smoothing parameter or bandwidth.}
-  \item{Ker}{ Type of asymmetric kernel used, by default asymetric normal kernel.}	  	
+  \item{Ker}{ Type of asymmetric kernel used, by default asymmetric normal kernel.}	  	
   \item{metric}{ Metric function, by default \code{\link{metric.lp}}.}
   \item{type.CV}{ Type of cross-validation. By default generalized cross-validation \code{\link{GCV.S}} method.} 
   \item{type.S}{ Type of smothing matrix \code{S}. By default \code{S} is calculated by Nadaraya-Watson kernel estimator (\code{S.NW}).}

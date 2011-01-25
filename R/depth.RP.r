@@ -1,5 +1,10 @@
 depth.RP=function(fdataobj,trim=0.25,nproj=50,xeps=0.0000001,draw=FALSE,...){
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
+nas<-apply(fdataobj$data,1,count.na)
+if (any(nas))  {
+   fdataobj$data<-fdataobj$data[!nas,]
+   cat("Warning: ",sum(nas)," curves with NA are not used in the calculations \n")
+   }
 data<-fdataobj[["data"]]
 n<-nrow(data)
 m<-ncol(data)
@@ -28,27 +33,20 @@ names2$main<-paste("RP trim",trim*100,"\u0025",sep="")
                     mtrim[j,]=apply(data[lista,],2,mean)
                         }
    tr<-paste("RP.tr",trim*100,"\u0025",sep="")
-   if (draw){cgray=1-(dep-min(dep))/(max(dep)-min(dep))
-   if (m==2) {
-   plot(range(data[,1]),range(data[,2]),type="n")
-   text(data[,1],data[,2],round(dep,3),cex=0.75)
-#   points(fdata[,1],fdata[,2],col=2,pch=19,cex=2)
-   points(med[1],med[2],col=3,pch=20,cex=2)
-   points(mtrim[,1],mtrim[,2],pch=19,col=gray(2*trim),cex=2)} else{
-   plot(range(t),range(data),type="n",xlab="argvals",ylab="X(t)",main="RP Depth")
-   for (i in 1:n) {lines(t,data[i,],col=gray(cgray[i]))}
-   lines(t,mtrim,lwd=2,col="yellow")
-   lines(t,med,col="red",lwd=2) }
-   legend("topleft",legend=c(tr,"Median"),
-    lwd=2,col=c("yellow","red"))
-   }
-med<-fdata(med,t,rtt,names1)
-mtrim<-fdata(mtrim,t,rtt,names2)
-rownames(med$data)<-"RP.med"
-rownames(mtrim$data)<-tr
+   med<-fdata(med,t,rtt,names1)
+   mtrim<-fdata(mtrim,t,rtt,names2)
+   rownames(med$data)<-"RP.med"
+   rownames(mtrim$data)<-tr
+if (draw){
+   ans<-dep
+   ind1<-!is.na(ans)
+   cgray=1-(ans-min(ans,na.rm=TRUE))/(max(ans,na.rm=TRUE)-min(ans,na.rm=TRUE))
+   plot(fdataobj[ind1,],col=gray(cgray[ind1]),main="RP Depth")
+   lines(mtrim,lwd=2,col="yellow")
+   lines(med,col="red",lwd=2)
+   legend("topleft",legend=c(tr,"Median"),lwd=2,col=c("yellow","red"))
+ }
 return(invisible(list("median"=med,"lmed"=k,"mtrim"=mtrim,"ltrim"=lista,"dep"=dep,"proj"=z)))
 }
-
-
 
 
