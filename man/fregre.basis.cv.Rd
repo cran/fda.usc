@@ -59,7 +59,7 @@ Alternative method: \code{\link{fregre.pc.cv}} and   \code{\link{fregre.np.cv}}.
 
 data(tecator)
 x<-tecator$absorp.fdata
-y=tecator$y[,1]
+y=tecator$y$Fat
 tt=x[["argvals"]]
 a=seq(21,77,by=8)
 b=seq(5,17,by=4)

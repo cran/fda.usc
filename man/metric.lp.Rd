@@ -20,10 +20,10 @@ metric.lp(fdata1,fdata2=NULL,p=2,w=1,...)
 }
 \details{
 By default it uses the L2-norm with \code{p = 2} and weights \code{w} with length=\code{(m-1)}. 
-\deqn{Let \ \  f(x)= fdata1(x)-fdata2(x)\ \ and\ \ \Delta_i=\frac{b-a}{m-1}} {}
+\deqn{Let \ \  f(x)= fdata1(x)-fdata2(x)\ \ and\ \ \Delta_i=t_{i+1}-t_i} {}
 \deqn{\left\|f\right\|_p=\left (  \frac{1}{\int_{a}^{b}w(x)dx} \int_{a}^{b} \left|f(x)\right|^{p}w(x)dx \right)^{1/p}}{}
-\deqn{\approx \Bigg( \sum_{i=1}^{m-1}\frac{\Delta_i({f(x_i)^p+f(x_{i+1})^p})}{2(b-a)}{w(x_i)}\Bigg)^{1/p}}{}
-\deqn{=\Bigg(\sum_{i=1}^{m-1} {\frac{f(x_i)^p+f(x_{i+1})^p}{2(m-1)}{w(x_i)}}\Bigg)^{1/p}}{}
+\deqn{\approx \Bigg( \sum_{i=1}^{m-1}\frac{\Delta_i({f(x_i)^p+f(x_{i+1})^p})}{2}{w(x_i)}\Bigg)^{1/p}}{}
+\deqn{\approx \Bigg(\sum_{i=1}^{m-1} {\frac{f(x_i)^p+f(x_{i+1})^p}{2}{w(x_i)}}\Bigg)^{1/p}}{}
 
 The observed points on each curve are equally spaced (by default) or not. 
 }

@@ -1,13 +1,11 @@
 fdata.deriv<-function(fdataobj,nderiv=1,method="bspline",class.out='fdata'
 ,nbasis=NULL,...) {
-
  if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
   nas1<-apply(fdataobj$data,1,count.na)
  if (any(nas1))  stop("fdataobj contain ",sum(nas1)," curves with some NA value \n")
-
  DATA<-fdataobj[["data"]]
  tt=fdataobj[["argvals"]]
- labels=fdataobj[["labels"]]
+ labels=fdataobj[["names"]]
  ndist=ncol(DATA)
  if (method=="diff") {
   res=matrix(NA,nrow=nrow(DATA),ncol=ncol(DATA))
@@ -18,7 +16,7 @@ fdata.deriv<-function(fdataobj,nderiv=1,method="bspline",class.out='fdata'
    ab[2,1:(ndist-1)]=a
    res[i,]=apply(ab,2,mean,na.rm=TRUE)
   }
-  res<-fdata(res,tt)
+  res<-fdata(res,tt,names=labels)
  }
   else {
       if (any(method==c("fmm", "periodic", "natural", "monoH.FC"))) {
@@ -27,19 +25,21 @@ fdata.deriv<-function(fdataobj,nderiv=1,method="bspline",class.out='fdata'
          f1<-splinefun(x=tt,y=DATA[i,],method=method)
          res[i,]=f1(tt,deriv=nderiv)
         }
-         res<-fdata(res,tt)
+         res<-fdata(res,tt,names=labels)
        }
       else{
       if (any(method==c("bspline","exponential", "fourier",
       "monomial","polynomial"))) {
 #no run  "constant","polygonal","power"
-            res<-fdata(DATA,tt)
-      res=fdata2fd(fdataobj=res,type.basis=method,nbasis=nbasis,nderiv=nderiv,...)
-      if (class.out=='fdata') res=fdata(res,tt,names=labels)
+#            res<-fdata(DATA,tt)
+      res=fdata2fd(fdataobj=fdataobj,type.basis=method,nbasis=nbasis,nderiv=nderiv,...)
+      if (class.out=='fdata') {
+         ff<-eval.fd(tt,res)
+         res=fdata(t(ff),tt,names=labels)
+         }
       }
   }
 }
-
 res
 }
 

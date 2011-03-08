@@ -60,7 +60,7 @@ data(tecator)
 absorp=tecator$absorp.fdata
 ind=1:129
 x=absorp[ind,]
-y=tecator$y[ind,2]
+y=tecator$y$Fat[ind]
 Ker=AKer.tri
 res.np=fregre.np.cv(x,y,Ker=Ker)
 summary.fregre.fd(res.np)

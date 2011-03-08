@@ -1,4 +1,4 @@
-fregre.lm=function(formula,data,basis.x=NULL,basis.b=NULL,...){
+fregre.glm=function(formula,data,family = gaussian,basis.x=NULL,basis.b=NULL,...){
  tf <- terms.formula(formula)
  terms <- attr(tf, "term.labels")
  nt <- length(terms)
@@ -16,17 +16,15 @@ fregre.lm=function(formula,data,basis.x=NULL,basis.b=NULL,...){
  off<-attr(tf,"offset")
 name.coef=nam=par.fregre=beta.l=list()
  kterms=1
-if (length(vnf)>0) {
+ if (length(vnf)>0) {
  XX=data[[1]][,c(response,vnf2)] #data.frame el 1er elemento de la lista
  for ( i in 1:length(vnf)){
      print(paste("Non functional covariate:",vnf[i]))
      if (kterms > 1)   pf <- paste(pf, "+", vnf[i], sep = "")
-#     else pf <- paste(pf, terms[i], sep = "")
      else pf <- paste(pf, vnf[i], sep = "")
      kterms <- kterms + 1
      }
 if   (attr(tf,"intercept")==0) {
-#     print("No intecept")
      pf<- paste(pf,-1,sep="")
      }
 }
@@ -58,8 +56,6 @@ if (length(vfunc)>0) {
               basis.x[[vfunc[i]]]$dropind<-NULL
               basis.x[[vfunc[i]]]$names<-basis.x[[vfunc[i]]]$names[int]
               }
-#          else int<-1:basis.x[[vfunc[i]]]$nbasis
-#                  nam[[vfunc[i]]]<-  basis.x[[vfunc[i]]]$names
           if (!is.null( basis.b[[vfunc[i]]]$dropind)) {
               int<-setdiff(1:basis.b[[vfunc[i]]]$nbasis,basis.b[[vfunc[i]]]$dropind)
               basis.b[[vfunc[i]]]$nbasis<-length(int)
@@ -68,9 +64,6 @@ if (length(vfunc)>0) {
               }
     	    x.fd = Data2fd(argvals = tt, y = t(xcc[[1]]$data),basisobj = basis.x[[vfunc[i]]],fdnames=fdnames)
           r=x.fd[[2]][[3]]
-#          Theta = getbasismatrix(tt,basis.b[[vfunc[i]]])
-#          Psi = getbasismatrix(tt,basis.x[[vfunc[i]]])
-#          J = t(Psi) %*% Theta
           J=inprod(basis.x[[vfunc[i]]],basis.b[[vfunc[i]]])
           Z =t(x.fd$coefs) %*% J
           colnames(J)=colnames(Z) = name.coef[[vfunc[i]]]=paste(vfunc[i],".",basis.b[[vfunc[i]]]$names,sep="")
@@ -96,8 +89,7 @@ if (length(vfunc)>0) {
            else pf <- paste(pf, name.coef[[vfunc[i]]][j], sep = "")
            kterms <- kterms + 1
            }
-        #   pf=paste(pf,"-1")
-      }
+          }
     }
  	else {
  		if(class(data[[vfunc[i]]])[1]=="fd"){
@@ -111,7 +103,6 @@ if (length(vfunc)>0) {
       else           if (class(basis.x[[vfunc[i]]])=="pca.fd") bsp2=FALSE
       if (bsp1 & bsp2) {
           r=fdat[[2]][[3]]
-#          tt = seq(r[1], r[2], len = length(fdat[[3]]$time))
           if (!is.null( basis.x[[vfunc[i]]]$dropind)) {
               int<-setdiff(1:basis.x[[vfunc[i]]]$nbasis,basis.x[[vfunc[i]]]$dropind)
               basis.x[[vfunc[i]]]$nbasis<-length(int)
@@ -130,6 +121,7 @@ if (length(vfunc)>0) {
           Z =t(x.fd$coefs) %*% J
           colnames(J)=colnames(Z) = name.coef[[vfunc[i]]]=paste(vfunc[i],".",basis.b[[vfunc[i]]]$names,sep="")
           XX = cbind(XX,Z)
+
           for ( j in 1:length(colnames(Z))){
            if (kterms >= 1)  pf <- paste(pf, "+", colnames(Z)[j], sep = "")
            else pf <- paste(pf, colnames(Z)[j], sep = "")
@@ -159,8 +151,8 @@ if (length(vfunc)>0) {
  if (!is.data.frame(XX)) XX=data.frame(XX)
     par.fregre$formula=pf
     par.fregre$data=XX
-    z=lm(formula=pf,data=XX,x=TRUE,y=TRUE,...)
-#    z$call<-z$call[1:2]
+    z=glm(formula=pf,data=XX,family=family,x=TRUE,y=TRUE,...)
+    z$call<-z$call[1:2]
 for (i in 1:length(vfunc)) {
  if (bsp1) beta.l[[vfunc[i]]]=fd(z[[1]][name.coef[[vfunc[i]]]],basis.b[[vfunc[i]]])
  else{
@@ -178,7 +170,6 @@ for (i in 1:length(vfunc)) {
       }
 }
 }
-
  z$beta.l=beta.l
  z$formula=pf
  z$mean=mean.list
@@ -188,8 +179,7 @@ for (i in 1:length(vfunc)) {
  z$JJ<-JJ
  z$data=z$data
  z$XX=XX
- z$vs.list=vs.list   ##### transformarlo en Data2fd(tt,vs.list,basisobj=basisobj)
+ z$vs.list=vs.list
  z
 }
-
 

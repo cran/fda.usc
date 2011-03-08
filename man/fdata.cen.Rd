@@ -7,16 +7,17 @@
  The function fdata.cen centres the curves by subtracting the functional mean.
 }
 \usage{
-fdata.cen(fdataobj)
+fdata.cen(fdataobj,meanX=func.mean(fdataobj))
 }
 
 \arguments{
 \item{fdataobj}{ \code{\link{fdata}} class object.}       
+\item{meanX}{ The functional mean subtracted in the \code{fdatobj}.}       
  }
 \value{
 Return:\cr  two \code{fdata} class objects with:
 \item{Xcen}{ The centered fdata.}
-\item{meanX}{ Functional mean.}
+\item{meanX}{ Functional mean substracted.}
 }
 \author{
 Febrero-Bande, M. and Oviedo de la Fuente, M.

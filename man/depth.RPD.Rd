@@ -7,7 +7,7 @@ The depth.RPD function implements a depth measure based on random projections an
 }
 \usage{
 depth.RPD(fdataobj,nproj=50,deriv=c(0,1),trim=0.25,
-dfunc2=depth.mode,method="bspline",draw=FALSE,...)
+dfunc2=depth.mode,method="fmm",draw=FALSE,...)
 }
 
 \arguments{
@@ -53,9 +53,9 @@ t=1:365
 out.RPD=depth.RPD(fdataobj,deriv=c(0,1),dfunc2=depth.RP,draw=TRUE)
 out.RPD2=depth.RPD(fdataobj,deriv=c(0,1),dfunc2=depth.RP,trim=0.1)
 out.RPD3=depth.RPD(fdataobj,deriv=c(0,1),dfunc2=depth.mode,draw=TRUE,
-method="fourier")
+method="fmm")
 out.RPD4=depth.RPD(fdataobj,deriv=c(0,1),dfunc2=depth.FM,draw=TRUE,
-method="fourier")
+method="fmm")
 
 plot(out.RPD$mtrim,type="l",lwd=2)
 lines(out.RPD2$mtrim,col=2,lwd=2,lty=2)

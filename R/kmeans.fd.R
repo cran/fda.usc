@@ -5,7 +5,6 @@ kmeans.fd=function(fdataobj,ncl=2,metric=metric.lp,dfunc=func.trim.mode,max.iter
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
  nas1<-apply(fdataobj$data,1,count.na)
  if (any(nas1))  stop("fdataobj contain ",sum(nas1)," curves with some NA value \n")
- 
 z<-fdataobj[["data"]]
 tt<-fdataobj[["argvals"]]
 rtt<-fdataobj[["rangeval"]]
@@ -64,10 +63,9 @@ while ((i<max.iter) && (!same_centers)) {
   same_centers=out2$centers==out3$centers
   out1$centers=out2$centers
   i=i+1
-}
-cat("iterations: ",i)
+     }
+#cat("iterations: ",i)
 out<-list("cluster"=out2$cluster,"centers"=out2$centers)
 return(out)
 }
-
 

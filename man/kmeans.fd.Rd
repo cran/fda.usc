@@ -57,8 +57,8 @@ data(phoneme)
 mlearn<-phoneme$learn[c(1:50,101:150,201:250),]
 
 #Unsupervised classification
-# Exemple
 out.fd1=kmeans.fd(mlearn,ncl=3,draw=TRUE)
+# NO RUN
 #out.fd2=kmeans.fd(mlearn,ncl=3,draw=TRUE,par.ini=list(method="exact"))
 # Different Depth function
 #ind=c(17,77,126)

@@ -38,18 +38,19 @@ See Also as:  \code{\link{fregre.pc}}, \code{\link{fregre.basis}},  \code{\link{
 \examples{
 
 data(tecator)
-x=tecator$absorp.fdata[1:50,]
-y=tecator$y[1:50,1]
-res1=fregre.pc(x,y,1:3)  
-res.infl1=influence.fdata(res1)  
+x=tecator$absorp.fdata
+y=tecator$y$Fat
+#NO RUN
+#res1=fregre.pc(x,y,1:3)  
+#res.infl1=influence.fdata(res1)  
 #res2=fregre.basis(x,y)  
 #res.infl2=influence.fdata(res2)  
 
-res<-res1
-res.infl<-res.infl1
-mat=cbind(y,res$fitted.values,res.infl$DCP,res.infl$DCE,res.infl$DP)
-colnames(mat)=c("Resp.","Pred.","DCP","DCE","DP")
-pairs(mat)
+#res<-res1
+#res.infl<-res.infl1
+#mat=cbind(y,res$fitted.values,res.infl$DCP,res.infl$DCE,res.infl$DP)
+#colnames(mat)=c("Resp.","Pred.","DCP","DCE","DP")
+#pairs(mat)
 
 
 }

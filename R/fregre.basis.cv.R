@@ -2,7 +2,6 @@ fregre.basis.cv=function(fdataobj,y,basis.x=NULL,basis.b=NULL,type.basis=NULL,la
 Lfdobj=vec2Lfd(c(0,0),rtt),type.CV=GCV.S,par.CV=list(trim=0),...){
 call<-match.call()
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
-
 nas<-apply(fdataobj$data,1,count.na)
 nas.g<-is.na(y)
 if (is.null(names(y))) names(y)<-1:length(y)
@@ -107,19 +106,16 @@ else {
  lenbasis.y=1
  basis.b=list(basis.b)
 }
-xmean=apply(x,2,mean)
-xcen=sweep(x,2,xmean,FUN="-")
-ymean=mean(y)
-ycen=y-ymean
 gcv=array(Inf,dim=c(lenbasis.x,lenbasis.y,lenlambda))
 pr=Inf
 i.lambda.opt=1;i.nb.y.opt=1;i.nb.x.opt=1
-	xmean=apply(x,2,mean)
-  xcen=sweep(x,2,xmean,FUN="-")
-	ymean=mean(y)
+ xx<-fdata.cen(fdataobj)
+	xmean=xx[[2]]
+  xcen=xx[[1]]
+    ymean=mean(y)
   ycen=y-ymean
 for (nb.x in 1:lenbasis.x) {
-	x.fd=Data2fd(argvals=tt,y=t(xcen),basisobj=basis.x[[nb.x]])
+	x.fd=Data2fd(argvals=tt,y=t(xcen$data),basisobj=basis.x[[nb.x]])
   C=t(x.fd$coefs)
   Cm=t(mean.fd(x.fd)$coefs)
   for (nb.y in 1:lenbasis.y) {
@@ -175,9 +171,9 @@ for (nb.x in 1:lenbasis.x) {
     object.lm$y<-y
     object.lm$rank<-df
     object.lm$df.residual<-n-df
-    vfunc="x."
+    vfunc=call[[2]]
     colnames(Z.opt)<-1:ncol(Z.opt)
-    colnames(Z.opt)[2:ncol(Z.opt)]= paste(vfunc,substr(basis.b.opt$type, 1,3), 1:basis.b.opt$nbasis, sep = "")
+    colnames(Z.opt)[2:ncol(Z.opt)]= paste(vfunc,".",basis.b.opt$names, sep = "")
     colnames(Z.opt)[1]="(Intercept)"
     vcov2=sr2*Cinv.opt
     std.error=sqrt(diag(vcov2))
@@ -211,7 +207,7 @@ out<-list("call"=call,"b.est"=b.est,"a.est"=a.est,"fitted.values"=yp,"H"=S,
 "residuals"=e,"df"=df,"r2"=r2,"sr2"=sr2,"y"=y,"fdataobj"=fdataobj,"gcv"=gcv,
 "lambda.opt"=lambda.opt,"gcv.opt"=gcv.opt,"coefficients"=coefficients,
 "basis.x.opt"=basis.x.opt,"basis.b.opt"=basis.b.opt,"J"=J.opt,"beta.est"=beta.est,
-"lm"=object.lm)
+"lm"=object.lm,"mean"=xmean)
 class(out)="fregre.fd"
 return(out)
 }

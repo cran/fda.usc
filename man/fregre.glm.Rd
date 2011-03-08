@@ -1,30 +1,33 @@
-\name{fregre.lm}
+\name{fregre.glm}
 \Rdversion{1.1}
-\alias{fregre.lm}
-\title{ Fitting Functional Linear Models}
+\alias{fregre.glm}
+\title{ Fitting Functional Generalized Linear Models}
 \description{
 	Computes functional regression between functional (and non functional) explanatory variables and scalar response using basis representation.
 }
 \usage{
-fregre.lm(formula,data,basis.x=NULL,basis.b=NULL,...)
+fregre.glm(formula,data,family = gaussian,basis.x=NULL,basis.b=NULL,...)
 }
 \arguments{
  \item{formula}{ an object of class \code{formula} (or one that can be coerced to that class): a symbolic description of the model to be fitted. The details of model specification are given under \code{Details}.}
   \item{data}{ List that containing the variables in the model. }
+ \item{family}{ a description of the error distribution and link function to be used in the model. This can be a character string naming a family function, a family function or the result of a call to a family function. (See \code{\link{family}} for details of family functions.) }
 	\item{basis.x}{ List of basis for functional explanatory data estimation.}
 	\item{basis.b}{ List of basis for functional beta parameter estimation.}
 
   \item{\dots}{ Further arguments passed to or from other methods.}
 }
 \details{ 
-The first item in the \code{data} list  is called \emph{"df"} and  is a data frame  with the response and non functional explanatory variables, as \code{\link{lm}}.\cr
+The first item in the \code{data} list  is called \emph{"df"} and  is a data frame  with the response and non functional explanatory variables, as \code{\link{glm}}.\cr
 
 Functional covariates of class  \code{fdata} or \code{fd} are introduced in the following items in the \code{data} list.\cr
-\code{basis.x} is a list of basis  for represent each functional covariate. The basis object can be created by the function: \code{\link{create.pc.basis}}, \code{\link{pca.fd}} \code{\link{create.pc.basis}}, \code{\link{create.fdata.basis}} o  \code{\link{create.basis}}\cr
-\code{basis.b} is a list of basis  for represent each functional beta parameter. If \code{basis.x} is a list of functional principal components basis (see \code{\link{create.pc.basis}} or \code{\link{pca.fd}}) the argument \code{basis.b} \emph{(is unnecessary and)} is ignored. 
+\code{basis.x} is a list of basis  for represent each functional covariate. The basis object can be created by the function: \code{\link{create.pc.basis}}, \code{\link{pca.fd}} \code{\link{create.pc.basis}}, \code{\link{create.fdata.basis}} o  \code{\link{create.basis}}.\cr
+\code{basis.b} is a list of basis  for represent each functional beta parameter. If \code{basis.x} is a list of functional principal components basis (see \code{\link{create.pc.basis}} or \code{\link{pca.fd}}) the argument \code{basis.b} is ignored. 
+
+%When using functional data derived recommend using a number of basis to represent beta lower than the number of basis used to represent the functional data. 
 }
 \value{
-Return \code{lm} object plus:\cr
+Return \code{glm} object plus:\cr
 \item{basis.x}{ Basis used for \code{fdata} or \code{fd} covariates.}
 \item{basis.b}{ Basis used for beta parameter estimation.}
 \item{beta.l}{ List of estimated beta parameter of functional covariates.}
@@ -38,8 +41,8 @@ Ramsay, James O., and Silverman, Bernard W. (2006), \emph{ Functional Data Analy
 Febrero-Bande, M. and Oviedo de la Fuente, M.
 }
 \seealso{
-See Also as:  \code{\link{predict.fregre.lm}} and \code{\link{summary.lm}}.\cr
-Alternative method: \code{\link{fregre.glm}}.
+See Also as:  \code{\link{predict.fregre.glm}} and \code{\link{summary.glm}}.\cr
+Alternative method if \code{family}=\emph{gaussian}: \code{\link{fregre.lm}}.
 }
 \examples{
 
@@ -58,20 +61,7 @@ f=Fat~Protein+x
 basis.x=list("x"=basis1)
 basis.b=list("x"=basis2)
 ldata=list("df"=dataf,"x"=x)
-res=fregre.lm(f,ldata,basis.x=basis.x,basis.b=basis.b)
+res=fregre.glm(f,ldata,family=gaussian(),basis.x=basis.x,basis.b=basis.b)
 summary(res)
-
-f2=Fat~Protein+xd
-xd=fdata.deriv(x,nderiv=2,class.out='fdata',nbasis=nbasis.x)
-ldata2=list("df"=dataf,"xd"=xd)
-basis.x2=list("xd"=basis1)
-basis.b2=list("xd"=basis2)
-res2=fregre.lm(f2,ldata2,basis.x=basis.x2,basis.b=basis.b2)
-summary(res2)
-
-par(mfrow=c(2,1))
-plot(res$beta.l$x,main="functional beta estimation")
-plot(res2$beta.l$xd,col=2)
-
 }
 \keyword{regression}

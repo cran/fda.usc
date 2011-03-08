@@ -67,7 +67,7 @@ data(tecator)
 absorp=tecator$absorp.fdata
 ind=1:129
 x=absorp[ind,]
-y=tecator$y[ind,2]
+y=tecator$y$Fat[ind]
 
 res=fregre.pc(x,y)
 summary(res)

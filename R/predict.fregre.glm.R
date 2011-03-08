@@ -1,7 +1,7 @@
-predict.fregre.lm<-function(object,newx=NULL,type="response",...){
+predict.fregre.glm<-function(object,newx=NULL,type="response",...){
  if (is.null(object)) stop("No fregre.glm object entered")
  if (is.null(newx)) {
-    yp=predict.lm(object,...)
+    yp=predict.glm(object,...)
     print("No newx entered")
     return(yp)
     }
@@ -103,7 +103,7 @@ if (length(vfunc)>0)  {
         
         }
 if (!is.data.frame(XX)) XX=data.frame(XX)
- yp=predict.lm(object=object,newdata=XX,type=type,x=TRUE,y=TRUE,...)
+ yp=predict.glm(object=object,newdata=XX,type=type,x=TRUE,y=TRUE,...)
 return(yp)
 }
 }

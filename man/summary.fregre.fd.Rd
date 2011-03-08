@@ -32,7 +32,7 @@ Shows:\cr
 
 If the \code{fregre.fd} object comes from the \code{\link{fregre.pc}} then shows:
 \tabular{ll}{
-\tab -Variability of explicative variables  explaines by Principal Components.\cr
+\tab -Variability of explicative variables  explained by Principal Components.\cr
 \tab -Variability for each  principal components -PC-.\cr
 }
      

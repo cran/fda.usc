@@ -1,7 +1,6 @@
-fdata.cen=function(fdataobj){
+fdata.cen=function(fdataobj,meanX=func.mean(fdataobj)){
 if (!is.fdata(fdataobj))  fdataobj=fdata(fdataobj)
 data<-fdataobj[["data"]]
- meanX <-func.mean(fdataobj)
  Xcen <- sweep(data,2,meanX[["data"]],FUN="-")
  Xcen<-fdata(Xcen,fdataobj[["argvals"]])
  return(list("Xcen"=Xcen,"meanX"=meanX))

@@ -6,12 +6,13 @@
  	 Computes predictions for regression between functional (and no functional) explanatory variables and scalar response using: basis representation.
 }
 \usage{
-predict.fregre.lm(object,newx=NULL,...)
+predict.fregre.lm(object,newx=NULL,type="response",...)
 %\method{predict}{fregre.lm}(object,newx=NULL,\dots)
 }
 \arguments{
    \item{object}{ \code{fregre.lm} object.}
   \item{newx}{ An optional data list in which to look for variables with which to predict. If omitted, the fitted values are used. List of new explanatory data.}
+  \item{type}{ Type of prediction (response or model term).}
   \item{\dots}{ Further arguments passed to or from other methods.}
 }
 \details{ 
@@ -46,8 +47,8 @@ dataf=as.data.frame(tecator$y)
 x=tecator$absorp.fdata
 
 ind=1:165
-y=tecator$y[ind,1]
-newy=tecator$y[-ind,1]
+y=tecator$y$Fat[ind]
+newy=tecator$y$Fat[-ind]
 dataf=as.data.frame(tecator$y[ind,])
 newdataf=as.data.frame(tecator$y[-ind,])
 

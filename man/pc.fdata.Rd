@@ -23,7 +23,9 @@ pc.fdata(out,l=NULL,loadings=FALSE,draw=TRUE,...)
 \value{
     \item{lambda}{ Eigenvalues of the principal components.} 
     \item{rotation}{ \code{\link{fdata}} class object.} 
-    \item{x}{ Is true the value of the rotated data (the centred data multiplied by the rotation matrix) is returned}      \item{fdataobj.cen}{ The centered \code{fdataobj} object.}  
+    \item{x}{ Is true the value of the rotated data (the centred data multiplied by the rotation matrix) is returned}      
+    \item{fdataobj.cen}{ The centered \code{fdataobj} object.}  
+    \item{mean}{ The functional mean of \code{fdataobj} object.}      
 }
 \references{
 Venables, W. N. and B. D. Ripley (2002). \emph{Modern Applied Statistics with S}. Springer-Verlag. 

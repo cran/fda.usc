@@ -55,7 +55,7 @@ names(tecator)
 absorp=tecator$absorp.fdata
 ind=1:129
 x=absorp[ind,]
-y=tecator$y[ind,1]
+y=tecator$y$Fat[ind]
 tt=absorp[["argvals"]]
 
 
@@ -66,7 +66,6 @@ basis2=create.bspline.basis(rangeval=range(tt),nbasis=9)
 res5=fregre.basis(x,y,basis1,basis2)
 summary(res5)
 x.d2=fdata.deriv(x,nbasis=19,nderiv=1,method="bspline",class.out="fdata")
-#error: no tiene argvals!
 res7=fregre.basis(x.d2,y,basis1,basis2)
 summary(res7)
 }

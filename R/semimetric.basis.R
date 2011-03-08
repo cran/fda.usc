@@ -1,6 +1,5 @@
 semimetric.basis=function(fdata1, fdata2 = fdata1,nderiv=0,type.basis1=NULL,
 nbasis1=NULL,type.basis2=NULL,nbasis2=NULL,...) {
-
  if (any(class(fdata1)=="fd")) {
    print("fd class")
    r=fdata1$basis[[3]]

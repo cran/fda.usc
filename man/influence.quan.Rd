@@ -45,14 +45,15 @@ See Also as:  \code{\link{influence.fdata}}, \code{\link{fregre.basis}}, \code{\
 
 
 data(tecator)
-x=tecator$absorp.fdata[1:30,]
-y=tecator$y[1:30,1]
+x=tecator$absorp.fdata
+y=tecator$y$Fat
 res=fregre.pc(x,y,1:6)
-res.infl=influence.fdata(res)
-resquan=influence.quan(res,res.infl,4,0.01,0.05,0.95)
-plot(res.infl$betas,type="l",col=2)
-lines(res$beta.est,type="l",col=3)
-lines(resquan$betas.boot,type="l",col="gray")
+#NO RUN
+#res.infl=influence.fdata(res)
+#resquan=influence.quan(res,res.infl,4,0.01,0.05,0.95)
+#plot(res.infl$betas,type="l",col=2)
+#lines(res$beta.est,type="l",col=3)
+#lines(resquan$betas.boot,type="l",col="gray")
 
 #res=fregre.basis(x,y)
 #res.infl=influence.fdata(res)

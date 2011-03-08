@@ -46,7 +46,7 @@ tecator.fdata3=fdata(tecator.fd3)
 tecator.fdata4=fdata.deriv(absorp,nderiv=1,method="bspline",
 class.out='fdata',nbasis=9)
 tecator.fd4=fdata.deriv(tecator.fd3,nderiv=0,class.out='fd',nbasis=9)
-plot(tecator.fdata4)
+#plot(tecator.fdata4)
 
 
 basi=c("bspline", "exponential", "fourier","monomial","polynomial")

@@ -45,10 +45,10 @@ See Also as \code{\link{Descriptive}}
 
 data(tecator)
 absorp<-tecator$absorp.fdata
-#Bootstrap for Trimmed Mean with depth mode
-out.boot=fdata.bootstrap(absorp,statistic=func.trim.FM,nb=20,draw=TRUE)
-names(out.boot)
 #No run
+#Bootstrap for Trimmed Mean with depth mode
+#out.boot=fdata.bootstrap(absorp,statistic=func.trim.FM,nb=200,draw=TRUE)
+#names(out.boot)
 #Bootstrap for Median with with depth mode
 #control=list("col"=c("grey","blue","cyan"),"lty"=c(2,1,1),"lwd"=c(1,3,1))
 #out.boot=fdata.bootstrap(absorp,statistic=func.med.mode,

@@ -71,9 +71,10 @@ See Also: \code{\link{fdata.bootstrap}}, \code{\link{Depth}}.
 
 \examples{
 data(aemet)
-nb<-4 #nb=200
-out.trim<-outliers.depth.trim(aemet$temp,dfunc=depth.FM,nb=nb)
-plot(aemet$temp,col=1,lty=1)
-lines(aemet$temp[out.trim[[1]]],col=2)
+nb=200
+# NOT RUN
+#out.trim<-outliers.depth.trim(aemet$temp,dfunc=depth.FM,nb=nb)
+#plot(aemet$temp,col=1,lty=1)
+#lines(aemet$temp[out.trim[[1]]],col=2)
 }
 \keyword{ outliers }

@@ -1,5 +1,4 @@
-fregre.pc.cv=function (fdataobj, y, kmax=8, criteria = "SIC",...)
-{
+fregre.pc.cv=function (fdataobj, y, kmax=8, criteria = "SIC",...) {
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
 nas<-apply(fdataobj$data,1,count.na)
 nas.g<-is.na(y)
@@ -25,7 +24,6 @@ if (any(nas) & any(nas.g))  {
    y<-y[bb]
    }
 }}
-
 x<-fdataobj[["data"]]
 tt<-fdataobj[["argvals"]]
 rtt<-fdataobj[["rangeval"]]
@@ -80,12 +78,15 @@ rtt<-fdataobj[["rangeval"]]
       setTxtProgressBar(pb,k-0.5)
       cv.AIC <- rep(NA, max.c)
       for (j in 1:max.c) {
-       residuals <- rep(NA, n)
+       residuals =residuals2<- rep(NA, n)
         for (i in 1:n){
-            print("no llega")
-           out = fregre.pc(fdataobj[-i,], y[-i], l = c[, j])
-           y.est=out$a.est*rep(1,n)+x%*%out$beta.est[["data"]][1,]/(nc-1)      ####
-           residuals[i] <- y[i] - y.est[i]
+            out = fregre.pc(fdataobj[-i,], y[-i], l = c[, j])
+#           y.est=out$coefficientes[1]*rep(1,n)+x%*%t(out$beta.est[["data"]])/(nc-1)      ####
+#            y.est=out$coefficients[1]*rep(1,n)+drop(x%*%out$beta.est[["data"]][1,]/(nc-1))      ####
+#           y.est=out$a.est*rep(1,n)+x%*%out$beta.est[["data"]][1,]/(nc-1)      ####
+#           residuals[i] <- y[i] - y.est[i]
+           y.est=predict(out,fdataobj[i,])
+           residuals[i] <- y[i] - y.est
           }
          cv.AIC[j] <- sum(residuals^2)/(n-ck)
         }
@@ -111,3 +112,4 @@ rtt<-fdataobj[["rangeval"]]
     return(list("fregre.pc"=fregre,pc.opt = pc.opt, MSC.min = l2[[mn]], pc.order =
 t(l[1:kmax]),MSC = MSC))
 }
+

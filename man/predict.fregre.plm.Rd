@@ -40,8 +40,8 @@ data(tecator)
 ind=1:129
 x=tecator$absorp.fdata[ind,]
 newx=tecator$absorp.fdata[-ind,]
-y=tecator$y[ind,1]
-newy=tecator$y[-ind,1]
+y=tecator$y$Fat[ind]
+newy=tecator$y$Fat[-ind]
 dataf=as.data.frame(tecator$y[ind,])
 
 f=Fat~Water+x

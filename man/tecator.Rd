@@ -6,7 +6,7 @@
 tecator data
 }
 \description{
-Fat, Water and Protein Content of Maat Samples
+Water, Fat and Protein content of meat samples
 }
 \usage{data(tecator)}
 \format{
@@ -17,15 +17,14 @@ Fat, Water and Protein Content of Maat Samples
  iii.- \code{"rangeval"}=(850,1050): range(\code{"argvals"})
  iv.- \code{"names"} list with:  \code{main} an overall title "Tecator data set",	\code{xlab} title for \code{x} axis "Wavelength (mm)" and \code{ylab} title for \code{y} axis  "Absorbances".\cr
  \cr
-  \code{..$y}:learning class numbers (as factor). Factor levels: "sh" 1, "iy" 2, "dcl" 3, "aa" 4 and "ao" 5.\cr 
+  \code{..$y}: the percentages of Fat, Water and Protein.  The three contents are determined by analytic chemistry.\cr 
 
 
 }
 \details{
 \code{absorp.fdata} absorbance data for 215 samples. The first 129 were originally used as a training set 
-endpoints the percentages of water, fat and protein.\cr 
-for more details see tecator package
-}
+endpoints the percentages of Fat, Water and Protein.\cr 
+for more details see tecator package}
 \source{
 \url{http://lib.stat.cmu.edu/datasets/tecator}
 }

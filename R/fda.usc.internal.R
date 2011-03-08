@@ -11,7 +11,7 @@ fdataobj
 fdataequal<-TRUE
  if (!(all(fdata1[["data"]] == fdata2[["data"]]))) {
         fdataequal <- FALSE
-        print("No equal data matrix")
+#        print("No equal data matrix")
     }
  if (!(all(fdata1[["argvals"]] == fdata2[["argvals"]]))) {
         fdataequal <- FALSE

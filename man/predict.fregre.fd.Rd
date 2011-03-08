@@ -50,10 +50,10 @@ data(tecator)
 absorp=tecator$absorp.fdata
 ind=1:129
 x=absorp[ind,]
-y=tecator$y[ind,2]
+y=tecator$y$Fat[ind]
 
 newx=absorp[-ind,]
-newy=matrix(tecator$y[-ind,2],ncol=1)
+newy=matrix(tecator$y$Fat[-ind],ncol=1)
 
 # Functional PC regression
 res.pc=fregre.pc(x,y,1:6)
@@ -61,33 +61,30 @@ summary(res.pc)
 pred.pc=predict.fregre.fd(res.pc,newx)
 
 # Functional nonparametric regression
-res.np=fregre.np.cv(x,y,Ker=AKer.tri)
+# Functional nonparametric regression with other semimetric.
+res.np=fregre.np(x,y,Ker=AKer.tri,metric=semimetric.deriv)
 summary(res.np)
 pred.np=predict.fregre.fd(res.np,newx)
-# Functional nonparametric regression with other semimetric.
-res.pca=fregre.np(x,y,Ker=AKer.tri,metric=semimetric.deriv)
-summary(res.pca)
-pred.pca=predict.fregre.fd(res.pca,newx)
 
 
 # Functional regression with basis representation
+
 res.basis=fregre.basis.cv(x,y)
 summary(res.basis)
 pred.basis=predict.fregre.fd(res.basis,newx)
-x.d=fdata.deriv(x,nbasis=19,nderiv=1)
-res.basis2=fregre.basis.cv(x.d,y)
-summary(res.basis2)
-newx.d=fdata.deriv(newx,nbasis=19,nderiv=1)
-pred.basis2=predict.fregre.fd(res.basis2,newx.d)
+
+#x.d=fdata.deriv(x,nbasis=19,nderiv=1)
+#res.basis2=fregre.basis.cv(x.d,y)
+#summary(res.basis2)
+#newx.d=fdata.deriv(newx,nbasis=19,nderiv=1)
+#pred.basis2=predict.fregre.fd(res.basis2,newx.d)
 
 dev.new()
 plot(pred.pc-newy)
 points(pred.np-newy,col=2,pch=2)
-points(pred.pca-newy,col=3,pch=3)
 points(pred.basis-newy,col=4,pch=4)
 sum((pred.pc-newy)^2,na.rm=TRUE)/sum((newy-mean(newy))^2,na.rm=TRUE)
 sum((pred.np-newy)^2,na.rm=TRUE)/sum((newy-mean(newy))^2,na.rm=TRUE)
-sum((pred.pca-newy)^2,na.rm=TRUE)/sum((newy-mean(newy))^2,na.rm=TRUE)
 sum((pred.basis-newy)^2,na.rm=TRUE)/sum((newy-mean(newy))^2,na.rm=TRUE)
 }
 \keyword{regression}

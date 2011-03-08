@@ -1,9 +1,9 @@
 \name{fda.usc-package}
-\Rdversion{0.9}
+\Rdversion{0.9.4}
 \alias{fda.usc-package}
 \alias{fda.usc}
 \docType{package}
-\title{Functional Data Analisis and Utilities for Statistical Computing (fda.usc)}
+\title{Functional Data Analysis and Utilities for Statistical Computing (fda.usc)}
 \description{
  %\emph{texto en cursiva}. ...
 This package carries out exploratory and descriptive analysis of functional data exploring its most important features: such as depth measurements or functional outliers detection, among others. \cr
@@ -79,12 +79,14 @@ The functions included in this section allow the estimation of different functio
   C.2. Functional  and non functional explanatory covariates.\cr
 The functions in this section extends those regression models in previous section in several ways.  \cr
 Semifunctional partial linear regression \code{\link{fregre.plm}}  is an extension of functional nonparameric regression  \code{\link{fregre.np}}  allowing  include non-functional variables.\cr
-Functional  linear regression \code{\link{fregre.lm}} is an extension of  \code{\link{fregre.basis}} allowing  include  more than one functional variable and other non-functional variables, as \code{\link{lm}} function.\cr
+Functional  linear regression \code{\link{fregre.lm}} and functional generalized linear regression \code{\link{fregre.glm}} are an extensions of  \code{\link{fregre.basis}} and \code{\link{fregre.pc}} allowing  include  more than one functional variable and other non-functional variables, as \code{\link{lm}} or \code{\link{glm}} functions.\cr
 
 \tabular{ll}{
 \tab \code{\link{fregre.lm}}  \cr
+\tab \code{\link{fregre.glm}}  \cr
 \tab \code{\link{fregre.plm}}  \cr
 \tab \code{\link{predict.fregre.fd}} \cr
+\tab \code{\link{predict.fregre.glm}} \cr
 \tab \code{\link{predict.fregre.plm}} \cr
 }
 
@@ -139,8 +141,8 @@ This section allows the estimation of the groups in a  functional data set \code
 \tabular{ll}{
 Package: \tab fda.usc\cr
 Type: \tab Package\cr
-Version: \tab 0.9\cr
-Date: \tab 2011-01-25\cr
+Version: \tab 0.9.4\cr
+Date: \tab 2011-03-08\cr
 License: \tab GPL-2 \cr
 LazyLoad: \tab yes\cr
 }

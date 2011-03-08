@@ -13,12 +13,12 @@
 }
 \usage{
 Kernel.integrate(u,Ker=Ker.norm,a=-1)
-IKer.norm=(u)
-IKer.cos=(u)
-IKer.epa=(u)
-IKer.tri=(u)
-IKer.quar=(u)
-IKer.unif=(u)
+IKer.norm(u)
+IKer.cos(u)
+IKer.epa(u)
+IKer.tri(u)
+IKer.quar(u)
+IKer.unif(u)
 }
 
 \arguments{

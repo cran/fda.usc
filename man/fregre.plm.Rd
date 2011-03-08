@@ -64,7 +64,7 @@ Alternative methods: \code{\link{fregre.lm}}, \code{\link{fregre.np}} and   \cod
 data(tecator)
 x=tecator$absorp.fdata
 newx=tecator$absorp.fdata
-y=tecator$y[,1]
+y=tecator$y$Fat
 dataf=as.data.frame(tecator$y)
 
 f=Fat~Water+x
@@ -92,7 +92,7 @@ res.np2=fregre.np.cv(x,y)
 res.np
 res.np2
 # fregre.plm as lm
-f=Fat~Water
+f=Fat~+Water
 res.lm=fregre.plm(f,ldata)
 res.lm2=lm(f,dataf)
 res.lm

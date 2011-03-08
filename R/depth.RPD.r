@@ -1,5 +1,5 @@
 depth.RPD=function(fdataobj,nproj=50,deriv=c(0,1),trim=0.25,dfunc2=depth.mode,
-method="bspline",draw=FALSE,...){
+method="fmm",draw=FALSE,...){
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
 nas<-apply(fdataobj$data,1,count.na)
 if (any(nas))  {
@@ -68,5 +68,5 @@ if (draw){
  }
 return(invisible(list(median = med, lmed = k, mtrim = mtrim,
                       ltrim = lista, dep = dep, proj = z)))
-}
+                      }
 

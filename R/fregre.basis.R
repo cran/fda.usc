@@ -43,18 +43,19 @@ rtt<-fdataobj[["rangeval"]]
      nbasis.b=floor(np/10)
      basis.b=create.bspline.basis(rangeval=rtt,nbasis=nbasis.b)
   }
-	xmean=apply(x,2,mean)
-  xcen=sweep(x,2,xmean,FUN="-")
+  xx<-fdata.cen(fdataobj)
+	xmean=xx[[2]]
+  xcen=xx[[1]]
 	ymean=mean(y)
   ycen=y-ymean
-  x.fd=Data2fd(argvals=tt,y=t(xcen),basisobj=basis.x)
+  x.fd=Data2fd(argvals=tt,y=t(xcen$data),basisobj=basis.x)
   C=t(x.fd$coefs)
   J=inprod(basis.x,basis.b)
-  vfunc="x."
+  vfunc=call[[2]]
   Z<-C%*%J
   Z=cbind(rep(1,len=n),Z)
   colnames(Z)<-1:ncol(Z)
-  colnames(Z)[2:ncol(Z)]= paste(vfunc,substr(basis.b$type, 1,3), 1:basis.b$nbasis, sep = "")
+  colnames(Z)[2:ncol(Z)]= paste(vfunc,".",basis.b$names, sep = "")
 if (lambda==0) {
        S=Z%*%solve(t(Z)%*%Z)%*%t(Z)
        yp2=S%*%y
@@ -103,7 +104,6 @@ else {
        vcov2=sr2*Cinv
        std.error=sqrt(diag(vcov2))
        t.value=b.est/std.error
-
        p.value= 2 * pt(abs(t.value),n-df, lower.tail = FALSE)
        coefficients<-cbind(b.est,std.error,t.value,p.value)
        colnames(coefficients) <- c("Estimate", "Std. Error", "t value", "Pr(>|t|)")
@@ -115,7 +115,7 @@ hat<-diag(hat(Z, intercept = TRUE),ncol=n)
 out<-list("call"=call,"b.est"=b.est,"a.est"=a.est,"fitted.values"=yp,"H"=S,
   "residuals"=e,"df"=df,"r2"=r2,"sr2"=sr2,"y"=y,"fdataobj"=fdataobj,
   x.fd=x.fd,"beta.est"=beta.est,"basis.x.opt"=basis.x,"basis.b.opt"=basis.b,
-  "J"=J,"lambda.opt"=lambda,lm=object.lm,coefficients=coefficients)
+  "J"=J,"lambda.opt"=lambda,lm=object.lm,coefficients=coefficients,"mean"=xmean)
  class(out)="fregre.fd"
 return(out)
 }
