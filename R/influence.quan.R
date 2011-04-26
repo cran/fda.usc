@@ -51,16 +51,17 @@ for (i in 1:mue.boot){
 #       y.mue <- a.est * rep(1,len=n) + fdata.mue%*%(beta.est)/(J-1)+ residuals.mue #t(beta.est)
 #inp<-fdata.mue%*%(beta.est[1,])/(J-1)
 #       y.mue <- a.est * rep(1,len=n) + inp+ residuals.mue #t(beta.est)
-      inp<-inprod.fdata(fdata.mue,model$beta.est,...)
-      y.mue <- a.est * rep(1,len=n) + inp+ residuals.mue
-
-       if (kmax.fix)    funcregpc.mue <- fregre.pc(fdata.mue,y.mue,model$l,...)
+#      inp<-inprod.fdata(fdata.mue,model$beta.est,...)
+#      y.mue <- a.est * rep(1,len=n) + inp+ residuals.mue
+       y.mue<-predict.fregre.fd(model,fdata.mue)  + residuals.mue
+        if (kmax.fix)    funcregpc.mue <- fregre.pc(fdata.mue,y.mue,model$l,...)
        else     {
                         fpc <- fregre.pc.cv(fdata.mue,y.mue,max(model$l,8))
                         knn.fix[[i]]<-fpc$pc.opt
                         funcregpc.mue<-fpc$fregre.pc
                         }
        inflfun.mue <- influence.fdata(funcregpc.mue) #####
+    #  inflfun.mue<-out.influ
        IDCP <- c(IDCP,inflfun.mue$DCP)
        IDCE <- c(IDCE,inflfun.mue$DCE)
        IDP <- c(IDP,inflfun.mue$DP)
@@ -70,8 +71,9 @@ for (i in 1:mue.boot){
              }
    else  {
        bett<-fdata(t(beta.est),tt,rtt)
-       inp<-inprod.fdata(fdata.mue,bett,...)
-       y.mue <- a.est * rep(1,len=n) + inp+ residuals.mue
+#       inp<-inprod.fdata(fdata.mue,bett,...)
+#       y.mue <- a.est * rep(1,len=n) + inp+ residuals.mue
+        y.mue<-predict.fregre.fd(model,fdata.mue)  + residuals.mue
        if (kmax.fix) funcregpc.mue <-fregre.basis(fdata.mue,y.mue,model$basis.x.opt,model$basis.b.opt,...)
        else {
               funcregpc.mue <-fregre.basis.cv(fdata.mue,y.mue,model$basis.x.opt,model$basis.b.opt,...)
@@ -105,4 +107,5 @@ return(list("quan.cook.for"=quan.cook.for,"quan.cook.est"=quan.cook.est,
 "betas.boot"=betas.boot,"norm.boot"=norm.boot,"coefs.boot"=coefs.boot,
 "knn.fix"=knn.fix))
 }
+
 

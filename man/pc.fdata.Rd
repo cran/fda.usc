@@ -10,7 +10,6 @@ Compute  principal components for functional data.
 pc.svd.fdata(fdataobj,norm=TRUE)
 pc.fdata(out,l=NULL,loadings=FALSE,draw=TRUE,...)
 }
-
 \arguments{
   \item{fdataobj}{ \code{\link{fdata}} class object.}  
      \item{norm}{=TRUE the norm of eigenvectors \code{(rotation)}  is 1.} 

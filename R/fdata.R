@@ -16,25 +16,17 @@ integer={
          out[["data"]]=matrix(mdata,nrow=1)
          out},
 fd={
-print("aaa")
    r = mdata$basis[[3]]
    nb<- mdata$basis[[4]]
 #   tt = seq(r[1], r[2], len = length(mdata$fdnames$time))
    argvals=tt = seq(r[1], r[2], len =nb)
    out[["data"]] = t(eval.fd(tt, mdata))
-   print("aaa2")
    if (!is.null(mdata$fdnames$reps)) rownames(out[["data"]]) = mdata$fdnames$reps
    else      rownames(out[["data"]]) =1:nrow( out[["data"]])
-print("aaa3")
    if (!is.null(mdata$fdnames$time)) {
-   print("aaa4")
-   print(dim(      out[["data"]]))
       colnames(out[["data"]]) = 1:ncol( out[["data"]])
       }
-   else      {print("aaa5")
-   colnames(out[["data"]]) =1:ncol( out[["data"]])
-   }
-   print("no ha petado")
+   else      {   colnames(out[["data"]]) =1:ncol( out[["data"]])   }
    out
    },
 fds={

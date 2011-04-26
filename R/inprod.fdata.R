@@ -1,42 +1,37 @@
-################################################################################
 inprod.fdata=function (fdata1,fdata2=NULL, w = 1, ...)   {
- if (!is.fdata(fdata1)) stop("No fdata class")
-
+if (!inherits(fdata1,"fdata")) stop("No fdata class")
 tt1<-fdata1[["argvals"]]
+DATA1<-fdata1[["data"]]
 nas1<-apply(fdata1$data,1,count.na)
+rtt<-fdata1[["rangeval"]]
 if (any(nas1)) {
    stop("fdata1 contain ",sum(nas1)," curves with some NA value \n")
    }
  if (is.null(fdata2)) {fdata2<-fdata1}
- else  if (!is.fdata(fdata2)) stop("No fdata class")
+ else  if (!inherits(fdata2,"fdata")) stop("No fdata class")
  nas2<-apply(fdata2$data,1,count.na)
  if (any(nas2)) {
    stop("fdata2 contain ",sum(nas2)," curves with some NA value \n")
    }
- DATA1<-fdata1[["data"]]
- tt<-fdata1[["argvals"]]
  DATA2<-fdata2[["data"]]
  tt2<-fdata2[["argvals"]]
- rtt<-fdata1[["rangeval"]]
- numgr = nrow(DATA1)
- numgr2 = nrow(DATA2)
- n =  ncol(DATA1)
- equi=TRUE
- if  (sum(tt!=tt2)!=0) stop("Error: different discretization points in the input data.\n")
- if (length(w) == 1) {w = rep(w, (n - 1))    }
- if (length(w)!=(n-1)) {stop("DATA ERROR: The weight vector hasn't the length of the functions\n")}
- di=diff(tt);
+ if  (sum(tt1!=tt2)!=0) stop("Error: different discretization points in the input data.\n")
+ numgr = nrow(DATA1); numgr2 = nrow(DATA2)
+ dtt<-diff(tt1)
+ eps<-as.double(.Machine[[1]]*10)
+ inf<-dtt-eps;sup<-dtt+eps
+ np<-length(tt1)
+ if (all(dtt>inf) & all(dtt<sup)) {equi=TRUE}
+ else equi=FALSE
+ if ((length(w)!=np) & (length(w) != 1)) {
+    stop("DATA ERROR: The weight vector hasn't the length of the functions\n")
+ }
  mdist = array(0, dim = c(numgr, numgr2))
  for (i in 1:numgr) {
     for (ii in 1:numgr2) {
-         f=DATA1[i,]*DATA2[ii,]   ###
-         if (equi) mdist[i,ii]=(sum((f[-n])*w)+sum((f[-1])*w))/(2*(n-1))
-         else {             # tt no equiespaciados
-            ai2=diff(tt)/rtt
-            f2=DATA1[i,]*DATA2[ii,]
-            mdist[i,ii]=sum(((f2[1:(n-1)])*ai2*w)/(2*(diff(rtt))))
-}}}
- mdist<-mdist*((diff(rtt)))
+         f=w*(DATA1[i,]*DATA2[ii,])
+         mdist[i,ii]=int.simpson2(tt1,f,equi)
+}}
 return(mdist)
 }
 

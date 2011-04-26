@@ -13,6 +13,8 @@
 \alias{traza}
 \alias{is.fdata}
 \alias{count.na}
+\alias{*.fdata}
+\alias{^.fdata}
 
 \title{ fda.usc internal functions}
 \description{Internal undocumentation functions for fda.usc package}
@@ -23,6 +25,7 @@
 \method{-}{fdata}(fdata1,fdata2)
 \method{*}{fdata}(fdata1,fdata2)
 \method{/}{fdata}(fdata1,fdata2)
+\method{^}{fdata}(fdataobj,pot)
 \method{c}{fdata}(\dots) 
 \method{dim}{fdata}(x)
 \method{nrow}{fdata}(fdataobj)
@@ -33,7 +36,8 @@ traza(A)
 }
 \arguments{
  \item{x,fdataobj,fdata1,fdata2}{ \code{fdata} class object}. %In \code{"[.fdata"} \code{fdataobj} is a object  from which to extract element(s) or in which to replace element(s).}  
-  \item{i,j}{ Indices specifying elements to extract or replace. Indices are numeric or character vectors or empty}  
+ \item{i,j}{ Indices specifying elements to extract, replace. Indices are numeric or character vectors or empty}  
+  \item{pot}{ Numeric value for exponentiation.}  
  \item{drop}{For \code{fdata} class object. If TRUE the result is coerced to the lowest possible dimension of  element \code{data}. This only works for extracting elements, not for the replacement.}
    \item{A}{  Matrix  of  set cases with dimension (\code{n} x \code{m}), where \code{n} is the number of curves and \code{m} are the points observed in each curve. \code{traza}, return the trace of a functional data matrix.}
   \item{\dots}{ \code{fdata} objects to be concatenated. }

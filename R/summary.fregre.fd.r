@@ -1,9 +1,9 @@
-summary.fregre.fd=function(object,times.influ=3,times.sigma=3,draw=TRUE,...){
+summary.fregre.fd<-function(object,times.influ=3,times.sigma=3,draw=TRUE,...){
     x<-object$fdataobj$data
     t=object$fdataobj$argvals
     y<-object$y
     n=nrow(x)
- 		up=mean(object$residuals)+times.sigma*sqrt(object$sr2)
+ up=mean(object$residuals)+times.sigma*sqrt(object$sr2)
     lo=mean(object$residuals)-times.sigma*sqrt(object$sr2)
     i.atypical=which(object$residuals>up|object$residuals<lo)
     lim.influ=traza(object$H)/n
@@ -22,8 +22,20 @@ summary.fregre.fd=function(object,times.influ=3,times.sigma=3,draw=TRUE,...){
 -Variability for each  principal components -PC- (%):\n")
     print(round(pr.x[object$l] * 100, 2))
     }
+    if (object$call[[1]]=="fregre.pls") {
+     cat(" *** Summary Functional Data Regression with Partial Least Squares *** \n\n")
+     object$lm$call<-object$call
+     print(summary(object$lm))
+#     var.1<-apply(object$pc$x, 2, var)
+#     pr.x= var.1/sum(var.1)
+# cat("\n-With",length(object$l),"Principal Components is  explained ",round(sum(pr.x[object$l])*100
+# ,2),"%\n of the variability of explicative variables. \n
+#-Variability for each  principal components -PC- (%):\n")
+#    print(round(pr.x[object$l] * 100, 2))
+    }
+
     if (object$call[[1]]=="fregre.basis") {
-     cat(" *** Summary Functional Data Regression with representation in Basis*** \n\n")
+     cat(" *** Summary Functional Data Regression with representation in Basis *** \n")
      if (object$lambda==0)     {object$lm$call<-object$call
                                 print(summary(object$lm))}
       else  {
@@ -35,7 +47,7 @@ summary.fregre.fd=function(object,times.influ=3,times.sigma=3,draw=TRUE,...){
             }
     }
   if (object$call[[1]]=="fregre.basis.cv") {
-     cat(" *** Summary Functional Data Regression with representation in Basis*** \n\n")
+     cat(" *** Summary Functional Data Regression with representation in Basis *** \n\n")
       cat("-Call: ");    print(object$call)
             cat("\n")
             print(object$coefficients)
@@ -47,19 +59,19 @@ summary.fregre.fd=function(object,times.influ=3,times.sigma=3,draw=TRUE,...){
 #      print(object$Lfdobj)
     }
     if (object$call[[1]]=="fregre.np") {
-     cat(" *** Summary  non-parametric Regression for Functional data*** \n\n")
+     cat(" *** Summary  non-parametric Regression for Functional data *** \n\n")
      cat("-Call: ");    print(object$call)
      cat("\n-Bandwidth (h): ",object$h.opt)
     cat("\n-R squared: ",object$r2)
-    cat("\n-Residual variance: ",object$sr2)
+    cat("\n-Residual variance: ",object$sr2,"\n")
 
     }
   if (object$call[[1]]=="fregre.np.cv") {
-     cat(" *** Summary  non-parametric Regression for Functional data*** \n\n")
+     cat(" *** Summary  non-parametric Regression for Functional data *** \n\n")
      cat("-Call: ");    print(object$call)
      cat("\n-Bandwidth (h): ",object$h.opt)
     cat("\n-R squared: ",object$r2)
-    cat("\n-Residual variance: ",object$sr2)
+    cat("\n-Residual variance: ",object$sr2,"\n")
 
     }
      if (object$call[[1]]=="fregre.plm") {
@@ -69,10 +81,9 @@ summary.fregre.fd=function(object,times.influ=3,times.sigma=3,draw=TRUE,...){
      print(object$coefficients)
       cat("\n-Bandwidth (h): ",object$h.opt)
     cat("\n-R squared: ",object$r2)
-    cat("\n-Residual variance: ",object$sr2)
-
+    cat("\n-Residual variance: ",object$sr2,"\n")
      }
-    cat("\n-Names of possible atypical curves: ");
+    cat("-Names of possible atypical curves: ");
     if (is.na(i.atypical[1]))     cat("No atypical curves \n")
     else   if (length(i.atypical)<11)  cat(rownames(x)[i.atypical],"\n")
            else cat(rownames(x)[i.atypical[1:10]],
@@ -100,9 +111,9 @@ summary.fregre.fd=function(object,times.influ=3,times.sigma=3,draw=TRUE,...){
           on.exit(devAskNewPage(oask))
           }
        else   par(mfrow=c(2,3))
- 		plot(object$fitted.values,y,xlab="Fitted values",main=paste("R-squared=",
+ plot(object$fitted.values,y,xlab="Fitted values",main=paste("R-squared=",
      round(object$r2,2)))
- 		plot(object$fitted.values,object$residuals,ylab="Residuals",xlab="Fitted values",main="Residuals vs fitted.values")
+ plot(object$fitted.values,object$residuals,ylab="Residuals",xlab="Fitted values",main="Residuals vs fitted.values")
     text(object$fitted.values[i.atypical],object$residuals[i.atypical],rownames(x)[i.atypical],cex=0.7)
     abline(h=mean(object$residuals),lwd=1,lty=2)
     abline(h=up,col=2,lwd=2,lty=2)
@@ -116,14 +127,15 @@ yl <- as.expression(substitute(sqrt(abs(YL)), list(YL = as.name(ylab23))))
 plot(object$fitted.values,resid.sd, xlab = "Fitted values", ylab = yl, main = main,ylim = ylim)
  text(object$fitted.values[i.atypical],resid.sd[i.atypical],rownames(x)[i.atypical],cex=0.7)
 #############
- 		plot(diag(object$H),1:nrow(x),xlab="Leverage",ylab="Index.curves",
+ plot(diag(object$H),1:nrow(x),xlab="Leverage",ylab="Index.curves",
     main="Leverage")
 text(diag(object$H)[i.influence],i.influence,rownames(x)[i.influence],cex=0.7)
- 		abline(v=times.influ*lim.influ,col=2,lwd=2,lty=2)
-#  	plot(density(object$residuals),main="Residuals")
+ abline(v=times.influ*lim.influ,col=2,lwd=2,lty=2)
+#  plot(density(object$residuals),main="Residuals")
     qqnorm(object$residuals,main="Residuals")
     boxplot(object$residuals,main="Residuals")
     }
     cat("\n")
 return(invisible(list("Influence"=influence,"i.influence"=i.influence,"i.atypical"=i.atypical)))
 }
+

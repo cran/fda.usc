@@ -1,5 +1,5 @@
 "norm.fdata"<-function(fdataobj,metric=metric.lp,...){
-if (!is.fdata(fdataobj)) stop("No fdata class")
+if (!inherits(fdataobj,"fdata")) stop("No fdata class")
 if (is.vector(fdataobj$data))    fdataobj$data=matrix(fdataobj$data,nrow=1)
 z0<-matrix(0,ncol=ncol(fdataobj),nrow=1)
 z0<-fdata(z0,fdataobj[["argvals"]],fdataobj[["rangeval"]],fdataobj[["names"]])
@@ -7,6 +7,15 @@ n.lp<-metric(fdataobj,z0,...)
 n.lp
 }
 
+#"norm.fdata2"<-function(fdataobj,...){
+#if (!inherits(fdataobj,"fdata")) stop("No fdata class")
+#if (is.vector(fdataobj$data))    fdataobj$data=matrix(fdataobj$data,nrow=1)
+#n.lp<-sqrt(inprod.fdata(fdataobj,...))
+#}
+
+#a<-norm.fdata(mlearn)
+#b<-norm.fdata2(mlearn)
+# a/diag(b)
 
 "norm.fd"<-function(fdobj){
 if (is.fd(fdobj)) rng<- fdobj[[2]]$rangeval

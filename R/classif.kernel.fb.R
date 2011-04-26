@@ -68,8 +68,9 @@ for (bb in 1:lenb) {
    fdata(x1,tt)
 
 #if (m[4]==0) mdist=metric(fdataobj,fdataobj,...) #            metric
-if (m[4]==0) mdist=metric(fdata(x1,tt),fdata(x1,tt),...) #            metric
-else mdist=metric(x1,x1,...) #            metric
+#if (m[4]==0) #mdist=metric(fdata(x1,tt),fdata(x1,tt),...) #            metric
+# else mdist=metric(x1,x1,...) #            metric
+mdist=metric(x1,x1,...)
 if (is.null(h)) {
      mdist2=mdist
      diag(mdist2)=NA
@@ -135,4 +136,3 @@ h=h,C=C,m=m)
 class(output)="classif.fd"
 return(output)
 }
-

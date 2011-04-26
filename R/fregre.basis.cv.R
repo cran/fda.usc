@@ -36,36 +36,46 @@ if (is.null(rownames(x)))        rownames(x) <- 1:n
 if (is.null(colnames(x)))        colnames(x) <- 1:np
 if (is.matrix(y)) y=as.vector(y)
 if (is.null(basis.x))  {
-  nbasis1=floor(np/6)
+  nbasis1=seq(max(floor(np/10),11),max(floor(np/5),11),by=2)
+  lenbasis.x=length(nbasis1)
+  basis.x=list()
+   for (nb.x in 1:lenbasis.x) {
   if (!is.null(type.basis))  {
     aa1 <- paste("create.", type.basis[1], ".basis", sep = "")
     as <- list()
     as[[1]] <- range(tt)
     names(as)[[1]] <- "rangeval"
-    as[[2]] <- nbasis1
+    as[[2]] <- nbasis1[nb.x]
     names(as)[[2]] <- "nbasis"
-    basis.x=do.call(aa1, as)
+    basis.x[[nb.x]]=do.call(aa1, as)
     }
-  else   basis.x=create.bspline.basis(rangeval=rtt,nbasis=nbasis1,...)
+  else      basis.x[[nb.x]]=create.bspline.basis(rangeval=rtt,nbasis=nbasis1[nb.x],...)
+   }
 }
+else nbasis1<-basis.x
 if (is.null(basis.b))  {
-  nbasis2=floor(np/10)
+  nbasis2=seq(min(floor(np/10),5),max(floor(np/10),11),by=2)
+  lenbasis.b=length(nbasis2)
+  basis.b=list()
+  for (nb.x in 1:lenbasis.b) {
 	if (!is.null(type.basis))  {
     if (length(type.basis)>1)    aa1 <- paste("create.",type.basis[2], ".basis", sep = "")
     else     aa1 <- paste("create.",type.basis, ".basis", sep = "")
     as <- list()
     as[[1]] <- rtt
     names(as)[[1]] <- "rangeval"
-    as[[2]] <- nbasis2
+    as[[2]] <- nbasis2[nb.x]
     names(as)[[2]] <- "nbasis"
-    basis.b=do.call(aa1, as)
+        basis.b[[nb.x]]=do.call(aa1, as)
     }
-  else basis.b=create.bspline.basis(rangeval=range(tt),nbasis=nbasis2)
+   else   basis.b[[nb.x]]=create.bspline.basis(rangeval=rtt,nbasis=nbasis2[nb.x])
 }
+}
+else nbasis2<-basis.b
 lenlambda=length(lambda)
 a1=list()
 a2=list()
-if (is.vector(basis.x))  {
+if (!is.list(basis.x))  {
  lenbasis.x=length(basis.x)
  for (nb.x in 1:lenbasis.x) {
    if (!is.null(type.basis))  {
@@ -77,15 +87,12 @@ if (is.vector(basis.x))  {
      names(as)[[2]] <- "nbasis"
      a1[[nb.x]]=do.call(aa1, as)
   }
- else  a1[[nb.x]]=create.bspline.basis(rangeval=rtt,nbasis=basis.x[nb.x])
+ else  a1[[nb.x]]=create.bspline.basis(rangeval=rtt,nbasis=basis.x[[nb.x]])
  }
  basis.x=a1
 }
-else {
-  lenbasis.x=1
-  basis.x=list(basis.x)
-  }
-if (is.vector(basis.b))  {
+else   lenbasis.x=length(nbasis1)
+if (!is.list(basis.b))  {
   lenbasis.y=length(basis.b)
   for (nb.y in 1:lenbasis.y) {
     if (!is.null(type.basis))  {
@@ -98,23 +105,20 @@ if (is.vector(basis.b))  {
       names(as)[[2]] <- "nbasis"
       a2[[nb.y]]=do.call(aa1, as)
       }
-  else  a2[[nb.y]]=create.bspline.basis(rangeval=rtt,nbasis=basis.b[nb.y],...)
+  else  a2[[nb.y]]=create.bspline.basis(rangeval=rtt,nbasis=basis.b[[nb.y]])
  }
  basis.b=a2
 }
-else {
- lenbasis.y=1
- basis.b=list(basis.b)
-}
-gcv=array(Inf,dim=c(lenbasis.x,lenbasis.y,lenlambda))
-pr=Inf
-i.lambda.opt=1;i.nb.y.opt=1;i.nb.x.opt=1
+else  lenbasis.y=length(nbasis2)
+ gcv=array(Inf,dim=c(lenbasis.x,lenbasis.y,lenlambda))
+ pr=Inf
+ i.lambda.opt=1;i.nb.y.opt=1;i.nb.x.opt=1
  xx<-fdata.cen(fdataobj)
-	xmean=xx[[2]]
-  xcen=xx[[1]]
-    ymean=mean(y)
-  ycen=y-ymean
-for (nb.x in 1:lenbasis.x) {
+ xmean=xx[[2]]
+ xcen=xx[[1]]
+ ymean=mean(y)
+ ycen=y-ymean
+ for (nb.x in 1:lenbasis.x) {
 	x.fd=Data2fd(argvals=tt,y=t(xcen$data),basisobj=basis.x[[nb.x]])
   C=t(x.fd$coefs)
   Cm=t(mean.fd(x.fd)$coefs)
@@ -185,6 +189,8 @@ for (nb.x in 1:lenbasis.x) {
     class(object.lm)<-"lm"
 b.est=b.est[-1]
 names(b.est)<-rownames(coefficients)[-1]
+dimnames(gcv)<-list(nbasis1,nbasis2,lambda)
+
 ####no es la matriz de hat ya que yp=a.est+S*y y no yp=S*y
 #yp=mean(y)+S%*%ycen
 #b.est=Sb.opt%*%y #idem beta.est$coefs

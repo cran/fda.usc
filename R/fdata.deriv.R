@@ -16,6 +16,7 @@ fdata.deriv<-function(fdataobj,nderiv=1,method="bspline",class.out='fdata'
    ab[2,1:(ndist-1)]=a
    res[i,]=apply(ab,2,mean,na.rm=TRUE)
   }
+  labels$main<-paste("d(",labels$main,",",nderiv,")",sep="")
   res<-fdata(res,tt,names=labels)
  }
   else {
@@ -25,6 +26,7 @@ fdata.deriv<-function(fdataobj,nderiv=1,method="bspline",class.out='fdata'
          f1<-splinefun(x=tt,y=DATA[i,],method=method)
          res[i,]=f1(tt,deriv=nderiv)
         }
+          labels$main<-paste("d(",labels$main,",",nderiv,")",sep="")
          res<-fdata(res,tt,names=labels)
        }
       else{
@@ -35,6 +37,7 @@ fdata.deriv<-function(fdataobj,nderiv=1,method="bspline",class.out='fdata'
       res=fdata2fd(fdataobj=fdataobj,type.basis=method,nbasis=nbasis,nderiv=nderiv,...)
       if (class.out=='fdata') {
          ff<-eval.fd(tt,res)
+         labels$ylab<-paste("d(",labels$ylab,",",nderiv,")",sep="")
          res=fdata(t(ff),tt,names=labels)
          }
       }

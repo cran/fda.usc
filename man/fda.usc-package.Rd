@@ -1,5 +1,5 @@
 \name{fda.usc-package}
-\Rdversion{0.9.4}
+\Rdversion{0.9.5}
 \alias{fda.usc-package}
 \alias{fda.usc}
 \docType{package}
@@ -72,6 +72,8 @@ The functions included in this section allow the estimation of different functio
 \tab \code{\link{fregre.basis.cv}}  \cr
 \tab \code{\link{fregre.np}}  \cr
 \tab \code{\link{fregre.np.cv}}  \cr
+\tab \code{\link{fregre.pls}}  \cr
+\tab \code{\link{fregre.pls.cv}}  \cr
 \tab \code{\link{summary.fregre.fd}} \cr
 \tab \code{\link{predict.fregre.fd}} \cr
 }
@@ -133,6 +135,8 @@ This section allows the estimation of the groups in a  functional data set \code
 \tab \code{\link{metric.lp}} \cr 
 \tab \code{\link{pc.cor}} \cr
 \tab \code{\link{pc.fdata}} \cr
+\tab \code{\link{pc.svd.fdata}} \cr
+\tab \code{\link{pls.fdata}} \cr
 \tab \code{\link{semimetric.NPFDA}} \cr 
 \tab \code{\link{semimetric.basis}} \cr 
 }
@@ -141,8 +145,8 @@ This section allows the estimation of the groups in a  functional data set \code
 \tabular{ll}{
 Package: \tab fda.usc\cr
 Type: \tab Package\cr
-Version: \tab 0.9.4\cr
-Date: \tab 2011-03-08\cr
+Version: \tab 0.9.5\cr
+Date: \tab 2011-04-01\cr
 License: \tab GPL-2 \cr
 LazyLoad: \tab yes\cr
 }

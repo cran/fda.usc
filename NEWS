@@ -1,16 +1,24 @@
+Release 0.9.5 improves fdata.bootstrap() function
+(better computational efficiency). It introduces a new 
+functions: for Partial Linear Square (pls.fdata(), fregre.pls() 
+and fregre.pls.cv()) and Simpson integration (int.simpson()
+and int.simpson2()). It modifies the functions metric.lp(), 
+inprod.fdata(), summary.fregre.fd() and predict.fregre.fd().
+
+ 
 Release 0.9.4 added 3 script files: Outliers_fdata.R, 
 flm_beta_estimation_brownian_data.R and Classif_phoneme.R.
-It has introduced the functions fregre.glm and 
-predict.fregre.glm which allow fit and predict
+It has introduced the functions fregre.glm() and 
+predict.fregre.glm() which allow fit and predict
 respectively Functional Generalized Linear Models.
 It has introduced the functions create.pc.basis and 
 create.fdata.basis  which allow to create basis objects
 for functional data of class "fdata".
 
-Release 0.9 introduces a new function h.default that 
+Release 0.9 introduces a new function h.default() that 
 simplifies the calculation of the bandwidth parameter
-"h" in the functions: fregre.np, fregre.np.cv and fregre.plm.  
+"h" in the functions: fregre.np(), fregre.np.cv() and fregre.plm().  
 In most of the functions has added a stop control when the
 dataset has missing data (NA's). It adds the attribute "call"
 to the distance  matrix calculated in metric.lp, 
-semimetric.basis  and semimetric.NPFDA functions.
+semimetric.basis()  and semimetric.NPFDA() functions.

@@ -1,5 +1,6 @@
 depth.RPD=function(fdataobj,nproj=50,deriv=c(0,1),trim=0.25,dfunc2=depth.mode,
 method="fmm",draw=FALSE,...){
+
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
 nas<-apply(fdataobj$data,1,count.na)
 if (any(nas))  {
@@ -36,12 +37,11 @@ for (j in 1:nproj){
         matriz=newfunc[,,ider]
         vproject[,ider]=matriz%*%z[j,]
          }
-
 #    resul=dfunc2(vproject,...)
     par.dfunc=list()
-    par.dfunc$fdataobj<-vproject
+    par.dfunc$fdataobj<-vproject  # matrix data
     par.dfunc$trim<-trim
-    resul=do.call(dfunc2,par.dfunc)
+    resul=do.call(dfunc2,par.dfunc)   ### call depth function
     dep=dep+resul$dep
     setTxtProgressBar(pb,j)
         }

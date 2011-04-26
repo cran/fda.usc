@@ -2,15 +2,15 @@ Package: fda.usc
 Type: Package
 Title: Functional Data Analysis and Utilities for Statistical Computing
         (fda.usc)
-Version: 0.9.4
-Date: 2011-03-08
+Version: 0.9.5
+Date: 2011-04-26
 Author: Febrero-Bande, M. and Oviedo de la Fuente, M.
 Maintainer: Oviedo de la Fuente, M.  <manuel.oviedo@usc.es>
-Depends: R (>= 2.10),fda, splines, MASS, e1071
+Depends: R (>= 2.10),fda, splines, MASS, mgcv, e1071, pls
 Description: This package implements functional data methods.
 License: GPL-2
 URL: http://eio.usc.es/pub/MAESFE/
-LazyLoad: yes
-Packaged: 2011-03-09 09:08:11 UTC; moviedo
+LazyLoad: no
+Packaged: 2011-04-26 15:26:36 UTC; moviedo
 Repository: CRAN
-Date/Publication: 2011-03-09 14:24:53
+Date/Publication: 2011-04-27 16:12:09

@@ -1,4 +1,6 @@
-fregre.pc=function (fdataobj, y, l = 1:3,norm=TRUE){
+#1. preg a manolo si max(l) o sequencial!!!
+#2. no hace falta hacer object.lm<-lm(df....etc etc ) o asi solucionamos 1
+fregre.pls=function (fdataobj, y, l = 1:3,...){
 if (!is.fdata(fdataobj))    fdataobj = fdata(fdataobj)
 nas<-apply(fdataobj$data,1,count.na)
 nas.g<-is.na(y)
@@ -33,11 +35,11 @@ if (any(nas) & any(nas.g))  {
     C <- match.call()
     if (is.null(rownames(x)))        rownames(x) <- 1:n
     ycen = y - mean(y)
-    pc<-pc.svd.fdata(fdataobj,norm)
+    pc<-pls.fdata(fdataobj,ycen,max(l),...)
     xcen<-pc$fdataobj.cen
-    if (length(l) == 1)  {
+     if (length(l) == 1)  {
                   vs <- pc$rotation$data[l,]
-                  Z<-pc$x[,l]
+                  Z<-pc$x[,1:l]
                   }
     else {
                   vs <- t(pc$rotation$data[l,])
@@ -67,9 +69,9 @@ if (any(nas) & any(nas.g))  {
     sr2 <- sum(e^2)/(n - df)
     r2 <- 1 - sum(e^2)/sum(ycen^2)
     out <- list(call = C, beta.est = beta.est, fitted.values =object.lm$fitted.values,
-    svd.fdata=pc,coefficients=object.lm$coefficients,residuals = object.lm$residuals,
-    df = df,r2=r2, sr2 = sr2,H=H,fdataobj = fdataobj,y = y, l = l,lm=object.lm,pc=pc)
-    #pc=pc,pf = pf,Z=Z
+    pls.fdata=pc,coefficients=object.lm$coefficients,residuals = object.lm$residuals,
+    df = df,r2=r2, sr2 = sr2,H=H,fdataobj = fdataobj,y = y, l = l, lm=object.lm)
+    #,Z=Z,pf = pf)
     class(out) = "fregre.fd"
     return(out)
 }

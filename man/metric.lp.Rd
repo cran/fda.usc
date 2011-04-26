@@ -19,11 +19,9 @@ metric.lp(fdata1,fdata2=NULL,p=2,w=1,...)
   \item{\dots}{ Further arguments passed to or from other methods.}
 }
 \details{
-By default it uses the L2-norm with \code{p = 2} and weights \code{w} with length=\code{(m-1)}. 
-\deqn{Let \ \  f(x)= fdata1(x)-fdata2(x)\ \ and\ \ \Delta_i=t_{i+1}-t_i} {}
+By default it uses the L2-norm with \code{p = 2}. 
+\deqn{Let \ \  f(x)= fdata1(x)-fdata2(x)} {}
 \deqn{\left\|f\right\|_p=\left (  \frac{1}{\int_{a}^{b}w(x)dx} \int_{a}^{b} \left|f(x)\right|^{p}w(x)dx \right)^{1/p}}{}
-\deqn{\approx \Bigg( \sum_{i=1}^{m-1}\frac{\Delta_i({f(x_i)^p+f(x_{i+1})^p})}{2}{w(x_i)}\Bigg)^{1/p}}{}
-\deqn{\approx \Bigg(\sum_{i=1}^{m-1} {\frac{f(x_i)^p+f(x_{i+1})^p}{2}{w(x_i)}}\Bigg)^{1/p}}{}
 
 The observed points on each curve are equally spaced (by default) or not. 
 }
@@ -43,13 +41,13 @@ glearn<-phoneme$classlearn
 gtest<-phoneme$classtest
 # Matrix of distances of curves of DATA1
 mdist1<-metric.lp(mlearn)
+
 # Matrix of distances beetween curves of DATA1 and curves of DATA2
 mdist2<-metric.lp(mlearn,mtest,p=2)
-
 # mdist with L1 norm and weigth=v
-v=dnorm(seq(-3,3,length.out=dim(mlearn)[2]-1))
+v=dnorm(seq(-3,3,len=dim(mlearn)[2]))
 mdist3<-metric.lp(mlearn,mtest,p=1,w=v)
-plot(1:250,mdist2[1,],type="l",ylim=c(1,max(mdist2[1,])+1))
+plot(1:250,mdist2[1,],type="l",ylim=c(1,max(mdist3[1,])))
 lines(mdist3[1,],type="l",col="2")
 
 # mdist with mlearn with diferents discretization points.
@@ -60,12 +58,11 @@ lines(mdist3[1,],type="l",col="2")
 #sum(mdist5-mdist6)
 #sum(mdist1-mdist6)
 
-# more examples
 x<-seq(0,2*pi,length=1001)
-fx<-sin(x)/sqrt(pi)
-metric.lp(fx,rep(0,length(fx)),w=2*pi)
+fx<-fdata(sin(x)/sqrt(pi),x)
+fx0<-fdata(rep(0,length(x)),x)
+metric.lp(fx,fx0)
 # The same
-integrate(function(x){(abs(sin(x)/sqrt(pi))^2)},0,2*pi) 
-
+integrate(function(x){(abs(sin(x)/sqrt(pi))^2)},0,2*pi)
 }
 \keyword{ cluster }

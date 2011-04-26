@@ -110,9 +110,16 @@ if (inhe.fdata1 && inhe.fdata2) {
 }
 fdataobj
 }
+################################################################################
 
+"^.fdata"<-function(fdataobj,pot){
+if (!inherits(fdataobj, "fdata"))  stop("No fdata object")
+fdataobj[["data"]]<-fdataobj[["data"]]^pot
+fdataobj
+}
 
 ################################################################################
+
 dim.fdata<-function(x) {dim(x[["data"]])}
 ncol.fdata<-function(fdataobj){ncol(fdataobj[["data"]])}
 nrow.fdata<-function(fdataobj){nrow(fdataobj[["data"]])}

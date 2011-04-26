@@ -3,7 +3,8 @@
 \alias{predict.fregre.fd}
 \title{ Predict method for functional linear model (fregre.fd class)}
 \description{
- 	 Computes predictions for  regression between functional explanatory variables and scalar response using: basis representation, Principal Components Analysis or nonparametric kernel estimation.
+ 	 Computes predictions for  regression between functional explanatory variables and scalar response using: basis representation, Principal Components Analysis, 
+ 	 Partial least squares or nonparametric kernel estimation.
 }
 \usage{
 predict.fregre.fd(object,new.fdataobj=NULL,...)
@@ -17,6 +18,7 @@ predict.fregre.fd(object,new.fdataobj=NULL,...)
 \details{ 
 Predicts from a fitted \code{fregre.basis} object,see  \code{\link{fregre.basis}} or \code{\link{fregre.basis.cv}}\cr
 Predicts from a fitted \code{fregre.pc} object,see  \code{\link{fregre.pc}} or \code{\link{fregre.pc.cv}}\cr
+Predicts from a fitted \code{fregre.pls} object,see  \code{\link{fregre.pls}} or \code{\link{fregre.pls.cv}}\cr
 Predicts from a fitted \code{fregre.np} object, see  \code{\link{fregre.np}} or \code{\link{fregre.np.cv}}.
 }
 \value{
@@ -42,7 +44,9 @@ Ramsay, James O., and Silverman, Bernard W. (2006), \emph{ Functional Data Analy
 Febrero-Bande, M. and Oviedo de la Fuente, M.
 }
 \seealso{
-See Also as:   \code{\link{fregre.basis}}, \code{\link{fregre.basis.cv}}, \code{\link{fregre.np}}, \code{\link{fregre.np.cv}}, \cr \code{\link{fregre.pc}}, \code{\link{fregre.pc.cv}} and \code{\link{summary.fregre.fd}}.\cr
+See Also as:   \code{\link{fregre.basis}}, \code{\link{fregre.basis.cv}}, \code{\link{fregre.np}}, \code{\link{fregre.np.cv}}, \cr 
+\code{\link{fregre.pc}}, \code{\link{fregre.pc.cv}}, \code{\link{fregre.pls}}, \code{\link{fregre.pls.cv}} \cr
+ and \code{\link{summary.fregre.fd}}.\cr
 }
 \examples{
 
@@ -59,6 +63,11 @@ newy=matrix(tecator$y$Fat[-ind],ncol=1)
 res.pc=fregre.pc(x,y,1:6)
 summary(res.pc)
 pred.pc=predict.fregre.fd(res.pc,newx)
+
+# Functional PLS regression
+res.pls=fregre.pls(x,y,1:6)
+summary(res.pls)
+pred.pls=predict.fregre.fd(res.pls,newx)
 
 # Functional nonparametric regression
 # Functional nonparametric regression with other semimetric.
@@ -81,9 +90,11 @@ pred.basis=predict.fregre.fd(res.basis,newx)
 
 dev.new()
 plot(pred.pc-newy)
-points(pred.np-newy,col=2,pch=2)
+points(pred.pls-newy,col=2,pch=2)
+points(pred.np-newy,col=3,pch=3)
 points(pred.basis-newy,col=4,pch=4)
 sum((pred.pc-newy)^2,na.rm=TRUE)/sum((newy-mean(newy))^2,na.rm=TRUE)
+sum((pred.pls-newy)^2,na.rm=TRUE)/sum((newy-mean(newy))^2,na.rm=TRUE)
 sum((pred.np-newy)^2,na.rm=TRUE)/sum((newy-mean(newy))^2,na.rm=TRUE)
 sum((pred.basis-newy)^2,na.rm=TRUE)/sum((newy-mean(newy))^2,na.rm=TRUE)
 }
