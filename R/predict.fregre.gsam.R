@@ -97,14 +97,14 @@ nfunc<-sum(func)
 nnf<-length(vnf)
 name.coef=nam=par.fregre=beta.l=list()
 kterms=1
-if (nnf>0) {
+if (!is.null(vnf)) {
  first=FALSE
- XX=data[[1]]
+ XX=data[["df"]]
 if   (attr(tf,"intercept")==0) {
      pf<- paste(pf,-1,sep="")
      }
  for ( i in 1:nnf) {
-     print(paste("Non functional covariate:",vnf[i]))
+                                #      print(paste("Non functional covariate:",vnf[i]))
         if (fnf1[i]==1) sm1<-TRUE
         else sm1<-FALSE
         if (sm1) {
@@ -115,13 +115,14 @@ if   (attr(tf,"intercept")==0) {
            }
 }
 else {  first=TRUE}
-#print(paste("Functional covariate:",vfunc))
-if (length(vfunc)>0) {
+#                            print(paste("Functional covariate:",vfunc))
+                            lenfunc<-length(vfunc)
+if (lenfunc>0) {
 k=1
  mean.list=vs.list=JJ=list()
  bsp1<-bsp2<-TRUE
- for (i in 1:length(vfunc)) {
-	if(class(data[[vfunc[i]]])[1]=="fdata"){
+ for (i in 1:lenfunc) {
+	if(class(newx[[vfunc[i]]])[1]=="fdata"){
       tt<-data[[vfunc[i]]][["argvals"]]
       rtt<-data[[vfunc[i]]][["rangeval"]]
       fdataobj<-data[[vfunc[i]]]
@@ -269,6 +270,5 @@ k=1
 return(yp)
 }
 }
-
 
 

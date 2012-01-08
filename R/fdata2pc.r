@@ -51,11 +51,13 @@ fdata2pc<-function (fdataobj,  ncomp = 2,norm = TRUE,...)
     }
     colnames(scores) <- paste("PC", 1:J, sep = "")
     l <- 1:ncomp
-    out <- list(call=C,d = newd[1:ncomp], rotation = vs[1:ncomp],
+    newd<-newd
+    out <- list(call=C,d = newd, rotation = vs[1:ncomp,drop=FALSE],
          x = scores, fdataobj.cen = Xcen.fdata,
-         mean = xmean, fdataobj = fdataobj,l=l,u=u[,1:ncomp])
+         mean = xmean, fdataobj = fdataobj,l=l,u=u[,1:ncomp,drop=FALSE])
     class(out) = "fdata.comp"
     return(out)
 }
-    
+
+
 

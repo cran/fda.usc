@@ -1,5 +1,5 @@
 fregre.basis=function(fdataobj,y,basis.x=NULL,basis.b=NULL,lambda=0,
-Lfdobj=vec2Lfd(c(0,0),rtt),...){
+Lfdobj=vec2Lfd(c(0,0),rtt),weights= rep(1,n),...){
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
 nas<-apply(fdataobj$data,1,count.na)
 nas.g<-is.na(y)
@@ -35,13 +35,13 @@ rtt<-fdataobj[["rangeval"]]
   if (is.null(rownames(x)))        rownames(x) <- 1:n
   if (is.null(colnames(x)))        colnames(x) <- 1:np
 	if (is.null(basis.x))  {
-	          nbasis.x=floor(np/6)
+	          nbasis.x=max(floor(np/6),7)
             basis.x=create.bspline.basis(rangeval=rtt,nbasis=nbasis.x,...)
             }
 	if (is.null(basis.b))  {
 	   if (basis.x$type=="fourier") basis.b<-basis.x
 	   else {
-     nbasis.b=floor(np/10)
+     nbasis.b=max(floor(np/10),5)
      basis.b=create.bspline.basis(rangeval=rtt,nbasis=nbasis.b)
      }
   }
@@ -75,19 +75,19 @@ rtt<-fdataobj[["rangeval"]]
   Z=cbind(rep(1,len=n),Z)
   colnames(Z)<-1:ncol(Z)
   colnames(Z)[2:ncol(Z)]= paste(vfunc,".",basis.b$names, sep = "")
+  W<-diag(weights)
 if (lambda==0) {
 #       S=Z%*%solve(t(Z)%*%Z)%*%t(Z)
 
-    S<-t(Z)%*%Z
+    S<-t(Z)%*%W%*%Z
     Lmat    <- chol(S)          
     Lmatinv <- solve(Lmat)
-    S<-Z%*%( Lmatinv %*% t(Lmatinv) )%*%t(Z)
-
+    S<-Z%*%( Lmatinv %*% t(Lmatinv) )%*%t(Z)%*%W
        yp2=S%*%y
        response="y"
        pf <- paste(response, "~", sep = "")
        for ( i in 1:length(colnames(Z))) pf <- paste(pf, "+", colnames(Z)[i], sep = "")
-       object.lm=lm(formula=pf,data=data.frame(y,Z),x=TRUE,y=TRUE,...)
+       object.lm=lm(formula=pf,data=data.frame(y,Z,weights),x=TRUE,y=TRUE,weights=weights,...)
        yp=object.lm$fitted.values
        e<-object.lm$residuals
        b.est<-object.lm$coefficients[-1]
@@ -106,17 +106,16 @@ else {
 #       R[-1,-1]<-getbasispenalty(basis.b,Lfdobj) ############
        R[-1,-1]<-eval.penalty(basis.b,Lfdobj)
 
-    Sb=t(Z)%*%Z+lambda*R
+    Sb=t(Z)%*%W%*%Z+lambda*R
     eigchk(Sb)    
     Lmat    <- chol(Sb)          
     Lmatinv <- solve(Lmat)
-    Cinv<- Lmatinv %*% t(Lmatinv) 
-   
+    Cinv<- Lmatinv %*% t(Lmatinv)  
 
 #       Cinv<-solve(Sb)
        Sb2=Cinv%*%t(Z)
-       DD<-t(Z)%*%y
-       S=Z%*%Sb2
+       DD<-t(Z)%*%W%*%y
+       S=Z%*%Sb2%*%W
        yp=S%*%y
        b.est=Sb2%*%y
        bet<-Cinv%*%DD
@@ -153,8 +152,12 @@ names(b.est)<-rownames(coefficients)[-1]
 out<-list("call"=call,"b.est"=b.est,"a.est"=a.est,"fitted.values"=yp,"H"=S,
   "residuals"=e,"df"=df,"r2"=r2,"sr2"=sr2,"y"=y,"fdataobj"=fdataobj,
   x.fd=x.fd,"beta.est"=beta.est,"basis.x.opt"=basis.x,"basis.b.opt"=basis.b,
-  "J"=J,"lambda.opt"=lambda,lm=object.lm,coefficients=coefficients,"mean"=xmean)
+  "J"=J,"lambda.opt"=lambda,lm=object.lm,coefficients=coefficients,"mean"=xmean,
+  Lfdobj=Lfdobj,weights= weights)
  class(out)="fregre.fd"
 return(out)
 }
+
+
+
 

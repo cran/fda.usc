@@ -1,3 +1,61 @@
+fdata2plsr2=function (fdataobj, y, ncomp = 2, norm = TRUE,method="oscorespls", ...){
+    C <- match.call()
+    if (!is.fdata(fdataobj))
+        stop("No fdata class")
+    if (is.fdata(y))  ycen<-fdata.cen(y)$Xcen
+    else  ycen = y - mean(y)
+
+    X <- fdataobj[["data"]]
+    tt <- fdataobj[["argvals"]]
+    rtt <- fdataobj[["rangeval"]]
+    nam <- fdataobj[["names"]]
+    mm <- fdata.cen(fdataobj)
+    xmean <- mm$meanX
+    Xcen.fdata <- mm$Xcen
+    n <- nrow(Xcen.fdata)
+    J <- ncol(Xcen.fdata)
+    Jmin <- min(c(ncomp, J, n))
+    cnames <- paste("PLS", seq(1, ncol(fdataobj$data)), sep = "")
+    response = "y"
+     if (is.fdata(y)) {
+       df <- data.frame(I(ycen$data), I(Xcen.fdata$data))
+       print(names(df))
+        cnames2 <- paste("PLS", seq(1, ncol(y$data)), sep = "")
+        names(df) <- c("y","X")
+        pf<-paste("y~X")
+        print(names(df))
+         }
+     else {
+     cnames <- paste("PLS", seq(1, ncol(fdataobj$data)), sep = "")
+#    ycen = y - mean(y)
+    response = "y"
+    df <- data.frame(y, Xcen.fdata$data)
+    colnames(df) <- c("y", cnames)
+    pf <- paste(response, "~", sep = "")
+    for (i in 1:length(cnames)) pf <- paste(pf, "+", cnames[i],
+        sep = "")
+         }
+    res <- plsr(as.formula(pf), ncomp = ncomp, data = df, method = method,
+        validation = "LO", ...)
+    class(res$loadings) <- "matrix"
+    vs <- fdata(t(res$loadings), tt, rtt, list(main = "pls.fdata",
+        xlab = "t", ylab = "rotationloadings"))
+    scores <- matrix(0, ncol = J, nrow = n)
+    if (norm) {
+        no <- norm.fdata(vs)
+        vs$data <- sweep(vs$data, 1, drop(no), "/")
+        scores[, 1:Jmin] <- inprod.fdata(Xcen.fdata, vs)
+    }
+    else {
+        scores[, 1:Jmin] <- inprod.fdata(Xcen.fdata, vs)
+    }
+#    colnames(scores) <- paste("PLS", 1:J, sep = "")
+    out <- list(rotation = vs, x = scores, res.pls = res, fdataobj.cen = Xcen.fdata,
+        mean = xmean, y = y, l = 1:ncomp, C = C)
+    class(out) = "fdata.comp"
+    return(out)
+}
+
 ################
 ################
 dA<-function (w, A, dw){
@@ -28,7 +86,7 @@ dvvtz<-function (v, z, dv, dz) {
 }
 #######################################################################
 ########################################################################
-fdata2pls<-function(fdataobj,y, ncomp = 2,...) {
+fdata2pls<-function(fdataobj,y, ncomp = 2,norm=TRUE,...) {
 if (!is.fdata(fdataobj)) fdataobj<-fdataobj(fdataobj)
     C <- match.call()
     X<-fdataobj$data
@@ -47,12 +105,18 @@ if (!is.fdata(fdataobj)) fdataobj<-fdataobj(fdataobj)
     center<-fdata.cen(fdataobj)
     mean.X<-center$meanX
     X<-center$Xcen$data
-#    sd.X <- apply(X, 2, sd)
+
+#    sdx = sqrt(apply(X, 2, var))
 #    sd.X<-rep(mean(sd.X),len=J)
 #    sd.X[sd.X == 0] = 1
-#    if (sca)     X <- X/(rep(1, nrow(X)) %*% t(sd.X))
-#    else X <-X/(rep(1, nrow(X)) %*%t(rep(mean(sd.X),J)))
+if (norm)    {
+sd.X <- sqrt(apply(X, 2, var))
+ X <- X/(rep(1, nrow(X)) %*% t(sd.X))
+ }
+    else {
+#    X <-X/(rep(1, nrow(X)) %*%t(rep(mean(sd.X),J)))
     sd.X<-rep(1,len=J)
+}
     repnX<-rep(1, n)
     X2<-fdata(X,tt,rtt,nam)
     dcoefficients = NULL
@@ -85,8 +149,12 @@ if (!is.fdata(fdataobj)) fdataobj<-fdataobj(fdataobj)
             DoF[i] <-traza(X %*%dBeta[i,,] + matrix(1,n, n)/n)
             }
     }
-    V2<-fdata(t(V),tt,rtt,nam)
-    V2$data<-sweep(V2$data,1,norm.fdata(V2),"/")
+    if (norm) {
+      V2<- fdata(t(V)*(rep(1, nrow(t(V))) %*% t(sd.X)),tt,rtt,nam)
+      V2$data<-sweep(V2$data,1,norm.fdata(V2),"/")
+      }
+    else V2<-fdata(t(V),tt,rtt,nam)
+#    V2$data<-sweep(V2$data,1,norm.fdata(V2),"/")
     DoF[DoF > Jmax] = Jmax
     scores<-inprod.fdata(X2,V2,...)
 #    scores<-X2$data%*%V
@@ -97,5 +165,3 @@ if (!is.fdata(fdataobj)) fdataobj<-fdataobj(fdataobj)
     class(outlist)<-"fdata.comp"
     return(outlist)
 }
-
-

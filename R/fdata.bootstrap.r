@@ -30,7 +30,10 @@ center<-estmues
  dist<-max(distboot[rank(distboot)<=floor((1-alpha)*nb)])
  resample<-fdata(estboot,tt,rtt,names)
  if (draw){
- if (is.null(draw.control)) draw.control=list("col"=c("grey","blue","pink"),"lty"=c(2,1,1))
+ if (is.null(draw.control)) draw.control=list("col"=c("grey","blue","pink"),"lty"=c(2,1,1),"lwd"=c(1,2,1))
+ if (is.null(draw.control$lwd)) draw.control$lwd=c(1,2,1)
+ if (is.null(draw.control$lty)) draw.control$lty=c(2,1,1)
+ if (is.null(draw.control$col)) draw.control$col=c("grey","blue","pink")
  plot(fdataobj,lwd=draw.control$lwd[1],lty=draw.control$lty[1],col=draw.control$col[1])
 # for(i in 1:nb){
 #if (distboot[i]<=dist) lines(tt,estboot[i,],lwd=draw.control$lwd[3],lty=draw.control$lty[3],col=draw.control$col[3])

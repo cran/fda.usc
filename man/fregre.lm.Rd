@@ -16,13 +16,15 @@ where \eqn{Z=\left[ Z^1,\cdots,Z^p  \right]}{Z=[Z^1,...,Z^p]} are the non functi
 %are the non functional covariates and the basis representation of functional covariates .
 }
 \usage{
-fregre.lm(formula,data,basis.x=NULL,basis.b=NULL,...)
+fregre.lm(formula,data,basis.x=NULL,basis.b=NULL,rn=0,weights=rep(1,n),...)
 }
 \arguments{
  \item{formula}{ an object of class \code{formula} (or one that can be coerced to that class): a symbolic description of the model to be fitted. The details of model specification are given under \code{Details}.}
   \item{data}{ List that containing the variables in the model. }
 	\item{basis.x}{ List of basis for functional explanatory data estimation.}
 	\item{basis.b}{ List of basis for functional beta parameter estimation.}
+	\item{rn}{Ridge parameter.  Default value is rn=0, i.e. no penalization is used.} 
+  \item{weights}{ weights}	
   \item{\dots}{ Further arguments passed to or from other methods.}
 }
 \details{ 

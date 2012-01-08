@@ -12,7 +12,7 @@ Government of Spain.\cr
 \usage{data(aemet)}
 \format{
 Elements of aemet:\cr
- \code{..$df:} Dataframe with information of each station:\cr
+ \code{..$df:} Dataframe with information of each wheather station:\cr
  \code{ind:}{ Indicated weather station.\cr}
  \code{name:}{ Station Name.  36 marked UTF-8 strings \cr}
  \code{province:}{  Province (region) of Spain. 36 marked UTF-8 strings \cr}
@@ -42,7 +42,7 @@ no precipitation (0.0 mm) is replaced  by \code{0.01}.  Then the logarithm is ap
 }
 \note{
 \url{ftp://ftpdatos.aemet.es/series_climatologicas/valores_diarios/NOTA_LEGAL.txt}}
-\author{Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}}
+\author{Manuel Febrero Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}}
 \examples{
 data(aemet)
 names(aemet)

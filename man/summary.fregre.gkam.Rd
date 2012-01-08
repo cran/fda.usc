@@ -49,9 +49,7 @@ If \code{ask}=FALSE draw graphs in one window, by default. If \code{ask}=TRUE, d
 \value{
 \item{object}{ Object.}
 }
-\author{
-Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
-}
+\author{Manuel Febrero-Bande and Manuel Oviedo de la Fuente \if{latex}{\cr}\email{manuel.oviedo@usc.es}}
 \seealso{
 Summary function for  \code{\link{fregre.gkam}}.
 }

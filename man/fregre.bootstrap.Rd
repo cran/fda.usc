@@ -1,26 +1,33 @@
 \name{fregre.bootstrap}
-\Rdversion{1.1}
+\Rdversion{1.2}
 \alias{fregre.bootstrap}
 \title{  Bootstrap regression}
-\description{Estimate the beta parameter by bootstrap }
+\description{Estimate the beta parameter by wild or smoothed bootstrap procedure }
 \usage{
-fregre.bootstrap(model,nb=500,newX=NULL,smo=0.1,
-smoX=0.05,alpha=0.95,kmax.fix=FALSE,draw=TRUE,...)                 
+fregre.bootstrap(model, nb = 500, wild = TRUE,type.wild="golden",newX = NULL,  smo = 0.1, 
+    smoX = 0.05, alpha = 0.95, kmax.fix = FALSE, draw = TRUE,...)                 
 }
 \arguments{
   \item{model}{ \code{fregre.pc}, \code{fregre.pls} or  \code{fregre.basis} object.}	
  \item{nb}{ Number of bootstrap samples }	
- \item{newX}{ (optional), new functional explanatory data of \code{fdata} class .}
-  \item{smo}{ Smoothing parameter as a proportion of response variance.}	
- \item{smoX}{  Smoothing parameter for \code{fdata} object as a proportion of variance-covariance matrix of the explanatory functional variable.}	
- \item{alpha}{ Significance level. }	
- \item{kmax.fix}{ The maximum number of principal comoponents,  partial least squares components  or number of basis is fixed by \code{model} object.}	 
+ \item{wild}{=TRUE, wild bootstrap. =FALSE, smoothed bootstrap.}
+  \item{type.wild}{Type of distribution of V in wild bootstrap procedure, see \code{\link{rwild}}.}
+ \item{smo}{ (only for smoothed bootstrap)  Smoothing parameter as a proportion of response variance.}	
+ \item{smoX}{ (only for smoothed bootstrap)  Smoothing parameter for \code{fdata} object as a proportion of variance-covariance matrix of the explanatory functional variable.}	
+ \item{newX}{ (optional, only for smoothed bootstrap), new functional explanatory data of \code{fdata} class .} 
+ \item{alpha}{ Significance level.}	
+% \item{kmax.fix}{ The maximum number of principal comoponents,  partial least squares components  or number of basis is fixed by \code{model} object.}	 
+ \item{kmax.fix}{=TRUE, the bootstrap procedure considers the same number of components used in the previous fitted model.
+   =FALSE, the bootstrap procedure estimates the best components in each iteration.}
    \item{draw}{=TRUE, plot the bootstrap estimated beta, and (optional) the CI for the predicted response values.}
  \item{\dots}{ Further arguments passed to or from other methods.}	    
 }
 \details{
 Compute the beta estimated in \code{\link{influence.fdata}} for functional regression using principal components representation \code{\link{fregre.pc}}, Partial least squares components (PLS) representation  \code{\link{fregre.pls}} or basis representation \code{\link{fregre.basis}}.\cr
-If a new curves are  in newX argumentthe smoothed bootstrap method estimates the response using the bootstrap samples.
+If a new curves are  in newX argument the bootstrap method estimates the response using the bootstrap resamples.   
+
+If the model exhibits heteroskedasticity, the use of wild bootstrap procedure is recommended (by default).
+
 }
 \value{
 Return:\cr

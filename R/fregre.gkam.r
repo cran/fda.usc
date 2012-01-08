@@ -167,12 +167,8 @@ if (family$family=="binomial") {
            res = fregre.np.cv(xfunc, z, h = h, type.CV = "dev.S", Ker=Ker,
            type.S=ty,par.S=parS,metric = mgood, par.CV = list(obs = y[good],
            family = family, off = off, offdf = offdf,W = diag(w)))
-#            res3 = fregre.plm(xfunc, z, h = h, type.CV = dev.S2,
-#                metric = metric[[i]][good, good], par.CV = list(obs = y[good],
-#                  family = family, off = off, offdf = offdf,weights = diag(weights)))
            if (control$trace)
-            cat("Var:",namesx[[i]]," h.opt:", res$h.opt," df:",res$df,"\n")
-            
+            cat("Var:",namesx[[i]]," h.opt:", res$h.opt," df:",res$df,"\n")           
            eqrank[namesx[i]] <- res$df
            X[good,namesx[i]] <- res$fitted.values
            result[[namesx[i]]] <- res
@@ -272,12 +268,10 @@ if (family$family=="binomial") {
     n.ok <- nobs - sum(weights == 0)
     nulldf <- n.ok - as.integer(intercept)
     aic.model <- aic(y, nobs, mu, weights, dev) + 2 * sum(eqrank)
-    names(result)<-namesx
+    names(result)<-namesx       
     H<-kgam.H(result,control$inverse)
     
     sr2<-sum(residuals^2)/(nobs - sum(eqrank))
-    print(sum(eqrank))
-    print(sum(diag(H)))
 #    if (family$family=="binomial" & !is.factor(y)) y<-factor(y)
     res <- list(result = result, residuals = residuals, fitted.values = mu,
         effects = X, alpha = mean(X[, nvars + intercept]), family = family,
@@ -287,4 +281,5 @@ if (family$family=="binomial") {
     class(res) <- "fregre.gkam"
     res
 }
+
 

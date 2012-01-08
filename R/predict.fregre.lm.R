@@ -101,8 +101,28 @@ if (length(vfunc)>0)  {
        }  }
        }
 if (!is.data.frame(XX)) XX=data.frame(XX)
- yp=predict.lm(object=object,newdata=XX,type=type,x=TRUE,y=TRUE,...)
+    if (object$rn==0)   yp=predict.lm(object=object,newdata=XX,type=type,x=TRUE,y=TRUE,...)
+    else {  
+#si pc o pls
+  yp<-object$coefficients[1]*rep(1,len=nrow(newx[[vfunc[i]]]))
+  for (i in 1:length(vfunc)){
+  if (object$basis.x[[1]]$type=="pc") {
+   object$beta.l[[vfunc[i]]]$data<-matrix(object$beta.l[[vfunc[i]]]$data,nrow=1)
+   b1<-inprod.fdata(fdata.cen(newx[[vfunc[i]]],object$mean.list[[vfunc[i]]])[[1]],object$beta.l[[vfunc[i]]])
+   yp<-yp+b1
+   }
+   else{
+    xcen<-fdata.cen(newx[[vfunc[i]]],object$mean.list[[vfunc[i]]])[[1]]
+    x.fd=Data2fd(argvals=tt,y=t(xcen$data),basisobj=object$basis.x[[vfunc[i]]])
+    C=t(x.fd$coefs)
+    b.est<-matrix(object$coefficients[-1],ncol=1)
+    b1<- C%*%object$JJ[[vfunc[i]]]%*%b.est
+    yp<-yp+b1
+   }
+  }
+  }
+ }
 return(yp)
 }
-}
+
 

@@ -10,11 +10,18 @@
 ##############################################
 
 # Generation of centred random variables with unit variance for the wild bootstrap
-rber.gold=function(n){
-	res=rbinom(n=n,size=1,prob=(5+sqrt(5))/10)
-	res=ifelse(res==1,(1-sqrt(5))/2,(1+sqrt(5))/2)
-	return(res)
+rwild<-function(residuals,type="golden"){
+n<-length(residuals)
+res=switch(type,
+ golden=sample(c((1-sqrt(5))/2,(1+sqrt(5))/2),size=n,prob=c((5+sqrt(5))/10,(5-sqrt(5))/10),replace=TRUE), 
+ Rademacher={	
+	sample(c(-1,1),size=n,prob=c(.5,.5),replace=TRUE)
+	},
+	normal=rnorm(n)
+	)
+return(residuals*res)
 }
+
 
 # Adot function to call Fortran code
 Adot=function(X,inpr){
@@ -402,7 +409,7 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 		for(i in 1:B){
 		
 			# Generate bootstrap errors
-			e.hat=e*rber.gold(n)
+			e.hat=rwild(e,"golden")
 	
 			# Calculate Y.star
 			Y.star=Y-e+e.hat
@@ -424,7 +431,7 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 		for(i in 1:B){
 				
 			# Generate bootstrap errors
-			e.hat.star[i,]=e*rber.gold(n)
+			e.hat.star[i,]=rwild(e,"golden")
 		
 			# Calculate PCVM.star
 			pcvm.star[i]=PCvM.statistic(X=X.est,residuals=e.hat.star[i,],p=p.opt,Adot.vec=Adot.vec)

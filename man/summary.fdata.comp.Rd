@@ -26,9 +26,7 @@ Becker, R. A., Chambers, J. M. and Wilks, A. R. (1988). \emph{The New S Language
 
 Venables, W. N. and B. D. Ripley (2002). \emph{Modern Applied Statistics with S}. Springer-Verlag. 
 }
-\author{
-Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
-}
+\author{Manuel Febrero-Bande and Manuel Oviedo de la Fuente \if{latex}{\cr}\email{manuel.oviedo@usc.es}}
 \seealso{
 See Also as \code{\link{fdata2pc}}, \code{\link{fdata2pls}}  and  \link[stats]{cor}
 }

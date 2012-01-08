@@ -1,4 +1,4 @@
-
+#documentar sqrt(W)%*% residuals^2
 FGCV.S=function(y,S,criteria="GCV",W=diag(1,ncol=ncol(S),nrow=nrow(S)),
 trim=0,draw=FALSE,metric=metric.lp,...){
     isfdata<-is.fdata(y)
@@ -6,13 +6,17 @@ trim=0,draw=FALSE,metric=metric.lp,...){
     tab=list("GCV","AIC","FPE","Shibata","Rice")
     type.i=pmatch(criteria,tab)
     n=ncol(S);l=1:n
-
          y2=(y$data)
          y.est=(S%*%y2)
          y.est<-fdata(y.est,y$argvals, y$rangeval, y$names)
          e <- y - y.est
-         ee <- drop(norm.fdata(e,metric=metric,...)[,1]^2)
-         if (trim>0) {
+#         ee <- drop(norm.fdata(e,metric=metric,...)[,1]^2)
+#         ee2<- drop(norm.fdata(e,metric=metric,w=diag(W))[,1]^2) 
+#   ee2<-mean(diag(t(e$data)%*%W%*%e$data)         )
+        ee<-sqrt(W)%*%(y2-y.est$data)
+        ee<-fdata(ee,e$argvals,e$rangeval)            
+        ee <- drop(norm.fdata(ee,metric=metric,...)[,1]^2)
+        if (trim>0) {
             e.trunc=quantile(ee,probs=(1-trim),na.rm=TRUE,type=4)
             ind<-ee<=e.trunc
             if (draw)  plot(y,col=(2-ind))

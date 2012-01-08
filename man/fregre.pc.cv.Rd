@@ -7,7 +7,7 @@
 Functional regression with scalar response using selection of number of principal components through cross-validation. The algorithm selects the principal components with best estimates the response. The	select is performed by cross-validation (CV) or  model selection criteria (MSC).  After is computing  functional regression using the best selection of principal components (PC).
 	}
 \usage{
-fregre.pc.cv(fdataobj, y, kmax = 8, rn = 0, criteria = "SIC", ...) 
+fregre.pc.cv(fdataobj, y, kmax = 8, rn = 0, criteria = "SIC",weights= rep(1,n), ...) 
 }
 \arguments{
    \item{fdataobj}{ \code{\link{fdata}} class object or \code{fdata.comp} class object created by \code{\link{create.pc.basis}} function.} 
@@ -15,6 +15,7 @@ fregre.pc.cv(fdataobj, y, kmax = 8, rn = 0, criteria = "SIC", ...)
 	\item{kmax}{ Maximum number of principal comoponents.}
 	\item{criteria}{ Type of cross-validation (CV) or  Model Selecttion Criteria (MSC) applied. Possible values are \emph{"CV"}, \emph{"AIC"}, \emph{"AICc"}, \emph{"SIC"} and \emph{"SICc"}.} 	
 		\item{rn}{Ridge parameter. Default value is \code{rn=0}, i.e. no penalization is used. If =TRUE, a sequence of values is provided}
+		\item{weights}{ weights}
  \item{\dots}{ Further arguments passed to \code{\link{fregre.pc}}}  
 }
 \details{
@@ -47,9 +48,27 @@ The criteria selection is done by cross-validation (CV) or Model Selection Crite
 	   \eqn{p_n=\frac{log(n)}{n}}{p_n=log(n)/n}, \code{criteria}=``SIC'' (by default)\cr
 	   \eqn{p_n=\frac{log(n)}{n-k_n-2}}{p_n=log(n)/(n-k_n-2)}, \code{criteria}=``SICc''\cr
 	   \eqn{p_n=2}, \code{criteria}=``AIC''\cr
-	   \eqn{p_n=\frac{2n}{n-k_n-2}}{p_n=2n/(n-k_n-2)}, \code{criteria}=``AICc''
+	   \eqn{p_n=\frac{2n}{n-k_n-2}}{p_n=2n/(n-k_n-2)}, \code{criteria}=``AICc''\cr
+	   \eqn{p_n=\frac{2log(log(n))}{n}}{p_n=2log(log(n))/(n)}, \code{criteria}=``HQIC''\cr 
+
+\item The generalized minimum description length (gmdl) criteria: \cr
+
+ \eqn{gmdl(k_n)=log \left[ \frac{1}{n-k_n}\sum_{i=1}^{n}{\Big(y_i-\big< X_i,\hat{\beta}_{(i,k_n)} \big>\Big)^2} \right] +K_n log \left(\frac{\sum_{i=1}^{n}\big< X_i,\hat{\beta}_{(i,k_n)} \big>^2}{\frac{\sum_{i=1}^{n}\Big(y_i-\big< X_i,\hat{\beta}_{(i,k_n)} \big>\Big)^2}{n-k_n} }\right)+log(n) }
+ 
+%{MSC(k_n)=log [ 1/(n-k_n) \sum_(i=1:n){ (y_i- < X_i , \beta_(i,k_n) > )^2} ] +p_n k_n/n }
+\item The rho criteria:  \eqn{rho(k_n)=log \left[ \frac{1}{n-k_n}\sum_{i=1}^{n}\left(\frac{y_i-\big< X_i,\hat{\beta}_{(i,k_n)} \big>}{1-H_{ii}}\right)^2 \right]}	    
+	    
+%	    "SICc"=log(s2) + log(n) * ck/(n-ck-2),
+%	     "HQIC"=log(s2) + 2*log(log(n)) * ck/n,
+%     RSS<-sum(out$residuals^2)
+             %s2 <- RSS/n
+             %S0<-sqrt(RSS/(n-ck)) #sigmahat
+             %FF<-sum(out$fitted.values^2)/(ck*RSS/(n-ck))
+             % "gmdl"=(n*log(RSS/(n-ck))+ck*log(FF)+log(n))/2,
+             % "rho"={A<-out$residuals;B<-1-diag(out$H)/n; D1<-(A/B)^2;sum(D1)})
 }
-% falta poner CV criteria
+
+  
 where \code{criteria} is an argument that controls the type of validation used in the selection of the smoothing parameter \code{kmax}\eqn{=k_n}.\cr
 
 \code{criteria=``CV''} is not recommended: time-consuming.

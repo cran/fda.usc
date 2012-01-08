@@ -1,4 +1,4 @@
-fregre.lm=function(formula,data,basis.x=NULL,basis.b=NULL,...){
+fregre.lm=function(formula,data,basis.x=NULL,basis.b=NULL,rn=0,weights=rep(1,n),...){
  tf <- terms.formula(formula)
  terms <- attr(tf, "term.labels")
  nt <- length(terms)
@@ -16,10 +16,11 @@ fregre.lm=function(formula,data,basis.x=NULL,basis.b=NULL,...){
  off<-attr(tf,"offset")
 name.coef=nam=par.fregre=beta.l=list()
  kterms=1
+ n<-length(data[["df"]][,response])
 if (length(vnf)>0) {
- XX=data[[1]][,c(response,vnf2)] #data.frame el 1er elemento de la lista
+ XX=cbind(data[[1]][,c(response,vnf2)],weights)
  for ( i in 1:length(vnf)){
-     print(paste("Non functional covariate:",vnf[i]))
+#     print(paste("Non functional covariate:",vnf[i]))
      if (kterms > 1)   pf <- paste(pf, "+", vnf[i], sep = "")
 #     else pf <- paste(pf, terms[i], sep = "")
      else pf <- paste(pf, vnf[i], sep = "")
@@ -31,10 +32,10 @@ if   (attr(tf,"intercept")==0) {
      }
 }
 else {
- XX=data.frame(data[[1]][,response])
- names(XX)=response
+ XX=data.frame(data[[1]][,response],weights)
+ names(XX)=c(response,"weights")
 }
-print(paste("Functional covariate:",vfunc))
+#print(paste("Functional covariate:",vfunc))
 if (length(vfunc)>0) {
  mean.list=vs.list=JJ=list()
  bsp1<-bsp2<-TRUE
@@ -42,6 +43,7 @@ if (length(vfunc)>0) {
 	if(class(data[[vfunc[i]]])[1]=="fdata"){
       tt<-data[[vfunc[i]]][["argvals"]]
       rtt<-data[[vfunc[i]]][["rangeval"]]
+      np<-length(tt)
       fdat<-data[[vfunc[i]]];      dat<-data[[vfunc[i]]]$data
       if (is.null(basis.x[[vfunc[i]]]))  basis.x[[vfunc[i]]]<-create.fdata.basis(fdat,l=1:7)
       else   if (basis.x[[vfunc[i]]]$type=="pc" | basis.x[[vfunc[i]]]$type=="pls") bsp1=FALSE
@@ -67,7 +69,6 @@ if (length(vfunc)>0) {
               basis.b[[vfunc[i]]]$names<-basis.b[[vfunc[i]]]$names[int]
               }
     	    x.fd = Data2fd(argvals = tt, y = t(xcc[[1]]$data),basisobj = basis.x[[vfunc[i]]],fdnames=fdnames)
-
           r=x.fd[[2]][[3]]
 #          Theta = getbasismatrix(tt,basis.b[[vfunc[i]]])
 #          Psi = getbasismatrix(tt,basis.x[[vfunc[i]]])
@@ -84,8 +85,11 @@ if (length(vfunc)>0) {
         	JJ[[vfunc[i]]]<-J
 				}
       else {
-        l<-nrow(basis.x[[vfunc[i]]]$basis)
-        vs <- t(basis.x[[vfunc[i]]]$basis$data)
+
+        l<-basis.x[[vfunc[i]]]$l
+        vs <- t(basis.x[[vfunc[i]]]$basis$data)        
+        
+        basis.x[[vfunc[i]]]$x<-basis.x[[vfunc[i]]]$x[,l,drop=FALSE]
         Z<-basis.x[[vfunc[i]]]$x
         response = "y"
         colnames(Z) = name.coef[[vfunc[i]]]=paste(vfunc[i], ".",rownames(basis.x[[vfunc[i]]]$basis$data),sep ="")
@@ -157,10 +161,34 @@ if (length(vfunc)>0) {
    else stop("Please, enter functional covariate")
    }
   }  }
+  
  if (!is.data.frame(XX)) XX=data.frame(XX)
+
     par.fregre$formula=pf
     par.fregre$data=XX
-    z=lm(formula=pf,data=XX,x=TRUE,y=TRUE,...)
+     y<-XX[,1]    
+    if (rn==0) z=lm(formula=pf,data=XX,x=TRUE,y=TRUE,...) #incluir  penalizacion
+    else {
+      scores<-as.matrix(cbind(rep(1,n),XX[,-(1:2)]))
+      mat<-rn*diag(ncol(scores))
+      mat[1,1]<-0
+      W<-diag(weights) 
+      ddd<-t(scores)%*%W  
+      S<-solve(t(scores)%*%W%*%scores+mat)       #incluir pesos solve(W)
+      Cinv<-S%*%t(scores)%*%W                    #incluir pesos W repetri proceso hasta que no cambie la prediccion   
+      ycen = y - mean(y)
+      coefs<-Cinv%*%XX[,1]
+      z<-list()      
+      z$fitted.values<-drop(scores%*%coefs)
+      z$residuals<-XX[,1]- z$fitted.values
+      H<-scores%*%Cinv
+      df<-traza(H)
+      coefs<-drop(coefs)
+      cnames<-names(XX[,-(1:2)])
+      names(coefs)<-c("Intercept",cnames)
+      z$coefficients<-coefs
+      z$mean.list<-mean.list
+    }       
 #    z$call<-z$call[1:2]
 for (i in 1:length(vfunc)) {
  if (bsp1) beta.l[[vfunc[i]]]=fd(z[[1]][name.coef[[vfunc[i]]]],basis.b[[vfunc[i]]])
@@ -192,9 +220,14 @@ for (i in 1:length(vfunc)) {
  z$data=z$data
  z$XX=XX
  z$data<-data
+ z$rn<-rn
  z$vs.list=vs.list   ##### transformarlo en Data2fd(tt,vs.list,basisobj=basisobj)
  class(z)<-c(class(z),"fregre.lm")
  z
-}
+}     
+
+
+
+
 
 

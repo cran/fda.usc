@@ -3,14 +3,20 @@ FCV.S <-function (y, S, W = diag(ncol(S)), trim = 0, draw = FALSE,metric=metric.
     n = ncol(S)
     isfdata<-is.fdata(y)
     if (isfdata) {
-       y2 = (y$data)
+       y2 = (y$data)     
+       
        y.est = (S %*% y2)
 #       digS<-diag(S)
 #       I = diag(n)/(1 - digS)^2
 #       W = W * I
        y.est<-fdata(y.est,y$argvals, y$rangeval, y$names)
        e <- y - y.est
-       ee <- drop(norm.fdata(e,metric=metric,...)[,1]^2)
+#       ee <- drop(norm.fdata(e,metric=metric,...)[,1]^2)       
+#       ee <- drop(norm.fdata(e,metric=metric,...)[,1]^2)
+       ee<-sqrt(W)%*%(y2-y.est$data)
+       ee<-fdata(ee,e$argvals,e$rangeval)            
+       ee <- drop(norm.fdata(ee,metric=metric,...)[,1]^2)
+
        if (trim > 0) {
            e.trunc=quantile(ee,probs=(1-trim),na.rm=TRUE,type=4)
            ind <- ee <= e.trunc

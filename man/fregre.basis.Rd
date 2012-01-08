@@ -11,7 +11,7 @@ where \eqn{ \big< \cdot , \cdot \big>}{<.,.>} denotes the inner product on \eqn{
 }
 \usage{
 fregre.basis(fdataobj,y,basis.x=NULL,basis.b=NULL,
-lambda=0,Lfdobj=vec2Lfd(c(0,0),rtt),...)
+lambda=0,Lfdobj=vec2Lfd(c(0,0),rtt), weights = rep(1,n),...)
 }
 \arguments{
   \item{fdataobj}{ \code{\link{fdata}} class object.} 
@@ -19,7 +19,8 @@ lambda=0,Lfdobj=vec2Lfd(c(0,0),rtt),...)
 	\item{basis.x}{ Basis for functional explanatory data \code{fdataobj}.}
 	\item{basis.b}{  Basis for functional beta parameter.}
 	\item{lambda}{ A roughness penalty. By default, no penalty \code{lambda=0}.}	
-  \item{Lfdobj}{ See \link[fda]{eval.penalty}.}   	
+  \item{Lfdobj}{ See \link[fda]{eval.penalty}.}   
+   \item{weights}{ weights}	
   \item{\dots}{ Further arguments passed to or from other methods.}
 }
 \details{

@@ -23,10 +23,14 @@ nterms<-length(terms)
 func<-nf<-sm<-rep(0,nterms)
 names(func)<-names(nf)<-names(sm)<-terms
 ndata<-length(data)-1
+if (ndata>0) {
 names.vfunc<-rep("",ndata)
+for (i in 1:ndata) names.vfunc[i]<-names(data)[i+1]
+}
+else names.vfunc<-NULL
+
 speci<-NULL
 for (i in 1:nterms) if (!is.na(specials[i]))     speci<-c(speci,specials[i])
-for (i in 1:ndata) names.vfunc[i]<-names(data)[i+1]
 for (i in 1:nterms) {
          if (any(terms[i]==names(data$df))){
                      vnf<-c(vnf,terms[i] )
@@ -34,7 +38,6 @@ for (i in 1:nterms) {
                      fnf1<-c(fnf1,0)
                      bs.dim1<-c(bs.dim1,0)
                      specials1<-c(specials1,"0")
-
                      }
          else {
          if (any(terms[i]==names.vfunc)){
@@ -83,8 +86,9 @@ nfunc<-sum(func)
 nnf<-length(vnf)
 name.coef=nam=par.fregre=beta.l=list()
 kterms=1
+
  if (nnf>0) {
- XX=data[[1]]
+ XX=data[["df"]]
 if   (attr(tf,"intercept")==0) {
      pf<- paste(pf,-1,sep="")
      }
@@ -101,7 +105,7 @@ if   (attr(tf,"intercept")==0) {
            }
 }
 else {
- XX=data.frame(data[[1]][,response])
+ XX=data.frame(data[["df"]][,response])
  names(XX)=response
 }
 #print(paste("Functional covariate:",vfunc))
@@ -156,9 +160,11 @@ k=1
         	JJ[[vfunc[i]]]<-J
 				}
          else {
-        l<-nrow(basis.x[[vfunc[i]]]$basis)
+        l<-basis.x[[vfunc[i]]]$l
+        lenl<-length(l)
         vs <- t(basis.x[[vfunc[i]]]$basis$data)
-        Z<-basis.x[[vfunc[i]]]$x[,1:l] ##
+#        Z<-basis.x[[vfunc[i]]]$x[,1:l] ##
+        Z<-basis.x[[vfunc[i]]]$x[,l,drop=FALSE]
         response = "y"
         colnames(Z) = name.coef[[vfunc[i]]]=paste(vfunc[i], ".",rownames(basis.x[[vfunc[i]]]$basis$data),sep ="")
         XX = cbind(XX,Z)
@@ -274,8 +280,5 @@ k=1
  class(z)<-c(class(z),"fregre.gsam")
 z
 }
-
-
-
- 
+  
  

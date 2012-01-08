@@ -1,5 +1,5 @@
 fregre.basis.cv=function(fdataobj,y,basis.x=NULL,basis.b=NULL,type.basis=NULL,lambda=0,
-Lfdobj=vec2Lfd(c(0,0),rtt),type.CV=GCV.S,par.CV=list(trim=0),...){
+Lfdobj=vec2Lfd(c(0,0),rtt),type.CV=GCV.S,par.CV=list(trim=0),weights= rep(1,n),...){
 call<-match.call()
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
 #        omit <- omit.fdata(fdataobj, y)
@@ -10,6 +10,7 @@ tt<-fdataobj[["argvals"]]
 rtt<-fdataobj[["rangeval"]]
 n = nrow(x)
 np <- ncol(x)
+W<-diag(weights)
 if (n != (length(y))) stop("ERROR IN THE DATA DIMENSIONS")
 if (is.null(rownames(x)))        rownames(x) <- 1:n
 if (is.null(colnames(x)))        colnames(x) <- 1:np
@@ -33,7 +34,7 @@ if (is.null(basis.x))  {
 }
 else nbasis1<-basis.x
 if (is.null(basis.b))  {
-  nbasis2=seq(min(floor(np/10),5),max(floor(np/10),11),by=2)
+  nbasis2=seq(max(floor(np/10),5),max(floor(np/10),11),by=2)
   lenbasis.b=length(nbasis2)
   basis.b=list()
   for (nb.x in 1:lenbasis.b) {
@@ -112,7 +113,7 @@ else  lenbasis.y=length(nbasis2)
   }
   else {
    nbasis12<-rep(NA,lenbasis.x)
-  nbasis22<-rep(NA,lenbasis.y)
+   nbasis22<-rep(NA,lenbasis.y)
    x.fdfou<-Cfou<-Cmfou<- list()
    for (nb.x in 1:lenbasis.x) {
          x.fdfou[[nb.x]]=Data2fd(argvals=tt,y=t(xcen$data),basisobj=basis.x[[nb.x]])
@@ -146,11 +147,11 @@ else  lenbasis.y=length(nbasis2)
                     }
      else R=0
      for (k in 1:lenlambda) {
-       Sb=t(Z)%*%Z+lambda[k]*R
+       Sb=t(Z)%*%W%*%Z+lambda[k]*R
 #      eigchk(Sb)
 #
       Cinv<-solve(Sb)
-      Sb2=Cinv%*%t(Z)
+      Sb2=Cinv%*%t(Z)%*%W
       par.CV$S <-Z%*%Sb2
        par.CV$y<-y
        gcv[nb.x,nb.y,k]<- do.call(type.CV,par.CV)
@@ -226,8 +227,6 @@ out<-list("call"=call,"b.est"=b.est,"a.est"=a.est,"fitted.values"=yp,"H"=S,
 class(out)="fregre.fd"
 return(out)
 }
-
-
 
 
 

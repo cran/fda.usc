@@ -1,6 +1,6 @@
 #################################################################
 #################################################################
-fregre.pc.cv=function (fdataobj, y, kmax=8,rn=0,criteria = "SIC",...) {
+fregre.pc.cv=function (fdataobj, y, kmax=8,rn=0,criteria = "SIC",weights= rep(1,n),...) {
    sequen=FALSE
    if (length(kmax)>1) {
    sequen=TRUE
@@ -43,7 +43,7 @@ l = l2 = list()
 max.c = length(c1)
 c0 = 1:kmax
 use = rep(FALSE, kmax)
-tab = list("AIC", "AICc","SIC", "SICc","rho","CV")
+tab = list("AIC", "AICc","SIC", "SICc","rho","HQIC","gmdl","CV")
 type.i = pmatch(criteria, tab)
 #pc2<-pc
 lenrn<-length(rn)
@@ -54,9 +54,10 @@ colnames(pc.opt2)<-paste("PC(",1:kmax,")",sep="")
 MSC2<-pc.opt2
 MSC.min<-Inf
 min.rn<-rn[1]
+#print(type.i)
 if (is.na(type.i))     stop("Error: incorrect criteria")
 else {
-    if (type.i < 6) {
+    if (type.i < 8) {
     for (r in 1:lenrn) {
     cv.opt1 = Inf
     pc.opt1 = NA
@@ -76,15 +77,19 @@ if (sequen) {
    for (j in 1:max.c) {
              pc2$rotation <- pc$rotation#[c1[, j]]
              pc2$l <- pc$l[c1[, j]]
-             out = fregre.pc(pc2, y,l=c1[, j],rn=rn[r],...)
+             out = fregre.pc(pc2, y,l=c1[, j],rn=rn[r],weights=weights,...)
              ck<-out$df
-             s2 <- sum(out$residuals^2)/n
+             RSS<-sum(out$residuals^2)
+             s2 <- RSS/n
+             S0<-sqrt(RSS/(n-ck)) #sigmahat
+             FF<-sum(out$fitted.values^2)/(ck*RSS/(n-ck))
              cv.AIC[j]<-switch(criteria,
               "AIC"=log(s2) + 2 * (ck)/n,
               "AICc"=log(s2) + 2 * (ck)/(n - ck - 2),
               "SIC"=log(s2) + log(n) * ck/n,
               "SICc"=log(s2) + log(n) * ck/(n-ck-2),
               "HQIC"=log(s2) + 2*log(log(n)) * ck/n,
+              "gmdl"=(n*log(RSS/(n-ck))+ck*log(FF)+log(n))/2,
               "rho"={A<-out$residuals;B<-1-diag(out$H)/n; D1<-(A/B)^2;sum(D1)})
               }
         if (!sequen){
@@ -181,7 +186,7 @@ if (sequen) {
     MSC = as.numeric(l2)
     names(pc.opt3)<-paste("PC", pc.opt3, sep = "")
  rn.min<-rn[min.rn]
- fregre=fregre.pc(fdataobj,y,l=pc.opt,rn=rn.min,...)
+ fregre=fregre.pc(fdataobj,y,l=pc.opt,rn=rn.min,weights=weights,...)
  return(list("fregre.pc"=fregre,pc.opt = pc.opt3,rn.opt=rn.min,PC.order=pc.opt2,
  MSC.order=MSC2,criteria=criteria))
 }

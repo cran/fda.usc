@@ -39,31 +39,16 @@ create.pc.basis<-function(fdataobj,l=1:5,norm=TRUE,basis=NULL,rn=0,...){
  rtt<-fdataobj$rangeval
  dropind=NULL
  pc<-fdata2pc(fdataobj,norm=norm,ncomp=max(l),...)
- vs<-pc$rotation$data
-# if (is.vector(pc$u)) pc$u<-matrix(pc$u,ncol=1)
- if (length(l)==1) {
-   if (is.matrix(pc$u)) {
-     pc$u<-matrix(pc$u[,l],ncol=1) 
-     vs<-matrix(vs[l,],nrow=1) 
-    pc.fdata<-pc$u%*%matrix(pc$d[l])%*%vs     
-     }
-   else { 
-        print(dim(pc$u))
-        pc$u<-matrix(pc$u,ncol=1) 
-        pc$rotation$data<-matrix(vs[l,],ncol=1)
-        pc.fdata<-pc$u%*%(pc$d)%*%vs        
-        }
-
-  }
- else  pc.fdata<-pc$u[,l]%*%diag(pc$d[l])%*%vs[l,]
+ vs<-pc$rotation$data    
+ lenl<-length(l)  
+ pc.fdata<-pc$u[,l,drop=FALSE]%*%(diag(lenl)*pc$d[l])%*%vs[l,,drop=FALSE]
  pc.fdata<-sweep(pc.fdata,2,matrix(pc$mean$data,ncol=1),"+")
- basis.pc = pc$rotation[l, ]
+ basis.pc = pc$rotation[l, ,drop=FALSE]
  rownames(basis.pc$data) <- paste("PC", l, sep = "")
 # pc.fdata<-inprod.fdata(x,pc$rotation)%*%pc$rotation$data
-# pc.fdata<-inprod.fdata(fdataobj,basis.pc)%*%basis.pc$data
-
+# pc.fdata<-inprod.fdata(fdataobj,basis.pc)%*%basis.pc$data 
  basisobj<-pc
- fdnames<- colnames(pc$x[,l])
+ fdnames<- colnames(pc$x[,l,drop=FALSE])
  if (is.null(basis)) {
    pc.fdata<-fdata(pc.fdata,tt,rtt,fdataobj$names)
    out <- list(fdataobj.pc=pc.fdata,basis = basis.pc, x = pc$x, mean = pc$mean,
@@ -77,7 +62,7 @@ create.pc.basis<-function(fdataobj,l=1:5,norm=TRUE,basis=NULL,rn=0,...){
       out$harmonics<-fdobj
       colnames(out$harmonics$coefs)<-rownames(fdataobj$data)
       out$values<-pc$newd^2
-      out$scores<-pc$x[,l]
+      out$scores<-pc$x[,l,drop=FALSE]
       rownames(out$scores)<-rownames(fdataobj$data)
       out$rn<-rn
       out$varprop<-out$values[l]/sum(out$values)
@@ -85,16 +70,14 @@ create.pc.basis<-function(fdataobj,l=1:5,norm=TRUE,basis=NULL,rn=0,...){
 #      fdobj$type = "pca"
       class(out) <- "pca.fd"
       }
- return(out)
- # min.basis vs min.np
+ return(out) 
 }
-
 
 #######################
 #######################
 create.pls.basis<-function(fdataobj,y,l=1:5,rn=0){
      pls<-fdata2pls(fdataobj,y,ncomp=max(l))
-     basis=pls$rotation[l,]
+     basis=pls$rotation[l,,drop=FALSE]
      rownames(basis$data)<-paste("PLS",l,sep="")
 #     if (length(l)==1)   x=as.matrix(pls$x[,l],ncol=1)
 #     else    x=pls$x[,l]
@@ -110,5 +93,4 @@ create.raw.fdata=function (fdataobj, l = 1:ncol(fdataobj))
 }
 #######################
 #######################
-
 

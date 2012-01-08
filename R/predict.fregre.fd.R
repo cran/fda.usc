@@ -2,6 +2,11 @@ predict.fregre.fd<-function(object,new.fdataobj=NULL,...){
 if (is.null(object)) stop("No fregre.fd object entered")
 #if (is.null(new.fdataobj)) stop("No newx entered")
 if (is.null(new.fdataobj)) return(object$fitted.values)
+if (object$call[[1]]=="gam")  return(predict(object,new.fdataobj,...))
+if (object$call[[1]]=="lm")  return(predict(object,new.fdataobj,...)  )
+if (object$call[[1]]=="glm")  return(predict(object,new.fdataobj,...))
+#falta np (no funcional) y basis (no funcional)
+#print("bbbbb")
 if (!is.fdata(new.fdataobj)) new.fdataobj=fdata(new.fdataobj,object$fdataobj[["argvals"]],object$fdataobj[["rangeval"]],object$fdataobj[["names"]])
 y=object$y
 isfdata<-is.fdata(y)
@@ -90,4 +95,6 @@ yp<-drop(yp)
 names(yp)<-gg
 return(yp)
 }
+
+
 

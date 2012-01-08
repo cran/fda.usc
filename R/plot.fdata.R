@@ -65,7 +65,6 @@ else matplot(x[["argvals"]],t(x[["data"]]),type=type,main=main,ylab=ylab,xlab=xl
 
 lines.fdata=function(x,...){plot(x,add=TRUE,...)}
 
-
 title.fdata<-function(x,main=NULL,xlab=NULL,ylab=NULL,rownames=NULL) {
 if (!is.fdata(x))  stop("Object is not fdata class")
 if (!is.null(rownames)) rownames(x[["data"]])<-rownames
@@ -74,3 +73,4 @@ if (!is.null(xlab)) x[["names"]][["xlab"]]<-xlab
 if (!is.null(ylab)) x[["names"]][["ylab"]]<-ylab
 x
 }
+

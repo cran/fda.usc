@@ -25,7 +25,7 @@ W = diag(1, ncol = ncol(S), nrow = nrow(S)), trim = 0, draw = FALSE,...)
 }
 
 \details{  
-up to a constant, minus twice the maximized log-likelihood. Where sensible, the constant is chosen so that a saturated model has deviance zero.\\
+up to a constant, minus twice the maximized log-likelihood. Where sensible, the constant is chosen so that a saturated model has deviance zero.\cr
 
  \deqn{GCV(h)=p(h) \Xi(n^{-1}h^{-1})}{} \cr
 

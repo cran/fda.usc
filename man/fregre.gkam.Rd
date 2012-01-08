@@ -51,12 +51,13 @@ Opsomer and Ruppert (1997)  solves a system  of equations for fit the unknowns \
 \item{eqrank}{  List that containing the variables in the model.}
 \item{prior.weights}{ Asymmetric kernel used.}
 \item{y}{ Scalar response.}
-\item{H}{ Hat matrix, see Opsomer  and Ruppert(1997) for more details.}
+\item{H}{ Hat matrix, see Opsomer and Ruppert(1997) for more details.}
 \item{converged}{ conv.}
 }
 \references{
-Febrero-Bande M. and Gonzalez-Manteiga W. (2011). \emph{Generalized Additive Models for Functional Data}. Recent Advances in functional Data Analysis and Related Topics. Physica-Velag. \cr
-McCullagh and Nelder (1989), \emph{Generalized Linear Models} 2nd ed. Chapman and Hall. \cr
+Febrero-Bande M. and Gonzalez-Manteiga W. (2012). \emph{Generalized Additive Models for Functional Data}. TEST. Springer-Velag. 
+\url{http://dx.doi.org/10.1007/s11749-012-0308-0}
+
 Opsomer J.D. and Ruppert D.(1997). \emph{Fitting a bivariate additive model by local polynomial regression}.Annals of Statistics, \code{25}, 186-211.
 }
 \author{

@@ -61,49 +61,46 @@ B.2-Functional Outliers detection methods:\cr
 \tab \code{\link{outliers.thres.lrt}} \cr
 \tab \code{\link{outliers.lrt}} \cr
 }
-  C.- Functional Regression with Scalar Response	\cr
+  C.- Functional Regression	Models\cr
 
-C.1. Functional explanatory covariate \cr
+C.1. Functional explanatory covariate  and scalar response\cr
 The functions included in this section allow the estimation of different functional regression models with a scalar response and a single functional explicative covariate.\cr
 \tabular{ll}{
 \tab \code{\link{fregre.pc}}  \cr
 \tab \code{\link{fregre.pc.cv}}  \cr
+\tab \code{\link{fregre.ppc}}  \cr
+\tab \code{\link{fregre.ppc.cv}}  \cr
+\tab \code{\link{fregre.pls}}  \cr
+\tab \code{\link{fregre.pls.cv}}  \cr
+\tab \code{\link{fregre.ppls}}  \cr
+\tab \code{\link{fregre.ppls.cv}}  \cr
 \tab \code{\link{fregre.basis}}  \cr
 \tab \code{\link{fregre.basis.cv}}  \cr
 \tab \code{\link{fregre.np}}  \cr
 \tab \code{\link{fregre.np.cv}}  \cr
-\tab \code{\link{fregre.pls}}  \cr
-\tab \code{\link{fregre.pls.cv}}  \cr
-\tab \code{\link{summary.fregre.fd}} \cr
-\tab \code{\link{predict.fregre.fd}} \cr
 }
 
-  C.2. Functional and non functional explanatory covariates.\cr
-The functions in this section extends those regression models in previous section in several ways.  \cr
-Semifunctional partial linear regression \code{\link{fregre.plm}}  is an extension of functional nonparameric regression  \code{\link{fregre.np}}  allowing  include non-functional variables.\cr
-Functional generalized additive model using backfitting algorithm \code{\link{fregre.gkam}} is an extension of functional nonparameric regression  \code{\link{fregre.np}}  allowing  include  more than one functional variables.\cr
-Functional  linear regression \code{\link{fregre.lm}}, functional generalized linear regression \code{\link{fregre.glm}} and 
-functional generalized spectral additive model \code{\link{fregre.gsam}}  are an extensions of  \code{\link{fregre.basis}} and \code{\link{fregre.pc}} allowing  include  more than one functional variable and other non-functional variables, as \code{\link{lm}} or \code{\link{glm}} functions.\cr
-
-\tabular{ll}{
-\tab \code{\link{fregre.plm}}  \cr
-\tab \code{\link{fregre.gkam}}  \cr
-\tab \code{\link{fregre.lm}}  \cr
-\tab \code{\link{fregre.glm}}  \cr
-\tab \code{\link{fregre.gsam}}  \cr
-\tab \code{\link{predict.fregre.fd}} \cr
-\tab \code{\link{predict.fregre.gkam}} \cr
-\tab \code{\link{predict.fregre.plm}} \cr
-\tab \code{\link{predict.fregre.glm}} \cr
-\tab \code{\link{predict.fregre.gsam}} \cr
-}
-
-C.3. Test for the functional linear model (FLM).\cr	
+C.2. Test for the functional linear model (FLM) with scalar response.\cr	
 \tabular{ll}{
 \tab \code{\link{flm.Ftest}}, F-test for the FLM with scalar response  \cr
 \tab \code{\link{flm.test}}, Goodness-of-fit test for the FLM with scalar response  \cr
 \tab \code{\link{PCvM.statistic}},  PCvM statistic for the FLM with scalar response  \cr
 }
+
+C.3. Functional and non functional explanatory covariates.\cr
+The functions in this section extends those regression models in previous section in several ways.  \cr
+Semifunctional partial linear regression \code{\link{fregre.plm}}  is an extension of functional nonparameric regression  \code{\link{fregre.np}}  allowing  include non-functional variables.\cr
+Functional  linear regression \code{\link{fregre.lm}}, functional generalized linear regression \code{\link{fregre.glm}} and 
+functional generalized spectral additive model \code{\link{fregre.gsam}}  are an extensions of  \code{\link{fregre.basis}} and \code{\link{fregre.pc}} allowing  include  more than one functional variable and other non-functional variables, as \code{\link{lm}} or \code{\link{glm}} functions.\cr
+
+\tabular{ll}{
+\tab \code{\link{fregre.plm}}  \cr
+\tab \code{\link{fregre.lm}}  \cr
+\tab \code{\link{fregre.glm}}  \cr
+\tab \code{\link{fregre.gsam}}  \cr
+\tab \code{\link{fregre.gkam}}  \cr
+}
+
 
   D.- Functional Supervised Classification	\cr
 This section allows the estimation of the groups in a training set of functional data \code{fdata} class by different nonparametric methods of supervised classification. Once these classifiers have been trained, they can be used to predict on new functional data.\cr	
@@ -117,8 +114,6 @@ Package allows the estimation of the groups in a training set of functional data
 \tab \code{\link{classif.glm}} \cr
 \tab \code{\link{classif.gsam}} \cr
 \tab \code{\link{classif.gkam}} \cr
-\tab \code{\link{summary.classif}} \cr
-\tab \code{\link{predict.classif}} \cr
 }
 
 	E.- Functional Non-Supervised Classification	\cr
@@ -139,6 +134,8 @@ This section allows the estimation of the groups in a  functional data set \code
 \tab \code{\link{fdata2fd}}  \cr
 \tab \code{\link{fdata2pc}} \cr
 \tab \code{\link{fdata2pls}} \cr
+\tab \code{\link{fdata2ppc}} \cr
+\tab \code{\link{fdata2ppls}} \cr
 \tab \code{\link{summary.fdata.comp}} \cr
 \tab \code{\link{cond.F}} \cr
 \tab \code{\link{cond.quantile}} \cr
@@ -157,16 +154,24 @@ This section allows the estimation of the groups in a  functional data set \code
 \tabular{ll}{
 Package: \tab fda.usc\cr
 Type: \tab Package\cr
-Version: \tab 1.0.0\cr
-Date: \tab 2012-10-18\cr
+Version: \tab 1.0.1\cr
+Date: \tab 2013-08-01\cr
 License: \tab GPL-2 \cr
 LazyLoad: \tab yes\cr
 Url: \url{ http://eio.usc.es/pub/MAESFE/}, \url{http://eio.usc.es/pub/gi1914/}
 }
 }
 \author{
-Manuel Febrero-Bande <manuel.febrero@usc.es> and\cr Manuel Oviedo de la Fuente <manuel.oviedo@usc.es> 
+\emph{Authors:}
+Manuel Febrero Bande \email{manuel.febrero@usc.es} and Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
+
+\emph{Contributors:}
+ Eduardo Garcia-Portugues \email{eduardo.garcia@usc.es}
+
+\emph{Maintainer:} Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
+
+
 \references{
 Febrero-Bande,  M., Oviedo de la Fuente, M. (2012).  \emph{Statistical Computing in Functional Data Analysis: The R Package fda.usc.}
 Journal of Statistical Software, 51(4), 1-28. \url{http://www.jstatsoft.org/v51/i04/}

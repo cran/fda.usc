@@ -24,18 +24,18 @@ if   (attr(tf,"intercept")==0) {
 ##########
  vtab<-rownames(attr(tf,"factors"))
  vnf=intersect(terms,names(data$df))
- vnf2=intersect(vtab[-1],names(data$df)[-1])
+# vnf2=intersect(vtab[-1],names(data$df)[-1])
  vfunc2=setdiff(terms,vnf)
  vint=setdiff(terms,vtab)
  vfunc=setdiff(vfunc2,vint)
- vnf=c(vnf2,vint)
+# vnf=c(vnf2,vint)
  off<-attr(tf,"offset")
  beta.l=list()
  kterms=1
 if (length(vnf)>0) {
  first=FALSE
- XX=data.frame(data[[1]][,c(vnf2)])
- names(XX)=vnf2
+ XX=data.frame(data[["df"]][,c(vnf)])
+ names(XX)=vnf
  for ( i in 1:length(vnf)){
 # print(paste("no functional variable",vnf[i]))
      if (kterms > 1)   pf <- paste(pf, "+", vnf[i], sep = "")
@@ -109,5 +109,4 @@ if (!is.data.frame(XX)) XX=data.frame(XX)
 return(yp)
 }
 }
-
 

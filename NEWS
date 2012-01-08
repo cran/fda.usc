@@ -1,4 +1,29 @@
+Release 1.0.1 
+New functions:
+New depth functions and its corresponding shortcut functions (see help(Descriptive) form more details):
+ depth.SD() provides the simplicial depth measure for bivariate data.
+ depth.PD() provides the depth measure using random projections for multivariate data.
+ depth.MhD) provides the Mahalanobis depth measure for multivariate data.
+ depth.HD() provides the half-space depth measure for multivariate data.
+It introduces a new functions for functional PC and PLS regression:
+fregre.ppc,fregre.ppls, fregre.ppc.cv,fregre.ppls.cv,
+and the auxiliary functions:  fdata2ppc,fdata2ppls,P.penalty.
+The function rber.gold() has been renamed by rwild() function. 
+Now, rwild() contructs the Wild bootstrap residuals. 
+order.fdata() is a wrapper function of order function.
 
+New arguments and options:
+New arguments "wild" and "type.wild" in fregre.bootstrap().
+In fregre.glm(), fregre.gsam(), classif.glm2boost(), classif.gsam2boost() the
+"fdataobj" argument allows a multivariate data or functional data.
+fregre.lm() allows penalization by "rn" parameter (ridge regression).
+fregre.pc() and fregre.basis() allow weighted least squares by "weights" argument.
+
+Correction of bugs:
+A bug in "draw" argument of fdata.bootstrap() has been fixed.
+A bug in predict.classif() function ussing a fitted object by classif.knn() has been fixed.
+A bug in create.pc.basis() function when "l" argument has length 1 has been fixed. 
+This "bug" has involved the following functions: fregre.lm(), fregre.glm() and fregre.gsam().
 
 
 Release 1.0.0 was released in Oct. 2012 as the working version to
@@ -21,8 +46,6 @@ Function flm.test() now has a better computational performance
 and function Aijr() has been replaced by Adot().
 New argument lambda in fdata2fd() function.
 New argument rn in create.pc.basis() function.
-fregre.lm() allows penalization as fregre.basis() and fregre.pc() 
--ridge regression-.
 fregre.kgam() has been renamed to fregre.gkam().
 
 

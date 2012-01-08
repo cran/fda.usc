@@ -53,7 +53,7 @@ Gonzalez-Manteiga, W., Gonzalez-Rodriguez, G., Martinez-Calvo, A. and Garcia-Por
 
 \author{Eduardo Garcia-Portugues. Please, report bugs and suggestions to \if{latex}{\cr}\email{eduardo.garcia@usc.es}}
 
-\seealso{\code{\link{rber.gold}}, \code{\link{flm.test}}, \code{\link{dfv.test}}}
+\seealso{\code{\link{rwild}}, \code{\link{flm.test}}, \code{\link{dfv.test}}}
 
 \examples{
 

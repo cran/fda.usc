@@ -38,7 +38,7 @@ dfv.test=function(X.fdata,Y,B=5000,h=quantile(x=metric.lp(X.fdata),probs=c(0.05,
 	for(i in 1:B){
 		
 		# Bootsrtap version of Tn: perturbation with a centred and unit variance noise
-		Tn.star[i,]=dfv.statistic(X.fdata=X.fdata,Y=Y*rber.gold(length(Y)),h=h,K=K,weights=weights,dist=dist)
+		Tn.star[i,]=dfv.statistic(X.fdata=X.fdata,Y=rwild(Y,"golden"),h=h,K=K,weights=weights,dist=dist)
 		
 		# Progress bar
 		if(show.prog) setTxtProgressBar(pb,i/B)

@@ -9,6 +9,7 @@ import(MASS)
 import(mgcv)
 import(pls)
 
+
 # exportPattern("^[^\\.]")
 #export(.checkMFClasses, .getXlevels, .MFclass)
 
@@ -18,11 +19,11 @@ anova.hetero,anova.RPm,argvals,
 AKer.norm,AKer.cos,AKer.epa,AKer.tri,AKer.quar,AKer.unif,
 create.pc.basis,create.pls.basis,create.fdata.basis,classif.glm,classif.gsam,classif.gkam,classif.np,classif.knn,classif.kernel,
 cond.F,cond.mode,cond.quantile,create.fdata.basis,CV.S, 
-
-depth.FM,depth.mode, depth.RP,depth.RPD,depth.RT,dev.S,dis.cos.cor,fdata,fdata.bootstrap,dim.fdata,
+depth.HD,depth.SD,depth.PD,depth.MhD,depth.FM,depth.mode, depth.RP,depth.RPD,depth.RT,dev.S,dis.cos.cor,fdata,fdata.bootstrap,dim.fdata,
 fdata.cen,fdata.deriv,fdata2fd,fdata2pc,fdata2pls,FDR,fregre.basis,fregre.basis.cv,fregre.bootstrap,fregre.glm,FDR,
 fregre.gsam,fregre.gkam,fregre.lm,fregre.np,fregre.np.cv,fregre.pc,fregre.pc.cv,fregre.plm,fregre.pls,fregre.pls.cv,
 func.mean,func.var,func.trim.FM,func.trim.mode,func.trim.RP,func.trim.RPD,func.med.FM,func.med.mode,func.med.RP,func.med.RPD,func.trimvar.FM,func.trimvar.mode,func.trimvar.RP,func.trimvar.RPD,
+func.med.HD,func.med.PD,func.med.SD,func.med.MhD,func.trim.HD,func.trim.PD,func.trim.SD,func.trim.MhD,
 GCV.S,
 h.default,
 IKer.norm,IKer.cos,IKer.epa,IKer.tri,IKer.quar,IKer.unif,
@@ -40,11 +41,17 @@ semimetric.hshift,semimetric.mplsr,semimetric.pca,semimetric.deriv,semimetric.fo
 summary.fdata.comp,summary.fregre.fd,summary.fregre.gkam,summary.anova,
 Var.y,Var.e,
 title.fdata,
-flm.Ftest,flm.test,PCvM.statistic,rber.gold,Adot,
-Ftest.statistic,dfv.statistic,dfv.test
-#fregre.basis.func,fregre.basis.func.cv,
-#fregre.pc.func,fregre.np.func,fregre.np.func.cv,fregre.lm.func,FGCV.S,FCV.S
+flm.Ftest,flm.test,PCvM.statistic,Adot,
+Ftest.statistic,dfv.statistic,dfv.test,
+order.fdata,
+fdata2ppc,fdata2ppls,
+fregre.ppc,fregre.ppls,
+fregre.ppc.cv,fregre.ppls.cv,
+P.penalty,rwild
 )
+
+#classif.boosting,classif.glm.cv,fregre.basis.func.cv,
+
 
 #count.na,traza: fda.usc.internal.Rd
 #hshift:	semimetric.NPFDA.Rd
@@ -52,7 +59,6 @@ Ftest.statistic,dfv.statistic,dfv.test
 #int.simpson2: int.simpson.Rd
 #rkernel: Kernel.Rd
 # auxiliares de fdata2pls.R
-
 S3method(c,fdata)
 S3method(dim, fdata)
 #S3method(influence,fdata)
@@ -63,25 +69,28 @@ S3method(Math, fdata)
 S3method(missing,fdata)
 #S3method(omit,fdata)
 S3method(Ops, fdata)
+S3method(order,fdata)
+
+
 S3method(plot, fdata)
 S3method(predict,classif)
 S3method(predict,fregre.fd)
 S3method(predict,fregre.glm)
 S3method(predict,fregre.gsam)
-S3method(predict, fregre.gkam)
-S3method(predict, fregre.lm)
-S3method(predict, fregre.plm)
-S3method(print, classif)
-S3method(print, fregre.fd)
-S3method(print, fregre.gkam)
-S3method(nrow, fdata)
-S3method(ncol, fdata)
-S3method(Summary, fdata)
+S3method(predict,fregre.gkam)
+S3method(predict,fregre.lm)
+S3method(predict,fregre.plm)
+S3method(print,classif)
+S3method(print,fregre.fd)
+S3method(print,fregre.gkam)
+S3method(nrow,fdata)
+S3method(ncol,fdata)
 
-S3method(summary, anova)
-S3method(summary, fdata.comp)
-S3method(summary, fregre.fd)
-S3method(summary, fregre.gkam)
+S3method(Summary,fdata)
+S3method(summary,anova)
+S3method(summary,fdata.comp)
+S3method(summary,fregre.fd)
+S3method(summary,fregre.gkam)
 #S3method(title, fdata)
 
 S3method("[", fdata)
@@ -94,5 +103,4 @@ S3method("==", fdata)
 S3method("^", fdata)
 
 #S3method(predict,depth)
-#S3method(predict,dist)
 #exportPattern("\\.test$")

@@ -31,7 +31,7 @@ flm.Ftest=function(X.fdata,Y,B=5000,show.prog=TRUE){
 	for(i in 1:B){
 		
 		# Bootsrtap version of Tn: perturbation with a centred and unit variance noise
-		Tn.star[i]=Ftest.statistic(X.fdata=X.fdata,Y=Y*rber.gold(length(Y)))
+		Tn.star[i]=Ftest.statistic(X.fdata=X.fdata,Y=rwild(Y,"golden"))
 		
 		# Progress bar
 		if(show.prog) setTxtProgressBar(pb,i/B)

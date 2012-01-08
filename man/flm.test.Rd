@@ -107,7 +107,7 @@ response. \url{http://arxiv.org/abs/1205.6167}
 
 \author{Eduardo Garcia-Portugues. Please, report bugs and suggestions to \if{latex}{\cr}\email{eduardo.garcia@usc.es}}
 
-\seealso{\code{\link{Adot}}, \code{\link{PCvM.statistic}}, \code{\link{rber.gold}}, 
+\seealso{\code{\link{Adot}}, \code{\link{PCvM.statistic}}, \code{\link{rwild}}, 
 \code{\link{flm.Ftest}}, \code{\link{dfv.test}},
 \code{\link{fregre.pc}}, \code{\link{fregre.pls}},\if{latex}{\cr} \code{\link{fregre.basis}}, 
  \code{\link{fregre.pc.cv}}, \code{\link{fregre.pls.cv}},

@@ -28,8 +28,8 @@ Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 See also  \code{\link{dist}} for multivariate date case and \code{\link{metric.lp} for functional data case}
 } 
 \examples{
-data(iris)
-d<-metric.dist(iris[,1:4])
-matplot(d,type="l",col=as.numeric(iris[,5]))
+# data(iris)
+# d<-metric.dist(iris[,1:4])
+# matplot(d,type="l",col=as.numeric(iris[,5]))
 }
 \keyword{ cluster }

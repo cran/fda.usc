@@ -28,7 +28,7 @@
     for (ider in 1:length(deriv)) {
         if (deriv[ider] == 0) {   
           newfunc[, , ider] = data     
-          newfunc2[, , ider] = data     
+          newfunc2[, , ider] = data2     
           } 
         else {
             newfunc[, , ider] = fdata.deriv(fdataobj, nderiv = (ider -
@@ -38,10 +38,10 @@
         }
     }
     dep = rep(0, n)
+    dep2 = rep(0, n2)    
     vproject = matrix(0, nrow = n, ncol = length(deriv))
     vproject2 = matrix(0, nrow = n2, ncol = length(deriv))    
-    z = rnorm(m * nproj)
-    z = matrix(z, nrow = nproj, ncol = m)
+    z = matrix(rnorm(m * nproj), nrow = nproj, ncol = m)
     modu = apply(z, 1, modulo)
     z = z/modu
     if (is.fdata(proj)) {
@@ -61,36 +61,38 @@
 #        resul = dfunc2(vproject, ...)       
         par.dfunc = list()
         par.dfunc$fdataobj <- fdata(vproject)
-        par.dfunc$fdataori <- fdata(vproject2    )
+        par.dfunc$fdataori <- fdata(vproject2)
         par.dfunc$trim <- trim              
         par.dfunc$scale<-TRUE
         resul = do.call(dfunc2, par.dfunc)
         dep = dep + resul$dep
+        dep2 = dep2 + resul$dep.ori        
         setTxtProgressBar(pb, j)
     } 
     close(pb)
     dep = dep/nproj
-    k = which.max(dep)
-    med = data[k, ]
-    lista = which(dep >= quantile(dep, probs = trim))
-    mtrim = apply(data[lista, ], 2, mean, na.rm = TRUE)
+    dep2 = dep2/nproj    
+    k = which.max(dep2)
+    med = data2[k, ]
+    lista = which(dep2 >= quantile(dep2, probs = trim))
+    mtrim = apply(data2[lista, ], 2, mean, na.rm = TRUE)
     tr <- paste("RPD.tr", trim * 100, "%", sep = "")
     med <- fdata(med, tt, rtt, names1)
     mtrim <- fdata(mtrim, tt, rtt, names2)
     rownames(med$data) <- "RPD.med"
     rownames(mtrim$data) <- tr
     if (draw) {
-        ans <- dep
+        ans <- dep2
         ind1 <- !is.nan(ans)
         ans[is.nan(ans)] = NA
         cgray = 1 - (ans - min(ans, na.rm = TRUE))/(max(ans,
             na.rm = TRUE) - min(ans, na.rm = TRUE))
-        plot(fdataobj[ind1, ], col = gray(cgray[ind1]), main = "RPD Depth")
+        plot(fdataori[ind1, ], col = gray(cgray[ind1]), main = "RPD Depth")
         lines(mtrim, lwd = 2, col = "yellow")
         lines(med, col = "red", lwd = 2)
         legend("topleft", legend = c(tr, "Median"), lwd = 2,box.col=0,
             col = c("yellow", "red"))
     }
     return(invisible(list(median = med, lmed = k, mtrim = mtrim,
-        ltrim = lista, dep = dep, proj = z)))
+        ltrim = lista, dep = dep, dep.ori = dep2, proj = z)))
 }  

@@ -34,7 +34,6 @@ nboot=0,contrast=NULL,\dots)
 \details{
 The function allows user-defined contrasts.  The list of contrast  to be used for some of the factors in the formula.  Each  contrast matrix in the list has  \code{r} rows, where \code{r} is the number of factor levels. The user can also request special predetermined contrasts, for example using the \code{\link{contr.helmert}}, \code{\link{contr.sum}} or \code{\link{contr.treatment}} functions.\cr
 
-
 The function returns (by default) the significance of the variables using the Bonferroni test and the False Discovery Rate test.
 Bootstrap procedure provides more precision 
 }
@@ -56,7 +55,7 @@ Cuesta-Albertos, J.A., Febrero-Bande, M. \emph{A simple multiway ANOVA for funct
 Test 2010, DOI \bold{10.1007/s11749-010-0185-3}.
 }
 \author{
-Cuesta-Albertos, J.A., Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
+Juan A. Cuesta-Albertos,  Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 \seealso{
 See Also as: \code{\link{anova.hetero}} 

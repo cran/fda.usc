@@ -11,13 +11,14 @@ where \eqn{ \big<  \cdot , \cdot \big>}{<.,.>} denotes the inner product on \eqn
  
 }
 \usage{
-fregre.pc(fdataobj, y, l = NULL,rn = 0, ...) 
+fregre.pc(fdataobj, y, l = NULL,rn = 0,weights= rep(1,len=n),...) 
 }
 \arguments{
    \item{fdataobj}{ \code{\link{fdata}} class object or \code{fdata.comp} class object created by \code{\link{create.pc.basis}} function.}  
 	\item{y}{ Scalar response with length \code{n}.}
 	\item{l}{ Vector of principal components. If is null \code{l} (by default), \code{l=1:3}.}
 	\item{rn}{Ridge parameter.  Default value is rn=0, i.e. no penalization is used.} 
+	\item{weights}{ weights}
 	%If rn = FALSE (by default), rn=0.  If =TRUE, rn is a percentage of a larger singular values of centered functional data.} 
   \item{\dots}{ Further arguments passed to or from other methods.}
 }

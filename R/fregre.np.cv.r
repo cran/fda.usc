@@ -1,4 +1,4 @@
-#incluir cv en type.S
+
 fregre.np.cv=function(fdataobj,y,h=NULL,Ker=AKer.norm,metric=metric.lp,
 type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0),par.S=list(w=1),...){
 if (is.function(type.CV)) tcv<-deparse(substitute(type.CV))

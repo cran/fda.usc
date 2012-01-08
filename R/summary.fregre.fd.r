@@ -414,6 +414,7 @@ return(invisible(object))
 ##############################################################################
 ##############################################################################
 kgam.H<-function(object,inverse="svd") {
+#print("kgam.H")
  lenH<-length(object)
  if (lenH==1) return(object[[1]]$H)
  else {
@@ -436,8 +437,15 @@ kgam.H<-function(object,inverse="svd") {
   DD<-kronecker(diag(lenH),outer(rep(1,n),rep(1,n)))
   D1<-abs(DD-1)
   SS<-MM1*D1+diag(n*lenH)
-#  cat("kappa=",kappa(SS),"\n")
-  SSinv<-switch (inverse,solve=solve(SS),
+#  cat("kappa=",kappa(SS),"\n")    
+    slv <- try(solve(SS),silent=TRUE)
+#    print(slv)
+    if (class(slv)=="try-error") {
+     sv<-svd(SS)
+     slv<-drop((sv$v%*%diag(1/sv$d)%*%t(sv$u)))
+    warning("Inverse of sigma computed by SVD")
+    }    
+  SSinv<-switch (inverse,solve=slv,
                svd={
                        res.X=svd(SS)
                       (res.X$v)%*%diag(res.X$d^(-1))%*%t(res.X$u)})
@@ -451,3 +459,4 @@ kgam.H<-function(object,inverse="svd") {
  }
 ##############################################################################
 ##############################################################################
+ 

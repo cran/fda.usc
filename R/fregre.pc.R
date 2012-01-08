@@ -1,6 +1,6 @@
 ####################################################################
 ####################################################################
-fregre.pc=function (fdataobj, y, l =NULL,rn=0,...){
+fregre.pc=function (fdataobj, y, l =NULL,rn=0,weights=rep(1,len=n),...){
 if (class(fdataobj)=="fdata.comp") {
     pc<-fdataobj
     fdataobj<-pc$fdataobj
@@ -21,7 +21,7 @@ else {
 #  y<-omit[[2]]
   tt<-fdataobj[["argvals"]]
   x<-fdataobj[["data"]]
-  pc<-fdata2pc(fdataobj,ncomp=max(l),...)
+  pc<-fdata2pc(fdataobj,ncomp=max(l))
 }
 #f (rn==TRUE) rn<-0.05*(pc$newd[1]^2)
     rtt <- fdataobj[["rangeval"]]
@@ -40,7 +40,8 @@ else {
     J<-min(np,lenl)
     ymean<-mean(y)
     ycen<- y - ymean
-if (rn>0) {
+    W<-diag(weights)    
+ if (rn>0) {
     xmean<-pc$mean
     d<-pc$newd[l]
 #    v<-pc$rotation[l,l]
@@ -64,8 +65,9 @@ if (rn>0) {
      mat<-rn*diag(J+1)
      mat[1,1]<-0
 #     xx2<-t(scores)%*%scores
-     S<-solve(t(scores)%*%scores+mat)
-     Cinv<-S%*%t(scores)
+     S<-solve(t(scores)%*%W%*%scores+mat)       #incluir pesos solve(W)
+     Cinv<-S%*%t(scores)%*%W                    #incluir pesos W repetri proceso hasta que no cambie la prediccion   
+     #comprobar y ver el siguiente
      coefs<-Cinv%*%y
      yp<-drop(scores%*%coefs)
      H<-scores%*%Cinv
@@ -112,36 +114,39 @@ if (rn>0) {
 else {
 #print("no rn")
     response = "y"
-    dataf<-data.frame(y,Z)
-     colnames(dataf)<-c("y",cnames)
+    dataf<-data.frame(y,Z,weights)
+    colnames(dataf)<-c("y",cnames,"weights")
     pf <- paste(response, "~", sep = "")
     for (i in 1:length(cnames)) pf <- paste(pf,"+",cnames[i],sep="")
-    object.lm = lm(formula = pf, data =dataf , x = TRUE,y = TRUE)
+    object.lm = lm(formula = pf,data=data.frame(dataf),weights=weights,...)
     beta.est<-object.lm$coefficients[2:(lenl+1)]*pc$rotation[l]
 #    beta.est$data<-apply(beta.est$data,2,sum)
-     beta.est$data<-colSums(beta.est$data)
+    beta.est$data<-colSums(beta.est$data)
     beta.est$names$main<-"beta.est"
     beta.est$data <- matrix(as.numeric(beta.est$data),nrow=1)
-#    H<-diag(hat(Z, intercept = TRUE),ncol=n)
-#    H<-lm.influence(object.lm, do.coef = FALSE)$hat o bien
-#    I <- diag(1/(n*pc$lambdas[l]), ncol = lenl) #1/n
-    Z=cbind(rep(1,len=n),Z)
-    S=solve(t(Z)%*%Z)
-    H<-Z%*%S%*%t(Z)
+##    H<-diag(hat(Z, intercept = TRUE),ncol=n)
+##    H<-lm.influence(object.lm, do.coef = FALSE)$hat o bien
+##    I <- diag(1/(n*pc$lambdas[l]), ncol = lenl) #1/n
+
+#    Z=cbind(rep(1,len=n),Z)
+#    S=solve(t(Z)%*%W%*%Z)
+#    H<-Z%*%S%*%t(Z)
     e<-object.lm$residuals
+    H<-diag(hat(Z, intercept = TRUE),ncol=n)
 #     H<-scores%*%solve(t(scores)%*%scores+mat)%*%t(scores)
-     df<-traza(H)
- sr2 <- sum(e^2)/(n - df)
- r2 <- 1 - sum(e^2)/sum(ycen^2)
- r2.adj<- 1 - (1 - r2) * ((n -    1)/(n-df))
- GCV <- sum(e^2)/(n - df)^2
+#     df<-traza(H)
+     df<-n- object.lm$df
+     sr2 <- sum(e^2)/(n - df)
+     r2 <- 1 - sum(e^2)/sum(ycen^2)
+     r2.adj<- 1 - (1 - r2) * ((n -    1)/(n-df))
+     GCV <- sum(e^2)/(n - df)^2
 # out <- list(call = C, beta.est = beta.est, fitted.values =object.lm$fitted.values,
 # fdata.comp=pc,coefficients=object.lm$coefficients,residuals = object.lm$residuals,
 # df = df,r2=r2, sr2 = sr2,H=H,fdataobj = fdataobj,y = y, l = l,lm=object.lm,pc=pc
 # ,GCV=GCV,rn=rn)
   out <- list(call = C, beta.est = beta.est,coefficients=object.lm$coefficients,
   fitted.values =object.lm$fitted.values,residuals = e,H=H,df = df,r2=r2,GCV=GCV,
-  sr2 = sr2,l = l,rn=rn,fdata.comp=pc,lm=object.lm,
+  sr2 = sr2,l = l,rn=rn,fdata.comp=pc,lm=object.lm,weights=weights,
   fdataobj = fdataobj,y = y)
   }
  class(out) = "fregre.fd"
@@ -149,4 +154,3 @@ else {
 }
 ####################################################################
 ####################################################################
-

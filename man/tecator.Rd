@@ -17,11 +17,8 @@ Water, Fat and Protein content of meat samples
 \item \code{"argvals"}: 100 discretization points from 850 to 1050mm \cr
 \item \code{"rangeval"}=(850,1050): range(\code{"argvals"})
 \item \code{"names"} list with:  \code{main} an overall title "Tecator data set",	\code{xlab} title for \code{x} axis "Wavelength (mm)" and \code{ylab} title for \code{y} axis  "Absorbances".
-}
- 
+}   
   \code{..$y}: the percentages of Fat, Water and Protein.  The three contents are determined by analytic chemistry.\cr 
-
-
 }
 \details{
 \code{absorp.fdata} absorbance data for 215 samples. The first 129 were originally used as a training set 
@@ -31,9 +28,7 @@ for more details see tecator package}
 \url{http://lib.stat.cmu.edu/datasets/tecator}
 }
 
-\author{
-Febrero-Bande, M and Oviedo de la Fuente, Manuel
-}
+\author{Manuel Febrero-Bande and Manuel Oviedo de la Fuente \if{latex}{\cr}\email{manuel.oviedo@usc.es}}
 \examples{
 data(tecator)
 names(tecator)

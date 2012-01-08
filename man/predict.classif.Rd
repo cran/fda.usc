@@ -3,7 +3,7 @@
 \alias{predict.classif}
 \title{ Predicts from a fitted classif object.}
 \description{
-  Classifier of Functional Data by kernel method using Functional Data Object of class \code{classif}. 
+  Classifier of functional data by kernel method using functional data object of class \code{classif}. 
 }
 \usage{
 \method{predict}{classif}(object, new.fdataobj,type="class",\dots)

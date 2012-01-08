@@ -23,15 +23,23 @@ For more details in estimation process see \code{\link{fregre.pls}}.\cr
  
 The criteria selection is done by cross-validation (CV) or Model Selection Criteria (MSC). 
 \itemize{
-	\item Predictive Cross-Validation:  \eqn{PCV(k_n)=\frac{1}{n}\sum_{i=1}^{n}{\Big(y_i -\big< X_i,\hat{\beta}_{(-i,k_n)} \big>\Big)^2}}{PCV(k_n)=1/n \sum_(i=1:n)  (y_i - < X_i , \beta.est_(-i,k_n) >)^2},\cr 
+	\item Predictive Cross-Validation:  \eqn{PCV(k_n)=\frac{1}{n}\sum_{i=1}^{n}{\Big(y_i -\hat{y}_{(-i,k_n)}	 \Big)^2}}{PCV(k_n)=1/n \sum_(i=1:n)  (y_i - \hat{y}_{-i})^2},\cr 
 	\code{criteria}=``CV''
 	
-	\item Model Selection Criteria:  \eqn{MSC(k_n)=log \left[ \frac{1}{n}\sum_{i=1}^{n}{\Big(y_i-\big< X_i,\hat{\beta}_{(i,k_n)} \big>\Big)^2} \right] +p_n\frac{k_n}{n} }{MSC(k_n)=log [ 1/n \sum_(i=1:n){ (y_i- < X_i , \beta_(i,k_n) > )^2} ] +p_n k_n/n } \cr
+	\item Model Selection Criteria:  \eqn{MSC(k_n)=log \left[ \frac{1}{n}\sum_{i=1}^{n}{\Big(y_i-\hat{y}_i\Big)^2} \right] +p_n\frac{k_n}{n} }{MSC(k_n)=log [ 1/n \sum_(i=1:n){ (y_i- \hat{y}_i )^2} ] +p_n k_n/n } \cr
 	   \eqn{p_n=\frac{log(n)}{n}}{p_n=log(n)/n}, \code{criteria}=``SIC'' (by default)\cr
 	   \eqn{p_n=\frac{log(n)}{n-k_n-2}}{p_n=log(n)/(n-k_n-2)}, \code{criteria}=``SICc''\cr
 	   \eqn{p_n=2}, \code{criteria}=``AIC''\cr
-	   \eqn{p_n=\frac{2n}{n-k_n-2}}{p_n=2n/(n-k_n-2)}, \code{criteria}=``AICc''
-}
+	   \eqn{p_n=\frac{2n}{n-k_n-2}}{p_n=2n/(n-k_n-2)}, \code{criteria}=``AICc''\cr
+	   \eqn{p_n=\frac{2log(log(n))}{n}}{p_n=2log(log(n))/(n)}, \code{criteria}=``HQIC''\cr 
+
+\item The generalized minimum description length (gmdl) criteria: \cr
+
+ \eqn{gmdl(k_n)=log \left[ \frac{1}{n-k_n}\sum_{i=1}^{n}{\Big(y_i-\hat{y}_i\Big)^2} \right] +K_n log \left(\frac{(n-k_n)\sum_{i=1}^{n}\hat{y}_i^2}{{\sum_{i=1}^{n}\Big(y_i-\hat{y}_i\Big)^2} }\right)+log(n) }
+ 
+%{MSC(k_n)=log [ 1/(n-k_n) \sum_(i=1:n){ (y_i- < X_i , \beta_(i,k_n) > )^2} ] +p_n k_n/n }
+\item The rho criteria:  \eqn{rho(k_n)=log \left[ \frac{1}{n-k_n}\sum_{i=1}^{n}\left(\frac{y_i-\hat{y}_i}{1-H_{ii}} \right)^2\right]}	
+}  
 % falta poner CV criteria
 where \code{criteria} is an argument that controls the type of validation used in the selection of the smoothing parameter \code{kmax}\eqn{=k_n}.\cr
 

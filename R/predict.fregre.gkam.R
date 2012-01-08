@@ -23,4 +23,3 @@ predict.fregre.gkam<-function (object, newx = NULL, type = "response", ...)
 
 
 
-

@@ -6,7 +6,7 @@
 phoneme data
 }
 \description{
-Phoneme curves.
+Phoneme curves
 }
 \usage{data(phoneme)}
 \format{

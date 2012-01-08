@@ -1,15 +1,22 @@
 \name{fdata2pls}
 \Rdversion{1.1}
 \alias{fdata2pls}
+\alias{fdata2ppls}
 \title{ Partial least squares components for functional data.}
 \description{ Compute partial least squares (PLS) components for functional data. }
 \usage{ 
-fdata2pls(fdataobj,y,ncomp=2,...)
+fdata2pls(fdataobj,y, ncomp = 2,norm=TRUE,...)
+fdata2ppls(fdataobj, y, ncomp = 2, lambda = 0, P = c(0, 0, 1),norm=TRUE,...) 
+
  }
 \arguments{
   \item{fdataobj}{ \code{\link{fdata}} class object.}  
 	\item{y}{ Scalar response with length \code{n}.}
   \item{ncomp}{The number of components to include in the model.}
+   \item{norm}{=TRUE the \code{fdataobj}  are centered  and scaled.} 
+  \item{lambda}{ Amount of penalization. Default value is 0, i.e. no penalization is used.}
+  \item{P}{ If P is a vector:  coefficients to define the penalty matrix object. By default P=c(0,0,1) penalize the second derivative (curvature) or acceleration.
+  If P is a matrix:  the penalty matrix object.} 
   \item{\dots}{ Further arguments passed to or from other methods.}
 }
 \details{
@@ -24,7 +31,9 @@ The partial least squares are calculated by \code{NIPALS} algorithm.
     \item{fdataobj.cen}{ The centered \code{fdataobj} object.}  
     \item{mean}{ mean of \code{fdataobj}.}         
  	  \item{l}{ Vector of index of principal components.}    
-     \item{C}{ The matched call.}     
+     \item{C}{ The matched call.} 
+    \item{lambda}{ Amount of penalization.}
+    \item{P}{ Penalty matrix.}         
 }
 \references{ 
 Kraemer, N., Sugiyama M. (2011). \emph{The Degrees of Freedom of Partial Least Squares Regression}. Journal of the American Statistical Association. Volume 106, 697-705.

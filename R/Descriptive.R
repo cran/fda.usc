@@ -1,3 +1,4 @@
+#  for functional data
 func.mean<-function(fdataobj){
 if (!is.fdata(fdataobj)) fdataobj<-fdata(fdataobj)
 fdataobj[["data"]]<-matrix(apply(fdataobj[["data"]],2,mean,na.rm=TRUE),nrow=1)
@@ -50,4 +51,16 @@ func.med.RT=function(fdataobj,...){ depth.RT(fdataobj,...)$median}
 func.trimvar.RT=function(fdataobj,...){
  lista=depth.RT(fdataobj,...)$ltrim
  func.var(fdataobj[lista,])}
+
+#  for multivarate data
+func.trim.SD=function(fdataobj,...){depth.SD(fdataobj,...)$mtrim}
+func.trim.PD=function(fdataobj,...){depth.PD(fdataobj,...)$mtrim}
+func.trim.HD=function(fdataobj,...){depth.HD(fdataobj,...)$mtrim} 
+func.trim.MhD=function(fdataobj,...){depth.MhD(fdataobj,...)$mtrim}
+
+func.med.SD=function(fdataobj,...){depth.SD(fdataobj,...)$median} 
+func.med.PD=function(fdataobj,...){depth.PD(fdataobj,...)$median}
+func.med.HD=function(fdataobj,...){ depth.HD(fdataobj,...)$median}
+func.med.MhD=function(fdataobj,...){ depth.MhD(fdataobj,...)$median}
+
 

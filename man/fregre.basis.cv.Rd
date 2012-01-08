@@ -9,7 +9,7 @@
 \usage{
 fregre.basis.cv(fdataobj,y,basis.x=NULL,basis.b=NULL,
 type.basis=NULL,lambda=0,Lfdobj=vec2Lfd(c(0,0),rtt),
-type.CV=GCV.S,par.CV=list(trim=0),...)
+type.CV=GCV.S,par.CV=list(trim=0),weights= rep(1,n),...)
 }
 \arguments{
   \item{fdataobj}{ \code{\link{fdata}} class object.} 
@@ -22,6 +22,7 @@ type.CV=GCV.S,par.CV=list(trim=0),...)
    \item{Lfdobj}{ See \link[fda]{eval.penalty}.}     
   \item{type.CV}{ Type of cross-validation. By default generalized cross-validation \code{\link{GCV.S}} method.}  
   \item{par.CV}{ List of parameters for \code{type.CV}: \code{trim}, the alpha of the trimming and \code{draw}.}	  
+  \item{weights}{ weights}
   \item{\dots}{ Further arguments passed to or from other methods.}
 }
 \details{ 

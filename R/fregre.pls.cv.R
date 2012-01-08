@@ -26,26 +26,30 @@ else {
      ind =1:kmax
     l = l2 = list()
     ck = 1
-    tab = list("AIC", "AICc","SIC", "SICc","HQIC","rho","CV")
+    tab = list("AIC", "AICc","SIC", "SICc","HQIC","rho","gmdl","CV")
     type.i = pmatch(criteria, tab)
     pc2<-pc
     MSC.min<-Inf
-    cv.AIC <- rep(NA,kmax)
+    ck<-cv.AIC <- rep(NA,kmax)
     if (is.na(type.i))     stop("Error: incorrect criteria")
     else {
-    if (type.i < 7) {
+    if (type.i < 8) {
 #        cv.AIC <- rep(NA, kmax)
         for (j in 1:kmax) {
             pc2$rotation<-pc$rotation[1:j]
             out = fregre.pls(pc2,y,...)
-            ck<-out$df
-            s2 <- sum(out$residuals^2)/n  #(n-ck)
+            ck[j]<-out$df
+             RSS<-sum(out$residuals^2)
+             s2 <- RSS/n
+             S0<-sqrt(RSS/(n-ck[j])) #sigmahat
+             FF<-sum(out$fitted.values^2)/(ck[j]*RSS/(n-ck[j]))
             cv.AIC[j]<-switch(criteria,
-              "AIC"=log(s2) + 2 * (ck)/n,
-              "AICc"=log(s2) + 2 * (ck)/(n - ck - 2),
-              "SIC"=log(s2) + log(n) * ck/n,
-              "SICc"=log(s2) + log(n) * ck/(n-ck-2),
-              "HQIC"=log(s2) + 2*log(log(n)) * ck/n,
+              "AIC"=log(s2) + 2 * (ck[j])/n,
+              "AICc"=log(s2) + 2 * (ck[j])/(n - ck[j] - 2),
+              "SIC"=log(s2) + log(n) * ck[j]/n,
+              "SICc"=log(s2) + log(n) * ck[j]/(n-ck[j]-2),
+              "HQIC"=log(s2) + 2*log(log(n)) * ck[j]/n,
+              "gmdl"=(n*log(RSS/(n-ck[j]))+ck[j]*log(FF)+log(n))/2,
               "rho"={A<-out$residuals;B<-1-diag(out$H)/n; D1<-(A/B)^2;sum(D1)})
      if ( MSC.min>cv.AIC[j]) {
        pc.opt<-j
@@ -92,7 +96,7 @@ names(cv.AIC) = paste("PLS",1:kmax , sep = "")
     fregre=fregre.pls(fdataobj,y,l=1:pc.opt,...)
     MSC.min = cv.AIC[pc.opt]
     return(list("fregre.pls"=fregre,pls.opt = 1:pc.opt,
-    MSC.min = MSC.min,MSC = cv.AIC,criteria=criteria))
+    MSC.min = MSC.min,MSC = cv.AIC,criteria=criteria,"df"=ck))
 }
 #################################################################
 #################################################################

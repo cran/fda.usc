@@ -1,6 +1,7 @@
 \name{CV.S}
 \Rdversion{1.1}
 \alias{CV.S}
+\alias{FCV.S}
 
 \title{ The cross-validation (CV) score}
 \description{
@@ -8,12 +9,13 @@ The cross-validation (CV)  score.
 }
 \usage{
 CV.S(y,S,W=diag(ncol(S)),trim=0,draw=FALSE,metric=metric.lp,...)
+FCV.S(y,S,W=diag(ncol(S)),trim=0,draw=FALSE,metric=metric.lp,...)
 }
 
 \arguments{
   \item{y}{ Matrix  of  set cases with dimension (\code{n} x \code{m}), where \code{n} is the number of curves and \code{m} are the points observed in each curve.}
   \item{S}{ Smoothing matrix, see \code{\link{S.NW}}, \code{\link{S.LLR}} or \eqn{S.KNN}.}
-  \item{W }{ Matrix of weights.}    
+  \item{W}{ Matrix of weights.}    
 	\item{trim}{ The alpha of the trimming.}
   \item{draw}{ =TRUE, draw the curves, the sample median and trimmed mean.}	
   \item{metric}{ Metric function, by default \code{\link{metric.lp}}.}

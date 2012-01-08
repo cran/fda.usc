@@ -1,6 +1,7 @@
 \name{GCV.S}
 \Rdversion{1.1}
 \alias{GCV.S}
+\alias{FGCV.S}
 \title{ The generalized cross-validation (GCV) score.}
 \description{
  The generalized cross-validation (GCV) score. 
@@ -8,13 +9,15 @@
 \usage{
 GCV.S(y,S,criteria="GCV",W=diag(1,ncol=ncol(S),nrow=nrow(S)),
 trim=0,draw=FALSE,metric=metric.lp,...)
+FGCV.S(y,S,criteria="GCV",W=diag(1,ncol=ncol(S),nrow=nrow(S)),
+trim=0,draw=FALSE,metric=metric.lp,...)
 }
 
 \arguments{
   \item{y}{ Matrix  of  set cases with dimension (\code{n} x \code{m}), where \code{n} is the number of curves and \code{m} are the points observed in each curve.}
   \item{S}{ Smoothing matrix, see \code{\link{S.NW}}, \code{\link{S.LLR}} or \eqn{S.KNN}. }
   \item{criteria}{ The penalizing function. By default \emph{"Rice"} criteria. Possible values are \emph{"GCV"}, \emph{"AIC"}, \emph{"FPE"}, \emph{"Shibata"}, \emph{"Rice"}. }
-  \item{W }{ Matrix of weights.}    
+  \item{W}{ Matrix of weights.}    
 	\item{trim}{ The alpha of the trimming.}
   \item{draw}{ =TRUE, draw the curves, the sample median and trimmed mean.}	  
   \item{metric}{ Metric function, by default \code{\link{metric.lp}}.}
@@ -26,7 +29,8 @@ trim=0,draw=FALSE,metric=metric.lp,...)
 
  Where  \cr
 A.-If \code{trim=0}:\cr 
-\deqn{p(h)=\frac{1}{n} \sum_{i=1}^{n}{\Big(y_i-r_{i}(x_i)\Big)^{2}w(x_i)}}{p(h)=1/n \sum_{i=1:n} ( y_i - r_i(x_i) )^2 w(x_i)} \cr
+%\deqn{p(h)=\frac{1}{n} \sum_{i=1}^{n}{\Big(y_i-r_{i}(x_i)\Big)^{2}w(x_i)}}{p(h)=1/n \sum_{i=1:n} ( y_i - r_i(x_i) )^2 w(x_i)} \cr
+\deqn{p(h)={\left\|\sqrt(W)\left(y_i-\hat{y}_{i}\right)\right\|}}{p(h)=||\sqrt{W}( y - \hat{y})||} \cr
 B.-If \code{trim>0}:\cr
 \deqn{p(h)=\frac{1}{l} \sum_{i=1}^{l}{\Big(y_i-r_{i}(x_i)\Big)^{2}w(x_i)}}{p(h)=1/l \sum_{i=1:l} ( y_i - r_i(x_i) )^2 w(x_i)} \cr
 \code{l}: index of \code{(1-trim)} curves with less error.

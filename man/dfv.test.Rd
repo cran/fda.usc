@@ -76,7 +76,7 @@ response. \url{http://arxiv.org/abs/1205.6167}
 
 \author{Eduardo Garcia-Portugues. Please, report bugs and suggestions to \if{latex}{\cr}\email{eduardo.garcia@usc.es}}
 
-\seealso{\code{\link{rber.gold}}, \code{\link{flm.test}}, \code{\link{flm.Ftest}}, \code{\link{fregre.np}}}
+\seealso{\code{\link{rwild}}, \code{\link{flm.test}}, \code{\link{flm.Ftest}}, \code{\link{fregre.np}}}
 
 \examples{
 

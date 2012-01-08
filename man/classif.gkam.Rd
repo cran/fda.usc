@@ -36,13 +36,16 @@ Return \code{gam} object plus:\cr
   \item{prob.group}{ Matrix of predicted class probabilities. For each functional point shows the probability of each possible group membership.}    
 }
 \references{
-Febrero-Bande M. and Gonzalez-Maneiga W. (2011). \emph{Generalized Additive Models for Functional Data}. Recent Advances in functional Data Analyisis and Related Topics. Physica-Velag. \cr
-McCullagh and Nelder (1989), \emph{Generalized Linear Models} 2nd ed. Chapman and Hall. \cr
+Febrero-Bande M. and Gonzalez-Manteiga W. (2012). \emph{Generalized Additive Models for Functional Data}. TEST. Springer-Velag. 
+\url{http://dx.doi.org/10.1007/s11749-012-0308-0}
+
+McCullagh and Nelder (1989), \emph{Generalized Linear Models} 2nd ed. Chapman and Hall. 
+
 Opsomer J.D. and Ruppert D.(1997). \emph{Fitting a bivariate additive model by local polynomial regression}.Annals of Statistics, \code{25}, 186-211.
 }
 
 \author{
-Febrero-Bande, M. and Oviedo de la Fuente, M.
+Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 \seealso{
 See Also as:  \code{\link{fregre.gkam}}.\cr

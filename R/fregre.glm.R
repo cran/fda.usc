@@ -9,16 +9,17 @@ basis.b=NULL,CV=FALSE,...){
     } else pf <- rf <- "~"
  vtab<-rownames(attr(tf,"factors"))
  vnf=intersect(terms,names(data$df))
- vnf2=intersect(vtab[-1],names(data$df)[-1])
+# vnf2=intersect(vtab[-1],names(data$df)[-1])
  vfunc2=setdiff(terms,vnf)
  vint=setdiff(terms,vtab)
  vfunc=setdiff(vfunc2,vint)
- vnf=c(vnf2,vint)
-off<-attr(tf,"offset")
-name.coef=nam=par.fregre=beta.l=list()
+# vnf=c(vnf2,vint)
+ off<-attr(tf,"offset")
+ name.coef=nam=par.fregre=beta.l=list()
  kterms=1
+#print(response)
  if (length(vnf)>0) {
- XX=data[[1]][,c(response,vnf2)] #data.frame el 1er elemento de la lista
+ XX=data[["df"]][,c(response,vnf)] #data.frame el 1er elemento de la lista
  for ( i in 1:length(vnf)){
 #     print(paste("Non functional covariate:",vnf[i]))
      if (kterms > 1)   pf <- paste(pf, "+", vnf[i], sep = "")
@@ -31,7 +32,7 @@ if   (attr(tf,"intercept")==0) {
 }
 else {
  XX=data$df[response]
-names(XX)=response
+ names(XX)=response
 }
 #print(paste("Non functional covariate:",vnf))
 #print(paste("Functional covariate:",vfunc))
@@ -78,14 +79,15 @@ names(XX)=response
            }
         JJ[[vfunc[i]]]<-J
     }
-      else {
-        l<-nrow(basis.x[[vfunc[i]]]$basis)
+      else {   
+        l<-basis.x[[vfunc[i]]]$l
+        lenl<-length(l)
         vs <- t(basis.x[[vfunc[i]]]$basis$data)
-        Z<-basis.x[[vfunc[i]]]$x[,1:l]
+        Z<-basis.x[[vfunc[i]]]$x[,l,drop=FALSE]
+   
         response = "y"
-        colnames(Z) = name.coef[[vfunc[i]]]=paste(vfunc[i], ".",colnames(Z),sep ="")
+        colnames(Z) = name.coef[[vfunc[i]]]=paste(vfunc[i], ".",colnames(Z),sep ="")      
 #       colnames(Z) = name.coef[[vfunc[i]]]=paste(vfunc[i],".",rownames(basis.x[[vfunc[i]]]$basis$data),sep ="")
-#print(colnames(Z))
         name.coef[[vfunc[i]]]<-colnames(Z)
         XX = cbind(XX,Z)
         vs.list[[vfunc[i]]]=basis.x[[vfunc[i]]]$basis
@@ -94,7 +96,7 @@ names(XX)=response
             if (kterms >= 1)  pf <- paste(pf, "+", name.coef[[vfunc[i]]][j], sep = "")
            else pf <- paste(pf, name.coef[[vfunc[i]]][j], sep = "")
            kterms <- kterms + 1
-           }
+           }       
           }
     }
  else {
@@ -229,4 +231,3 @@ if (lenfunc) {
  class(z)<-c(class(z),"fregre.glm")
  z
 }
-
