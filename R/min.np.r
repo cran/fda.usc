@@ -1,7 +1,7 @@
 
 
 
-min.np<-function (fdataobj, h =NULL, W = diag(1, nrow = np, ncol = np), Ker = Ker.norm,type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),...)
+min.np<-function (fdataobj, h =NULL, W = NULL, Ker = Ker.norm,type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),...)
 {
 
  if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)

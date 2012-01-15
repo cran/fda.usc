@@ -8,7 +8,7 @@ Smoothing of functional data using nonparametric kernel estimation with cross-va
 \usage{
 %min.np(fdataobj,h=NULL,W=diag(1,nrow=np,ncol=np),Ker=Ker.norm,
 %type.CV=GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),...)
-\method{min}{np}(fdataobj,h=NULL,W=diag(1,nrow=np,ncol=np),Ker=Ker.norm,
+\method{min}{np}(fdataobj,h=NULL,W=NULL,Ker=Ker.norm,
 type.CV=GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),\dots)
 }
 

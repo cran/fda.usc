@@ -1,16 +1,12 @@
 \name{GCV.S}
 \Rdversion{1.1}
 \alias{GCV.S}
-\alias{FGCV.S}
 \title{ The generalized cross-validation (GCV) score.}
 \description{
  The generalized cross-validation (GCV) score. 
 }
 \usage{
-GCV.S(y,S,criteria="GCV",W=diag(1,ncol=ncol(S),nrow=nrow(S)),
-trim=0,draw=FALSE,metric=metric.lp,...)
-FGCV.S(y,S,criteria="GCV",W=diag(1,ncol=ncol(S),nrow=nrow(S)),
-trim=0,draw=FALSE,metric=metric.lp,...)
+GCV.S(y,S,criteria="GCV",W=NULL,trim=0,draw=FALSE,metric=metric.lp,...)
 }
 
 \arguments{

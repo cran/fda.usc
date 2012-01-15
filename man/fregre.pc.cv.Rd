@@ -7,7 +7,8 @@
 Functional regression with scalar response using selection of number of principal components through cross-validation. The algorithm selects the principal components with best estimates the response. The	select is performed by cross-validation (CV) or  model selection criteria (MSC).  After is computing  functional regression using the best selection of principal components (PC).
 	}
 \usage{
-fregre.pc.cv(fdataobj, y, kmax = 8, rn = 0, criteria = "SIC",weights= rep(1,n), ...) 
+fregre.pc.cv(fdataobj, y, kmax = 8, rn = 0, 
+   criteria = "SIC",weights= rep(1,n), ...) 
 }
 \arguments{
    \item{fdataobj}{ \code{\link{fdata}} class object or \code{fdata.comp} class object created by \code{\link{create.pc.basis}} function.} 

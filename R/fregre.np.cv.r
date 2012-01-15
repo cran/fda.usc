@@ -1,4 +1,3 @@
-
 fregre.np.cv=function(fdataobj,y,h=NULL,Ker=AKer.norm,metric=metric.lp,
 type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0),par.S=list(w=1),...){
 if (is.function(type.CV)) tcv<-deparse(substitute(type.CV))
@@ -75,11 +74,6 @@ par.S2<-par.S
 if (is.null(par.S2$h))  par.S$h<-h
 if (is.null(par.S$Ker))  par.S$Ker<-Ker
 y.est.cv<-y.est<-matrix(NA,nrow=nrow(y.mat),ncol=ncol(y.mat))
-if (isfdata) {
-   if (tcv=="GCV.S") tcv="FGCV.S"
-   if (tcv=="CV.S") tcv="FCV.S"
-   if (tcv=="dev.S") tcv="Fdev.S"
-   }
 par.S$tt<-mdist
 par.CV$metric<-metric
   for (i in 1:lenh) {
@@ -93,9 +87,10 @@ par.CV$metric<-metric
     H=do.call(ty,par.S)
 
 #     gcv[i] <- type.CV(y, H,trim=par.CV$trim,draw=par.CV$draw,...)
-    if (tcv=="CV.S"  | tcv=="FCV.S")  par.CV$S<-H.cv
-    if (tcv=="GCV.S" | tcv=="FGCV.S") par.CV$S<-H
-    if (tcv=="dev.S") par.CV$S<-H
+    par.CV$S<-switch(tcv,CV.S=H.cv,GCV.S=H,dev.S=H)
+#    if (tcv=="CV.S")  par.CV$S<-H.cv
+#    if (tcv=="GCV.S") par.CV$S<-H
+#    if (tcv=="dev.S") par.CV$S<-H
     for (j in 1:npy) {
         par.CV$y<-y.mat[,j]
 #        if (!isfdata) gcv[i]<- do.call(type.CV,par.CV)    #si es fdata no hace falta!!!
@@ -148,14 +143,15 @@ if (all(is.infinite(gcv))) print(" Warning: Invalid range for h")
     ypcv<-fdata(ypcv,tty,rtty)
    	rownames(ypcv$data)<-rownames(y$data)
     ecv<-y-ypcv
-
+                                                                  
     norm.e<-drop(norm.fdata(e,metric=metric,...)[,1]^2)
     sr2=sum(norm.e)/(n-df)
     ycen=fdata.cen(y)$Xcen
 #	  r2=1-sum(e^2)/sum(ycen^2)
 	  r2=1-sum(norm.e)/sum(ycen^2)
+    yp2<-Hcv%*%y.mat^2-(Hcv%*%y.mat)^2
     out<-list("call"=C,"fitted.values"=yp,"H"=H,"residuals"=e,"df"=df,"r2"=r2,
-"sr2"=sr2,"y"=y,"fdataobj"=fdataobj,"mdist"=mdist,"Ker"=Ker,
+"sr2"=sr2,"var.y"=yp2,"y"=y,"fdataobj"=fdataobj,"mdist"=mdist,"Ker"=Ker,
 "metric"=metric,"type.S"=type.S,"par.S"=par.S,"gcv"=gcv,"h.opt"=h.opt,"h"=h,"m"=m,
 "fit.CV"=list("fitted.values"=ypcv,"residuals"=ecv))
  }
@@ -166,9 +162,10 @@ else {
 
     sr2=sum(e^2)/(n-df)
     ycen=y-mean(y)
-	  r2=1-sum(e^2)/sum(ycen^2)
+	  r2=1-sum(e^2)/sum(ycen^2)      	  
+    yp2<-Hcv%*%y.mat[,1]^2-(Hcv%*%y.mat[,1])^2
 	  out<-list("call"=C,"fitted.values"=yp,"H"=H,"residuals"=e,"df"=df,"r2"=r2,
-"sr2"=sr2,"y"=y,"fdataobj"=fdataobj,"mdist"=mdist,"Ker"=Ker,
+"sr2"=sr2,"var.y"=yp2,"y"=y,"fdataobj"=fdataobj,"mdist"=mdist,"Ker"=Ker,
 "metric"=metric,"type.S"=type.S,"par.S"=par.S,"gcv"=gcv,"h.opt"=h.opt,"h"=h,"m"=m,
 "fit.CV"=list("fitted.values"=ypcv,"residuals"=ecv))
   }

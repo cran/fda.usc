@@ -1,3 +1,11 @@
+
+Release 1.0.2 introduces new functions:
+New argument "se.fit" in predict.fregre.fd() and predict.fregre.lm() function.
+A bug in CV.S() function when "y" argument is a fdata object has been fixed. 
+This "bug" has involved the min.np() function.
+In metric.lp() function NA values are returned, if the fdata has NA's values. 
+In metric.lp() function supremum distance is computed, if "lp" argument is 0.
+
 Release 1.0.1 
 New functions:
 New depth functions and its corresponding shortcut functions (see help(Descriptive) form more details):

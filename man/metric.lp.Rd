@@ -20,10 +20,14 @@ metric.lp(fdata1,fdata2=NULL,lp=2,w=1,...)
 }
 \details{
 By default it uses the L2-norm with \code{lp = 2}. 
-\deqn{Let \ \  f(x)= fdata1(x)-fdata2(x)} {}
+\deqn{Let \ \  f(x)= fdata1(x)-fdata2(x)}{f(x)= fdata1(x)-fdata2(x)}
 \deqn{\left\|f\right\|_p=\left (  \frac{1}{\int_{a}^{b}w(x)dx} \int_{a}^{b} \left|f(x)\right|^{p}w(x)dx \right)^{1/p}}{}
 
 The observed points on each curve are equally spaced (by default) or not. 
+
+The  L\eqn{\infty}-norm is computed with \code{lp = 0}. 
+\deqn{d(fdata1(x),fdata2(x))_{\infty}=sup \left|fdata1(x)-fdata2(x)\right|}%{sup | fdata1(x) - fdata2(x) |}
+
 }
 \references{
 Febrero-Bande,  M., Oviedo de la Fuente, M. (2012).  \emph{Statistical Computing in Functional Data Analysis: The R Package fda.usc.}

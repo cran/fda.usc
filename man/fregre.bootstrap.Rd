@@ -4,8 +4,8 @@
 \title{  Bootstrap regression}
 \description{Estimate the beta parameter by wild or smoothed bootstrap procedure }
 \usage{
-fregre.bootstrap(model, nb = 500, wild = TRUE,type.wild="golden",newX = NULL,  smo = 0.1, 
-    smoX = 0.05, alpha = 0.95, kmax.fix = FALSE, draw = TRUE,...)                 
+fregre.bootstrap(model, nb = 500, wild = TRUE,type.wild="golden",newX = NULL,
+ smo = 0.1, smoX = 0.05, alpha = 0.95, kmax.fix = FALSE, draw = TRUE,...)                 
 }
 \arguments{
   \item{model}{ \code{fregre.pc}, \code{fregre.pls} or  \code{fregre.basis} object.}	
@@ -56,23 +56,17 @@ See Also as: \code{\link{fregre.pc}}, \code{\link{fregre.pls}}, \code{\link{freg
 data(tecator)
 x=tecator$absorp.fdata[1:129]
 y=tecator$y$Fat[1:129]
-
-res.basis=fregre.basis(x,y)
-newx=tecator$absorp.fdata[-c(1:129)]
-newy=tecator$y$Fat[-c(1:129)]
-nb<-10 # Time-consuming
-res.boot1=fregre.bootstrap(res.basis,nb=nb,newX=newx,kmax.fix=TRUE)
-predy=predict(res.basis,newx)
-plot(predy-newy,col=2)
-
-## predicted responses by bootstrap
-# res.boot1$ypred
-
-## With FPC and FPLS basis
+nb<-100
+## Time-consuming
 # res.pc=fregre.pc(x,y,1:6)
+# res.boot1=fregre.bootstrap(res.pc,nb=nb,wild=FALSE,kmax.fix=TRUE)
+
+## predicted responses by bootstrap  with FPC and FPLS basis
+# newx=tecator$absorp.fdata[-c(1:129)]
+# newy=tecator$y$Fat[-c(1:129)]
 # res.pls=fregre.pls(x,y)
-# res.boot2=fregre.bootstrap(res.pls,nb=5,newX=newx,kmax.fix=TRUE)
-# res.boot3=fregre.bootstrap(res.pc,nb=5,newX=newx,kmax.fix=TRUE)
+# res.boot2=fregre.bootstrap(res.pls,nb=nb,wild=FALSE,newX=newx,kmax.fix=TRUE)
+# res.boot3=fregre.bootstrap(res.pc,nb=nb,wild=FALSE,newX=newx,kmax.fix=TRUE)
 
 }
 \keyword{ regression }

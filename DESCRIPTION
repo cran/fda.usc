@@ -2,8 +2,8 @@ Package: fda.usc
 Type: Package
 Title: Functional Data Analysis and Utilities for Statistical Computing
         (fda.usc)
-Version: 1.0.1
-Date: 2012-01-08
+Version: 1.0.2
+Date: 2012-01-15
 Author: Manuel Febrero-Bande, Manuel Oviedo de la Fuente
 Maintainer: Manuel Oviedo de la Fuente <manuel.oviedo@usc.es>
 Depends: R (>= 2.10), fda, splines, MASS, mgcv, pls
@@ -16,6 +16,6 @@ Description: The R package fda.usc carries out exploratory and
 License: GPL-2
 URL: http://www.jstatsoft.org/v51/i04/
 LazyLoad: yes
-Packaged: 2013-01-10 15:57:13 UTC; moviedo
+Packaged: 2013-01-15 12:26:56 UTC; moviedo
 Repository: CRAN
-Date/Publication: 2013-01-10 17:30:10
+Date/Publication: 2013-01-15 18:01:13

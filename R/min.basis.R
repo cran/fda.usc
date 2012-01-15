@@ -1,4 +1,4 @@
-min.basis<-function(fdataobj,type.CV=GCV.S,W=diag(1,ncol=np,nrow=np),lambda=0,
+min.basis<-function(fdataobj,type.CV=GCV.S,W=NULL,lambda=0,
 numbasis=floor(seq(ncol(fdataobj)/16,ncol(fdataobj)/2,len=10)),
 type.basis="bspline",par.CV=list(trim=0,draw=FALSE),...){
 

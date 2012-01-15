@@ -9,8 +9,8 @@
 }
 \usage{
 fregre.gkam(formula,family = gaussian(),data, weights= rep(1,nobs),
-     par.metric = NULL,par.np=NULL,offset=NULL,
-     control = list(maxit = 100,epsilon = 0.001, trace = FALSE, inverse="solve"),...)
+par.metric = NULL,par.np=NULL,offset=NULL,
+control = list(maxit = 100,epsilon = 0.001, trace = FALSE, inverse="solve"),...)
 kgam.H(object,inverse="svd")
        }
 \arguments{

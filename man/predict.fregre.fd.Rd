@@ -8,11 +8,12 @@
 }
 \usage{
 %predict.fregre.fd(object,new.fdataobj=NULL,...)
-\method{predict}{fregre.fd}(object,new.fdataobj=NULL,\dots)
+\method{predict}{fregre.fd}(object,new.fdataobj=NULL,se.fit=FALSE,\dots)
 }
 \arguments{
    \item{object}{ \code{fregre.fd} object.}
   \item{new.fdataobj}{ New functional explanatory data of \code{fdata} class.}
+  \item{se.fit}{=TRUE (not default) standard error estimates are returned for each prediction.}
   \item{\dots}{ Further arguments passed to or from other methods.}
 }
 \details{ 
@@ -22,8 +23,11 @@ Predicts from a fitted \code{fregre.pls} object,see  \code{\link{fregre.pls}} or
 Predicts from a fitted \code{fregre.np} object, see  \code{\link{fregre.np}} or \code{\link{fregre.np.cv}}.
 }
 \value{
-Return:\cr
-\item{fitted.values}{  Predited scalar response.}
+If \code{se.fit = FALSE}, a vector of predictions of scalar response is returned.\cr
+If \code{se.fit =TRUE}  a list with the following components is returned: 
+\item{fit}{Predictions of scalar response}
+\item{se.fit}{Associated standard error estimates of predictions}
+%If \code{se.fit} is TRUE then a 2 item list is returned with items (both arrays) fit and se.fit containing predictions and associated standard error estimates, otherwise an array of predictions of scalar response is returned.
 }
 \references{
 Cai TT, Hall P. 2006. \emph{Prediction in functional linear regression}. Annals of Statistics 34: 2159{-}2179.

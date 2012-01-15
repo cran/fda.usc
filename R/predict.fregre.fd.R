@@ -1,4 +1,4 @@
-predict.fregre.fd<-function(object,new.fdataobj=NULL,...){
+predict.fregre.fd<-function(object,new.fdataobj=NULL,se.fit=FALSE,...){
 if (is.null(object)) stop("No fregre.fd object entered")
 #if (is.null(new.fdataobj)) stop("No newx entered")
 if (is.null(new.fdataobj)) return(object$fitted.values)
@@ -26,23 +26,57 @@ newx<-new.fdataobj[["data"]]
 tt<-new.fdataobj[["argvals"]]
 rtt<-new.fdataobj[["rangeval"]]
 nn <- nrow(new.fdataobj)
+np <- ncol(new.fdataobj)
  if (is.null(rownames(newx)))         rownames(newx) <- 1:nn
- if (object$call[[1]]=="fregre.pc") {
- a1<-object$coefficients[1]*rep(1,len=nrow(newx))
- object$beta.est$data<-matrix(object$beta.est$data,nrow=1)
-# b2<-new.fdataobj$data%*%t(object$beta.est$data)
- b1<-inprod.fdata(fdata.cen(new.fdataobj,object$fdata.comp$mean)[[1]],object$beta.est)#/(ncol(newx)-1)
- yp<- a1+b1
+ if (object$call[[1]]=="fregre.pc" ) {
+  Z<- inprod.fdata(fdata.cen(new.fdataobj,object$fdata.comp$mean)[[1]],object$fdata.comp$rotation)
+  colnames(Z)<-names(object$lm$coefficients[-1])
+  XX<-data.frame(Z)   
+   if (object$rn==0) return(predict.lm(object=object$lm,newdata=XX,se.fit=se.fit,x=TRUE,y=TRUE,...))
+   else {
+    a1<-object$coefficients[1]*rep(1,len=nrow(newx))
+    object$beta.est$data<-matrix(object$beta.est$data,nrow=1)
+    b1<-inprod.fdata(fdata.cen(new.fdataobj,object$fdata.comp$mean)[[1]],object$beta.est)#/(ncol(newx)-1)
+    yp<- a1+b1      
+    yp<-drop(yp)
+    XX2<-cbind(rep(1,len=nn),Z)
+#    yp.lm<-predict.lm(object=object$lm,newdata=XX,se.fit=se.fit,...)  
+    names(yp) <-gg
+    if (se.fit) {
+     se.fit<-sqrt(rowSums((XX2 %*%object$Vp*XX2)))
+     names(se.fit)<-gg
+     return(list("fit"=yp,"se.fit"=se.fit))
+    }
+    else      return(yp)   
+    }
  }
- else {
-  if (object$call[[1]]=="fregre.pls" ) {
-  a1<-object$coefficients[1]*rep(1,len=nrow(newx))
-  object$beta.est$data<-matrix(object$beta.est$data,nrow=1)
-#  b2<-new.fdataobj$data%*%t(object$beta.est$data)
-  b1<-inprod.fdata(fdata.cen(new.fdataobj,object$fdata.comp$mean)[[1]],object$beta.est)#/(ncol(newx)-1)
-  yp<- a1+b1
- }
- else {
+else{
+  if (object$call[[1]]=="fregre.pls") {
+  newXcen<-fdata.cen(new.fdataobj,object$fdata.comp$mean)[[1]]
+  if (object$fdata.comp$norm)  {
+    sd.X <- sqrt(apply(object$fdataobj$data, 2, var))
+    newXcen$data<- newXcen$data/(rep(1, nn) %*% t(sd.X))
+    }
+  Z<- inprod.fdata(newXcen,object$fdata.comp$rotation) 
+  colnames(Z)<-names(object$lm$coefficients[-1])  
+  XX<-data.frame(Z)  
+  return(predict.lm(object=object$lm,newdata=XX,se.fit=se.fit,...))
+#  a1<-object$coefficients[1]*rep(1,len=nrow(newx))  
+#  object$beta.est$data<-matrix(object$beta.est$data,nrow=1)
+#  b1<-inprod.fdata(newXcen,object$beta.est)#/(ncol(newx)-1)
+#  yp<- a1+b1      
+#  yp<-drop(yp)        
+#  names(yp) <-gg  
+#  if (se.fit) { 
+#     p1<-predict.lm(object=object$lm,newdata=XX,se.fit=se.fit,...)
+#     XX2<-cbind(rep(1,len=nn),Z) 
+#     se.fit<-sqrt(rowSums((XX2 %*%object$Vp*XX2)))       
+#       names(se.fit)<-gg    
+# return(list(p1$fit,yp=yp,p1$se.fit,se.fit)) 
+#       }
+#  else {       return(yp) } 
+ } 
+else {
  if (object$call[[1]]=="fregre.basis" || object$call[[1]]=="fregre.basis.cv"){
   x=newx
   basis.x=object$basis.x.opt             #
@@ -50,16 +84,24 @@ nn <- nrow(new.fdataobj)
 	x.fd=Data2fd(argvals=tt,y=t(xcen$data),basisobj=basis.x)
   C=t(x.fd$coefs)
   if (is.vector(object$b.est)) object$b.est<-matrix(object$b.est,ncol=1,nrow=length(object$b.est))
-  yp=object$a.est* rep(1,len=nn) + C%*%object$J%*%object$b.est
+  Z<-C%*%object$J
+#  colnames(Z)<-names(object$lm$coefficients[-1])  
+#  p1<-predict.lm(object=object$lm,newdata=data.frame(Z),se.fit=se.fit,...)  
+  yp=object$a.est* rep(1,len=nn) + Z%*%object$b.est
    if (isfdata) {
     return(fdata(yp,y$argvals,y$rtt,y$names))
     }
-  yp <- matrix(yp,ncol=1,nrow=nn)
-  }
+  if (se.fit) {
+     XX2<-cbind(rep(1,len=nn),Z) 
+     se.fit<-sqrt(rowSums((XX2 %*%object$Vp*XX2)))       
+ #    names(se.fit)<-gg    
+     return(list("fit"=yp,"se.fit"=se.fit)) 
+ }
+ else {       return(yp) } 
+ }
  else {
  if (object$call[[1]]=="fregre.np" || object$call[[1]]=="fregre.np.cv"){
-# if (is.vector(newx))  newx <- t(as.matrix(newx))
-
+# if (is.vector(newx))  newx <- t(as.matrix(newx))    
  x=object$fdataobj
  h=object$h.opt
  n = nrow(x)
@@ -84,17 +126,21 @@ nn <- nrow(new.fdataobj)
   par.S$cv=FALSE
   H<-do.call(a2,par.S)
 #print(y.mat)
-  yp=H%*%y.mat
+  yp=H%*%y.mat    
  if (isfdata) {
     return(fdata(yp,y$argvals,y$rtt,y$names))
     }
+ else{
+  yp<-drop(yp)
+  names(yp)<-gg
+  if (se.fit) {
+   se.fit<- H%*%y.mat^2-yp^2
+   return(list("fit"=yp,"se.fit"=sqrt(se.fit)))
+  } 
+  else (return(yp))
+ }   
  }     }
- }     }
+}     }
 #rownames(yp)=rownames(newx)
-yp<-drop(yp)
-names(yp)<-gg
 return(yp)
 }
-
-
-

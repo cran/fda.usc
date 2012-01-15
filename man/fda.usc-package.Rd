@@ -102,6 +102,7 @@ functional generalized spectral additive model \code{\link{fregre.gsam}}  are an
 }
 
 
+
   D.- Functional Supervised Classification	\cr
 This section allows the estimation of the groups in a training set of functional data \code{fdata} class by different nonparametric methods of supervised classification. Once these classifiers have been trained, they can be used to predict on new functional data.\cr	
 \cr
@@ -154,8 +155,8 @@ This section allows the estimation of the groups in a  functional data set \code
 \tabular{ll}{
 Package: \tab fda.usc\cr
 Type: \tab Package\cr
-Version: \tab 1.0.1\cr
-Date: \tab 2013-08-01\cr
+Version: \tab 1.0.2\cr
+Date: \tab 2013-01-15\cr
 License: \tab GPL-2 \cr
 LazyLoad: \tab yes\cr
 Url: \url{ http://eio.usc.es/pub/MAESFE/}, \url{http://eio.usc.es/pub/gi1914/}
@@ -166,7 +167,9 @@ Url: \url{ http://eio.usc.es/pub/MAESFE/}, \url{http://eio.usc.es/pub/gi1914/}
 Manuel Febrero Bande \email{manuel.febrero@usc.es} and Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 
 \emph{Contributors:}
- Eduardo Garcia-Portugues \email{eduardo.garcia@usc.es}
+ Pedro Galeano, Alicia Nieto-Reyes, Eduardo Garcia-Portugues \email{eduardo.garcia@usc.es} and STAPH group \url{http://www.lsp.ups-tlse.fr/staph/}
+ %pedro.galeano@uc3m.es,  alicia.nieto@unican.es STAPH group maintaining the page http://www.lsp.ups-tlse.fr/staph/
+ 
 
 \emph{Maintainer:} Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }

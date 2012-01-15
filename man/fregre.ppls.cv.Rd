@@ -1,4 +1,4 @@
-\name{fregre.ppc.cv,fregre.ppls.cv}
+\name{fregre.ppc.cv}   
 \Rdversion{1.1}
 \alias{fregre.ppc.cv}
 \alias{fregre.ppls.cv}
