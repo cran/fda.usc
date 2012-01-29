@@ -47,7 +47,7 @@ order.fdata,
 fdata2ppc,fdata2ppls,
 fregre.ppc,fregre.ppls,
 fregre.ppc.cv,fregre.ppls.cv,
-P.penalty,rwild
+P.penalty,rwild,classif.depth
 )
 
 #classif.boosting,classif.glm.cv,fregre.basis.func.cv,

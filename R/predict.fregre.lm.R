@@ -1,7 +1,7 @@
-predict.fregre.lm<-function(object,newx=NULL,type="response",...){
+predict.fregre.lm<-function(object,newx=NULL,type="response",se.fit=FALSE,...){
  if (is.null(object)) stop("No fregre.glm object entered")
  if (is.null(newx)) {
-    yp=predict.lm(object,...)
+    yp=predict.lm(object,,type=type,se.fit=se.fit,...)
     print("No newx entered")
     return(yp)
     }
@@ -56,7 +56,7 @@ if (length(vfunc)>0)  {
       x.fd<-fdataobj[["data"]]
       tt<-fdataobj[["argvals"]]
       rtt<-fdataobj[["rangeval"]]
-      if (!object$basis.x[[vfunc[i]]]$type=="pc"&!object$basis.x[[vfunc[i]]]$type=="pls") {
+      if (!object$basis.x[[vfunc[i]]]$type=="pc"&!object$basis.x[[vfunc[i]]]$type=="pls") {            # si es pls hay que quitarle la norma!!!
  	      	x.fd = Data2fd(argvals = tt, y = t(fdata.cen(fdataobj,object$mean[[vfunc[i]]])[[1]]$data),
                       basisobj = basis.x[[vfunc[i]]],fdnames=rownames(x.fd))
 	    	  r=x.fd[[2]][[3]]
@@ -66,8 +66,17 @@ if (length(vfunc)>0)  {
           colnames(Z) = colnames(J)
       }
       else {
-           name.coef<-paste(vfunc[i], ".",rownames(object$basis.x[[vfunc[i]]]$basis$data),sep ="")
-          Z<- inprod.fdata(fdata.cen(fdataobj,object$mean[[vfunc[i]]])[[1]],object$vs.list[[vfunc[i]]])
+          name.coef<-paste(vfunc[i], ".",rownames(object$basis.x[[vfunc[i]]]$basis$data),sep ="")
+          newXcen<-fdata.cen(fdataobj,object$mean[[vfunc[i]]])[[1]]                  
+                      if (object$basis.x[[vfunc[i]]]$type == "pls") {
+                       if (object$basis.x[[vfunc[i]]]$norm)  {
+                         sd.X <- sqrt(apply(object$basis.x[[vfunc[i]]]$fdataobj$data, 2, var))
+                         newXcen$data<- newXcen$data/(rep(1, nrow(newXcen)) %*% t(sd.X))
+                        }
+                      } 
+                    Z<- inprod.fdata(newXcen,object$vs.list[[vfunc[i]]]) 
+                    
+#          Z<- inprod.fdata(fdata.cen(fdataobj,object$mean[[vfunc[i]]])[[1]],object$vs.list[[vfunc[i]]])
           colnames(Z)<-name.coef
 #         object$beta.l[[vfunc[i]]]$data <- matrix(object$beta.l[[vfunc[i]]]$data,nrow = 1)
 #         b1 <- inprod.fdata(fdata.cen(fdataobj,object$mean[[vfunc[i]]])[[1]],object$beta.l[[vfunc[i]]])
@@ -100,16 +109,25 @@ if (length(vfunc)>0)  {
           else stop("Please, enter functional covariate")
        }  }
        }
-if (!is.data.frame(XX)) XX=data.frame(XX)
-    if (object$rn==0)   yp=predict.lm(object=object,newdata=XX,type=type,x=TRUE,y=TRUE,...)
+ nn<-nrow(XX)  
+ if (!is.data.frame(XX)) XX=data.frame(XX)
+    if (object$rn==0)   return(predict.lm(object=object,newdata=XX,type=type,se.fit=se.fit,...))
     else {  
 #si pc o pls
   yp<-object$coefficients[1]*rep(1,len=nrow(newx[[vfunc[i]]]))
   for (i in 1:length(vfunc)){
+  if (object$call[[1]]=="fregre.pls")  return(predict.lm(object=object,newdata=XX,type=type,se.fit=se.fit,...))
   if (object$basis.x[[1]]$type=="pc") {
    object$beta.l[[vfunc[i]]]$data<-matrix(object$beta.l[[vfunc[i]]]$data,nrow=1)
    b1<-inprod.fdata(fdata.cen(newx[[vfunc[i]]],object$mean.list[[vfunc[i]]])[[1]],object$beta.l[[vfunc[i]]])
-   yp<-yp+b1
+   yp<-yp+b1  
+  
+     XX2<-cbind(rep(1,len=nn),XX)
+    if (se.fit) {
+     se.fit<-sqrt(rowSums((XX2 %*%object$Vp*XX2)))
+     return(list("fit"=yp,"se.fit"=se.fit))
+    }
+    else      return(yp)    
    }
    else{
     xcen<-fdata.cen(newx[[vfunc[i]]],object$mean.list[[vfunc[i]]])[[1]]
@@ -118,11 +136,16 @@ if (!is.data.frame(XX)) XX=data.frame(XX)
     b.est<-matrix(object$coefficients[-1],ncol=1)
     b1<- C%*%object$JJ[[vfunc[i]]]%*%b.est
     yp<-yp+b1
+    if (se.fit) {
+     XX2<-as.matrix(cbind(rep(1,len=nn),XX) )
+     se.fit<-sqrt(rowSums((XX2 %*%object$Vp*XX2)))       
+ #    names(se.fit)<-gg    
+     return(list("fit"=yp,"se.fit"=se.fit)) 
+     }
+    else {       return(yp) }
    }
   }
   }
  }
 return(yp)
 }
-
-

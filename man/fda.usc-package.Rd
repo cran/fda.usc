@@ -115,6 +115,7 @@ Package allows the estimation of the groups in a training set of functional data
 \tab \code{\link{classif.glm}} \cr
 \tab \code{\link{classif.gsam}} \cr
 \tab \code{\link{classif.gkam}} \cr
+\tab \code{\link{classif.depth}} \cr
 }
 
 	E.- Functional Non-Supervised Classification	\cr
@@ -155,8 +156,8 @@ This section allows the estimation of the groups in a  functional data set \code
 \tabular{ll}{
 Package: \tab fda.usc\cr
 Type: \tab Package\cr
-Version: \tab 1.0.2\cr
-Date: \tab 2013-01-15\cr
+Version: \tab 1.0.3\cr
+Date: \tab 2013-01-29\cr
 License: \tab GPL-2 \cr
 LazyLoad: \tab yes\cr
 Url: \url{ http://eio.usc.es/pub/MAESFE/}, \url{http://eio.usc.es/pub/gi1914/}

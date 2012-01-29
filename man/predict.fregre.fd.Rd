@@ -67,7 +67,7 @@ y=tecator$y$Fat[ind]
 newx=absorp[-ind,]
 newy=matrix(tecator$y$Fat[-ind],ncol=1)
 
-# Functional PC regression
+## Functional PC regression
 res.pc=fregre.pc(x,y,1:6)
 summary(res.pc)
 pred.pc=predict.fregre.fd(res.pc,newx)
@@ -78,7 +78,6 @@ pred.pc=predict.fregre.fd(res.pc,newx)
 # pred.pls=predict.fregre.fd(res.pls,newx)
 
 ## Functional nonparametric regression
-## Functional nonparametric regression with other semimetric.
 # res.np=fregre.np(x,y,Ker=AKer.tri,metric=semimetric.deriv)
 # summary(res.np)
 # pred.np=predict.fregre.fd(res.np,newx)

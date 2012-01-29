@@ -120,17 +120,26 @@ floor((ncol(DATA1) - nderiv - 4)/2), floor(ncol(DATA1)/3)),...)
 # to the second one.
 ###############################################################
 #	library(splines)
- if (!is.fdata(fdata1)) fdata1<-fdata(fdata1)
- tt<-fdata1[["argvals"]]
- rtt<-fdata1[["rangeval"]]
- range.t<-rtt
- nas1<-apply(fdata1$data,1,count.na)
- if (any(nas1))  stop("fdata1 contain ",sum(nas1)," curves with some NA value \n")
- else  if (!is.fdata(fdata2))  {fdata2<-fdata(fdata2,tt,rtt) }
- nas2<-apply(fdata2$data,1,count.na)
- if (any(nas2))  stop("fdata2 contain ",sum(nas2)," curves with some NA value \n")
-DATA1<-fdata1[["data"]]
-DATA2<-fdata2[["data"]]
+ C1<-match.call()  
+ if (is.fdata(fdata1)) {
+  tt<-fdata1[["argvals"]]
+  rtt<-fdata1[["rangeval"]]
+  nas1<-apply(fdata1$data,1,count.na)
+  if (any(nas1))  stop("fdata1 contain ",sum(nas1)," curves with some NA value \n")
+  else  if (!is.fdata(fdata2))  {fdata2<-fdata(fdata2,tt,rtt) }
+  nas2<-apply(fdata2$data,1,count.na)
+  if (any(nas2))  stop("fdata2 contain ",sum(nas2)," curves with some NA value \n")
+  DATA1<-fdata1[["data"]]
+  DATA2<-fdata2[["data"]]
+  range.t<-rtt
+ }
+else {      
+     	if(is.vector(fdata1)) fdata1 <- as.matrix(t(fdata1))
+    	if(is.vector(fdata2)) fdata2 <- as.matrix(t(fdata2)) 
+      DATA1<-fdata1
+      DATA2<-fdata2
+      range.t<-c(1,ncol(DATA1))
+      }
 	testfordim <- sum(dim(DATA1)==dim(DATA2))==2
 	twodatasets <- TRUE
 	if(testfordim) twodatasets <- sum(DATA1==DATA2)!=prod(dim(DATA1))
@@ -143,7 +152,7 @@ DATA2<-fdata2[["data"]]
 # The B-spline approximation of the curve contained in "DATA1[i, ]"
 # is given by "Bspline %*% coef.mat1[, i]"
 #####################################################################
-	C1<-match.call()
+
   p <- ncol(DATA1)
 	a <- range.t[1]
 	b <- range.t[2]
@@ -211,18 +220,27 @@ floor((ncol(DATA1) - nderiv - 4)/2), floor(ncol(DATA1)/3)), period=NULL,...)
 # between the curves lying to the first sample and the curves lying
 # to the second one.
 ###############################################################
-C1<-match.call()
- if (!is.fdata(fdata1)) fdata1<-fdata(fdata1)
- tt<-fdata1[["argvals"]]
- rtt<-fdata1[["rangeval"]]
- range.t<-rtt
- nas1<-apply(fdata1$data,1,count.na)
- if (any(nas1))  stop("fdata1 contain ",sum(nas1)," curves with some NA value \n")
- else  if (!is.fdata(fdata2))  {fdata2<-fdata(fdata2,tt,rtt,fdata1$names) }
- nas2<-apply(fdata2$data,1,count.na)
- if (any(nas2))  stop("fdata2 contain ",sum(nas2)," curves with some NA value \n")
- DATA1<-fdata1[["data"]]
- DATA2<-fdata2[["data"]]
+ C1<-match.call()  
+ if (is.fdata(fdata1)) {
+  tt<-fdata1[["argvals"]]
+  rtt<-fdata1[["rangeval"]]
+  nas1<-apply(fdata1$data,1,count.na)
+  if (any(nas1))  stop("fdata1 contain ",sum(nas1)," curves with some NA value \n")
+  else  if (!is.fdata(fdata2))  {fdata2<-fdata(fdata2,tt,rtt) }
+  nas2<-apply(fdata2$data,1,count.na)
+  if (any(nas2))  stop("fdata2 contain ",sum(nas2)," curves with some NA value \n")
+  DATA1<-fdata1[["data"]]
+  DATA2<-fdata2[["data"]]
+  range.t<-rtt
+ }
+else {      
+     	if(is.vector(fdata1)) fdata1 <- as.matrix(t(fdata1))
+    	if(is.vector(fdata2)) fdata2 <- as.matrix(t(fdata2)) 
+      DATA1<-fdata1
+      DATA2<-fdata2
+      range.t<-c(1,ncol(DATA1))
+      }
+
 	p <- ncol(DATA1)
 	nbasismax <- (p - nbasis)%/%2
 	if(nbasis > nbasismax){
@@ -300,17 +318,24 @@ semimetric.hshift <- function(fdata1,fdata2=fdata1, t=1:ncol(DATA1),...)
 # between the curves lying to the first sample and the curves lying
 # to the second one.
 ###############################################################
-C1<-match.call()
- if (!is.fdata(fdata1)) fdata1<-fdata(fdata1)
- tt<-fdata1[["argvals"]]
- rtt<-fdata1[["rangeval"]]
- nas1<-apply(fdata1$data,1,count.na)
- if (any(nas1))  stop("fdata1 contain ",sum(nas1)," curves with some NA value \n")
- else  if (!is.fdata(fdata2))  {fdata2<-fdata(fdata2,tt,rtt) }
- nas2<-apply(fdata2$data,1,count.na)
- if (any(nas2))  stop("fdata2 contain ",sum(nas2)," curves with some NA value \n")
- DATA1<-fdata1[["data"]]
- DATA2<-fdata2[["data"]]
+ C1<-match.call()  
+ if (is.fdata(fdata1)) {
+  tt<-fdata1[["argvals"]]
+  rtt<-fdata1[["rangeval"]]
+  nas1<-apply(fdata1$data,1,count.na)
+  if (any(nas1))  stop("fdata1 contain ",sum(nas1)," curves with some NA value \n")
+  else  if (!is.fdata(fdata2))  {fdata2<-fdata(fdata2,tt,rtt) }
+  nas2<-apply(fdata2$data,1,count.na)
+  if (any(nas2))  stop("fdata2 contain ",sum(nas2)," curves with some NA value \n")
+  DATA1<-fdata1[["data"]]
+  DATA2<-fdata2[["data"]]
+ }
+else {      
+     	if(is.vector(fdata1)) fdata1 <- as.matrix(t(fdata1))
+    	if(is.vector(fdata2)) fdata2 <- as.matrix(t(fdata2)) 
+      DATA1<-fdata1
+      DATA2<-fdata2
+      }
 	testfordim <- sum(dim(DATA1)==dim(DATA2))==2
 	twodatasets <- TRUE
 	if(testfordim) twodatasets <- sum(DATA1==DATA2)!=prod(dim(DATA1))
@@ -353,17 +378,26 @@ semimetric.mplsr <- function(fdata1,fdata2=fdata1, q=2, class1,...)
 # between the curves lying to the first sample and the curves lying
 # to the second one.
 ###############################################################
-C1<-match.call()
- if (!is.fdata(fdata1)) fdata1<-fdata(fdata1)
- tt<-fdata1[["argvals"]]
- rtt<-fdata1[["rangeval"]]
- nas1<-apply(fdata1$data,1,count.na)
- if (any(nas1))  stop("fdata1 contain ",sum(nas1)," curves with some NA value \n")
- else  if (!is.fdata(fdata2))  {fdata2<-fdata(fdata2,tt,rtt,fdata1$names) }
- nas2<-apply(fdata2$data,1,count.na)
- if (any(nas2))  stop("fdata2 contain ",sum(nas2)," curves with some NA value \n")
- DATA1<-fdata1[["data"]]
- DATA2<-fdata2[["data"]]
+ C1<-match.call()  
+ if (is.fdata(fdata1)) {
+  tt<-fdata1[["argvals"]]
+  rtt<-fdata1[["rangeval"]]
+  nas1<-apply(fdata1$data,1,count.na)
+  if (any(nas1))  stop("fdata1 contain ",sum(nas1)," curves with some NA value \n")
+  else  if (!is.fdata(fdata2))  {fdata2<-fdata(fdata2,tt,rtt) }
+  nas2<-apply(fdata2$data,1,count.na)
+  if (any(nas2))  stop("fdata2 contain ",sum(nas2)," curves with some NA value \n")
+  DATA1<-fdata1[["data"]]
+  DATA2<-fdata2[["data"]]
+  range.t<-rtt
+ }
+else {      
+     	if(is.vector(fdata1)) fdata1 <- as.matrix(t(fdata1))
+    	if(is.vector(fdata2)) fdata2 <- as.matrix(t(fdata2)) 
+      DATA1<-fdata1
+      DATA2<-fdata2
+      range.t<-c(1,ncol(DATA1))
+      } 
 	testfordim <- sum(dim(DATA1)==dim(DATA2))==2
 	twodatasets <- TRUE
 	if(testfordim) twodatasets <- sum(DATA1==DATA2)!=prod(dim(DATA1))
@@ -412,19 +446,26 @@ semimetric.pca <- function(fdata1, fdata2=fdata1, q=1,...)
 # between the curves lying to the first sample and the curves lying
 # to the second one.
 ###############################################################
-C1<-match.call()
- if (!is.fdata(fdata1)) fdata1<-fdata(fdata1)
- tt<-fdata1[["argvals"]]
- rtt<-fdata1[["rangeval"]]
- nas1<-apply(fdata1$data,1,count.na)
- if (any(nas1))  stop("fdata1 contain ",sum(nas1)," curves with some NA value \n")
- else  if (!is.fdata(fdata2))  {fdata2<-fdata(fdata2,tt,rtt) }
- nas2<-apply(fdata2$data,1,count.na)
- if (any(nas2))  stop("fdata2 contain ",sum(nas2)," curves with some NA value \n")
- DATA1<-fdata1[["data"]]
- DATA2<-fdata2[["data"]]
-#	if(is.vector(DATA1)) DATA1 <- as.matrix(t(DATA1))
-#	if(is.vector(DATA2)) DATA2 <- as.matrix(t(DATA2))
+ C1<-match.call()  
+ if (is.fdata(fdata1)) {
+  tt<-fdata1[["argvals"]]
+  rtt<-fdata1[["rangeval"]]
+  nas1<-apply(fdata1$data,1,count.na)
+  if (any(nas1))  stop("fdata1 contain ",sum(nas1)," curves with some NA value \n")
+  else  if (!is.fdata(fdata2))  {fdata2<-fdata(fdata2,tt,rtt) }
+  nas2<-apply(fdata2$data,1,count.na)
+  if (any(nas2))  stop("fdata2 contain ",sum(nas2)," curves with some NA value \n")
+  DATA1<-fdata1[["data"]]
+  DATA2<-fdata2[["data"]]
+  range.t<-rtt
+ }
+else {      
+     	if(is.vector(fdata1)) fdata1 <- as.matrix(t(fdata1))
+    	if(is.vector(fdata2)) fdata2 <- as.matrix(t(fdata2)) 
+      DATA1<-fdata1
+      DATA2<-fdata2
+      range.t<-c(1,ncol(DATA1))
+      }
 	testfordim <- sum(dim(DATA1)==dim(DATA2))==2
 	twodatasets <- TRUE
 	if(testfordim) twodatasets <- sum(DATA1==DATA2)!=prod(dim(DATA1))
@@ -444,12 +485,10 @@ C1<-match.call()
   mdist<-sqrt(SEMIMETRIC)
 #  attr(mdist,"call")<-C1
   attr(mdist,"call")<-"semimetric.pca"
- attr(mdist,"par.metric")<-list("q"=q)
-
-	return(mdist)
+  attr(mdist,"par.metric")<-list("q"=q)
+  return(mdist)
 }
 #####################################################################
 #####################################################################
 #####################################################################
-
 

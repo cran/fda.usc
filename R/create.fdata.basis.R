@@ -17,43 +17,29 @@ rangeval=fdataobj$rangeval,class.out="fd"){
           basis$dropind<-as$dropind
          }
          basis
-}
+} 
 #######################
 #######################
-#create.pc.basis<-function(fdataobj,l=1:5,norm=TRUE){
-#     pc<-fdata2pc(fdataobj,norm=norm,ncomp=max(l))
-#     basis=pc$rotation[l,]
-#     rownames(basis$data)<-paste("PC",l,sep="")
-#no#     if (length(l)==1)   x=as.matrix(pc$x[,l],ncol=1)
-#no#     else    x=pc$x[,l]
-#      out<-list("basis"=basis,"x"=pc$x,"mean"=pc$mean,
-#      "fdataobj.cen"=pc$"fdataobj.cen","fdataobj"=pc$fdataobj,
-#      "lambdas"=pc$lambdas,"l"=l,"type"="pc")
-#      class(out)<-"fdata.comp"
-#return(out)
-#}
-#######################
-#######################
-create.pc.basis<-function(fdataobj,l=1:5,norm=TRUE,basis=NULL,rn=0,...){
+create.pc.basis<-function(fdataobj,l=1:5,norm=TRUE,basis=NULL,rn=0,
+lambda=0,P = c(0, 0, 1),...){
  tt<-fdataobj$argvals
  rtt<-fdataobj$rangeval
  dropind=NULL
- pc<-fdata2pc(fdataobj,norm=norm,ncomp=max(l),...)
+ if (lambda>0) pc<-fdata2ppc(fdataobj,norm=norm,ncomp=max(l),lambda=lambda,P=P,...)
+ else  pc<-fdata2pc(fdataobj,norm=norm,ncomp=max(l),...)
  vs<-pc$rotation$data    
  lenl<-length(l)  
  pc.fdata<-pc$u[,l,drop=FALSE]%*%(diag(lenl)*pc$d[l])%*%vs[l,,drop=FALSE]
  pc.fdata<-sweep(pc.fdata,2,matrix(pc$mean$data,ncol=1),"+")
  basis.pc = pc$rotation[l, ,drop=FALSE]
  rownames(basis.pc$data) <- paste("PC", l, sep = "")
-# pc.fdata<-inprod.fdata(x,pc$rotation)%*%pc$rotation$data
-# pc.fdata<-inprod.fdata(fdataobj,basis.pc)%*%basis.pc$data 
  basisobj<-pc
  fdnames<- colnames(pc$x[,l,drop=FALSE])
  if (is.null(basis)) {
    pc.fdata<-fdata(pc.fdata,tt,rtt,fdataobj$names)
    out <- list(fdataobj.pc=pc.fdata,basis = basis.pc, x = pc$x, mean = pc$mean,
-   fdataobj.cen = pc$fdataobj.cen,fdataobj = pc$fdataobj,l = l,
-   rn=rn,type = "pc")
+   fdataobj.cen = pc$fdataobj.cen,fdataobj = fdataobj,l = l,norm=norm,
+   rn=rn,lambda=lambda,P=P,type = "pc")
    class(out) <- "fdata.comp"
    }
  else {
@@ -67,24 +53,29 @@ create.pc.basis<-function(fdataobj,l=1:5,norm=TRUE,basis=NULL,rn=0,...){
       out$rn<-rn
       out$varprop<-out$values[l]/sum(out$values)
       out$meanfd<- Data2fd(argvals = tt, y = pc$mean$data[1,],basisobj = basis)
-#      fdobj$type = "pca"
       class(out) <- "pca.fd"
       }
  return(out) 
 }
 
+ 
 #######################
 #######################
-create.pls.basis<-function(fdataobj,y,l=1:5,rn=0){
-     pls<-fdata2pls(fdataobj,y,ncomp=max(l))
+create.pls.basis<-function(fdataobj,y,l=1:5,norm=TRUE,
+                           rn=0,lambda=0,P = c(0, 0, 1),...){
+if (lambda>0) pls<-fdata2ppls(fdataobj,y,norm=norm,ncomp=max(l),lambda=lambda,P=P,...)
+ else  pls<-fdata2pls(fdataobj,y,norm=norm,ncomp=max(l),...)
      basis=pls$rotation[l,,drop=FALSE]
      rownames(basis$data)<-paste("PLS",l,sep="")
-#     if (length(l)==1)   x=as.matrix(pls$x[,l],ncol=1)
-#     else    x=pls$x[,l]
-return(list("basis"=basis,"x"=pls$x,"mean"=pls$mean,"rn"=rn,
-"fdataobj.cen"=pls$"fdataobj.cen","fdataobj"=pls$fdataobj,
-"l"=l,"type"="pls","y"=y))
+out<-list("basis"=basis,"x"=pls$x,"mean"=pls$mean,"rn"=rn,
+"fdataobj.cen"=pls$fdataobj.cen,"fdataobj"=fdataobj,norm=norm,
+"l"=l,"type"="pls","y"=y)
+class(out)<-"fdata.comp"
+return(out)
 }
+
+
+
 #######################
 #######################
 create.raw.fdata=function (fdataobj, l = 1:ncol(fdataobj))

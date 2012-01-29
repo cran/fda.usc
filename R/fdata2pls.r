@@ -110,7 +110,7 @@ if (!is.fdata(fdataobj)) fdataobj<-fdataobj(fdataobj)
 #    sd.X<-rep(mean(sd.X),len=J)
 #    sd.X[sd.X == 0] = 1
 if (norm)    {
-sd.X <- sqrt(apply(X, 2, var))
+ sd.X <- sqrt(apply(X, 2, var))
  X <- X/(rep(1, nrow(X)) %*% t(sd.X))
  }
     else {
@@ -161,7 +161,7 @@ sd.X <- sqrt(apply(X, 2, var))
     l<-1:ncomp
     colnames(scores) <- paste("PLS", l, sep = "")
     outlist = list(call=C,df = DoF, rotation=V2,x=scores,fdataobj=fdataobj,
-    y=y0,l=l,fdataobj.cen=center$Xcen,mean=mean.X,X2=X2)
+    y=y0,l=l,fdataobj.cen=center$Xcen,mean=mean.X,X2=X2,norm=norm)
     class(outlist)<-"fdata.comp"
     return(outlist)
 }

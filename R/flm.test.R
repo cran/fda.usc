@@ -76,7 +76,7 @@ PCvM.statistic=function(X,residuals,p,Adot.vec){
 	if(missing(Adot.vec)) Adot.vec=Adot(X)
 	
 	# Call Fortran function
-	res=n^(-2)*pi^((p/2)-1)/gamma(p/2+1)*.Fortran("pcvm_statistic",n=as.integer(n),Adot_vec=Adot.vec,residuals=residuals,statistic=0)$statistic
+	res=n^(-2)*pi^((p/2)-1)/gamma(p/2)*.Fortran("pcvm_statistic",n=as.integer(n),Adot_vec=Adot.vec,residuals=residuals,statistic=0)$statistic
 	
 	return(res)
 

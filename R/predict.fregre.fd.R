@@ -56,7 +56,7 @@ else{
   if (object$fdata.comp$norm)  {
     sd.X <- sqrt(apply(object$fdataobj$data, 2, var))
     newXcen$data<- newXcen$data/(rep(1, nn) %*% t(sd.X))
-    }
+  }
   Z<- inprod.fdata(newXcen,object$fdata.comp$rotation) 
   colnames(Z)<-names(object$lm$coefficients[-1])  
   XX<-data.frame(Z)  
@@ -144,3 +144,5 @@ else {
 #rownames(yp)=rownames(newx)
 return(yp)
 }
+
+

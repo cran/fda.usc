@@ -17,7 +17,7 @@
 }
 }
 \usage{
-\method{predict}{fregre.lm}(object,newx=NULL,type="response",\dots)
+\method{predict}{fregre.lm}(object,newx=NULL,type="response",se.fit=FALSE,\dots)
 \method{predict}{fregre.plm}(object,newx=NULL,\dots)
 \method{predict}{fregre.glm}(object,newx=NULL,type="response",\dots)
 \method{predict}{fregre.gsam}(object, newx = NULL, type = "response",\dots)
@@ -27,6 +27,7 @@
   \item{object}{ \code{fregre.lm},  \code{fregre.plm}, \code{fregre.glm},  \code{fregre.gsam} or \code{fregre.gkam} object.}
   \item{newx}{ An optional data list in which to look for variables with which to predict. If omitted, the fitted values are used. List of new explanatory data.}
   \item{type}{ Type of prediction (response or model term).}
+  \item{se.fit}{=TRUE (not default) standard error estimates are returned for each prediction.}
   \item{\dots}{ Further arguments passed to or from other methods.}
 }
 \details{ 

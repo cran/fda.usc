@@ -1,7 +1,7 @@
 predict.fregre.glm<-function(object,newx=NULL,type="response",...){
  if (is.null(object)) stop("No fregre.glm object entered")
  if (is.null(newx)) {
-    yp=predict.glm(object,...)
+    yp=predict.glm(object,type=type,...)
     print("No newx entered")
     return(yp)
     }
@@ -52,7 +52,7 @@ if (length(vfunc)>0)  {
 #   yp2<-a1 <- object$coefficients[1] * rep(1, len = nrow(data[[vfunc[1]]]))
    for (i in 1:length(vfunc)) {
    if(class(data[[vfunc[i]]])[1]=="fdata")  {
-     fdataobj<-data[[vfunc[i]]]
+      fdataobj<-data[[vfunc[i]]]
       x.fd<-fdataobj[["data"]]
       if (nrow(x.fd)==1) rwn<-NULL
       else rwn<-rownames(x.fd)
@@ -68,8 +68,16 @@ if (length(vfunc)>0)  {
         colnames(Z) = colnames(J)
       }
       else {
-           name.coef<-paste(vfunc[i], ".",rownames(object$basis.x[[vfunc[i]]]$basis$data),sep ="")
-          Z<- inprod.fdata(fdata.cen(fdataobj,object$mean[[vfunc[i]]])[[1]],object$vs.list[[vfunc[i]]])
+          name.coef<-paste(vfunc[i], ".",rownames(object$basis.x[[vfunc[i]]]$basis$data),sep ="")
+                      newXcen<-fdata.cen(fdataobj,object$mean[[vfunc[i]]])[[1]]                  
+                      if (object$basis.x[[vfunc[i]]]$type == "pls") {
+                       if (object$basis.x[[vfunc[i]]]$norm)  {
+                         sd.X <- sqrt(apply(object$basis.x[[vfunc[i]]]$fdataobj$data, 2, var))
+                         newXcen$data<- newXcen$data/(rep(1, nrow(newXcen)) %*% t(sd.X))
+                        }
+                      } 
+                    Z<- inprod.fdata(newXcen,object$vs.list[[vfunc[i]]])                   
+#          Z<- inprod.fdata(fdata.cen(fdataobj,object$mean[[vfunc[i]]])[[1]],object$vs.list[[vfunc[i]]])
           colnames(Z)<-name.coef
 #         object$beta.l[[vfunc[i]]]$data <- matrix(object$beta.l[[vfunc[i]]]$data,nrow = 1)
 #         b1 <- inprod.fdata(fdata.cen(fdataobj,object$mean[[vfunc[i]]])[[1]],object$beta.l[[vfunc[i]]])
@@ -109,4 +117,5 @@ if (!is.data.frame(XX)) XX=data.frame(XX)
 return(yp)
 }
 }
+
 

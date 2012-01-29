@@ -32,12 +32,12 @@ else {
     xcen<-pc$fdataobj.cen
     cnames<-colnames(pc$x)[l]
     response = "y"
-    df<-data.frame(y,Z)
-    colnames(df)<-c("y",cnames)
+    XX<-data.frame(y,Z)
+    colnames(XX)<-c("y",cnames)
     pf <- paste(response, "~", sep = "")
     for (i in 1:length(cnames)) pf <- paste(pf,"+",cnames[i],sep="")
 #   pf=paste(pf,"-1")
-    object.lm = lm(formula = pf, data =df , x = TRUE,y = TRUE)
+    object.lm = lm(formula = pf, data =XX , ...)
     beta.est<-object.lm$coefficients[2:(lenl+1)]*pc$rotation[l]
 #    beta.est$data<-apply(beta.est$data,2,sum)
      beta.est$data<-colSums(beta.est$data)
@@ -56,12 +56,13 @@ else {
     rdf<-n-df
     object.lm$df.residual<-rdf
     sr2 <- sum(e^2)/rdf
+    Vp<-sr2*S
     r2 <- 1 - sum(e^2)/sum(ycen^2)
     r2.adj<- 1 - (1 - r2) * ((n -    1)/ rdf)
     GCV <- sum(e^2)/rdf^2
     GCV <- sum(e^2)/(n - df)^2
 #        object.lm$coefficients <- coefs
-        object.lm$rank <- df
+#        object.lm$rank <- df
         Z=cbind(rep(1,len=n),Z)
         colnames(Z)[1] = "(Intercept)"
         std.error = sqrt(diag(S) *sr2)
@@ -73,13 +74,10 @@ else {
         class(object.lm) <- "lm"
  out <- list(call = C, beta.est = beta.est,coefficients=object.lm$coefficients,
  fitted.values =object.lm$fitted.values, residuals = object.lm$residuals,
- H=H,df = df,r2=r2, GCV=GCV,sr2 = sr2, l = l, fdata.comp=pc, coefs=coefficients,
- lm=object.lm,fdataobj = fdataobj,y = y)
+ H=H,df = df,r2=r2, GCV=GCV,sr2 = sr2,Vp=Vp, l = l, fdata.comp=pc, coefs=coefficients,
+ lm=object.lm,fdataobj = fdataobj,y = y,XX=XX)
     class(out) = "fregre.fd"
     return(out)
 }
 #################################################################
 #################################################################
-
-
-
