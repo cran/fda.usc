@@ -1,5 +1,5 @@
 \name{fda.usc-package}
-\Rdversion{0.9.5}
+\Rdversion{0.9.6}
 \alias{fda.usc-package}
 \alias{fda.usc}
 \docType{package}
@@ -102,11 +102,11 @@ Package allows the estimation of the groups in a training set of functional data
 -Kernel classification methods:\cr
 
 \tabular{ll}{
-\tab \code{\link{classif.knn.fd}}  \cr
-\tab \code{\link{classif.kernel.fd}} \cr
-\tab \code{\link{classif.kernel.fb}} \cr
-\tab \code{\link{summary.classif.fd}} \cr
-\tab \code{\link{predict.classif.fd}} \cr
+\tab \code{\link{classif.knn}}  \cr
+\tab \code{\link{classif.kernel}} \cr
+\tab \code{\link{classif.glm}} \cr
+\tab \code{\link{summary.classif}} \cr
+\tab \code{\link{predict.classif}} \cr
 }
 
 	E.- Functional Non-Supervised Classification	\cr
@@ -125,6 +125,9 @@ This section allows the estimation of the groups in a  functional data set \code
 	\tabular{ll}{
 \tab \code{\link{fdata.bootstrap}} \cr
 \tab \code{\link{fdata2fd}}  \cr
+\tab \code{\link{fdata2pc}} \cr
+\tab \code{\link{fdata2pls}} \cr
+\tab \code{\link{summary.fdata.comp}} \cr
 \tab \code{\link{cond.F}} \cr
 \tab \code{\link{cond.quantile}} \cr
 \tab \code{\link{cond.mode}} \cr
@@ -133,10 +136,6 @@ This section allows the estimation of the groups in a  functional data set \code
 \tab \code{\link{Kernel.asymmetric}} \cr
 \tab \code{\link{Kernel.integrate}} \cr
 \tab \code{\link{metric.lp}} \cr 
-\tab \code{\link{pc.cor}} \cr
-\tab \code{\link{pc.fdata}} \cr
-\tab \code{\link{pc.svd.fdata}} \cr
-\tab \code{\link{pls.fdata}} \cr
 \tab \code{\link{semimetric.NPFDA}} \cr 
 \tab \code{\link{semimetric.basis}} \cr 
 }
@@ -145,8 +144,8 @@ This section allows the estimation of the groups in a  functional data set \code
 \tabular{ll}{
 Package: \tab fda.usc\cr
 Type: \tab Package\cr
-Version: \tab 0.9.5\cr
-Date: \tab 2011-04-01\cr
+Version: \tab 0.9.6\cr
+Date: \tab 2012-03-05\cr
 License: \tab GPL-2 \cr
 LazyLoad: \tab yes\cr
 }

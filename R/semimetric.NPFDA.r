@@ -102,9 +102,9 @@ hshift <- function(x,y, t=1:ncol(x),...)
 #####################################################################
 #####################################################################
 #####################################################################
-semimetric.deriv <- function(fdataobj1,fdataobj2, nderiv=1,
+semimetric.deriv <- function(fdata1,fdata2=fdata1, nderiv=1,
 nknot=ifelse(floor(ncol(DATA1)/3) > floor((ncol(DATA1) - nderiv - 4)/2),
-floor((ncol(DATA1) - nderiv - 4)/2), floor(ncol(DATA1)/3)),range.t=c(0,1),...)
+floor((ncol(DATA1) - nderiv - 4)/2), floor(ncol(DATA1)/3)),...)
 {
 ###############################################################
 # Computes a semimetric between curves based on their derivatives.
@@ -112,25 +112,22 @@ floor((ncol(DATA1) - nderiv - 4)/2), floor(ncol(DATA1)/3)),range.t=c(0,1),...)
 #    "DATA2" matrix containing a second set of curves stored row by row
 #    "nderiv" order of derivation
 #    "nknot" number of interior knots (needed for defining the B-spline basis)
-#    "range.t" vector of length 2 containing the range of the grid at
-#                 which the curve are evaluated (i.e. range of the
-#                 discretization)
 # Returns a "semimetric" matrix containing the semimetric computed
 # between the curves lying to the first sample and the curves lying
 # to the second one.
 ###############################################################
 #	library(splines)
- if (!is.fdata(fdataobj1)) fdataobj1<-fdata(fdataobj1)
- tt<-fdataobj1[["argvals"]]
- nas1<-apply(fdataobj1$data,1,count.na)
+ if (!is.fdata(fdata1)) fdata1<-fdata(fdata1)
+ tt<-fdata1[["argvals"]]
+ rtt<-fdata1[["rangeval"]]
+ range.t<-rtt
+ nas1<-apply(fdata1$data,1,count.na)
  if (any(nas1))  stop("fdata1 contain ",sum(nas1)," curves with some NA value \n")
- else  if (!is.fdata(fdataobj2))  {fdataobj2<-fdata(fdataobj2,tt) }
- nas2<-apply(fdataobj2$data,1,count.na)
+ else  if (!is.fdata(fdata2))  {fdata2<-fdata(fdata2,tt,rtt) }
+ nas2<-apply(fdata2$data,1,count.na)
  if (any(nas2))  stop("fdata2 contain ",sum(nas2)," curves with some NA value \n")
-
-
-DATA1<-fdataobj1[["data"]]
-DATA2<-fdataobj2[["data"]]
+DATA1<-fdata1[["data"]]
+DATA2<-fdata2[["data"]]
 	testfordim <- sum(dim(DATA1)==dim(DATA2))==2
 	twodatasets <- TRUE
 	if(testfordim) twodatasets <- sum(DATA1==DATA2)!=prod(dim(DATA1))
@@ -189,15 +186,16 @@ DATA2<-fdataobj2[["data"]]
 	for(f in 1:nbasis)
 		SEMIMETRIC <- SEMIMETRIC + outer(COEF1[, f], COEF2[, f], "-")^2
   mdist<-sqrt(SEMIMETRIC)
-  attr(mdist,"call")<-C1
+  attr(mdist,"call")<-"semimetric.deriv"
+  attr(mdist,"par.metric")<-list("nderiv"=nderiv,"nknot"=nknot,"range.t"=range.t)
 	return(mdist)
 }
 #####################################################################
 #####################################################################
 #####################################################################
-semimetric.fourier <- function(fdataobj1,fdataobj2, nderiv=0,
+semimetric.fourier <- function(fdata1,fdata2=fdata1, nderiv=0,
 nbasis=ifelse(floor(ncol(DATA1)/3) > floor((ncol(DATA1) - nderiv - 4)/2),
-floor((ncol(DATA1) - nderiv - 4)/2), floor(ncol(DATA1)/3)), range.t=c(0,1), period=NULL,...)
+floor((ncol(DATA1) - nderiv - 4)/2), floor(ncol(DATA1)/3)), period=NULL,...)
 {
 ###############################################################
 # Computes a semimetric between curves based on their Fourier expansion.
@@ -205,25 +203,23 @@ floor((ncol(DATA1) - nderiv - 4)/2), floor(ncol(DATA1)/3)), range.t=c(0,1), peri
 #    "DATA2" matrix containing a second set of curves stored row by row
 #    "nderiv" order of derivation
 #    "nbasis" size of the basis
-#    "range.t" vector of length 2 containing the range of the grid at
-#                 which the curve are evaluated (i.e. range of the
-#                 discretization)
 #    "period" allows to select the period for the fourier expansion
 # Returns a "semimetric" matrix containing the semimetric computed
 # between the curves lying to the first sample and the curves lying
 # to the second one.
 ###############################################################
 C1<-match.call()
- if (!is.fdata(fdataobj1)) fdataobj1<-fdata(fdataobj1)
- tt<-fdataobj1[["argvals"]]
- nas1<-apply(fdataobj1$data,1,count.na)
+ if (!is.fdata(fdata1)) fdata1<-fdata(fdata1)
+ tt<-fdata1[["argvals"]]
+ rtt<-fdata1[["rangeval"]]
+ range.t<-rtt
+ nas1<-apply(fdata1$data,1,count.na)
  if (any(nas1))  stop("fdata1 contain ",sum(nas1)," curves with some NA value \n")
- else  if (!is.fdata(fdataobj2))  {fdataobj2<-fdata(fdataobj2,tt) }
- nas2<-apply(fdataobj2$data,1,count.na)
+ else  if (!is.fdata(fdata2))  {fdata2<-fdata(fdata2,tt,rtt,fdata1$names) }
+ nas2<-apply(fdata2$data,1,count.na)
  if (any(nas2))  stop("fdata2 contain ",sum(nas2)," curves with some NA value \n")
-
-DATA1<-fdataobj1[["data"]]
-DATA2<-fdataobj2[["data"]]
+ DATA1<-fdata1[["data"]]
+ DATA2<-fdata2[["data"]]
 	p <- ncol(DATA1)
 	nbasismax <- (p - nbasis)%/%2
 	if(nbasis > nbasismax){
@@ -281,13 +277,14 @@ DATA2<-fdataobj2[["data"]]
 	for(f in 1:nbasis)
 		SEMIMETRIC <- SEMIMETRIC + outer(COEF1[, f], COEF2[, f], "-")^2
   mdist<-sqrt(SEMIMETRIC)
-  attr(mdist,"call")<-C1
+  attr(mdist,"call")<-"semimetric.fourier"
+  attr(mdist,"par.metric")<-list("nderiv"=nderiv,"nbasis"=nbasis,"range.t"=range.t,"period"=period)
 	return(mdist)
 }
 #####################################################################
 #####################################################################
 #####################################################################
-semimetric.hshift <- function(fdataobj1,fdataobj2, t=1:ncol(DATA1),...)
+semimetric.hshift <- function(fdata1,fdata2=fdata1, t=1:ncol(DATA1),...)
 {
 ###############################################################
 # Computes between curves a semimetric taking into account an
@@ -301,16 +298,16 @@ semimetric.hshift <- function(fdataobj1,fdataobj2, t=1:ncol(DATA1),...)
 # to the second one.
 ###############################################################
 C1<-match.call()
- if (!is.fdata(fdataobj1)) fdataobj1<-fdata(fdataobj1)
- tt<-fdataobj1[["argvals"]]
- nas1<-apply(fdataobj1$data,1,count.na)
+ if (!is.fdata(fdata1)) fdata1<-fdata(fdata1)
+ tt<-fdata1[["argvals"]]
+ rtt<-fdata1[["rangeval"]]
+ nas1<-apply(fdata1$data,1,count.na)
  if (any(nas1))  stop("fdata1 contain ",sum(nas1)," curves with some NA value \n")
- else  if (!is.fdata(fdataobj2))  {fdataobj2<-fdata(fdataobj2,tt) }
- nas2<-apply(fdataobj2$data,1,count.na)
+ else  if (!is.fdata(fdata2))  {fdata2<-fdata(fdata2,tt,rtt) }
+ nas2<-apply(fdata2$data,1,count.na)
  if (any(nas2))  stop("fdata2 contain ",sum(nas2)," curves with some NA value \n")
-
-DATA1<-fdataobj1[["data"]]
-DATA2<-fdataobj2[["data"]]
+ DATA1<-fdata1[["data"]]
+ DATA2<-fdata2[["data"]]
 	testfordim <- sum(dim(DATA1)==dim(DATA2))==2
 	twodatasets <- TRUE
 	if(testfordim) twodatasets <- sum(DATA1==DATA2)!=prod(dim(DATA1))
@@ -332,13 +329,14 @@ DATA2<-fdataobj2[["data"]]
 		}
 	}
   mdist<-sqrt(SEMIMETRIC)
-  attr(mdist,"call")<-C1
+  attr(mdist,"call")<-"semimetric.hshift"
+  attr(mdist,"par.metric")<-list("t"=t)
 	return(mdist)
 }
 #####################################################################
 #####################################################################
 #####################################################################
-semimetric.mplsr <- function(fdataobj1,fdataobj2, q=2, class1,...)
+semimetric.mplsr <- function(fdata1,fdata2=fdata1, q=2, class1,...)
 {
 ###############################################################
 # Computes between curves a semimetric based on the partial least
@@ -353,16 +351,16 @@ semimetric.mplsr <- function(fdataobj1,fdataobj2, q=2, class1,...)
 # to the second one.
 ###############################################################
 C1<-match.call()
- if (!is.fdata(fdataobj1)) fdataobj1<-fdata(fdataobj1)
- tt<-fdataobj1[["argvals"]]
- nas1<-apply(fdataobj1$data,1,count.na)
+ if (!is.fdata(fdata1)) fdata1<-fdata(fdata1)
+ tt<-fdata1[["argvals"]]
+ rtt<-fdata1[["rangeval"]]
+ nas1<-apply(fdata1$data,1,count.na)
  if (any(nas1))  stop("fdata1 contain ",sum(nas1)," curves with some NA value \n")
- else  if (!is.fdata(fdataobj2))  {fdataobj2<-fdata(fdataobj2,tt) }
- nas2<-apply(fdataobj2$data,1,count.na)
+ else  if (!is.fdata(fdata2))  {fdata2<-fdata(fdata2,tt,rtt,fdata1$names) }
+ nas2<-apply(fdata2$data,1,count.na)
  if (any(nas2))  stop("fdata2 contain ",sum(nas2)," curves with some NA value \n")
-
-DATA1<-fdataobj1[["data"]]
-DATA2<-fdataobj2[["data"]]
+ DATA1<-fdata1[["data"]]
+ DATA2<-fdata2[["data"]]
 	testfordim <- sum(dim(DATA1)==dim(DATA2))==2
 	twodatasets <- TRUE
 	if(testfordim) twodatasets <- sum(DATA1==DATA2)!=prod(dim(DATA1))
@@ -392,13 +390,14 @@ DATA2<-fdataobj2[["data"]]
 		SEMIMETRIC <- SEMIMETRIC + outer(COMPONENT1[, g], COMPONENT2[,
 			g], "-")^2
   mdist<-sqrt(SEMIMETRIC)
-  attr(mdist,"call")<-C1
+  attr(mdist,"call")<-"semimetric.mplsr"
+  attr(mdist,"par.metric")<-list("q"=q,"class1"=class1)
 	return(mdist)
 }
 #####################################################################
 #####################################################################
 #####################################################################
-semimetric.pca <- function(fdataobj1, fdataobj2, q=1,...)
+semimetric.pca <- function(fdata1, fdata2=fdata1, q=1,...)
 {
 ###############################################################
 # Computes between curves a pca-type semimetric based on the
@@ -411,16 +410,16 @@ semimetric.pca <- function(fdataobj1, fdataobj2, q=1,...)
 # to the second one.
 ###############################################################
 C1<-match.call()
- if (!is.fdata(fdataobj1)) fdataobj1<-fdata(fdataobj1)
- tt<-fdataobj1[["argvals"]]
- nas1<-apply(fdataobj1$data,1,count.na)
+ if (!is.fdata(fdata1)) fdata1<-fdata(fdata1)
+ tt<-fdata1[["argvals"]]
+ rtt<-fdata1[["rangeval"]]
+ nas1<-apply(fdata1$data,1,count.na)
  if (any(nas1))  stop("fdata1 contain ",sum(nas1)," curves with some NA value \n")
- else  if (!is.fdata(fdataobj2))  {fdataobj2<-fdata(fdataobj2,tt) }
- nas2<-apply(fdataobj2$data,1,count.na)
+ else  if (!is.fdata(fdata2))  {fdata2<-fdata(fdata2,tt,rtt) }
+ nas2<-apply(fdata2$data,1,count.na)
  if (any(nas2))  stop("fdata2 contain ",sum(nas2)," curves with some NA value \n")
-
-DATA1<-fdataobj1[["data"]]
-DATA2<-fdataobj2[["data"]]
+ DATA1<-fdata1[["data"]]
+ DATA2<-fdata2[["data"]]
 #	if(is.vector(DATA1)) DATA1 <- as.matrix(t(DATA1))
 #	if(is.vector(DATA2)) DATA2 <- as.matrix(t(DATA2))
 	testfordim <- sum(dim(DATA1)==dim(DATA2))==2
@@ -433,24 +432,21 @@ DATA2<-fdataobj2[["data"]]
 	ei=eigen(COVARIANCE, symmetric = TRUE)
 	EIGENVECTORS <- matrix(eigen(COVARIANCE, symmetric = TRUE)$vectors[, 1:q],ncol=q)
 	COMPONENT1 <- DATA1 %*% EIGENVECTORS
-	if(twodatasets) {
-		COMPONENT2 <- DATA2 %*% EIGENVECTORS
-	}
-	else {
-		COMPONENT2 <- COMPONENT1
-	}
+	if(twodatasets) {    		COMPONENT2 <- DATA2 %*% EIGENVECTORS	}
+	else {		COMPONENT2 <- COMPONENT1	}
 	SEMIMETRIC <- 0
 	for(qq in 1:q)
-		SEMIMETRIC <- SEMIMETRIC + outer(COMPONENT1[, qq], COMPONENT2[,
-			qq], "-")^2
+		SEMIMETRIC <- SEMIMETRIC + outer(COMPONENT1[, qq], COMPONENT2[,qq], "-")^2
 #			print(dim(SEMIMETRIC))
   mdist<-sqrt(SEMIMETRIC)
-  attr(mdist,"call")<-C1
+#  attr(mdist,"call")<-C1
+  attr(mdist,"call")<-"semimetric.pca"
+ attr(mdist,"par.metric")<-list("q"=q)
+
 	return(mdist)
 }
 #####################################################################
 #####################################################################
 #####################################################################
-
 
 

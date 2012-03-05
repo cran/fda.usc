@@ -10,6 +10,7 @@ int.simpson=function(fdataobj,equi=TRUE,method="CSR"){
 int.simpson2=function(x,y,equi=TRUE,method="CSR"){
   n=length(x);ny=length(y)
 	if (n!=ny) stop("Different length in the input data")
+	if (n==2 || ny==2) method="TRAPZ"
   out <- switch(method,
     "CSR" = {
      if (!equi){app=approx(x,y,n=2*length(x)-1);x=app$x;y=app$y}

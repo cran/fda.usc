@@ -1,4 +1,4 @@
-depth.RP=function(fdataobj,trim=0.25,nproj=50,xeps=0.0000001,draw=FALSE,...){
+depth.RP<-function(fdataobj,trim=0.25,nproj=50,proj=1,xeps=0.0000001,draw=FALSE,...){
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
 nas<-apply(fdataobj$data,1,count.na)
 if (any(nas))  {
@@ -15,14 +15,26 @@ names1<-names2<-names<-fdataobj[["names"]]
 names1$main<-"depth.RP median"
 names2$main<-paste("RP trim",trim*100,"\u0025",sep="")
  dep=rep(0.0,n)
+ #### new
+ if (is.fdata(proj)) {
+  if (fdataobj$argvals!=proj$argvals || ncol(fdataobj)!=ncol(proj)) stop("Error en proj dimension")
+  z<-proj
+  }
+else {
+z<-rproc2fdata(nproj,t,sigma=proj,norm=TRUE,...)
+}
+##
+# z<-matrix(NA,nproj,m)
  for (j in 1:nproj){
-        z=rnorm(m)
-        modulo=sum(z^2)
-        z=z/sqrt(modulo)
-        valor=data%*%z
+    #    z[j,]=rnorm(m)
+     #   modulo=sum(z[j]^2)
+     #   z[j,]=z[j,]/sqrt(modulo)
+#     print("aki peta");      print(data);      print(z)
+        valor=data%*%z$data[j,]
         Fn=ecdf(valor)
         dep=dep+(Fn(valor)*(1-Fn(valor-xeps)))
  }
+
    dep=dep/nproj
    k=which.max(dep)
    med=data[k,]
@@ -46,7 +58,7 @@ if (draw){
    lines(med,col="red",lwd=2)
    legend("topleft",legend=c(tr,"Median"),lwd=2,col=c("yellow","red"))
  }
-return(invisible(list("median"=med,"lmed"=k,"mtrim"=mtrim,"ltrim"=lista,"dep"=dep,"proj"=z)))
+return(invisible(list("median"=med,"lmed"=k,"mtrim"=mtrim,"ltrim"=lista,
+"dep"=dep,"proj"=z)))
 }
-
 

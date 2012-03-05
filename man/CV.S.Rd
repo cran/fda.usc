@@ -1,12 +1,14 @@
 \name{CV.S}
 \Rdversion{1.1}
 \alias{CV.S}
+\alias{FCV.S}
 \title{ The cross-validation (CV) score}
 \description{
 The cross-validation (CV)  score.
 }
 \usage{
-CV.S(y,S,W=diag(ncol(S)),trim=0,draw=FALSE,...)
+CV.S(y,S,W=diag(ncol(S)),trim=0,draw=FALSE,metric=metric.lp,...)
+FCV.S(y,S,W=diag(ncol(S)),trim=0,draw=FALSE,metric=metric.lp,...)
 }
 
 \arguments{
@@ -15,6 +17,7 @@ CV.S(y,S,W=diag(ncol(S)),trim=0,draw=FALSE,...)
   \item{W }{ Matrix of weights.}    
 	\item{trim}{ The alpha of the trimming.}
   \item{draw}{ =TRUE, draw the curves, the sample median and trimmed mean.}	
+  \item{metric}{ Metric function, by default \code{\link{metric.lp}}.}
   \item{\dots}{ Further arguments passed to or from other methods.}  
   }
 

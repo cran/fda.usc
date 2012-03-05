@@ -6,20 +6,20 @@ Aproximates Lp-metric distances for functional data.
 }
 \description{	
 Measures the  proximity between the functional data and curves approximating Lp-metric.
-If \code{w = 1} approximates the Lp-metric by Simpson's rule.	By default it uses \code{p = 2} and weights \code{w = 1}.
+If \code{w = 1} approximates the Lp-metric by Simpson's rule.	By default it uses \code{lp = 2} and weights \code{w = 1}.
 }
 \usage{
-metric.lp(fdata1,fdata2=NULL,p=2,w=1,...)
+metric.lp(fdata1,fdata2=NULL,lp=2,w=1,...)
 }
 \arguments{  
   \item{fdata1}{Functional data 1 or curve 1. If \code{fdata} class, the dimension of \code{fdata1$data} object is (\code{n1} x \code{m}), where \code{n1} is the number of curves and \code{m} are the points observed in each curve.}
   \item{fdata2}{Functional data 2 or curve 2. If \code{fdata} class, the dimension of \code{fdata2$data} object is (\code{n2} x \code{m}), where \code{n2} is the number of curves and \code{m} are the points observed in each curve.}
-  \item{p}{ Lp norm, by default it uses \code{p = 2}}
+  \item{lp}{ Lp norm, by default it uses \code{lp = 2}}
   \item{w}{ Vector of weights with length \code{m}, If \code{w = 1} approximates the metric Lp by Simpson's rule. By default it uses \code{w = 1} }
   \item{\dots}{ Further arguments passed to or from other methods.}
 }
 \details{
-By default it uses the L2-norm with \code{p = 2}. 
+By default it uses the L2-norm with \code{lp = 2}. 
 \deqn{Let \ \  f(x)= fdata1(x)-fdata2(x)} {}
 \deqn{\left\|f\right\|_p=\left (  \frac{1}{\int_{a}^{b}w(x)dx} \int_{a}^{b} \left|f(x)\right|^{p}w(x)dx \right)^{1/p}}{}
 
@@ -43,10 +43,10 @@ gtest<-phoneme$classtest
 mdist1<-metric.lp(mlearn)
 
 # Matrix of distances beetween curves of DATA1 and curves of DATA2
-mdist2<-metric.lp(mlearn,mtest,p=2)
+mdist2<-metric.lp(mlearn,mtest,lp=2)
 # mdist with L1 norm and weigth=v
 v=dnorm(seq(-3,3,len=dim(mlearn)[2]))
-mdist3<-metric.lp(mlearn,mtest,p=1,w=v)
+mdist3<-metric.lp(mlearn,mtest,lp=1,w=v)
 plot(1:250,mdist2[1,],type="l",ylim=c(1,max(mdist3[1,])))
 lines(mdist3[1,],type="l",col="2")
 

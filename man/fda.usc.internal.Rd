@@ -7,6 +7,7 @@
 \alias{/.fdata}
 \alias{c.fdata}
 \alias{==.fdata}
+\alias{!=.fdata}
 \alias{dim.fdata}
 \alias{ncol.fdata}
 \alias{nrow.fdata}
@@ -15,12 +16,15 @@
 \alias{count.na}
 \alias{*.fdata}
 \alias{^.fdata}
+\alias{argvals}
+\alias{rangeval}
 
 \title{ fda.usc internal functions}
 \description{Internal undocumentation functions for fda.usc package}
 \usage{
 \method{[}{fdata}(fdataobj, i = TRUE, j = TRUE,drop=FALSE)
 \method{==}{fdata}(fdata1,fdata2)
+\method{!=}{fdata}(fdata1,fdata2)
 \method{+}{fdata}(fdata1,fdata2)
 \method{-}{fdata}(fdata1,fdata2)
 \method{*}{fdata}(fdata1,fdata2)
@@ -33,6 +37,8 @@
 \method{is}{fdata}(fdataobj)
 count.na(A)
 traza(A) 
+argvals(fdataobj)
+rangeval(fdataobj)
 }
 \arguments{
  \item{x,fdataobj,fdata1,fdata2}{ \code{fdata} class object}. %In \code{"[.fdata"} \code{fdataobj} is a object  from which to extract element(s) or in which to replace element(s).}  

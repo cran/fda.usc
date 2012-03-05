@@ -56,14 +56,14 @@ if (length(vfunc)>0)  {
       x.fd<-fdataobj[["data"]]
       tt<-fdataobj[["argvals"]]
       rtt<-fdataobj[["rangeval"]]
-      if (!object$basis.x[[vfunc[i]]]$type=="pc") {
- 	  	x.fd = Data2fd(argvals = tt, y = t(fdata.cen(fdataobj,object$mean[[vfunc[i]]])[[1]]$data),
+      if (!object$basis.x[[vfunc[i]]]$type=="pc"&!object$basis.x[[vfunc[i]]]$type=="pls") {
+ 	      	x.fd = Data2fd(argvals = tt, y = t(fdata.cen(fdataobj,object$mean[[vfunc[i]]])[[1]]$data),
                       basisobj = basis.x[[vfunc[i]]],fdnames=rownames(x.fd))
-	    	r=x.fd[[2]][[3]]
-        J<-object$JJ[[vfunc[i]]]
-        Z = t(x.fd$coefs) %*% J
+	    	  r=x.fd[[2]][[3]]
+          J<-object$JJ[[vfunc[i]]]
+          Z = t(x.fd$coefs) %*% J
 #        colnames(Z) = paste(vfunc[i], ".",colnames(J), sep = "")
-        colnames(Z) = colnames(J)
+          colnames(Z) = colnames(J)
       }
       else {
            name.coef<-paste(vfunc[i], ".",rownames(object$basis.x[[vfunc[i]]]$basis$data),sep ="")
@@ -75,35 +75,34 @@ if (length(vfunc)>0)  {
       }
        if (first) {    XX=Z;              first=FALSE         }
        else XX = cbind(XX, Z)
-        }
-       else {
-          if(class(data[[vfunc[i]]])[1]=="fd")  {
-      if (class(object$basis.x[[vfunc[i]]])!="pca.fd") {
-        x.fd<-fdataobj<-data[[vfunc[i]]]
- 	    	r=x.fd[[2]][[3]]
-        J<-object$JJ[[vfunc[i]]]
-        x.fd$coefs<-x.fd$coefs-object$mean[[vfunc[i]]]$coefs[,1]
-        Z = t(x.fd$coefs) %*% J
-        colnames(Z) = colnames(J)
       }
       else {
-          name.coef[[vfunc[i]]]=paste(vfunc[i], ".",colnames(object$basis.x[[vfunc[i]]]$harmonics$coefs),sep ="")
-          data[[vfunc[i]]]$coefs<- sweep(data[[vfunc[i]]]$coefs,1,(object$basis.x[[vfunc[i]]]$meanfd$coefs),FUN="-")
-          fd.cen<-data[[vfunc[i]]]
-#          fd.cen<-data[[vfunc[i]]]-object$basis.x[[vfunc[i]]]$meanfd # de las CP basi
-          Z<- inprod(fd.cen,object$basis.x[[vfunc[i]]]$harmonics)
-          colnames(Z)<-name.coef[[vfunc[i]]]
-      }
-       if (first) {    XX=Z;              first=FALSE         }
-       else XX = cbind(XX, Z)
+          if(class(data[[vfunc[i]]])[1]=="fd")  {
+             if (class(object$basis.x[[vfunc[i]]])!="pca.fd") {
+             x.fd<-fdataobj<-data[[vfunc[i]]]
+ 	    	     r=x.fd[[2]][[3]]
+             J<-object$JJ[[vfunc[i]]]
+             x.fd$coefs<-x.fd$coefs-object$mean[[vfunc[i]]]$coefs[,1]
+             Z = t(x.fd$coefs) %*% J
+             colnames(Z) = colnames(J)
+             }
+             else {
+                       name.coef[[vfunc[i]]]=paste(vfunc[i], ".",colnames(object$basis.x[[vfunc[i]]]$harmonics$coefs),sep ="")
+                       data[[vfunc[i]]]$coefs<- sweep(data[[vfunc[i]]]$coefs,1,(object$basis.x[[vfunc[i]]]$meanfd$coefs),FUN="-")
+                       fd.cen<-data[[vfunc[i]]]
+                       #          fd.cen<-data[[vfunc[i]]]-object$basis.x[[vfunc[i]]]$meanfd # de las CP basi
+                       Z<- inprod(fd.cen,object$basis.x[[vfunc[i]]]$harmonics)
+                       colnames(Z)<-name.coef[[vfunc[i]]]
+                   }
+              if (first) {    XX=Z;              first=FALSE         }
+             else XX = cbind(XX, Z)
            }
           else stop("Please, enter functional covariate")
        }  }
-
-        
-        }
+       }
 if (!is.data.frame(XX)) XX=data.frame(XX)
  yp=predict.lm(object=object,newdata=XX,type=type,x=TRUE,y=TRUE,...)
 return(yp)
 }
 }
+

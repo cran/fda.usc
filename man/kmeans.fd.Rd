@@ -9,11 +9,11 @@
 	 Perform k-means clustering on functional data. 
 }
 \usage{
-kmeans.fd(fdataobj,ncl=2,metric=metric.lp,dfunc=func.trim.mode,
-max.iter=100,par.dfunc=list(trim=0),par.ini=list(method="sample"),
-draw=TRUE,...)
-kmeans.center.ini(fdataobj,ncl=2,metric=metric.lp,draw=TRUE,
-method="sample",iter=100,...)
+kmeans.fd(fdataobj,ncl=2,metric=metric.lp,dfunc=func.trim.FM,
+max.iter=100,par.metric=NULL,par.dfunc=list(trim=0.05),
+par.ini=list(method="sample"),draw=TRUE,...)
+kmeans.center.ini(fdataobj,ncl=2,metric=metric.lp,
+draw=TRUE,method="sample",iter=100,par.metric=NULL,...)
  }
 \arguments{
   \item{fdataobj}{ \code{\link{fdata}} class object.}     
@@ -26,6 +26,7 @@ method="sample",iter=100,...)
   \item{par.ini}{ List of arguments to pass to the \code{kmeans.center.ini} function .}
 	\item{method}{ Method for selecting initial centers. If \code{method}=\emph{"Sample"} (by default) takes \code{n} times a random selection by the \code{ncl} centers. The \code{ncl} curves  with  greater distance are the initial centers. If \code{method}=\emph{"Exact"} calculated all combinations of \code{ncl} centers. The \code{ncl} curves  with  greater distance are the initial centers (this method may be too slow).}  	
 	\item{iter}{ Maximum number of random samples for the initial selection of centers.}	
+  \item{par.metric}{ List of arguments to pass to the \code{metric} function.}
 	\item{\dots}{ Further arguments passed to or from other methods.}
 }
 \details{ 

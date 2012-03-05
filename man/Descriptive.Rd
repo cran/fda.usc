@@ -15,6 +15,8 @@
 \alias{func.trimvar.mode}
 \alias{func.trimvar.RP}
 \alias{func.trimvar.RPD}
+
+
 \title{ Descriptive measures for functional data.}
 \description{ Central and dispersion measures for functional data.}
 \usage{
@@ -32,6 +34,7 @@ func.trimvar.FM(fdataobj,...)
 func.trimvar.mode(fdataobj,...)
 func.trimvar.RP(fdataobj,...)
 func.trimvar.RPD(fdataobj,...)
+
 }
 \arguments{
   \item{fdataobj}{ \code{\link{fdata}} class object.}   
@@ -56,6 +59,7 @@ func.trimvar.RPD(fdataobj,...)
 \tab \code{\link{func.trimvar.mode}}  Returns the marginal variance from the deepest curves followinng mode criteria. \cr
 \tab \code{\link{func.trimvar.RP}}  Returns the marginal variance from the deepest curves followinng RP criteria. \cr
 \tab \code{\link{func.trimvar.RPD}}  Returns the marginal variance from the deepest curves followinng RPD criteria. \cr
+
 }
 }
 \references{
@@ -63,7 +67,13 @@ Cuevas, A., Febrero-Bande, M. and Fraiman, R. (2007). \emph{Robust estimation an
 
 Cuevas, A., Febrero-Bande, M. and Fraiman, R.	 (2006). \emph{On the use of the bootstrap for estimating functions with functional data.} Computational Statistics and Data Analysis 51, n 2, 1063{-}107. \cr
 
-Fraiman R, Muniz G. 2001.  \emph{Trimmed means for functional data.} Test 10: 419{-}440.
+Fraiman R, Muniz G. 2001.  \emph{Trimmed means for functional data.} Test 10: 419{-}440.\cr
+
+Cuesta Albertos, J. A. and Nieto Reyes, A.  \emph{The Random Tukey Depth.}
+Computational Statistics and Data Analysis (2008), Vol. 52, Issue 11, 4979{-}4988.\cr
+
+Cuesta Albertos, J. A. and Nieto Reyes, A.  \emph{A Random Functional Depth.} Functional and Operational Statistics. 
+Physica Verlag, (2008), 121-126. 
 }
 \author{
 Febrero-Bande, M. and Oviedo de la Fuente, M.
@@ -83,6 +93,7 @@ a6<-func.med.FM(fdataobj)
 a7<-func.med.mode(fdataobj)
 a8<-func.med.RP(fdataobj)
 a9<-func.med.RPD(fdataobj,deriv=c(0,1))
+
 
 # Measures of dispersion
 b1<-func.var(fdataobj)

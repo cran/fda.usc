@@ -1,5 +1,5 @@
 fregre.plm=function(formula,data,h=NULL,Ker=AKer.norm,metric=metric.lp,
-type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),...){
+type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),par.S=list(w=1),...){
  C<-match.call()
  mf <- match.call(expand.dots = FALSE)
  m<-match(c("formula","data","h","Ker","metric","type.CV","type.S","par.CV"),names(mf),0L)
@@ -28,12 +28,12 @@ type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),...){
  for ( i in 1:length(vnf)){
     if (kterms > 1)   pf <- paste(pf, "+", vnf[i], sep = "")
      else pf <- paste(pf, vnf[i], sep = "")
-     kterms <- kterms + 1 }
+     kterms <- kterms + 1
+ }
  if   (attr(tf,"intercept")==0) {pf<- paste(pf,-1,sep="")}
  y=as.matrix(data[[1]][,response],ncol=1)
  n=nrow(y)
  if (length(vfunc)>0) {
-
   if (!is.fdata(data[[vfunc[1]]])) fdataobj=fdata(data[[vfunc[1]]])
   else fdataobj=data[[vfunc[1]]]
   x.fd<-fdataobj[["data"]]
@@ -43,7 +43,7 @@ type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),...){
 #  else    	 x.fd=data[[vfunc[1]]]
 #  if (is.data.frame(x.fd))  x.fd=as.matrix(x.fd)
 #  cat(" ",class(data[[vfunc[1]]])[1]," object: ",vfunc[1],"\n")
-   mdist=metric(x.fd,x.fd,...)
+   mdist=metric(fdataobj,fdataobj,...)
    if (is.null(h))  h<-h.default(data[[vfunc[1]]],type.S=ty,metric=mdist,Ker=ke)
    lenh <- length(h)
    df=gcv<- array(NA, dim = c(lenh))
@@ -59,14 +59,18 @@ type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),...){
 ##    kmdist=Ker(mdist/h[i])
 ##    ww=kmdist/apply(kmdist, 1, sum)
 ####
-    ww=type.S(mdist,h[i],Ker,cv=FALSE)
+#    ww=type.S(mdist,h[i],Ker,cv=FALSE)
+       par.S$tt<-mdist
+    if (is.null(par.S$Ker))  par.S$Ker<-Ker
+    if (is.null(par.S$h))  par.S$h<-h[i]
+    ww=do.call(type.S,par.S)
     wh=(I-ww)
     yh=wh%*%y
     xh=wh%*%XX
     betah=solve(t(xh)%*%xh)%*%t(xh)%*%yh
     mh=ww%*%(y-XX%*%betah)
     yph[,i]=XX%*%betah+mh
-    e=yph[,i]-y
+    e=yph[,i]-drop(y)
     c1=solve(t(xh)%*%xh)%*%t(xh)
     H[,,i]=wh%*%XX%*%c1%*%wh+ww
     df[i]=traza(H[,,i])
@@ -85,7 +89,8 @@ close(pb)
  	names(gcv)<-h
   yph=yph[,l]
   HH=H[,,l]
-  e=y-yph
+  e=drop(y)-drop(yph)
+#  names(e)<-rownames(fdataobj)
   sr2 = sum(e^2)/(n - df)
   ycen = y - mean(y)
   r2 = 1 - sum(e^2)/sum(ycen^2)
@@ -100,7 +105,8 @@ if (lenh>1) {
    provided, range(h)=",range(h),"\n")
   else if (h.opt==max(h)) cat(" Warning: h.opt is the maximum value of bandwidths
    provided, range(h)=",range(h),"\n")}
-z=list(coefficients=result,vcov=vcov2,r2=r2,residuals=e,sr2=sr2,formula=formula,h.opt=h.opt,h=h,fdataobjf=fdataobj,XX=XX,xh=xh,yh=yh,wh=wh,mdist=mdist,y=y,betah=betah,H=HH,data=data,call=C,fitted.values=yph,gcv=gcv,df=df,m=m,metric=metric,Ker=Ker,type.S=type.S)
+z=list(coefficients=result,vcov=vcov2,r2=r2,residuals=e,sr2=sr2,
+formula=formula,h.opt=h.opt,h=h,fdataobj=fdataobj,XX=XX,xh=xh,yh=yh,wh=wh,mdist=mdist,y=y,betah=betah,H=HH,data=data,call=C,fitted.values=yph,gcv=gcv,df=df,m=m,metric=metric,Ker=Ker,type.S=type.S)
 class(z)="fregre.fd"
 }
 else {
@@ -115,13 +121,14 @@ else {
  print("Warning: fregre.np.cv done, only functional data in the formula")
  if (m[5]==0) {
   if (is.null(h)) h<-h.default(data[[vfunc[1]]],type.S=ty,Ker=ke)
-  z=fregre.np.cv(data[[vfunc[1]]],matrix(data[[1]][,response],ncol=1),h=h,
+  z=fregre.np.cv(data[[vfunc[1]]],data[[1]][,response],h=h,
   Ker=Ker,metric=metric,type.CV=type.CV,type.S=type.S,par.CV=par.CV,...)
  }
  else {
   a1<-match.fun(C[[m[5]]])
   for (i in 1:length(z$call)) {if (z$call[[i]]=="metric") {z$call[[i]]=metric}}
-  z$metric=metric  }
+  z$metric=metric
+  }
  z$formula=formula
  z$data=data
  }

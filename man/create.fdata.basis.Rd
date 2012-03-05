@@ -2,15 +2,20 @@
 \Rdversion{1.1}
 \alias{create.fdata.basis}
 \alias{create.pc.basis}
+\alias{create.pls.basis}
+\alias{create.raw.fdata}
 \title{  Create Basis Set for Functional Data of fdata class}
 \description{Compute  basis for functional data.}
 \usage{
 create.fdata.basis(fdataobj,l=1:5,maxl=max(l),type.basis="bspline",
 rangeval=fdataobj$rangeval,class.out="fd")
 create.pc.basis(fdataobj,l=1:5)
+create.pls.basis(fdataobj, y, l = 1:5) 
+create.raw.fdata(fdataobj, l = 1:ncol(fdataobj))
 }
 \arguments{
-  \item{fdataobj}{ \code{\link{fdata}} class object.}  
+  \item{fdataobj}{ \code{\link{fdata}} class object.} 
+  \item{y}{ Vector of response (scalar).} 
   \item{l}{ Vector of basis index.}
   \item{maxl}{maximum number of basis}
   \item{type.basis}{ Type of basis (see create.basis function).}   
@@ -31,12 +36,14 @@ Ramsay, James O. and Silverman, Bernard W. (2006), \emph{Functional Data Analysi
 Febrero-Bande, M. and Oviedo de la Fuente, M.
 }
 \seealso{
-See Also as  \link[fda]{create.basis} and   \code{\link{pc.fdata}}.
+See Also as  \link[fda]{create.basis} and   \code{\link{fdata2pc}}.
 }
 \examples{
 data(tecator)
 basis.pc<-create.pc.basis(tecator$absorp.fdata,c(1,4,5))
-plot(basis.pc$basis)
+plot(basis.pc$basis,col=1)
+basis.pls<-create.pls.basis(tecator$absorp.fdata,y=tecator$y[,1],c(1,4,5))
+lines(basis.pls$basis,col=2)
 
 basis.fd<-create.fdata.basis(tecator$absorp.fdata,c(1,4,5),
 type.basis="fourier")

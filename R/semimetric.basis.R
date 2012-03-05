@@ -1,26 +1,24 @@
 semimetric.basis=function(fdata1, fdata2 = fdata1,nderiv=0,type.basis1=NULL,
 nbasis1=NULL,type.basis2=NULL,nbasis2=NULL,...) {
  if (any(class(fdata1)=="fd")) {
-   print("fd class")
    r=fdata1$basis[[3]]
    tt=seq(r[1],r[2],len=length(fdata1$fdnames$time))
    df1=deriv.fd(fdata1,nderiv)
    df2=deriv.fd(fdata2,nderiv)
-   fd1=fdata(t(eval.fd(tt,df1)),tt)
-   fd2=fdata(t(eval.fd(tt,df2)),tt)
+   fd1=fdata(t(eval.fd(tt,df1)),tt,r)
+   fd2=fdata(t(eval.fd(tt,df2)),tt,r)
    mdist=metric.lp(fd1,fd2,...)
   }
  else {
-
  if (!is.fdata(fdata1)) fdata1<-fdata(fdata1)
  tt<-fdata1[["argvals"]]
+ rtt<-fdata1[["rangeval"]]
  nas1<-apply(fdata1$data,1,count.na)
  if (any(nas1))  stop("fdata1 contain ",sum(nas1)," curves with some NA value \n")
- else  if (!is.fdata(fdata2))  {fdata2<-fdata(fdata2,tt) }
+ else  if (!is.fdata(fdata2))  {fdata2<-fdata(fdata2,tt,rtt) }
  nas2<-apply(fdata2$data,1,count.na)
  if (any(nas2))  stop("fdata2 contain ",sum(nas2)," curves with some NA value \n")
-
-  rtt<-fdata1[["rangeval"]]
+ rtt<-fdata1[["rangeval"]]
 #   print("Raw class")
    np=ncol(fdata1)
    if (is.null(nbasis1)) {
@@ -96,10 +94,10 @@ else {  b1 <- paste('create.',type.basis2,'.basis',sep="")
    fd2=fdata(t(eval.fd(tt,df2)),tt)
    mdist=metric.lp(fd1,fd2,...)
 }
+attr(mdist,"call")<-"semimetric.basis"
+attr(mdist,"par.metric")<-list("nderiv"=nderiv,"type.basis1"=type.basis1,
+"nbasis1"=nbasis1,"type.basis2"=type.basis2,"nbasis2"=nbasis2)
 mdist
 }
-
-
-
 
 

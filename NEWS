@@ -1,3 +1,19 @@
+Release 0.9.6 renames the functions: 
+  pc.fdata()-->fdata2pc()
+  pls.fdata()-->fdata2pls()
+  pc.cor-->summary.fdata.comp()
+  pc.fdata-->summary.fdata.comp()
+It added create.pls.basis, Math.fdata, 
+Ops.fdata, Summary.fdata and
+dis.cos.cor() function.
+
+New argument par.S in: fregre.np, 
+fregre.np.cv, fregre.plm,
+New argument cv in: S.NW,S.KNN, S.LLR,
+In metric.lp the argument p now is called lp.
+
+
+
 Release 0.9.5 improves fdata.bootstrap() function
 (better computational efficiency). It introduces a new 
 functions: for Partial Linear Square (pls.fdata(), fregre.pls() 

@@ -7,7 +7,7 @@
 }
 \usage{
 fregre.np(fdataobj,y,h=NULL,Ker=AKer.norm,metric=metric.lp,
-type.S=S.NW,...)
+type.S=S.NW,par.S=list(w=1),...)
 }
 \arguments{
   \item{fdataobj}{ \code{\link{fdata}} class object.}  
@@ -15,7 +15,8 @@ type.S=S.NW,...)
 	\item{h}{ Smoothing parameter or bandwidth.}	
 	\item{Ker}{ Type of asymmetric kernel used, by default asymmetric normal kernel.}	
   \item{metric}{ Metric function, by default \code{\link{metric.lp}}.}
-  \item{type.S}{ Type of smothing matrix \code{S}. By default \code{S} is calculated by Nadaraya-Watson kernel estimator (\code{S.NW}).}   
+  \item{type.S}{ Type of smothing matrix \code{S}. By default \code{S} is calculated by Nadaraya-Watson kernel estimator (\code{S.NW}).}
+  \item{par.S}{ List of parameters for \code{type.S}: \code{w}, the weights.}	      
   \item{\dots}{ Arguments to be passed  for \code{\link{metric.lp}} o other metric function.}
 }
 \details{ 

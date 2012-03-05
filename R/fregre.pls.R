@@ -1,5 +1,3 @@
-#1. preg a manolo si max(l) o sequencial!!!
-#2. no hace falta hacer object.lm<-lm(df....etc etc ) o asi solucionamos 1
 fregre.pls=function (fdataobj, y, l = 1:3,...){
 if (!is.fdata(fdataobj))    fdataobj = fdata(fdataobj)
 nas<-apply(fdataobj$data,1,count.na)
@@ -35,16 +33,19 @@ if (any(nas) & any(nas.g))  {
     C <- match.call()
     if (is.null(rownames(x)))        rownames(x) <- 1:n
     ycen = y - mean(y)
-    pc<-pls.fdata(fdataobj,ycen,max(l),...)
+    pc<-fdata2pls(fdataobj,ycen,ncomp=max(l))
     xcen<-pc$fdataobj.cen
      if (length(l) == 1)  {
                   vs <- pc$rotation$data[l,]
                   Z<-pc$x[,1:l]
                   }
     else {
-                  vs <- t(pc$rotation$data[l,])
+ #                 Z <- pc$res.pls$scores
+#                  class(Z)<-"matrix"
+                  vs <- pc$rotation$data[l,]
                   Z<-(pc$x[,l])
-                  }
+#                                    print(dim(Z))
+                   }
     cnames<-colnames(pc$x)[l]
     response = "y"
     df<-data.frame(y,Z)
@@ -58,8 +59,8 @@ if (any(nas) & any(nas.g))  {
     beta.est$names$main<-"beta.est"
     beta.est$data <- matrix(as.numeric(beta.est$data),nrow=1)
 #    H<-diag(hat(Z, intercept = TRUE),ncol=n)
-# H<-lm.influence(object.lm, do.coef = FALSE)$hat o bien
-#    I <- diag(1/(n*pc$lambdas[l]), ncol = lenl) #1/n
+ # H2<-lm.influence(object.lm, do.coef = T)$hat# o bien
+ #    I <- diag(1/(n*pc$lambdas[l]), ncol = lenl) #1/n
     Z=cbind(rep(1,len=n),Z)
     S=solve(t(Z)%*%Z)
     H<-Z%*%S%*%t(Z)
@@ -69,10 +70,11 @@ if (any(nas) & any(nas.g))  {
     sr2 <- sum(e^2)/(n - df)
     r2 <- 1 - sum(e^2)/sum(ycen^2)
     out <- list(call = C, beta.est = beta.est, fitted.values =object.lm$fitted.values,
-    pls.fdata=pc,coefficients=object.lm$coefficients,residuals = object.lm$residuals,
+    fdata.comp=pc,coefficients=object.lm$coefficients,residuals = object.lm$residuals,
     df = df,r2=r2, sr2 = sr2,H=H,fdataobj = fdataobj,y = y, l = l, lm=object.lm)
     #,Z=Z,pf = pf)
     class(out) = "fregre.fd"
     return(out)
 }
+
 

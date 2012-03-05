@@ -33,7 +33,7 @@ if (any(nas) & any(nas.g))  {
     C <- match.call()
     if (is.null(rownames(x)))        rownames(x) <- 1:n
     ycen = y - mean(y)
-    pc<-pc.svd.fdata(fdataobj,norm)
+    pc<-fdata2pc(fdataobj,norm,max(l))
     xcen<-pc$fdataobj.cen
     if (length(l) == 1)  {
                   vs <- pc$rotation$data[l,]
@@ -67,7 +67,7 @@ if (any(nas) & any(nas.g))  {
     sr2 <- sum(e^2)/(n - df)
     r2 <- 1 - sum(e^2)/sum(ycen^2)
     out <- list(call = C, beta.est = beta.est, fitted.values =object.lm$fitted.values,
-    svd.fdata=pc,coefficients=object.lm$coefficients,residuals = object.lm$residuals,
+    fdata.comp=pc,coefficients=object.lm$coefficients,residuals = object.lm$residuals,
     df = df,r2=r2, sr2 = sr2,H=H,fdataobj = fdataobj,y = y, l = l,lm=object.lm,pc=pc)
     #pc=pc,pf = pf,Z=Z
     class(out) = "fregre.fd"

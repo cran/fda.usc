@@ -6,12 +6,12 @@
 Functional data estimation via basis representation using cross-validation (CV) or generalized cross-validation (GCV) method with a roughness penalty. 
 }
 \usage{
-min.basis(fdataobj,type.CV=GCV.S,W=diag(1,ncol=np,nrow=np),lambda=0,
-numbasis=floor(seq(ncol(fdataobj)/16,ncol(fdataobj)/2,len=10)),
-type.basis="bspline",par.CV=list(trim=0,draw=FALSE),...) 
-%\method{min}{basis}(fdataobj,type.CV=GCV.S,W=diag(1,ncol=np,nrow=np),lambda=0,
+%min.basis(fdataobj,type.CV=GCV.S,W=diag(1,ncol=np,nrow=np),lambda=0,
 %numbasis=floor(seq(ncol(fdataobj)/16,ncol(fdataobj)/2,len=10)),
-%type.basis="bspline",par.CV=list(trim=0,draw=FALSE),\dots)
+%type.basis="bspline",par.CV=list(trim=0,draw=FALSE),...) 
+\method{min}{basis}(fdataobj,type.CV=GCV.S,W=diag(1,ncol=np,nrow=np),lambda=0,
+numbasis=floor(seq(ncol(fdataobj)/16,ncol(fdataobj)/2,len=10)),
+type.basis="bspline",par.CV=list(trim=0,draw=FALSE),\dots)
 }
 
 \arguments{

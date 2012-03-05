@@ -1,17 +1,17 @@
-\name{classif.kernel.fd}
+\name{classif.kernel}
 \Rdversion{1.1}
-\alias{classif.kernel.fd}
+\alias{classif.kernel}
 \title{Kernel  Classifier from  Functional Data }
 \description{
-Fits Nonparametric Supervised Classification for Functional Data.  \cr}
+Fits Nonparametric Supervised Classification for Functional Data.  }
 \usage{
-classif.kernel.fd(fdataobj, group, h = NULL, 
-metric = metric.lp, ...)
+classif.kernel(group, fdataobj, w = NULL, h = NULL,
+ metric = metric.lp,...)
 }
-
 \arguments{
- \item{fdataobj}{ \code{\link{fdata}} class object.} 
-  \item{group}{ Factor of length \code{n}.}
+ \item{group}{ Factor of length \emph{n}}
+  \item{fdataobj}{ \code{\link{fdata}} class object.}  
+   \item{w}{ Optional case weights.}
 	\item{h}{ Vector of smoothing parameter or bandwidth.}
   \item{metric}{ Metric function, by default \code{\link{metric.lp}}.}
   \item{\dots}{  Arguments to be passed  for \code{\link{metric.lp}} o other metric function and \code{\link{Kernel}} function.}
@@ -31,7 +31,7 @@ metric = metric.lp, ...)
   \item{prob.classification}{ Probability of correct classification by group.}  	
     \item{misclassification}{ Vector of probability of misclassification by number of neighbors \code{knn}.}
   \item{h}{ Vector of smoothing parameter or bandwidht.}
-   \item{C}{ A call of function \code{classif.kernel.fd}.}
+   \item{C}{ A call of function \code{classif.kernel}.}
 }
 \references{
 Ferraty, F. and Vieu, P. (2006). \emph{Nonparametric functional data analysis.}
@@ -45,19 +45,16 @@ Febrero-Bande, M. and Oviedo de la Fuente, M.
 }
 
 \seealso{
-See Also as \code{\link{predict.classif.fd}}}
+See Also as \code{\link{predict.classif}}}
 
 \examples{
-
 data(phoneme)
 mlearn<-phoneme[["learn"]]
 glearn<-phoneme[["classlearn"]]
 
 h=seq(7,19,len=10)
-out=classif.kernel.fd(mlearn,glearn,h=h)
-summary.classif.fd(out)
+out=classif.kernel(glearn,mlearn,h=h)
+summary.classif(out)
 #round(out$prob.group,4)
-
 }
-
 \keyword{classif}

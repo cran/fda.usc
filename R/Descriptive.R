@@ -44,4 +44,3 @@ func.trimvar.RPD=function(fdataobj,...){
  lista=depth.RPD(fdataobj,...)$ltrim
  func.var(fdataobj[lista,])}
 
-

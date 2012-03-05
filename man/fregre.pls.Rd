@@ -30,7 +30,7 @@ Return:
 	\item{y}{ Scalar response.}
   \item{l}{ Index of components to include in the model.}  	
 	%\item{Z}{ Matrix of centered \code{fdata} multiplied by the factors .}
-	\item{pls.fdata}{ Fitted object in \code{\link{pls.fdata}} function.}
+	\item{fdata2pls}{ Fitted object in \code{\link{fdata2pls}} function.}
 	\item{lm}{ Fitted object in \code{\link{lm}} function}	
 	%\item{Z}{ Design matrix}   
 }

@@ -6,13 +6,14 @@
 Provides the smoothing matrix \code{S}  with roughness penalties. 
 }
 \usage{
-S.basis(tt,basis,lambda=0,Lfdobj=vec2Lfd(c(0,0)),...)
+S.basis(tt,basis,lambda=0,Lfdobj=vec2Lfd(c(0,0)),w=NULL,...)
 }
 \arguments{
    \item{tt}{ Discretization points.}
    \item{basis}{ Basis to use. See \link[fda]{create.basis}.}
    \item{lambda}{ A roughness penalty. By default, no penalty \code{lambda}=0.}  
    \item{Lfdobj}{ See \link[fda]{eval.penalty}.}
+   \item{w}{ Optional case weights.}
   \item{\dots}{ Further arguments passed to or from other methods. Arguments to be passed by default to \link[fda]{create.basis}}
 }
 \details{

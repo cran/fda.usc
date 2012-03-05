@@ -2,20 +2,23 @@ summary.fregre.fd<-function(object,times.influ=3,times.sigma=3,draw=TRUE,...){
     x<-object$fdataobj$data
     t=object$fdataobj$argvals
     y<-object$y
+    isfdata<-is.fdata(y)
     n=nrow(x)
- up=mean(object$residuals)+times.sigma*sqrt(object$sr2)
-    lo=mean(object$residuals)-times.sigma*sqrt(object$sr2)
-    i.atypical=which(object$residuals>up|object$residuals<lo)
-    lim.influ=traza(object$H)/n
-    influence=diag(object$H)
-    i.influence=which(influence>times.influ*lim.influ)
-    if (length(i.influence) == 0) i.influence=NA
-    if (length(i.atypical) == 0) i.atypical=NA
-    if (object$call[[1]]=="fregre.pc") {
+    if (!isfdata) {
+     up=mean(object$residuals)+times.sigma*sqrt(object$sr2)
+     lo=mean(object$residuals)-times.sigma*sqrt(object$sr2)
+     i.atypical=which(object$residuals>up|object$residuals<lo)
+     lim.influ=traza(object$H)/n
+     influence=diag(object$H)
+     i.influence=which(influence>times.influ*lim.influ)
+     if (length(i.influence) == 0) i.influence=NA
+     if (length(i.atypical) == 0) i.atypical=NA
+     }
+     if (object$call[[1]]=="fregre.pc") {
      cat(" *** Summary Functional Data Regression with Principal Components *** \n\n")
      object$lm$call<-object$call
      print(summary(object$lm))
-     var.1<-apply(object$pc$x, 2, var)
+     var.1<-apply(object$fdata.comp$x, 2, var)
      pr.x= var.1/sum(var.1)
  cat("\n-With",length(object$l),"Principal Components is  explained ",round(sum(pr.x[object$l])*100
  ,2),"%\n of the variability of explicative variables. \n
@@ -26,12 +29,11 @@ summary.fregre.fd<-function(object,times.influ=3,times.sigma=3,draw=TRUE,...){
      cat(" *** Summary Functional Data Regression with Partial Least Squares *** \n\n")
      object$lm$call<-object$call
      print(summary(object$lm))
-#     var.1<-apply(object$pc$x, 2, var)
-#     pr.x= var.1/sum(var.1)
-# cat("\n-With",length(object$l),"Principal Components is  explained ",round(sum(pr.x[object$l])*100
-# ,2),"%\n of the variability of explicative variables. \n
-#-Variability for each  principal components -PC- (%):\n")
-#    print(round(pr.x[object$l] * 100, 2))
+     var.1<-apply(object$fdata.comp$x, 2, var)
+     pr.x= var.1/sum(var.1)
+ cat("\n-With",length(object$l),"Principal Components is  explained ",round(sum(pr.x[object$l])*100 ,2),"%\n of the variability of explicative variables. \n
+-Variability for each  principal components -PLS- (%):\n")
+    print(round(pr.x[object$l] * 100, 2))
     }
 
     if (object$call[[1]]=="fregre.basis") {
@@ -67,12 +69,12 @@ summary.fregre.fd<-function(object,times.influ=3,times.sigma=3,draw=TRUE,...){
 
     }
   if (object$call[[1]]=="fregre.np.cv") {
+
      cat(" *** Summary  non-parametric Regression for Functional data *** \n\n")
      cat("-Call: ");    print(object$call)
      cat("\n-Bandwidth (h): ",object$h.opt)
     cat("\n-R squared: ",object$r2)
     cat("\n-Residual variance: ",object$sr2,"\n")
-
     }
      if (object$call[[1]]=="fregre.plm") {
      cat(" *** Summary semi-functional partial linear regression *** \n\n")
@@ -83,16 +85,19 @@ summary.fregre.fd<-function(object,times.influ=3,times.sigma=3,draw=TRUE,...){
     cat("\n-R squared: ",object$r2)
     cat("\n-Residual variance: ",object$sr2,"\n")
      }
-    cat("-Names of possible atypical curves: ");
-    if (is.na(i.atypical[1]))     cat("No atypical curves \n")
-    else   if (length(i.atypical)<11)  cat(rownames(x)[i.atypical],"\n")
+    if (!isfdata) {
+     cat("-Names of possible atypical curves: ");
+     if (is.na(i.atypical[1]))     cat("No atypical curves \n")
+     else   if (length(i.atypical)<11)  cat(rownames(x)[i.atypical],"\n")
            else cat(rownames(x)[i.atypical[1:10]],
            "\n It prints only the 10 most atypical curves. \n")
-    cat("-Names of possible influence curves : ");
-    if (is.na(i.influence[1])) cat("No influence curves \n\n")
-    else  if (length(i.influence)<11) cat(rownames(x)[i.influence],"\n\n")
+     cat("-Names of possible influence curves: ");
+     if (is.na(i.influence[1])) cat("No influence curves \n")
+     else  if (length(i.influence)<11) cat(rownames(x)[i.influence],"\n")
      else cat(rownames(x)[i.influence[1:10]],
-     "\n It prints only the 10 most influence curves \n\n")
+     "\n It prints only the 10 most influence curves \n")
+   }
+   else  return(invisible(object)) #draw=FALSE
     if (draw) {
       C<-match.call()
       lenC=length(C)
@@ -135,7 +140,9 @@ text(diag(object$H)[i.influence],i.influence,rownames(x)[i.influence],cex=0.7)
     qqnorm(object$residuals,main="Residuals")
     boxplot(object$residuals,main="Residuals")
     }
-    cat("\n")
+#    cat("\n")
 return(invisible(list("Influence"=influence,"i.influence"=i.influence,"i.atypical"=i.atypical)))
 }
+
+
 

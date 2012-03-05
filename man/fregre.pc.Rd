@@ -15,7 +15,7 @@
   %\item{\dots}{ Further arguments passed to or from other methods.}
 }
 \details{
-The principal components are calculated by \code{\link{svd}} decomposition in the \code{\link{pc.svd.fdata}} function.
+The principal components are calculated by \code{\link{svd}} decomposition in the \code{\link{fdata2pc}} function.
 }
 \value{
 Return:\cr
@@ -71,13 +71,9 @@ y=tecator$y$Fat[ind]
 
 res=fregre.pc(x,y)
 summary(res)
-pc.cor(x,y,1:8)
-pc.fdata(x,1:8,draw=FALSE)
 res2=fregre.pc(x,y,l=c(1,3,4))
 summary(res2)
 x.d=fdata.deriv(x)
-pc.cor(x.d,y,1:8)
-pc.fdata(x.d,1:8,draw=FALSE)
 res3=fregre.pc(x.d,y,l=c(1,3,4))
 summary(res3)
 

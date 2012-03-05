@@ -1,7 +1,9 @@
-
-kmeans.center.ini=function(fdataobj,ncl=2,metric=metric.lp,draw=TRUE,method="sample",iter=100,...){
+kmeans.center.ini=function(fdataobj,ncl=2,metric=metric.lp,draw=TRUE,method="sample",iter=100,par.metric=NULL,...){
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
-mdist=metric(fdataobj,...)
+if (is.null(par.metric)) par.metric=list()
+par.metric$fdata1<-fdataobj
+#mdist=metric(fdataobj,...)
+mdist=do.call(metric,par.metric)
 z<-fdataobj[["data"]]
 tt<-fdataobj[["argvals"]]
 rtt<-fdataobj[["rangeval"]]
@@ -55,4 +57,3 @@ out=list("centers"=centers,"lcenters"=lxm,"z.dist"=mdist,"fdataobj"=fdataobj)
 class(out)="kmeans.fd"
 return(invisible(out))
 }
-

@@ -6,13 +6,14 @@
  The depth.RP function implements a depth measure based on random projections.
 }
 \usage{
-depth.RP(fdataobj,trim=0.25,nproj=50,xeps=0.0000001,draw=FALSE,...)
+depth.RP(fdataobj,trim=0.25,nproj=50,proj=1,xeps=0.0000001,draw=FALSE,...)
 }
 
 \arguments{
  \item{fdataobj}{ \code{\link{fdata}} class object.}  
    \item{trim}{ The alpha of the trimming.}
   \item{nproj}{ The number projection.}
+    \item{proj}{  if is a character: create the random projection using a covariance matrix by process indicated in the argument (by default, proj=1, sigma=diag(ncol(fdataobj))), else if is a  matrix of random projection provided by the user.} 
   \item{xeps}{ Accuracy. The left limit  of the empirical distribution function.}
   \item{draw}{ =TRUE, draw the curves, the sample median and trimmed mean.}
   \item{\dots}{ Further arguments passed to or from other methods.}

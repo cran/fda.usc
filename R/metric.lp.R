@@ -1,20 +1,24 @@
-metric.lp=function (fdata1, fdata2 = NULL, p = 2, w = 1, ...)
+metric.lp=function (fdata1, fdata2 = NULL, lp = 2, w = 1, ...)
 {
+p<-lp
 C1<-match.call()
 same<-FALSE
 if (is.fdata(fdata1)) {
    fdat<-TRUE
    tt<-tt1<-fdata1[["argvals"]]
+   rtt<-fdata1[["rangeval"]]
    nas1<-apply(fdata1$data,1,count.na)
    if (any(nas1))  stop("fdata1 contain ",sum(nas1)," curves with some NA value \n")
    if (is.null(fdata2)) {fdata2<-fdata1;same<-TRUE}
-   else  if (!is.fdata(fdata2))  {fdata2<-fdata(fdata2,tt1) }
+   else  if (!is.fdata(fdata2))  {
+
+         fdata2<-fdata(fdata2,tt1,rtt,fdata1$names)
+         }
    nas2<-apply(fdata2$data,1,count.na)
    if (any(nas2)) {stop("fdata2 contain ",sum(nas2)," curves with some NA value \n")}
    DATA1<-fdata1[["data"]]
    DATA2<-fdata2[["data"]]
    tt2<-fdata2[["argvals"]]
-   rtt<-fdata1[["rangeval"]]
    if (!same) {
    if  (sum(tt1!=tt2)!=0) {stop("Error: different discretization points in the input data.\n")  }
    }}
@@ -62,7 +66,6 @@ if (predi) {
              }}
 #mdist<-mdist/(sqrt(diff(rtt)))
 }
-attr(mdist,"call")<-C1
 }
 else {
    mdist = array(0, dim = c(numgr, numgr2))
@@ -72,5 +75,8 @@ else {
             mdist[i,ii]=(sum(f))^(1/p)
              }}
 }
+attr(mdist,"call")<-"metric.lp"
+attr(mdist,"par.metric")<-list("lp"=p,"w"=w)
 return(mdist)
 }
+

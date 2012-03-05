@@ -36,21 +36,20 @@ See Also as:  \code{\link{cond.F}} and  \code{\link{cond.mode}}.
 }
 \examples{
 
-# Read data
-library(e1071)
 n= 500
 t= seq(0,1,len=101)
 beta = t*sin(2*pi*t)^2
 x = matrix(NA, ncol=101, nrow=n)
 y=numeric(n)
-for (i in 1:n){
-	x[i,] = rwiener(1,101)*3 + rnorm(101,sd=0.1)
-	y[i] = mean((x[i,])*beta)+rnorm(1,sd=0.1)
-}
+x0<-rproc2fdata(n,seq(0,1,len=101),sigma="wiener")
+x1<-rproc2fdata(n,seq(0,1,len=101),sigma=0.1)
+x<-x0*3+x1
+fbeta = fdata(beta,t)
+y<-inprod.fdata(x,fbeta)+rnorm(n,sd=0.1)
 
-prx=x[1:100,];pry=y[1:100]
+prx=x[1:100];pry=y[1:100]
 ind=101;ind2=101:110
-pr0=x[ind,];pr10=x[ind2,]
+pr0=x[ind];pr10=x[ind2]
 ndist=161
 gridy=seq(-1.598069,1.598069, len=ndist)
 ind4=5

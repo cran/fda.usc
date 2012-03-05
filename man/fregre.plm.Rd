@@ -7,8 +7,8 @@
 }
 \usage{
 fregre.plm(formula,data,h=NULL,Ker=AKer.norm,metric=metric.lp,
-type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),...)
-}
+type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),
+par.S=list(w=1),...)}
 \arguments{
  \item{formula}{ an object of class \code{formula} (or one that can be coerced to that class): a symbolic description of the model to be fitted. The details of model specification are given under \code{Details}.}
   \item{data}{ List that containing the variables in the model. }
@@ -18,7 +18,8 @@ type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),...)
   \item{type.CV}{ Type of cross-validation. By default generalized cross-validation \code{\link{GCV.S}} method.} 
   \item{type.S}{ Type of smothing matrix \code{S}. By default \code{S} is calculated by Nadaraya-Watson kernel estimator (\code{S.NW}).}   
   \item{par.CV}{ List of parameters for \code{type.CV}: \code{trim}, the alpha of the trimming and \code{draw=TRUE}.}	  
-  \item{\dots}{ Further arguments passed to or from other methods.}
+   \item{par.S}{ List of parameters for \code{type.S}: \code{w}, the weights.}	      
+   \item{\dots}{ Further arguments passed to or from other methods.}
 }
 \details{ 
 The first item in the \code{data} list  is called \emph{"df"} and  is a data frame  with the response and non functional explanatory variables, as \code{link{lm}} . If non  functional data into the formula then \code{\link{lm}} regression is performed.\cr
@@ -86,11 +87,12 @@ plot(res.plm$residuals)
 points(res.plm2$residuals,col=2)
 
 # fregre.plm as fregre.np.cv
-f=Fat~+x
-res.np=fregre.plm(f,ldata)
-res.np2=fregre.np.cv(x,y)
-res.np
-res.np2
+#f=Fat~+x
+#res.np=fregre.plm(f,ldata)
+#res.np2=fregre.np.cv(x,y)
+#res.np
+#res.np2
+
 # fregre.plm as lm
 f=Fat~+Water
 res.lm=fregre.plm(f,ldata)

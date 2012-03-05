@@ -15,7 +15,6 @@ print.fregre.fd<-function (x, digits = max(3, getOption("digits") - 3), ...)
          }
     cat("\n-R squared: ",x$r2)
     cat("\n-Residual variance: ",x$sr2,"\n")
-    cat("\n")
     invisible(x)
 }
 

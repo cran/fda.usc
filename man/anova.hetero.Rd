@@ -6,8 +6,8 @@
   Univariate ANOVA for heteroscedastic data.
 }
 \usage{
-anova.hetero(object=NULL,formula,pr=FALSE,contrast=NULL,...)
-%\method{anova}{hetero}(object=NULL,formula,pr=FALSE,contrast=NULL,...)
+%anova.hetero(object=NULL,formula,pr=FALSE,contrast=NULL,...)
+\method{anova}{hetero}(object=NULL,formula,pr=FALSE,contrast=NULL,...)
 }
 \arguments{
   \item{object}{ A data frame with  dimension (\code{n} x \code{p+1}).  In the first column contains the \code{n} response values and on the following \code{p} columns the explanatory variables specified in the formula.}

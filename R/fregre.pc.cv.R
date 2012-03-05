@@ -38,11 +38,11 @@ rtt<-fdataobj[["rangeval"]]
     max.c = length(c)
     c0 = 1:kmax
     use = rep(FALSE, kmax)
-    tab = list("AIC", "AICc","SIC", "SICc","CV")
+    tab = list("AIC", "AICc","SIC", "SICc","rho","CV")
     type.i = pmatch(criteria, tab)
     if (is.na(type.i))     stop("Error: incorrect criteria")
     else {
-    if (type.i < 5) {
+    if (type.i < 6) {
     for (k in 1:kmax) {
         cv.AIC <- rep(NA, max.c)
         for (j in 1:max.c) {
@@ -60,6 +60,17 @@ rtt<-fdataobj[["rangeval"]]
             else if (criteria == "SICc") {
                 cv.AIC[j] <- log(s2) + log(n) * ck/(n-ck-2)
             }
+                        else if (criteria == "rho") {
+#              cv.AIC[j] <-   (traza(abs(out$residuals)*abs(R)*abs(out$residuals)))/(n-ck)
+#              cv.AIC[j] <-   log(sum(out$residuals*abs(R)*out$residuals))/n +2*log(log(n)) * ck/n        }
+#cv.AIC[j] <-   log(matrix(out$residuals,nrow=1)%*%abs(R)%*%out$residuals)/n +2*log(log(n)) * ck/n
+#A<-out$residuals*abs(R)*out$residuals
+A<-out$residuals^2
+B<-1-diag(out$H)
+D1<-A/B
+cv.AIC[j] <-   log(sum(D1)/n) #+ log(n) * ck/(n-ck-2)
+
+                }
         }
         min.AIC = min(cv.AIC)
         pc.opt1 <- c[, which.min(cv.AIC)]
@@ -104,12 +115,15 @@ rtt<-fdataobj[["rangeval"]]
     close(pb)
     }
     mn = which.min(l2)
-    pc.opt = pc.opt1[1:mn]
-    MSC = t(l2)
+
+    MSC = as.numeric(l2)
     }
     for (i in 1:kmax) names(MSC)[i] = paste("PC", t(l[i]), sep = "")
+    MSC.min = MSC[mn]
+    pc.order<-names(MSC)
+    pc.opt = pc.opt1[1:mn]
+    names(pc.opt)<-paste("PC", pc.opt1[1:mn], sep = "")
     fregre=fregre.pc(fdataobj,y,l=pc.opt,...)
-    return(list("fregre.pc"=fregre,pc.opt = pc.opt, MSC.min = l2[[mn]], pc.order =
-t(l[1:kmax]),MSC = MSC))
+    return(list("fregre.pc"=fregre,pc.opt = pc.opt,pc.order =pc.order,MSC = MSC))
 }
 

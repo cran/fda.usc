@@ -1,4 +1,6 @@
-classif.knn.fd<-function(fdataobj,group,
+#######################
+#######################
+classif.knn<-function(group,fdataobj,w=NULL,
 knn=seq(3,floor(min(table(group))/3),by=2),metric=metric.lp,...) {
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
 if (is.null(names(group))) names(group)<-1:length(group)
@@ -38,7 +40,7 @@ if (min(table(group))<max(knn)) {
  min(table(group)),"elements or components"),"\n")}
 C<-match.call()
 mf <- match.call(expand.dots = FALSE)
-m <- match(c("fdataobj", "group", "knn","metric"), names(mf), 0L)
+m <- match(c( "group","fdataobj","w","knn","metric"), names(mf), 0L)
 numg=nlevels(as.factor(group))
 misclassification=array(1,dim=c(1,length(knn)))
 group.pred=array(0,dim=c(numgr))
@@ -49,8 +51,8 @@ pr=1;
 mm=data
 mdist=array(0,dim=c(numgr,numgr))
 mat=array(0,dim=c(numgr,numg,length(knn)))
-if (m[4]==0) mdist=metric(fdataobj,fdataobj,...) #            metric
-else mdist=metric(data,data,...) #            metric
+if (m[5]==0) mdist=metric(fdataobj,fdataobj,...)
+else mdist=metric(data,data,...)
 pb=txtProgressBar(min=0,max=numgr,style=3)
 for (i in 1:numgr) {
    setTxtProgressBar(pb,i-0.5)
@@ -60,20 +62,20 @@ for (i in 1:numgr) {
      mdist[i,i]=NA
      vec=quantile(mdist[i,],prob=(kk/(numgr-1)),type=4,na.rm=TRUE)
      l=which(mdist[i,]<=vec)
-  l2=which.min(mdist[i,])
-  for (j in 1:knn[k]) {
-   mat[i,group[l[j]],k]=mat[i,group[l[j]],k]+1
-  }
-  prob.group[i,,k]=mat[i,,k]/knn[k]
-  max2=which(max(mat[i,,k])==mat[i,,k])
-  if (length(max2)>1) {vvmax[i]=as.character(group[l2])}
-  else {vvmax[i]=levels(group)[max2]}
-  group.est[k,i]=vvmax[i]
-  }
+     l2=which.min(mdist[i,])
+     for (j in 1:knn[k]) {
+         mat[i,group[l[j]],k]=mat[i,group[l[j]],k]+1
+     }
+     prob.group[i,,k]=mat[i,,k]/knn[k]
+     max2=which(max(mat[i,,k])==mat[i,,k])
+     if (length(max2)>1) {vvmax[i]=as.character(group[l2])}
+     else {vvmax[i]=levels(group)[max2]}
+     group.est[k,i]=vvmax[i]
+   }
    setTxtProgressBar(pb,i)
    }
 close(pb)
-  for (k in 1:length(knn)) {
+for (k in 1:length(knn)) {
    misclassification[1,k]=sum(group.est[k,]!=group)/numgr
    if (pr>misclassification[1,k]) {
     pr=misclassification[1,k]
@@ -99,6 +101,8 @@ output<-list(fdataobj=fdataobj,group=group,group.est=as.factor(group.pred),
 max.prob=max.prob,knn.opt=knn.opt,D=D,prob.classification=prob.groupV2,
 prob.group=prob.group2,misclassification=misclassification,knn=knn,
 C=C,m=m)
-class(output)="classif.fd"
+class(output)="classif"
 return(output)
 }
+
+

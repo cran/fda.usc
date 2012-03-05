@@ -6,7 +6,7 @@
 The depth.RPD function implements a depth measure based on random projections and using several derivatives. 
 }
 \usage{
-depth.RPD(fdataobj,nproj=50,deriv=c(0,1),trim=0.25,
+depth.RPD(fdataobj,nproj=50,proj=1,deriv=c(0,1),trim=0.25,
 dfunc2=depth.mode,method="fmm",draw=FALSE,...)
 }
 
@@ -14,6 +14,7 @@ dfunc2=depth.mode,method="fmm",draw=FALSE,...)
    \item{fdataobj}{ \code{\link{fdata}} class object.}    
    \item{nproj}{ Number of random projection.}
   \item{deriv}{  Number of derivatives described in integer vector \code{deriv}. \code{=0} means no derivative.}
+  \item{proj}{  if is a character: create the random projection using a covariance matrix by process indicated in the argument (by default, proj=1, sigma=diag(ncol(fdataobj))), else if is a  matrix of random projection provided by the user.} 
    \item{trim}{ The alpha of the trimming.}
   \item{dfunc2}{by default,  \code{\link{depth.mode}}.}
   \item{method}{  Type of derivative method. See   \code{\link{fdata.deriv}} for more details.}
@@ -26,7 +27,7 @@ dfunc2=depth.mode,method="fmm",draw=FALSE,...)
 \value{
     \item{median}{ Deepest curve.}
     \item{lmed}{ Index deepest element \code{median}.}
-		\item{mtrim}{ code{fdata} class object with the average from the \code{(1-trim)\%} deepest curves. }
+		\item{mtrim}{ \code{fdata} class object with the average from the \code{(1-trim)\%} deepest curves. }
     \item{ltrim}{ Index of curves with trimmed mean \code{mtrim}. }    \item{dep}{ Depth of each curve. }
     \item{dep}{ Depth of each curve.}
     \item{proj}{ The projection value of each point on the curves.}

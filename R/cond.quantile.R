@@ -9,8 +9,6 @@ if (!is.fdata(fdata0))  fdata0=fdata(fdata0,tt)
   nas2<-apply(fdata0$data,1,count.na)
  if (any(nas2))  stop("fdata0 contain ",sum(nas2)," curves with some NA value \n")
  if (any(is.na(y)))   stop("y contain ",sum(is.na(y)),"  NA values \n")
-
- 
   i<-0
   tol.up=qua+tol
   tol.lo=qua-tol
@@ -19,7 +17,10 @@ if (!is.fdata(fdata0))  fdata0=fdata(fdata0,tt)
   rlo=fn(fdata0,a, fdataobj, y, ...)$Fc
   rup=fn(fdata0,b, fdataobj, y, ...)$Fc
   res<-c(i,medio,rmed)
-  if ((rup*rlo>qua)|(a>b)) {return('Error in input data') }
+  if ((rup < qua) | (rlo >qua) | (a>b)) {
+     print('Error in input data')
+     return(NA)
+     }
   else {
     while (abs(rmed-qua)>tol & i<iter.max) {
       i<-i+1

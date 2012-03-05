@@ -44,9 +44,9 @@ if (length(vfunc)>0) {
       rtt<-data[[vfunc[i]]][["rangeval"]]
       fdat<-data[[vfunc[i]]];      dat<-data[[vfunc[i]]]$data
       if (is.null(basis.x[[vfunc[i]]]))  basis.x[[vfunc[i]]]<-create.fdata.basis(fdat,l=1:7)
-      else   if (basis.x[[vfunc[i]]]$type=="pc") bsp1=FALSE
+      else   if (basis.x[[vfunc[i]]]$type=="pc" | basis.x[[vfunc[i]]]$type=="pls") bsp1=FALSE
       if (is.null(basis.b[[vfunc[i]]])& bsp1)  basis.b[[vfunc[i]]]<-create.fdata.basis(fdat)
-      else           if (basis.x[[vfunc[i]]]$type=="pc") bsp2=FALSE
+      else           if (basis.x[[vfunc[i]]]$type=="pc" | basis.x[[vfunc[i]]]$type=="pls") bsp2=FALSE
       if (bsp1 & bsp2) {
           if (is.null(rownames(dat)))    rownames(fdat$data)<-1:nrow(dat)
           fdnames=list("time"=tt,"reps"=rownames(fdat[["data"]]),"values"="values")
@@ -67,6 +67,7 @@ if (length(vfunc)>0) {
               basis.b[[vfunc[i]]]$names<-basis.b[[vfunc[i]]]$names[int]
               }
     	    x.fd = Data2fd(argvals = tt, y = t(xcc[[1]]$data),basisobj = basis.x[[vfunc[i]]],fdnames=fdnames)
+
           r=x.fd[[2]][[3]]
 #          Theta = getbasismatrix(tt,basis.b[[vfunc[i]]])
 #          Psi = getbasismatrix(tt,basis.x[[vfunc[i]]])
@@ -188,7 +189,9 @@ for (i in 1:length(vfunc)) {
  z$JJ<-JJ
  z$data=z$data
  z$XX=XX
+ z$data<-data
  z$vs.list=vs.list   ##### transformarlo en Data2fd(tt,vs.list,basisobj=basisobj)
+ class(z)<-c(class(z),"fregre.lm")
  z
 }
 

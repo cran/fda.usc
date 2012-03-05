@@ -17,7 +17,6 @@
 	\item{times.sigma}{ Limit for detect possible oultiers or atypical curves.}
 	\item{draw}{ =TRUE draw   estimation and residuals graphics.}
 	\item{digits}{a non-null value for digits specifies the minimum number of significant digits to be printed in values. The default, NULL, uses \code{\link{getOption}}(digits).}	
-
   \item{\dots}{ Further arguments passed to or from other methods.}
 }
 \details{
@@ -29,10 +28,9 @@ Shows:\cr
 \tab -Index of possible atypical curves or possible outliers.\cr
 \tab -Index of possible influence curves.\cr
 }
-
 If the \code{fregre.fd} object comes from the \code{\link{fregre.pc}} then shows:
 \tabular{ll}{
-\tab -Variability of explicative variables  explaines by Principal Components.\cr
+\tab -Variability of explicative variables  explained by Principal Components.\cr
 \tab -Variability for each  principal components -PC-.\cr
 }
      
@@ -45,7 +43,7 @@ If draw=TRUE plot: \cr
 \tab -Residual boxplot.\cr
 \tab -Quantile-Quantile Plot (qqnorm).\cr
 }
-If \code{ask}=FALSE draw graphs in one window, by defalult. If \code{ask}=TRUE, draw each graph in a window, waiting to confirm.
+If \code{ask}=FALSE draw graphs in one window, by default. If \code{ask}=TRUE, draw each graph in a window, waiting to confirm.
 }
 \value{
 \item{Influence}{ Vector of influence measures.}
@@ -61,26 +59,22 @@ Summary function for  \code{\link{fregre.pc}}, \code{\link{fregre.basis}}, \code
 \examples{
 
 # Ex 1. Simulated data
-library(e1071)
-n=500
-t=seq(0,1,len=101)
-beta=t*sin(2*pi*t)^2 # beta con 2 colinas
-x=matrix(NA,ncol=101,nrow=n)
-y=numeric(n)
-for(i in 1:n){
-	x[i, ]=rwiener(1,101)*3+rnorm(101,sd=0.1)
-	y[i]=mean(x[i,]*beta)+ rnorm(1,sd=0.1)
-}
-x.fdata<-fdata(x,t)
+n= 500;tt= seq(0,1,len=101)
+x0<-rproc2fdata(n,tt,sigma="wiener")
+x1<-rproc2fdata(n,tt,sigma=0.1)
+x<-x0*3+x1
+beta = tt*sin(2*pi*tt)^2
+fbeta = fdata(beta,tt)
+y<-inprod.fdata(x,fbeta)+rnorm(n,sd=0.1)
 
 # Functional regression
-res=fregre.pc(x.fdata,y,l=c(1:5))
+res=fregre.pc(x,y,l=c(1:5))
 summary.fregre.fd(res)
 summary.fregre.fd(res,3)
 summary.fregre.fd(res,3,draw=FALSE)
 summary.fregre.fd(res,3,ask=TRUE)
 
-res2=fregre.pls(x.fdata,y,l=c(1:5))
+res2=fregre.pls(x,y,l=c(1:4))
 summary.fregre.fd(res2)
 }
 \keyword{print}

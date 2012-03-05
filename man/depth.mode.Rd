@@ -53,7 +53,7 @@ fdataobj<-fdata(t(CanadianWeather$dailyAv[,,1]),t)
 #Modal Depth
 out.mode=depth.mode(fdataobj)
 out.mode2=depth.mode(fdataobj,trim=0.10,draw=TRUE)
-out.mode3=depth.mode(fdataobj,metriC=semimetric.basis, draw=TRUE)
+out.mode3=depth.mode(fdataobj,metric=semimetric.basis, draw=TRUE)
 out.mode4=depth.mode(fdataobj,h=0.05, draw=TRUE)
 plot(out.mode$mtrim)
 lines(out.mode2$mtrim,col=2)

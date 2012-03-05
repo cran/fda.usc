@@ -1,4 +1,6 @@
-classif.kernel.fd <- function(fdataobj,group,h=NULL,metric=metric.lp,...) {
+###################
+###################
+classif.kernel <- function(group,fdataobj,w=NULL,h=NULL,metric=metric.lp,...) {
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
 if (is.null(names(group))) names(group)<-1:length(group)
 nas<-apply(fdataobj$data,1,count.na)
@@ -34,17 +36,17 @@ if (!is.factor(group)) {group=as.factor(group)}
 if (numgr!=length(group)) {stop("ERROR IN THE DATA DIMENSIONS") }
 C<-match.call()
 mf <- match.call(expand.dots = FALSE)
-m <- match(c("fdataobj", "group", "h","metric"), names(mf), 0L)
+m <- match(c("fdataobj", "group","w", "h","metric"), names(mf), 0L)
 group=as.factor(group)
 numg=nlevels(as.factor(group))
 group.pred=array(0,dim=c(numgr))
 prob.groupV2=array(0,dim=c(numg))
 pr=1;maxk=0;prob=0
 mm=data
-if (m[4]==0) mdist=metric(fdataobj,fdataobj,...) #            metric
+if (m[5]==0) mdist=metric(fdataobj,fdataobj,...) #            metric
 else mdist=metric(data,data,...) #            metric
 diag(mdist)=NA
-Y=array(0,dim=c(numg,numgr)) 
+Y=array(0,dim=c(numg,numgr))
 for (g in 1:numg) {
 y=as.integer(group==levels(group)[g])
 Y[g,]=as.integer(group==levels(group)[g])
@@ -108,7 +110,7 @@ output<-list(fdataobj=fdataobj,group=group,group.est=as.factor(group.pred),
 max.prob=prob,h.opt=h.opt,D=D,prob.classification=prob.groupV2,
 prob.group=t(prob.group2),misclassification=misclassification,h=h,
 C=C,m=m)
-class(output)="classif.fd"
+class(output)="classif"
 return(output)
 }
 

@@ -1,5 +1,4 @@
-S.NW<-function (tt, h, Ker = Ker.norm,cv=FALSE)
-{
+S.NW<-function (tt, h=NULL, Ker = Ker.norm,w=NULL,cv=FALSE) {
  if (is.matrix(tt)) {
     if (ncol(tt)!=nrow(tt)) {
       if (ncol(tt)==1) {
@@ -9,18 +8,16 @@ S.NW<-function (tt, h, Ker = Ker.norm,cv=FALSE)
     }}
  else if (is.vector(tt))    tt=abs(outer(tt,tt, "-"))
  else stop("Error: incorrect arguments passed")
+      if (is.null(h)) {
+    h=quantile(tt,probs=0.15,na.rm=TRUE)
+    cat("h=");print(h)
+    }
   if (cv)  diag(tt)=Inf
   k=Ker(tt/h)
-#  if (cv)   diag(k)=0
-  S =k/apply(k,1,sum)
+  if (is.null(w)) w<-rep(1,nrow(k))
+  k1<-sweep(k,1,w,FUN="*")   #antes un 2, aviso en prediccion
+  S =k1/apply(k1,1,sum)
+return(S)
+}
 
-return(S)}
 
-
-#res.np=fregre.np.cv(x,y,Ker=AKer.tri,type.CV=CV.S)
-#res.np$gcv
-
-# porque sino habría que calcular el cuantil de I*e^2 que es el efecto conjunto del error y el peso
-
-#S.NW pasar cv
-#truncamiento?

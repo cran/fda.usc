@@ -1,13 +1,16 @@
 \name{GCV.S}
 \Rdversion{1.1}
 \alias{GCV.S}
+\alias{FGCV.S}
 \title{ The generalized cross-validation (GCV) score.}
 \description{
  The generalized cross-validation (GCV) score.
 }
 \usage{
-GCV.S(y,S,criteria="Rice",W=diag(1,ncol=ncol(S),nrow=nrow(S)),
-trim=0,draw=FALSE,...)
+GCV.S(y,S,criteria="GCV",W=diag(1,ncol=ncol(S),nrow=nrow(S)),
+trim=0,draw=FALSE,metric=metric.lp,...)
+FGCV.S(y,S,criteria="GCV",W=diag(1,ncol=ncol(S),nrow=nrow(S)),
+trim=0,draw=FALSE,metric=metric.lp,...)
 }
 
 \arguments{
@@ -17,6 +20,7 @@ trim=0,draw=FALSE,...)
   \item{W }{ Matrix of weights.}    
 	\item{trim}{ The alpha of the trimming.}
   \item{draw}{ =TRUE, draw the curves, the sample median and trimmed mean.}	  
+  \item{metric}{ Metric function, by default \code{\link{metric.lp}}.}
   \item{\dots}{ Further arguments passed to or from other methods.}  
 }
 
@@ -57,8 +61,7 @@ Alternative method:  \code{\link{CV.S}}
 
 data(phoneme)
 mlearn<-phoneme$learn
-np<-ncol(mlearn)
-tt<-mlearn[["argvals"]]
+tt<-1:ncol(mlearn)
 S1 <- S.NW(tt,2.5)
 S2 <- S.LLR(tt,2.5)
 S3 <- S.KNN(tt,2.5)
@@ -66,7 +69,7 @@ gcv1 <- GCV.S(mlearn, S1)
 gcv2 <- GCV.S(mlearn, S2)
 gcv3 <- GCV.S(mlearn, S3)
 gcv4 <- GCV.S(mlearn, S1,criteria="AIC")
-gcv5 <- GCV.S(mlearn, S1,trim=0.01,draw=TRUE) 
+gcv5 <- GCV.S(mlearn, S1,trim=0.01,draw=TRUE)
 gcv1; gcv2; gcv3; gcv4; gcv5
  }
 

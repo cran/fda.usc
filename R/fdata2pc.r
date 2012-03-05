@@ -1,4 +1,5 @@
-pc.svd.fdata<- function(fdataobj,norm=TRUE){
+fdata2pc<- function(fdataobj,norm=TRUE,ncomp=2){
+  C <- match.call()
 if (!is.fdata(fdataobj)) stop("No fdata class")
  if (!is.fdata(fdataobj)) fdataobj<-fdata(fdataobj)
  nas1<-apply(fdataobj$data,1,count.na)
@@ -21,9 +22,13 @@ if (norm) {
           vs$data<-sweep(vs$data,1,drop(no),"/")
           scores[,1:Jmin] <-inprod.fdata(Xcen.fdata,vs)
           }
-#else     {scores[,1:Jmin] <-inprod.fdata(Xcen.fdata,vs)}
-else     {scores[,1:Jmin] <-Xcen.fdata$data%*%(eigenres$v)*diff(rtt)/(J-1)}
+else     {scores[,1:Jmin] <-inprod.fdata(Xcen.fdata,vs)}
+#else     {scores[,1:Jmin] <-Xcen.fdata$data%*%(eigenres$v)*diff(rtt)/(J-1)}
 colnames(scores)<-paste("PC",1:J, sep = "")
-return(list("lambdas"=lambdas,"rotation"=vs,"x"=scores,"fdataobj.cen"=Xcen.fdata,"mean"=xmean))
+l<-1:ncomp
+out<-list("lambdas"=lambdas[l],"rotation"=vs[l],"x"=scores,"fdataobj.cen"=Xcen.fdata,"mean"=xmean,
+"l"=l,"C"=C)
+class(out) = "fdata.comp"
+return(out)
 }
 

@@ -7,15 +7,44 @@ fdataobj
 }
 ################################################################################
 
-"==.fdata"<-function(fdata1,fdata2){
+"!=.fdata"<-function(fdata1,fdata2){
+eps=1e-14
 fdataequal<-TRUE
  if (!(all(fdata1[["data"]] == fdata2[["data"]]))) {
-        fdataequal <- FALSE
+    res<-fdata1[["data"]] - fdata2[["data"]]
+    if (!all(abs(res)<eps))        {
+       fdataequal <- FALSE  }
 #        print("No equal data matrix")
     }
  if (!(all(fdata1[["argvals"]] == fdata2[["argvals"]]))) {
         fdataequal <- FALSE
         print("No equal argvals vector")
+    }
+ if (!(all(fdata1[["rangeval"]] == fdata2[["rangeval"]]))) {
+        fdataequal <- FALSE
+        print("No equal rangeval vector")
+    }
+ return(!fdataequal)
+}
+
+################################################################################
+
+"==.fdata"<-function(fdata1,fdata2){
+eps=1e-14
+fdataequal<-TRUE
+ if (!(all(fdata1[["data"]] == fdata2[["data"]]))) {
+    res<-fdata1[["data"]] - fdata2[["data"]]
+    if (!all(abs(res)<eps))        {
+       fdataequal <- FALSE  }
+#        print("No equal data matrix")
+    }
+ if (!(all(fdata1[["argvals"]] == fdata2[["argvals"]]))) {
+        fdataequal <- FALSE
+        print("No equal argvals vector")
+    }
+ if (!(all(fdata1[["rangeval"]] == fdata2[["rangeval"]]))) {
+        fdataequal <- FALSE
+        print("No equal rangeval vector")
     }
  return(fdataequal)
 }
@@ -164,7 +193,7 @@ c.fdata<-function(...) {
         if (any(unlist(fdataj$rangeval) != unlist(rangeval)))
             stop("Objects must all have the same rangeval")
         if (any(unlist(fdataj$names) != unlist(names)))        {
-            print("Concatenate main names")
+            #print("Concatenate main names")
             names$main<-paste(names$main,"_",fdataj$names$main,sep="")
             }
         if (length(dim(fdataj$data)) != ndim)
@@ -186,3 +215,17 @@ c.fdata<-function(...) {
 }
 ################################################################################
 count.na<-function(A){any(is.na(A))}
+
+argvals<-function(fdataobj){
+    if (!inherits(fdataobj, "fdata")) stop("Object must be of class fdata")
+    fdataobj$argvals
+}
+
+rangeval<-function(fdataobj){
+    if (!inherits(fdataobj, "fdata")) stop("Object must be of class fdata")
+    fdataobj$rangeval
+}
+
+
+
+

@@ -5,10 +5,11 @@
 \description{Estimate the quantile of measures of influence for each observation.
 }
 \usage{
-%\method{influence}{quan}(model,out.influ,mue.boot=500,
-%smo=0.1,smoX=0.05,alpha=0.95,kmax.fix=FALSE,\dots)
-influence.quan(model,out.influ,mue.boot=500,
-                 smo=0.1,smoX=0.05,alpha=0.95,kmax.fix=FALSE,...)}
+\method{influence}{quan}(model,out.influ,mue.boot=500,
+smo=0.1,smoX=0.05,alpha=0.95,kmax.fix=FALSE,\dots)
+%influence.quan(model,out.influ,mue.boot=500,
+%                 smo=0.1,smoX=0.05,alpha=0.95,kmax.fix=FALSE,...)
+}
 \arguments{
   \item{model}{ \code{fregre.pc}, \code{fregre.basis} or \code{fregre.basis.cv} object.}	
  \item{out.influ}{ \code{inflluence.fd} bject}	

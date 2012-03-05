@@ -12,16 +12,16 @@
    K nearest neighbors estimator (S.KNN) with parameter \code{knn} .\cr
 }
 \usage{
-S.LLR(tt, h, Ker = Ker.norm,cv=FALSE)
-S.NW(tt, h, Ker = Ker.norm,cv=FALSE)
-S.KNN(tt,knn=NULL,Ker=Ker.unif,cv=FALSE)
+S.LLR(tt, h, Ker = Ker.norm,w=NULL,cv=FALSE)
+S.NW(tt, h, Ker = Ker.norm,w=NULL,cv=FALSE)
+S.KNN(tt,h=NULL,Ker=Ker.unif,w=NULL,cv=FALSE)
 
 }
 \arguments{
   \item{tt}{ Vector of discretization points or distance matrix \code{mdist}}
-  \item{h}{ Smoothing parameter or bandwidth.}
-  \item{knn}{ Number of k-nearest neighbors.}
+  \item{h}{ Smoothing parameter or bandwidth. In S.KNN, number of k-nearest neighbors.}
   \item{Ker}{ Type of kernel used, by default normal kernel. }
+   \item{w}{ Optional case weights.}
   \item{cv}{ =TRUE cross-validation is done.}
   }
 \value{
@@ -47,7 +47,7 @@ tt=1:101
 S=S.LLR(tt,h=5)
 S2=S.LLR(tt,h=10,Ker=Ker.tri)
 S3=S.NW(tt,h=10,Ker=Ker.tri)
-S4=S.KNN(tt,knn=5,Ker=Ker.tri)
+S4=S.KNN(tt,h=5,Ker=Ker.tri)
 par(mfrow=c(2,2))
 image(S)
 image(S2)

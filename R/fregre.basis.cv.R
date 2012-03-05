@@ -164,7 +164,9 @@ else  lenbasis.y=length(nbasis2)
     #beta.est2=fd(b.est2[-1,1]*diff(rtt),basis.b)
     beta.est=fd(b.est[-1,1],basis.b.opt)
     a.est=b.est[1,1]
-    e=y-yp
+           e=drop(y)-drop(yp)
+       names(e)<-rownames(x)
+
     df=basis.b.opt$nbasis+1
     sr2=sum(e^2)/(n-df)
     r2=1-sum(e^2)/sum(ycen^2)

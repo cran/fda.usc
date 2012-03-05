@@ -1,6 +1,6 @@
-\name{classif.knn.fd}
+\name{classif.knn}
 \Rdversion{1.1}
-\alias{classif.knn.fd}
+\alias{classif.knn}
 \title{ k-Nearest Neighbor Classifier from Functional Data}
 \description{
 Performs k-nearest neighbor classification of a test set using a training set.   
@@ -10,18 +10,19 @@ The method classifies the functional data to the group with the highest number o
 In case of tie the data is classified in the group with a shorter distance.
 }
 \usage{
-classif.knn.fd(fdataobj, group,
-knn=seq(3, floor(min(table(group))/3),by=2),metric=metric.lp,...)
+classif.knn(group, fdataobj, w = NULL, 
+knn = seq(3, floor(min(table(group))/3),by = 2),metric=metric.lp,...) 
 }
 \arguments{
-  \item{fdataobj}{ \code{\link{fdata}} class object.}  
  \item{group}{ Factor of length \emph{n}}
-  \item{knn}{ Vector of number of nearest neighbors considered }
+  \item{fdataobj}{ \code{\link{fdata}} class object.}  
+  \item{w}{ Optional case weights.}
+   \item{knn}{ Vector of number of nearest neighbors considered }
   \item{metric}{ Metric function, by default \code{\link{metric.lp}}}
   \item{\dots}{ Further arguments passed to or from other methods. Arguments to be passed  for  metric function.}
 }
 \details{
-The nearest neighbor method \code{\link{classif.knn.fd}} to estimate the number of k nearest neighbors to classify a sample of best practice. In the training sample is known for each data functional group (group). You can use different metric functions or types of distance metric by changing the parameters: \emph{p} and \emph{w} of \code{\link{metric.lp}} function.
+The nearest neighbor method \code{\link{classif.knn}} to estimate the number of k nearest neighbors to classify a sample of best practice. In the training sample is known for each data functional group (group). You can use different metric functions or types of distance metric by changing the parameters: \emph{p} and \emph{w} of \code{\link{metric.lp}} function.
 }
 
 \value{
@@ -35,7 +36,7 @@ The nearest neighbor method \code{\link{classif.knn.fd}} to estimate the number 
   \item{max.prob}{ Highest probability of correct classification.}
   \item{misclassification}{ Vector of probability of misclassification by number of neighbors \code{knn}.}
   \item{knn}{ Vector of number of k nearest neighbors considered.}
-  \item{C}{ A call of function \code{classif.knn.fd}.}
+  \item{C}{ A call of function \code{classif.knn}.}
   }
 \references{
 Ferraty, F. and Vieu, P. (2006). \emph{Nonparametric functional data analysis.}
@@ -49,14 +50,14 @@ Ferraty, F. and Vieu, P. (2006). \emph{NPFDA in practice}. Free access on line a
 Febrero-Bande, M. and Oviedo de la Fuente, M.
 }
 \seealso{
-See Also as \code{\link{predict.classif.fd}}}
+See Also as \code{\link{predict.classif}}}
 \examples{
 
 data(phoneme)
 mlearn<-phoneme[["learn"]]
 glearn<-phoneme[["classlearn"]]
 
-out=classif.knn.fd(mlearn,glearn)
-summary.classif.fd(out)
+out=classif.knn(glearn,mlearn)
+summary.classif(out)
 }
 \keyword{classif}

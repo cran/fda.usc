@@ -37,12 +37,12 @@ AKer.unif(u)
 \details{  
 Type of Asymmetric kernel:
 \tabular{ll}{
-\tab		 Asymmetric Normal Kernel: \code{IKer.norm}\cr
-\tab		 Asymmetric Cosine Kernel: \code{IKer.cos}\cr
-\tab     Asymmetric Epanechnikov Kernel: \code{IKer.epa}\cr
-\tab     Asymmetric Triweight Kernel: \code{IKer.tri}\cr
-\tab     Asymmetric Quartic Kernel: \code{IKer.quar}\cr
-\tab     Asymmetric Uniform Kernel: \code{IKer.unif}\cr
+\tab		 Asymmetric Normal Kernel: \code{AKer.norm}\cr
+\tab		 Asymmetric Cosine Kernel: \code{AKer.cos}\cr
+\tab     Asymmetric Epanechnikov Kernel: \code{AKer.epa}\cr
+\tab     Asymmetric Triweight Kernel: \code{AKer.tri}\cr
+\tab     Asymmetric Quartic Kernel: \code{AKer.quar}\cr
+\tab     Asymmetric Uniform Kernel: \code{AKer.unif}\cr
  } 
 }
 

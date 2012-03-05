@@ -6,15 +6,16 @@
 	Computes functional regression between functional (and non functional) explanatory variables and scalar response using basis representation.
 }
 \usage{
-fregre.glm(formula,data,family = gaussian,basis.x=NULL,basis.b=NULL,...)
+fregre.glm(formula,family = gaussian(),data,basis.x=NULL,basis.b=NULL,CV=FALSE,...)
 }
 \arguments{
- \item{formula}{ an object of class \code{formula} (or one that can be coerced to that class): a symbolic description of the model to be fitted. The details of model specification are given under \code{Details}.}
-  \item{data}{ List that containing the variables in the model. }
- \item{family}{ a description of the error distribution and link function to be used in the model. This can be a character string naming a family function, a family function or the result of a call to a family function. (See \code{\link{family}} for details of family functions.) }
+  \item{formula}{ an object of class \code{formula} (or one that can be coerced to that class): a symbolic description of the model to be fitted. The details of model specification are given under \code{Details}.} 
+  \item{family}{ a description of the error distribution and link function to be used in the model. This can be a character string naming a family function, a family function or the result of a call to a family function. (See \code{\link{family}} for details of family functions.) }
+  \item{data}{ List that containing the variables in the model. } 
+  %\item{weigths}{ weights}
 	\item{basis.x}{ List of basis for functional explanatory data estimation.}
 	\item{basis.b}{ List of basis for functional beta parameter estimation.}
-
+	\item{CV}{ =TRUE, Cross-validation (CV) is done .}	
   \item{\dots}{ Further arguments passed to or from other methods.}
 }
 \details{ 
@@ -33,9 +34,19 @@ Return \code{glm} object plus:\cr
 \item{beta.l}{ List of estimated beta parameter of functional covariates.}
 \item{data}{ List that containing the variables in the model.}
 \item{formula}{ formula.}
+\item{CV}{ \$y.pred predicted response by cross-validation.}	
 }
 \references{
 Ramsay, James O., and Silverman, Bernard W. (2006), \emph{ Functional Data Analysis}, 2nd ed., Springer, New York. \cr
+McCullagh and Nelder (1989), \emph{Generalized Linear Models} 2nd ed. Chapman and Hall. \cr
+Venables, W. N. and Ripley, B. D. (2002) \emph{Modern Applied Statistics with S}, New York: Springer. 
+
+
+%Wood (2001) mgcv:GAMs and Generalized Ridge Regression for R. R News 1(2):20-25 
+
+
+
+
 }
 \author{
 Febrero-Bande, M. and Oviedo de la Fuente, M.
@@ -61,7 +72,7 @@ f=Fat~Protein+x
 basis.x=list("x"=basis1)
 basis.b=list("x"=basis2)
 ldata=list("df"=dataf,"x"=x)
-res=fregre.glm(f,ldata,family=gaussian(),basis.x=basis.x,basis.b=basis.b)
+res=fregre.glm(f,family=gaussian(),ldata,basis.x=basis.x,basis.b=basis.b)
 summary(res)
 }
 \keyword{regression}

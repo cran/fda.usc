@@ -18,7 +18,7 @@ ndist=length(y0)
   x.dist=metric(fdataobj,...)
   h3=quantile(x.dist, probs = h, na.rm = TRUE,type=4)
   h=h3
-  W =apply(xy.dist/h,2,Ker$IKer)
+  W =apply(xy.dist/h,2,Ker$AKer)
   g=g*(max(y)-min(y))
   A=outer(y,y0,"-")
   Wy = apply(A/g,2,Ker$IKer) ###

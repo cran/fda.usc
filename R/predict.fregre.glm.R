@@ -54,11 +54,13 @@ if (length(vfunc)>0)  {
    if(class(data[[vfunc[i]]])[1]=="fdata")  {
      fdataobj<-data[[vfunc[i]]]
       x.fd<-fdataobj[["data"]]
+      if (nrow(x.fd)==1) rwn<-NULL
+      else rwn<-rownames(x.fd)
       tt<-fdataobj[["argvals"]]
       rtt<-fdataobj[["rangeval"]]
-      if (!object$basis.x[[vfunc[i]]]$type=="pc") {
+      if (!object$basis.x[[vfunc[i]]]$type=="pc"&!object$basis.x[[vfunc[i]]]$type=="pls") {
  	  	x.fd = Data2fd(argvals = tt, y = t(fdata.cen(fdataobj,object$mean[[vfunc[i]]])[[1]]$data),
-                      basisobj = basis.x[[vfunc[i]]],fdnames=rownames(x.fd))
+                      basisobj = basis.x[[vfunc[i]]],fdnames=rwn)
 	    	r=x.fd[[2]][[3]]
         J<-object$JJ[[vfunc[i]]]
         Z = t(x.fd$coefs) %*% J
@@ -107,3 +109,8 @@ if (!is.data.frame(XX)) XX=data.frame(XX)
 return(yp)
 }
 }
+
+
+
+
+
