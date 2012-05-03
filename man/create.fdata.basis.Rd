@@ -9,7 +9,7 @@
 \usage{
 create.fdata.basis(fdataobj,l=1:5,maxl=max(l),type.basis="bspline",
 rangeval=fdataobj$rangeval,class.out="fd")
-create.pc.basis(fdataobj,l=1:5)
+create.pc.basis(fdataobj,l=1:5,norm=TRUE,basis=NULL,...)
 create.pls.basis(fdataobj, y, l = 1:5) 
 create.raw.fdata(fdataobj, l = 1:ncol(fdataobj))
 }
@@ -19,8 +19,11 @@ create.raw.fdata(fdataobj, l = 1:ncol(fdataobj))
   \item{l}{ Vector of basis index.}
   \item{maxl}{maximum number of basis}
   \item{type.basis}{ Type of basis (see create.basis function).}   
-  \item{rangeval}{ A vector of length 2 giving the lower and upper limits of the range of permissible values for the function argument. }
+  \item{rangeval}{ A vector of length 2 giving the lower and upper limits of the range of permissible values for the function argument.}
+  \item{norm}{=TRUE the norm of eigenvectors \code{basis} is 1.} 
   \item{class.out}{=="fd" basisfd class, =="fdata" fdata class.}
+	\item{basis}{ "fd" basis object.}    
+ \item{\dots}{ Further arguments passed to or from other methods.}
 }
 %\details{ }
 \value{

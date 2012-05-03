@@ -1,18 +1,22 @@
+#################################################################
+#################################################################
 summary.fdata.comp=function(object,y=NULL,biplot=TRUE,corplot=FALSE,...) {
 if (inherits(object, "fdata.comp"))         {
    a1=TRUE
-   pr.comp<-object
-   if (is.null(y)) {if (object$C[[1]]=="fdata2pls") y<-object$y
+   pr.com<-object
+   if (is.null(y)) {
+      if (object$call[[1]]=="fdata2pls" | object$call[[1]]=="fdata2ppls")
+       y<-object$y
 #                    else stop("Argument y no introduced")
                     }
    }
 else if (inherits(object, "fregre.fd"))     {
    a1=FALSE
-   pr.comp<-object$fdata.comp
+   pr.com<-object$fdata.comp
    y<-object$y
      }
 else stop("Error in input data")
-  pr.com=object
+#  pr.com=object
   out2=pr.com$x
 #  object<-object[["data"]]
 #  if (nrow(object) != (length(y))) stop("ERROR IN THE DATA DIMENSIONS")
@@ -20,18 +24,30 @@ else stop("Error in input data")
  le=length(l)
  rotation=aperm(pr.com$rotation$data)
  p=pr.com$x
+if (object$call[[1]]=="fdata2pls" | object$call[[1]]=="fdata2ppls") {
  var.1<-apply(p, 2, var)
- pr.x= var.1/sum(var.1)
+ pr.x2= var.1/sum(var.1)
+}
+else {
+ d<-object$d
+ if (is.null(object$rn)) rn<-0
+ pr.x2<-(d^2+rn)/sum(d^2+rn)
+ names(pr.x2)<-colnames(out2)
+ }
+# print(pr.x2)
  C<-match.call()
  lenC=length(C)
  cor.y.pc=rep(NA,le)
  xxx=cbind(y,pr.com$x)
  cor.y.pc=round(cor(xxx[,c(1,l+1)]),3)[1,-1]
  types<-colnames(pr.com$x)
- cat("\n     - SUMMARY:  ",object$C[[1]]," object   -\n")
-   cat("\n-With",le," components are explained ",round(sum(pr.x[l])*100
+ cat("\n     - SUMMARY:  ",object$call[[1]]," object   -\n")
+ if (object$call[[1]]=="fdata2pc" | object$call[[1]]=="fdata2ppc") {
+   cat("\n-With",le," components are explained ",round(sum(pr.x2[l])*100
  ,2),"%\n of the variability of explicative variables.\n \n-Variability for each component (%):\n")
- print(round(pr.x[l] * 100, 2))
+# print(round(pr.x[l] * 100, 2))
+print(round(pr.x2[l] * 100, 2))
+}
   if (corplot){
    if (is.null(y)) stop("Argument y no introduced")
    names(cor.y.pc)=paste("cor(y,",types[l],")",sep="")
@@ -70,7 +86,7 @@ else stop("Error in input data")
           on.exit(devAskNewPage(oask))
           for (i in 1:le) {
           ts.plot(rotation[,l[i]],ylab=c("loadings",l[i],sep=""),
-      main=c(paste("components",l[i],"- Expl. Var. ",round(pr.x[l[i]] * 100, 2),"%",sep="")))
+      main=c(paste("components",l[i],"- Expl. Var. ",round(pr.x2[l[i]] * 100, 2),"%",sep="")))
       if (i<le)
       for (j in (i+1):le) {
 
@@ -90,7 +106,7 @@ else stop("Error in input data")
     for (i in 1:le) {
       par(mfg=c(i,i))
       ts.plot(rotation[,l[i]],ylab=c("loadings",l[i],sep=""),
-       main=c(paste("Component",l[i],"- Expl. Var. ",round(pr.x[l[i]] * 100, 2),"%",sep="")))
+       main=c(paste("Component",l[i],"- Expl. Var. ",round(pr.x2[l[i]] * 100, 2),"%",sep="")))
       if (i<le)
       for (j in (i+1):le) {
             par(mfg=c(i,j))
@@ -109,4 +125,6 @@ else stop("Error in input data")
 #return(invisible(pr.com))
 return(invisible(object))
 }
+#################################################################
+#################################################################
 

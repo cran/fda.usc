@@ -228,4 +228,22 @@ rangeval<-function(fdataobj){
 
 
 
+################################################################################
+ "[.fdist"<-function(fdataobj, i = TRUE, j = TRUE,drop=FALSE) {
+a1<-class(fdataobj)
+a2<-attr(fdataobj,"call")
+a3<-attr(fdataobj,"par.metric")
+class(fdataobj)<-"matrix"
+if (is.numeric(j) && j==1 && length(j)==1) fdataobj<-matrix(fdataobj[i,j],nrow=1)
+else {
+#fdataobj<-fdataobj[i,j,drop=TRUE]
+fdataobj<-fdataobj[i,j,drop=drop]
+}
+#class(fdataobj) <- a1
+attr(fdataobj,"call")<-a2
+attr(fdataobj,"par.metric")<-a3
+#class(fdataobj)<-"matrix"
+invisible(fdataobj)
+}
+
 

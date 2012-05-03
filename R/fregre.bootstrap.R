@@ -35,7 +35,8 @@ betas.boot2<-model$beta.est
 norm.boot <- array(NA,dim=c(nb,1))
 ncoefs<-100
 if (pc==3) ncoefs<-nrow(model$beta.est$coefs)
-coefs.boot <- array(NA,dim=c(nb,ncoefs))
+  if (kmax.fix) coefs.boot <- array(NA,dim=c(nb,ncoefs))
+  else coefs.boot<-list()
 pb=txtProgressBar(min=1,max=nb,width=50,style=3)
 knn.fix=NULL
 y.mue2<-array(NA,dim=c(nb,nrow(dat)))
@@ -45,14 +46,13 @@ for (i in 1:nb){
    muee <- sample(1:n,n,replace=TRUE)
    mueX <- sample(1:n,n,replace=TRUE)
    residuals.mue <- resi[muee] + rnorm(n,0,sqrt(smo * sr2))
-#   print(class(fdataobj))
-      b1<- fdata(mvrnorm(n,rep(0,J),smoX * var(dat)),argvals(fdataobj),rtt)
-#   print(class(b1))
+
+   b1<- fdata(mvrnorm(n,rep(0,J),smoX * var(dat)),argvals(fdataobj),rtt)
    b0<-fdataobj[mueX,]
-#   print(dim(b0));      print(dim(b1))
    fdata.mue <-b0+b1
    if (pc==1)   {
       y.mue<-predict.fregre.fd(model,fdata.mue)  + residuals.mue
+
       if (kmax.fix)    funcregpc.mue <- fregre.pc(fdata.mue,y.mue,model$l,...)
        else     {
                         fpc <- fregre.pc.cv(fdata.mue,y.mue,max(model$l,8))
@@ -69,7 +69,7 @@ for (i in 1:nb){
              }
 else  if (pc==2)  {
       y.mue<-predict.fregre.fd(model,fdata.mue)  + residuals.mue
-      if (kmax.fix)    funcregpc.mue <- fregre.pls(fdata.mue,y.mue,model$l,...)
+      if (kmax.fix)    {funcregpc.mue <- fregre.pls(fdata.mue,y.mue,model$l,...)}
        else     {
                         fpc <- fregre.pls.cv(fdata.mue,y.mue,max(model$l,8))
                         knn.fix[[i]]<-fpc$pls.opt
@@ -88,13 +88,14 @@ else  if (pc==2)  {
         y.mue<-predict.fregre.fd(model,fdata.mue)  + residuals.mue
        if (kmax.fix) funcregpc.mue <-fregre.basis(fdata.mue,y.mue,model$basis.x.opt,model$basis.b.opt,...)
        else {
-              funcregpc.mue <-fregre.basis.cv(fdata.mue,y.mue,model$basis.x.opt,model$basis.b.opt,...)
+              funcregpc.mue <-fregre.basis.cv(fdata.mue,y.mue,basis.x=model$basis.x,basis.b=model$basis.b,...)
               knn.fix[[i]]<-c(funcregpc.mue$basis.x.opt$nbasis,funcregpc.mue$basis.b.opt$nbasis)
                         }
        betas.boot[i,] <- eval.fd(tt,funcregpc.mue$beta.est)
        bb<-model$beta.est-funcregpc.mue$beta.est
        norm.boot[i]<-  norm.fd(bb)
-       coefs.boot[i,]<-funcregpc.mue$beta.est$coefs[,1]
+        if (kmax.fix)  coefs.boot[i,]<-funcregpc.mue$beta.est$coefs[,1]
+        else         coefs.boot[[i]]<-funcregpc.mue$beta.est$coefs[,1]
        if (!is.null(newX))   {
        ypred[i,]<-predict(funcregpc.mue,newX)
 #      print(cbind(y.mue,model$y,funcregpc.mue$fitted.values,residuals.mue))
@@ -112,15 +113,17 @@ if (draw) {
   lines(betas.boot[out],col=2,lty=2)
 if (!is.null(newX))   {
    dev.new()
-   IC<-apply(ypred,2,quantile,c(1-alpha/2,alpha+(1-alpha)/2))
+   IC<-apply(ypred,2,quantile,c((1-alpha)/2,alpha+(1-alpha)/2))
    yp<-predict(model,newX)
-   matplot(t(rbind(IC,yp)),type="l",col=c(2,2,4),lty=c(2,2,1),
-   xlab=newX$names$xlab,ylab="y",main="y predicted and CI")
+#newX$names$xlab
+   if (nrow(newX)>1) matplot(t(rbind(IC,yp)),type="l",col=c(2,2,4),lty=c(2,2,1),
+   xlab="Id curves",ylab="predicted value",main="y predicted and CI")
+   else   plot(rep(1,3),c(IC,yp),type="p",col=c(2,2,4),lty=c(2,2,1),
+   xlab=rownames(newX$data),xlim=c(0.9,1.1),ylab="predicted value",main="y predicted and CI")
 }
 }
 return(list("betas.boot"=betas.boot,"norm.boot"=norm.boot,"coefs.boot"=coefs.boot,
 "knn.fix"=knn.fix,"ypred"=ypred,"y.boot"=y.mue2))
 }
-
 
 

@@ -1,35 +1,45 @@
 \name{fdata2pls}
 \Rdversion{1.1}
 \alias{fdata2pls}
+\alias{vvtz}
+\alias{dvvtz}
+\alias{dA}
 \title{ Partial least squares components for functional data.}
 \description{ Compute partial least squares (PLS) components for functional data. }
-\usage{ fdata2pls(fdataobj,y,ncomp=2,norm=TRUE,...) }
+\usage{ 
+fdata2pls(fdataobj,y,ncomp=2,...)
+dA(w, A, dw)
+vvtz(v, z)
+dvvtz(v, z, dv, dz) 
+ }
 \arguments{
   \item{fdataobj}{ \code{\link{fdata}} class object.}  
 	\item{y}{ Scalar response with length \code{n}.}
   \item{ncomp}{The number of components to include in the model.}
-  \item{norm}{=TRUE the norm of eigenvectors \code{(rotation)}  is 1.} 
   \item{\dots}{ Further arguments passed to or from other methods.}
+  \item{w,A,dw,v,z,dv,dz}{ Auxiliary arguments}
 }
 \details{
-The partial least squares  are calculated by \code{\link{plsr}} function.
+ %SIMPLS algorithm (de Jong, 1993)
+The partial least squares are calculated by \code{NIPALS} algorithm.
 }
 \value{
 \code{fdata2pls} function return:
     \item{rotation}{ \code{\link{fdata}} class object.} 
     \item{x}{ Is true the value of the rotated data (the centred data multiplied by the rotation matrix) is returned.}      
-	  \item{res.pls}{ Fitted regression object. See \code{\link{plsr}} for details.}     
+%	  \item{res.pls}{ Fitted regression object. See \code{\link{plsr}} for details.}     
     \item{fdataobj.cen}{ The centered \code{fdataobj} object.}  
     \item{mean}{ mean of \code{fdataobj}.}         
- 	  \item{l}{ Vector of index of principal comoponents.}    
+ 	  \item{l}{ Vector of index of principal components.}    
      \item{C}{ The matched call.}     
 }
 \references{ 
-Preda C. and Saporta G. \emph{PLS regression on a stochastic process}. Comput. Statist. Data Anal. 48 (2005): 149{-}158.
+Preda C. and Saporta G. \emph{PLS regression on a stochastic process}. Comput. Statist. Data Anal. 48 (2005): 149{-}158.\cr
+Kraemer, N., Sugiyama M. (2011). \emph{The Degrees of Freedom of Partial Least Squares Regression}. Journal of the American Statistical Association. Volume 106, 697-705.
 }
 \author{ Febrero-Bande, M. and Oviedo de la Fuente, M. }
 \seealso{
-See Also as:  \code{\link{plsr}}. \cr
+%See Also as:  \code{\link{fdata2pc}}. \cr
 Used in: \code{\link{fregre.pls}}, \code{\link{fregre.pls.cv}}.\cr
 Alternative method: \code{\link{fdata2pc}}.
 }

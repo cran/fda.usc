@@ -1,3 +1,19 @@
+
+Release 0.9.7
+New functions: 
+fregre.kgam, classif.kgam, dev.S,
+predict.fregre.kgam,print.fregre.kgam, 
+summary.fregre.kgam, fregre.gsam, 
+classif.np, classif.kgam, classif.gsam.
+
+New argument par.S in: fregre.np, 
+fregre.np.cv, fregre.plm,S.NW, 
+S.KNN, S.LLR.
+
+New attributes for: metric.lp, 
+semimetric.basis and semimetric.NPFDA
+
+
 Release 0.9.6 renames the functions: 
   pc.fdata()-->fdata2pc()
   pls.fdata()-->fdata2pls()

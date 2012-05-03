@@ -1,6 +1,10 @@
 #incluir cv en type.S
 fregre.np.cv=function(fdataobj,y,h=NULL,Ker=AKer.norm,metric=metric.lp,
 type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0),par.S=list(w=1),...){
+if (is.function(type.CV)) tcv<-deparse(substitute(type.CV))
+else tcv<-type.CV
+if (is.function(type.S)) ty<-deparse(substitute(type.S))
+else ty<-type.S
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
 isfdata<-is.fdata(y)
 nas<-apply(fdataobj$data,1,count.na)
@@ -53,12 +57,15 @@ rtt<-fdataobj[["rangeval"]]
      if (n != ny | npy!=np)         stop("ERROR IN THE DATA DIMENSIONS")
       }
 types=FALSE
+
 if (is.matrix(metric)) mdist<-metric
 else mdist=metric(fdataobj,fdataobj,...)
+
 ke<-deparse(substitute(Ker))
-ty<-deparse(substitute(type.S))
-tcv<-deparse(substitute(type.CV))
+#ty<-deparse(substitute(type.S))
+#tcv<-deparse(substitute(type.CV))
 attr(par.S, "call") <- ty
+
 if (is.null(h)) h=h.default(fdataobj,probs=c(0.025,0.25),len=25,metric = mdist,Ker =ke,
  type.S =ty,...)
 else {if   (any(h<=0)) stop("Error: Invalid range for h")}
@@ -71,6 +78,7 @@ y.est.cv<-y.est<-matrix(NA,nrow=nrow(y.mat),ncol=ncol(y.mat))
 if (isfdata) {
    if (tcv=="GCV.S") tcv="FGCV.S"
    if (tcv=="CV.S") tcv="FCV.S"
+   if (tcv=="dev.S") tcv="Fdev.S"
    }
 par.S$tt<-mdist
 par.CV$metric<-metric
@@ -78,22 +86,29 @@ par.CV$metric<-metric
 #     H2=type.S(mdist,h[i],Ker,cv=FALSE)
     par.S$h<-h[i]
     par.S$cv=TRUE
-#    H=do.call(type.S,par.S
+#    H.cv=do.call(type.S,par.S)
     H.cv=do.call(ty,par.S)
     par.S$cv=FALSE
+#    H=do.call(type.S,par.S)
     H=do.call(ty,par.S)
+
 #     gcv[i] <- type.CV(y, H,trim=par.CV$trim,draw=par.CV$draw,...)
-    if (tcv=="CV.S" | tcv=="FCV.S") par.CV$S<-H.cv
+    if (tcv=="CV.S"  | tcv=="FCV.S")  par.CV$S<-H.cv
     if (tcv=="GCV.S" | tcv=="FGCV.S") par.CV$S<-H
+    if (tcv=="dev.S") par.CV$S<-H
     for (j in 1:npy) {
         par.CV$y<-y.mat[,j]
+#        if (!isfdata) gcv[i]<- do.call(type.CV,par.CV)    #si es fdata no hace falta!!!
         if (!isfdata) gcv[i]<- do.call(tcv,par.CV)    #si es fdata no hace falta!!!
         y.est[,j]=H%*%y.mat[,j]
         y.est.cv[,j]=H.cv%*%y.mat[,j]
-         }
+        }
    if (isfdata) {
       par.CV$y<-y
+########################
+#      gcv[i]<- do.call(type.CV,par.CV)
       gcv[i]<- do.call(tcv,par.CV)
+########################
 #      cálculo directo del CV y GCV (respuesta funcional)
 #      yp<-fdata(y.est,tty,rtty,names=y$names)
 #      yp.cv<-fdata(y.est.cv,tty,rtty,names=y$names)
@@ -133,7 +148,8 @@ if (all(is.infinite(gcv))) print(" Warning: Invalid range for h")
     ypcv<-fdata(ypcv,tty,rtty)
    	rownames(ypcv$data)<-rownames(y$data)
     ecv<-y-ypcv
-    norm.e<-norm.fdata(e,metric=metric,...)[,1]^2
+
+    norm.e<-drop(norm.fdata(e,metric=metric,...)[,1]^2)
     sr2=sum(norm.e)/(n-df)
     ycen=fdata.cen(y)$Xcen
 #	  r2=1-sum(e^2)/sum(ycen^2)
@@ -147,6 +163,7 @@ else {
     e<-y-drop(yp)
     names(e)<-rownames(x)
     ecv<-y-drop(ypcv)
+
     sr2=sum(e^2)/(n-df)
     ycen=y-mean(y)
 	  r2=1-sum(e^2)/sum(ycen^2)

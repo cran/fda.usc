@@ -6,25 +6,28 @@ summary.classif<-function (object, ...)
  cat("\n-Confusion matrix between the theoretical groups (by rows)
   and estimated groups (by column) \n")
  print(table(object$group,object$group.est))
- if (object$C[[1]]=='classif.kernel'){
+ if (object$C[[1]]=='classif.np'){
+    if (object$ty=="S.NW") {
    cat("\n-Vector of probability of correct classification
     by banwidth (h):\n")
-    print(round(1-object$misclassification,4))
-   cat("\n-Functional measure of closeness (optimal distance, h.opt):\n")
-   print(round(object$h.opt,4))
+    print(round(1-object$gcv,4))
+#   cat("\n-Functional measure of closeness (optimal distance, h.opt):\n")
+#   print(round(object$h.opt,4))
 
 cat("\n-Optimal bandwidth: h.opt=",object$h.opt,"with highest probability of
 correct classification: max.prob=",object$max.prob,"\n")
-  }
- if (object$C[[1]]=='classif.knn'){
+  }  }
+ if (object$C[[1]]=='classif.np'){
+   if (object$ty=="S.KNN") {
    cat("\n-Vector of probability of correct classification
    by number of neighbors (knn):\n")
-    print(round(1-object$misclassification,4))
-    cat("\n-Optimal number of neighbors: knn.opt=",object$knn.opt,
+    print(round(1-object$gcv,4))
+    cat("\n-Optimal number of neighbors: knn.opt=",object$h.opt,
     "\nwith highest probability of correct classification max.prob= ",
     object$max.prob,"\n")
-    }
-    if (object$C[[1]]=='classif.gsam' | object$C[[1]]=='classif.gsam2boost'
+    }}
+    if (object$C[[1]]=='classif.kgam' | object$C[[1]]=='classif.kgam2boost' |
+     object$C[[1]]=='classif.gsam2boost' | object$C[[1]]=='classif.gsam'
      | object$C[[1]]=='classif.glm'| object$C[[1]]=='classif.glm2boost'){
    cat("\n-Probability of correct classification: ",round(object$max.prob,4),"\n")
     }
@@ -35,3 +38,4 @@ correct classification: max.prob=",object$max.prob,"\n")
 cat("\n")
 output<-object
 }
+

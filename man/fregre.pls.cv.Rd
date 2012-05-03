@@ -5,7 +5,7 @@
 \description{																						
 Functional Regression with scalar response using selection of number of partial leas squares (PLS) comoponents through cross-validation. The algoritm selects the  PLS components with best estimates the response. The	select is performed by cross-validation (CV) or  Model Selecttion Criteria (MSC).  After is computing  functional regression using the best selection of PLS components.
 	}
-\usage{fregre.pls.cv(fdataobj, y, kmax=8, criteria = "CV",...)}
+\usage{fregre.pls.cv(fdataobj, y, kmax=8, criteria = "SICc",...)}
 \arguments{
   \item{fdataobj}{ \code{\link{fdata}} class object.}  
   \item{kmax}{The number of PLS components to include in the model.}
@@ -14,7 +14,7 @@ Functional Regression with scalar response using selection of number of partial 
  \item{\dots}{ Further arguments passed to \code{\link{fregre.pls}}}  
 }
 \details{
-The partial least squares  are calculated by \code{\link{plsr}} function.\cr
+The partial least squares  are calculated by \code{NIPALS} method.\cr
 The method selects the PLS components with minimum MSC criteria by stepwise regression.
 }    
 \value{
@@ -30,7 +30,8 @@ See Also as:   \code{\link{fregre.pls}}, \code{\link{summary.fregre.fd}} and \co
 Alternative method: \code{\link{fregre.pc}}, \code{\link{fregre.basis}} and   \code{\link{fregre.np}}.
 }
 \references{
-Preda C. and Saporta G. \emph{PLS regression on a stochastic process}. Comput. Statist. Data Anal. 48 (2005): 149{-}158.
+Preda C. and Saporta G. \emph{PLS regression on a stochastic process}. Comput. Statist. Data Anal. 48 (2005): 149{-}158.\cr
+Kraemer, N., Sugiyama M. (2011). \emph{The Degrees of Freedom of Partial Least Squares Regression}. Journal of the American Statistical Association. Volume 106, 697-705.
 }
 \examples{
 data(tecator)

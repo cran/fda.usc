@@ -6,7 +6,7 @@
   Classifier of Functional Data by kernel method using Functional Data Object of class \code{classif}. 
 }
 \usage{
-\method{predict}{classif}(object,new.fdataobj,type="class",\dots)
+\method{predict}{classif}(object, new.fdataobj,type="class",\dots)
 %predict.classif(object, new.fdataobj,type="class",...)
 }
 \arguments{

@@ -1,129 +1,173 @@
-fregre.pc.cv=function (fdataobj, y, kmax=8, criteria = "SIC",...) {
-if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
-nas<-apply(fdataobj$data,1,count.na)
-nas.g<-is.na(y)
+#################################################################
+#################################################################
+fregre.pc.cv=function (fdataobj, y, kmax=8,rn=0,criteria = "SIC",...) {
+if (class(fdataobj)=="fdata.comp") {
+    pc<-fdataobj
+    fdataobj<-pc$fdataobj
+    if (is.null(kmax))    {
+       kmax<-max(pc$l)
+       }
+    else if (kmax>nrow(pc$rotation)) stop("Incorrect value for  argument l")
+#    kmax<-length(pc$l)
+    tt<-fdataobj[["argvals"]]
+    x<-fdataobj[["data"]]
+    np<-ncol(x)
+   }
+else {
+  if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
+  tt<-fdataobj[["argvals"]]
+  x<-fdataobj[["data"]]
+  np<-ncol(x)
+  pc<-fdata2pc(fdataobj,ncomp=kmax,...)
+}
+if (is.logical(rn[1])) {
+   val<-log(.25*(pc$d[1]^2),base=2)
+   rn<-c(0,2^seq(0,val,len=10))
+   }
 if (is.null(names(y))) names(y)<-1:length(y)
-if (any(nas) & !any(nas.g)) {
-   bb<-!nas
-   cat("Warning: ",sum(nas)," curves with NA are omited\n")
-   fdataobj$data<-fdataobj$data[bb,]
-  y<-y[bb]
-   }
-else {
-if (!any(nas) & any(nas.g)) {
-   cat("Warning: ",sum(nas.g)," values of group with NA are omited \n")
-   bb<-!nas.g
-   fdataobj$data<-fdataobj$data[bb,]
-     y<-y[bb]
-   }
-else {
-if (any(nas) & any(nas.g))  {
-   bb<-!nas & !nas.g
-   cat("Warning: ",sum(!bb)," curves  and values of group with NA are omited \n")
-   fdataobj$data<-fdataobj$data[bb,]
-   y<-y[bb]
-   }
-}}
-x<-fdataobj[["data"]]
-tt<-fdataobj[["argvals"]]
+#x<-fdataobj[["data"]]
+#tt<-fdataobj[["argvals"]]
 rtt<-fdataobj[["rangeval"]]
-    n <- nrow(x)
-    nc <- ncol(x)
+n <- nrow(x);    #nc <- ncol(x)
+cv.opt1 = Inf;    pc.opt1 = NA
+c1 = matrix(1:kmax, nrow = 1)
+num.pc = nrow(c1)
+l = l2 = list()
+#ck = 1
+max.c = length(c1)
+c0 = 1:kmax
+use = rep(FALSE, kmax)
+tab = list("AIC", "AICc","SIC", "SICc","rho","CV")
+type.i = pmatch(criteria, tab)
+#pc2<-pc
+lenrn<-length(rn)
+MSC3<-list()
+pc.opt2 <- matrix(NA,nrow=lenrn,ncol=kmax)
+rownames(pc.opt2)<-paste("rn=",zapsmall(signif(rn)),sep="")
+colnames(pc.opt2)<-paste("PC(",1:kmax,")",sep="")
+MSC2<-pc.opt2
+MSC.min<-Inf
+min.rn<-rn[1]
+if (is.na(type.i))     stop("Error: incorrect criteria")
+else {
+    if (type.i < 6) {
+    for (r in 1:lenrn) {
     cv.opt1 = Inf
     pc.opt1 = NA
-    c = matrix(1:kmax, nrow = 1)
-    num.pc = nrow(c)
     l = l2 = list()
-    ck = 1
-    max.c = length(c)
-    c0 = 1:kmax
-    use = rep(FALSE, kmax)
-    tab = list("AIC", "AICc","SIC", "SICc","rho","CV")
-    type.i = pmatch(criteria, tab)
-    if (is.na(type.i))     stop("Error: incorrect criteria")
-    else {
-    if (type.i < 6) {
-    for (k in 1:kmax) {
-        cv.AIC <- rep(NA, max.c)
-        for (j in 1:max.c) {
-            out = fregre.pc(fdataobj, y, l = c[, j],...)
-            s2 <- sum(out$residuals^2)/n  #(n-ck)
-            if (criteria == "AIC") {
-                cv.AIC[j] <- log(s2) + 2 * (ck+1)/n
-            }
-            else if (criteria == "AICc") {
-                cv.AIC[j] <- log(s2) + 2 * (ck+1)/(n - ck - 2)
-            }
-            else if (criteria == "SIC") {
-                cv.AIC[j] <- log(s2) + log(n) * ck/n
+     c1 = matrix(1:kmax, nrow = 1)
+         num.pc = nrow(c1)
+     max.c = length(c1)
+     c0 = 1:kmax
+     use = rep(FALSE, kmax)
+     pc2<-pc
+     for (k in 1:kmax) {
+                cv.AIC <- rep(NA, max.c)
+                for (j in 1:max.c) {
+                  pc2$rotation <- pc$rotation#[c1[, j]]
+                  pc2$l <- pc$l[c1[, j]]
+                  out = fregre.pc(pc2, y,l=c1[, j],rn=rn[r],...)
+                  ck<-out$df
+                  s2 <- sum(out$residuals^2)/n
+                  cv.AIC[j]<-switch(criteria,
+              "AIC"=log(s2) + 2 * (ck)/n,
+              "AICc"=log(s2) + 2 * (ck)/(n - ck - 2),
+              "SIC"=log(s2) + log(n) * ck/n,
+              "SICc"=log(s2) + log(n) * ck/(n-ck-2),
+              "HQIC"=log(s2) + 2*log(log(n)) * ck/n,
+              "rho"={A<-out$residuals;B<-1-diag(out$H)/n; D1<-(A/B)^2;sum(D1)})
                 }
-            else if (criteria == "SICc") {
-                cv.AIC[j] <- log(s2) + log(n) * ck/(n-ck-2)
+                #peta en 2!!!
+                min.AIC = min(cv.AIC)
+                pc.opt1 <- c1[, which.min(cv.AIC)]
+                l[[k]] = pc.opt1[k]
+                l2[[k]] = min.AIC
+                use[pc.opt1[k]] = TRUE
+                l[[k + 1]] = c0[use == FALSE]
+                c1 = t(expand.grid(l))
+                ck = nrow(c1) + 1
+                max.c = ncol(c1)
             }
-                        else if (criteria == "rho") {
-#              cv.AIC[j] <-   (traza(abs(out$residuals)*abs(R)*abs(out$residuals)))/(n-ck)
-#              cv.AIC[j] <-   log(sum(out$residuals*abs(R)*out$residuals))/n +2*log(log(n)) * ck/n        }
-#cv.AIC[j] <-   log(matrix(out$residuals,nrow=1)%*%abs(R)%*%out$residuals)/n +2*log(log(n)) * ck/n
-#A<-out$residuals*abs(R)*out$residuals
-A<-out$residuals^2
-B<-1-diag(out$H)
-D1<-A/B
-cv.AIC[j] <-   log(sum(D1)/n) #+ log(n) * ck/(n-ck-2)
-
-                }
-        }
-        min.AIC = min(cv.AIC)
-        pc.opt1 <- c[, which.min(cv.AIC)]
-        l[[k]] = pc.opt1[k]
-        l2[[k]] = min.AIC
-        use[pc.opt1[k]] = TRUE
-        l[[k + 1]] = c0[use == FALSE]
-        c = t(expand.grid(l))
-        ck=nrow(c)+1
-        max.c = ncol(c)
+     mn = which.min(l2)
+     MSC = as.numeric(l2)
+     if ( MSC.min>MSC[mn]) {
+       min.rn<-r
+       MSC.min = MSC[mn]
+       pc.opt3<-pc.opt1[1:mn]
+       }
+    pc.opt = pc.opt1[1:mn]
+    MSC2[r,]<-MSC
+    pc.opt2[r,]<-pc.opt1
     }
     }
+#### CV criteria
     else {
-    pb=txtProgressBar(min=0,max=kmax,width=50,style=3)
-    for (k in 1:kmax) {
-      setTxtProgressBar(pb,k-0.5)
+    pb=txtProgressBar(min=0,max=lenrn,width=50,style=3)
+    pcl<-list()
+    for (i in 1:n) {pcl[[i]]<-fdata2pc(fdataobj[-i,],ncomp=kmax,...)}
+    for (r in 1:lenrn) {
+     setTxtProgressBar(pb,r-0.5)
+     cv.opt1 = Inf
+     pc.opt1 = NA
+     l = l2 = list()
+     c1 = matrix(1:kmax, nrow = 1)
+     num.pc = nrow(c1)
+     max.c = length(c1)
+     c0 = 1:kmax
+     use = rep(FALSE, kmax)
+       for (k in 1:kmax) {
       cv.AIC <- rep(NA, max.c)
+      cv.AIC2 <- matrix(NA,nrow=max.c,ncol=lenrn)
+      rownames(cv.AIC2)<-1:max.c
       for (j in 1:max.c) {
-       residuals =residuals2<- rep(NA, n)
-        for (i in 1:n){
-            out = fregre.pc(fdataobj[-i,], y[-i], l = c[, j])
-#           y.est=out$coefficientes[1]*rep(1,n)+x%*%t(out$beta.est[["data"]])/(nc-1)      ####
-#            y.est=out$coefficients[1]*rep(1,n)+drop(x%*%out$beta.est[["data"]][1,]/(nc-1))      ####
-#           y.est=out$a.est*rep(1,n)+x%*%out$beta.est[["data"]][1,]/(nc-1)      ####
-#           residuals[i] <- y[i] - y.est[i]
-           y.est=predict(out,fdataobj[i,])
-           residuals[i] <- y[i] - y.est
+        residuals2<- rep(NA, n)
+        maxk<-max(c1[, j])
+          for (i in 1:n){
+            pc2<-pcl[[i]]
+            pc2$rotation<-pcl[[i]]$rotation#[c1[,j]]
+            pc2$l<-pcl[[i]]$l[c1[,j]]
+            out = fregre.pc(pc2,y[-i],l=c1[, j],rn=rn[r],...) #####
+#            out = fregre.pc(fdataobj[-i,],y[-i],l=c1[,j],rn=rn[r],...)
+            ck<-out$df
+            residuals2[i] <- ((y[i] - predict(out,fdataobj[i,]))/(n-ck))^2
+#            cat(ck)
+            }
+          cv.AIC[j] <-sum(residuals2)/n
           }
-         cv.AIC[j] <- sum(residuals^2)/(n-ck)
-        }
-        min.AIC = min(cv.AIC)
-        pc.opt1 <- c[, which.min(cv.AIC)]
-        l[[k]] = pc.opt1[k]
-        l2[[k]] = min.AIC
-        use[pc.opt1[k]] = TRUE
-        l[[k + 1]] = c0[use == FALSE]
-        c = t(expand.grid(l))
-        ck=nrow(c)+1
-        max.c = ncol(c)
-         setTxtProgressBar(pb,k)
+                min.AIC = min(cv.AIC)
+                pc.opt1 <- c1[, which.min(cv.AIC)]
+                l[[k]] = pc.opt1[k]
+                l2[[k]] = min.AIC
+                use[pc.opt1[k]] = TRUE
+                l[[k + 1]] = c0[use == FALSE]
+                c1 = t(expand.grid(l))
+                ck = nrow(c1) + 1
+                max.c = ncol(c1)
+            }
+     mn = which.min(l2)
+     MSC = as.numeric(l2)
+     if ( MSC.min>MSC[mn]) {
+       min.rn<-r
+       MSC.min = MSC[mn]
+       pc.opt3<-pc.opt1[1:mn]
+       }
+    pc.order<-names(MSC)
+    pc.opt = pc.opt1[1:mn]
+    MSC2[r,]<-MSC
+    pc.opt2[r,]<-pc.opt1
+    setTxtProgressBar(pb,r)
     }
     close(pb)
     }
-    mn = which.min(l2)
-
-    MSC = as.numeric(l2)
-    }
-    for (i in 1:kmax) names(MSC)[i] = paste("PC", t(l[i]), sep = "")
-    MSC.min = MSC[mn]
-    pc.order<-names(MSC)
-    pc.opt = pc.opt1[1:mn]
-    names(pc.opt)<-paste("PC", pc.opt1[1:mn], sep = "")
-    fregre=fregre.pc(fdataobj,y,l=pc.opt,...)
-    return(list("fregre.pc"=fregre,pc.opt = pc.opt,pc.order =pc.order,MSC = MSC))
+ mn = which.min(l2)
+ MSC = as.numeric(l2)
+ names(pc.opt3)<-paste("PC", pc.opt3, sep = "")
+ rn.min<-rn[min.rn]
+ fregre=fregre.pc(fdataobj,y,l=pc.opt,rn=rn.min,...)
+ return(list("fregre.pc"=fregre,pc.opt = pc.opt3,rn.opt=rn.min,PC.order=pc.opt2,
+ MSC.order=MSC2))
 }
+}
+#################################################################
+#################################################################
 

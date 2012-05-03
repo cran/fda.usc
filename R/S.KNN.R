@@ -17,8 +17,8 @@ vec=apply(tt,1,quantile,probs=((h+1)/numgr),type=4)+tol
 rr=sweep(tt,1,vec,"/")
 rr=Ker(rr)
 if (cv) diag(rr)=0
-if (is.null(w)) w<-rep(1,numgr)
-rr<-sweep(rr,1,w,FUN="*")   ## antes un 2
+if (is.null(w)) w<-rep(1,ncol(rr))
+rr<-sweep(rr,2,w,FUN="*")   ## antes un 2
 res=rr/apply(rr,1,sum,na.rm=TRUE)
 return(res)
 }

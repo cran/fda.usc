@@ -1,117 +1,99 @@
-fregre.pls.cv=function (fdataobj, y, kmax=8, criteria = "CV",...) {
-if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
-nas<-apply(fdataobj$data,1,count.na)
-nas.g<-is.na(y)
-if (is.null(names(y))) names(y)<-1:length(y)
-if (any(nas) & !any(nas.g)) {
-   bb<-!nas
-   cat("Warning: ",sum(nas)," curves with NA are omited\n")
-   fdataobj$data<-fdataobj$data[bb,]
-  y<-y[bb]
+#################################################################
+#################################################################
+fregre.pls.cv=function (fdataobj, y, kmax=8, criteria = "SICc",...) {
+if (class(fdataobj)=="fdata.comp") {
+    pc<-fdataobj
+    fdataobj<-pc$fdataobj
+    kmax<-nrow(pc$basis)
    }
 else {
-if (!any(nas) & any(nas.g)) {
-   cat("Warning: ",sum(nas.g)," values of group with NA are omited \n")
-   bb<-!nas.g
-   fdataobj$data<-fdataobj$data[bb,]
-     y<-y[bb]
-   }
-else {
-if (any(nas) & any(nas.g))  {
-   bb<-!nas & !nas.g
-   cat("Warning: ",sum(!bb)," curves  and values of group with NA are omited \n")
-   fdataobj$data<-fdataobj$data[bb,]
-   y<-y[bb]
-   }
-}}
-x<-fdataobj[["data"]]
-tt<-fdataobj[["argvals"]]
-rtt<-fdataobj[["rangeval"]]
+ if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
+ omit<-omit.fdata(fdataobj,y)
+ fdataobj<-omit[[1]]
+ y<-omit[[2]]
+ pc<-fdata2pls(fdataobj,y,kmax,...)
+}
+    x<-fdataobj[["data"]]
+    tt<-fdataobj[["argvals"]]
+    rtt<-fdataobj[["rangeval"]]
     n <- nrow(x);    nc <- ncol(x)
-#    cv.opt1 = Inf;    pc.opt1 = NA
-    ind =1:kmax
-#    num.pc = nrow(c)
+## if (is.logical(rn[1])) {
+#   val<-log(.25*(pc$d[1]^2),base=2)
+#   rn<-c(0,2^seq(0,val,len=10))
+#   }
+ # NO TENEMOS LA D PERO SI LOS SCORES
+ # VAR(z)=d^2/n # calcular 1er autovalor lambda
+     ind =1:kmax
     l = l2 = list()
     ck = 1
-#    max.c = length(c)
     tab = list("AIC", "AICc","SIC", "SICc","HQIC","rho","CV")
     type.i = pmatch(criteria, tab)
+    pc2<-pc
+    MSC.min<-Inf
+    cv.AIC <- rep(NA,kmax)
     if (is.na(type.i))     stop("Error: incorrect criteria")
     else {
     if (type.i < 7) {
-        cv.AIC <- rep(NA, kmax)
-#        R<-correl(fdataobj)
+#        cv.AIC <- rep(NA, kmax)
         for (j in 1:kmax) {
-            out = fregre.pls(fdataobj, y, l = 1:ind[j],...)
-#             l2<-out$pls.fdata$res.pls$loadings
-#             l3<-crossprod(l2,l2)
-#           ck=traza((l3))
-#print(ck)
-#            ck=traza(t(l3)%*%l3)
-             ck<-length(l)+1
+            pc2$rotation<-pc$rotation[1:j]
+            out = fregre.pls(pc2,y,...)
+            ck<-out$df
             s2 <- sum(out$residuals^2)/n  #(n-ck)
-            ck=ind[j]+1
-            if (criteria == "AIC") {
-                cv.AIC[j] <- log(s2) + 2 * (ck)/n
-            }
-            else if (criteria == "AICc") {
-                cv.AIC[j] <- log(s2) + 2 * (ck)/(n - ck - 2)
-            }
-            else if (criteria == "SIC") {
-                cv.AIC[j] <- log(s2) + log(n) * ck/n
-                }
-            else if (criteria == "SICc") {
-                cv.AIC[j] <- log(s2) + log(n) * ck/(n-ck-2)
-            }
-            else if (criteria == "HQIC") {
-                cv.AIC[j] <- log(s2) + 2*log(log(n)) * ck/n
-            }
-            else if (criteria == "rho") {
-#              cv.AIC[j] <-   (traza(abs(out$residuals)*abs(R)*abs(out$residuals)))/(n-ck)
-#              cv.AIC[j] <-   log(sum(out$residuals*abs(R)*out$residuals))/n +2*log(log(n)) * ck/n        }
-#cv.AIC[j] <-   log(matrix(out$residuals,nrow=1)%*%abs(R)%*%out$residuals)/n +2*log(log(n)) * ck/n
-#va bien si usamos las 3 siguientes lineas
-#A<-out$residuals*abs(R)*out$residuals
-#B<-1-diag(out$H);D1<-A/B
-#cv.AIC[j] <-   log(sum(D1)/n) + log(n) * ck/(n-ck-2)
+            cv.AIC[j]<-switch(criteria,
+              "AIC"=log(s2) + 2 * (ck)/n,
+              "AICc"=log(s2) + 2 * (ck)/(n - ck - 2),
+              "SIC"=log(s2) + log(n) * ck/n,
+              "SICc"=log(s2) + log(n) * ck/(n-ck-2),
+              "HQIC"=log(s2) + 2*log(log(n)) * ck/n,
+              "rho"={A<-out$residuals;B<-1-diag(out$H)/n; D1<-(A/B)^2;sum(D1)})
+     if ( MSC.min>cv.AIC[j]) {
+       pc.opt<-j
+       MSC.min= cv.AIC[j]
+       }
 
-
-#    ss<-drop(y)*(1-out$H)*drop(y)
-#       print(dim(ss))
-#    s1<-solve(ss)
-#   print(dim(s1))
-A<-out$residuals
-B<-1-diag(out$H)/n
-D1<-(A/B)^2
-cv.AIC[j] <-   sum(D1)#+ 2*traza(out$H)*out$sr2/n
-                }
+#    min.AIC = min(cv.AIC)
+#    pc.opt <- which.min(cv.AIC)
     }
-    min.AIC = min(cv.AIC)
-    pc.opt <- 1:ind[which.min(cv.AIC)]
     }
-####
+# CV criteria
     else {
-#    pb=txtProgressBar(min=0,max=kmax,width=50,style=3)
-    cv.AIC <- rep(NA, kmax)
-#    for (j in 1:kmax) {
-#        setTxtProgressBar(pb,j-0.5)
-#        residuals =residuals2<- rep(NA, n)
-#       ck<-ind[j]
-#        for (i in 1:n){
-#            out = fregre.pls(fdataobj[-i,], y[-i],l = 1:ind[j],...)
-#           residuals[i] <- y[i] - predict(out,fdataobj[i,])
-#        }
-#        cv.AIC[j] <- sum(residuals^2)/(n-ck)
-        out = fregre.pls(fdataobj,y,l=1:kmax,...)
-        cv.AIC <- out$fdata.comp$res.pls$validation$PRESS
-        min.AIC = min(cv.AIC)
-        pc.opt <- 1:which.min(cv.AIC)
-#    }
-#    close(pb)
-#    }
-    }   }
-    names(cv.AIC) = paste("PLS",1:kmax , sep = "")
-    fregre=fregre.pls(fdataobj,y,l=pc.opt,...)
-    return(list("fregre.pls"=fregre,pls.opt = pc.opt, MSC.min = min.AIC,MSC = cv.AIC))
+         pc<-list()
+         for (i in 1:n){
+         xi<-fdataobj[-i]
+         yi<-y[-i]
+         pc[[i]] = fdata2pls(xi, yi,ncomp=kmax,...)
+         }
+        pc2<-pc
+        for (j in 1:kmax) {
+         residuals2<-rep(NA,n)
+          for (i in 1:n){
+            pc2[[i]]$rotation<-pc[[i]]$rotation[1:j]
+            out = fregre.pls(pc2[[i]],y[-i],...)
+            ck<-out$df
+            a1<-out$coefficients[1]
+            out$beta.est$data<-matrix(out$beta.est$data,nrow=1)
+            b1<-inprod.fdata(fdata.cen(fdataobj[i],out$fdata.comp$mean)[[1]],out$beta.est)
+            yp<- a1+b1
+#            residuals[i] <- y[i] - yp
+            residuals2[i] <- ((y[i] - yp)/(n-ck))^2
+            }
+#         cv.AIC[j] <- mean(residuals^2)/(n-j)^2###
+         cv.AIC[j] <-sum(residuals2)/n
+
+     if ( MSC.min>cv.AIC[j]) {
+       pc.opt<-j
+       MSC.min= cv.AIC[j]
+       }
+}     }   }
+names(cv.AIC) = paste("PLS",1:kmax , sep = "")
+#    rownames(cv.AIC) = paste("rn=",rn , sep = "")
+    pc2$basis<-pc$rotation[1:pc.opt]
+    fregre=fregre.pls(fdataobj,y,l=1:pc.opt,...)
+    MSC.min = cv.AIC[pc.opt]
+    return(list("fregre.pls"=fregre,pls.opt = 1:pc.opt,
+    MSC.min = MSC.min,MSC = cv.AIC))
 }
+#################################################################
+#################################################################
 

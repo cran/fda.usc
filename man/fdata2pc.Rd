@@ -6,24 +6,21 @@
 Compute  principal components for functional data.
 }
 \usage{
-fdata2pc(fdataobj,norm=TRUE,ncomp=2)
-%pc.fdata(out,l=NULL,loadings=FALSE,draw=TRUE,...)
+fdata2pc(fdataobj,  ncomp = 2,norm = TRUE,...)
 }
 \arguments{
   \item{fdataobj}{ \code{\link{fdata}} class object.}  
-    \item{norm}{=TRUE the norm of eigenvectors \code{(rotation)}  is 1.} 
-    \item{ncomp}{ Number of  principal comoponents.}
-  %\item{loadings}{ =TRUE "rotate"' loading matrices by \link[stats]{varimax} function.}
-  %\item{draw}{ =TRUE draw correlations.}   
-  %\item{\dots}{ Further arguments passed to or from other methods.}
+  \item{ncomp}{ Number of  principal comoponents.}
+  \item{norm}{=TRUE the norm of eigenvectors \code{(rotation)}  is 1.} 
+  \item{\dots}{ Further arguments passed to or from other methods.}
 }
 \value{
-    \item{lambda}{ Eigenvalues of the principal components.} 
-    \item{rotation}{ \code{\link{fdata}} class object.} 
-    \item{x}{ Is true the value of the rotated data (the centred data multiplied by the rotation matrix) is returned}      
+    \item{d}{  The standard deviations of the functional principal components.} 
+    \item{rotation}{ are also known as loadings.  A \code{fdata} class object whose rows contain the eigenvectors).} 
+    \item{x}{  are also known as scores. The value of the rotated functional data is returned. }      
     \item{fdataobj.cen}{ The centered \code{fdataobj} object.}  
     \item{mean}{ The functional mean of \code{fdataobj} object.}      
- 	  \item{l}{ Vector of index of principal comoponents.}    
+    \item{l}{ Vector of index of principal components.}    
      \item{C}{ The matched call.}   	  
 }
 \references{

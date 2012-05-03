@@ -7,13 +7,14 @@ if (x$C[[1]]=='classif.knn'){
     cat("\n-Optimal number of neighbors: knn.opt=",x$knn.opt,
     "\nwith highest probability of correct classification max.prob=",
     x$max.prob,"\n")}
-else {if (x$C[[1]]=='classif.kernel') {
+else {if (x$C[[1]]=='classif.kernel'| x$C[[1]]=='classif.np') {
    cat("\n-Optimal bandwidth: h.opt=",x$h.opt,"with highest probability of
    correct classification: max.prob=",x$max.prob,"\n")
    }
 else {if  (x$C[[1]]=='classif.gsam' | x$C[[1]]=='classif.gsam2boost'|
-x$C[[1]]=='classif.glm' |x$C[[1]]== 'classif.glm2boost' |   x$C[[1]]=='classif.tree'
- |   x$C[[1]]=='classif.tree2boost'){
+x$C[[1]]=='classif.glm' |x$C[[1]]== 'classif.glm2boost' |
+x$C[[1]]=='classif.kgam' | x$C[[1]]=='classif.kgam2boost'|
+ x$C[[1]]=='classif.tree' |   x$C[[1]]=='classif.tree2boost'){
    cat("\n-Probability of correct classification: ",round(x$max.prob,4),"\n")
      }
      }
@@ -21,5 +22,4 @@ x$C[[1]]=='classif.glm' |x$C[[1]]== 'classif.glm2boost' |   x$C[[1]]=='classif.t
 cat("\n")
 invisible(x)
 }
-
 

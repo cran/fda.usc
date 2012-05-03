@@ -1,5 +1,5 @@
 semimetric.basis=function(fdata1, fdata2 = fdata1,nderiv=0,type.basis1=NULL,
-nbasis1=NULL,type.basis2=NULL,nbasis2=NULL,...) {
+nbasis1=NULL,type.basis2=type.basis1,nbasis2=NULL,...) {
  if (any(class(fdata1)=="fd")) {
    r=fdata1$basis[[3]]
    tt=seq(r[1],r[2],len=length(fdata1$fdnames$time))

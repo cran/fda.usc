@@ -1,5 +1,5 @@
 \name{fda.usc-package}
-\Rdversion{0.9.6}
+\Rdversion{0.9.7}
 \alias{fda.usc-package}
 \alias{fda.usc}
 \docType{package}
@@ -81,30 +81,34 @@ The functions included in this section allow the estimation of different functio
   C.2. Functional  and non functional explanatory covariates.\cr
 The functions in this section extends those regression models in previous section in several ways.  \cr
 Semifunctional partial linear regression \code{\link{fregre.plm}}  is an extension of functional nonparameric regression  \code{\link{fregre.np}}  allowing  include non-functional variables.\cr
-Functional  linear regression \code{\link{fregre.lm}} and functional generalized linear regression \code{\link{fregre.glm}} are an extensions of  \code{\link{fregre.basis}} and \code{\link{fregre.pc}} allowing  include  more than one functional variable and other non-functional variables, as \code{\link{lm}} or \code{\link{glm}} functions.\cr
+Functional generalized additive model using backfitting algorithm \code{\link{fregre.kgam}} is an extension of functional nonparameric regression  \code{\link{fregre.np}}  allowing  include  more than one functional variables.\cr
+Functional  linear regression \code{\link{fregre.lm}}, functional generalized linear regression \code{\link{fregre.glm}} and 
+functional generalized spectral additive model \code{\link{fregre.gsam}}  are an extensions of  \code{\link{fregre.basis}} and \code{\link{fregre.pc}} allowing  include  more than one functional variable and other non-functional variables, as \code{\link{lm}} or \code{\link{glm}} functions.\cr
 
 \tabular{ll}{
+\tab \code{\link{fregre.plm}}  \cr
+\tab \code{\link{fregre.kgam}}  \cr
 \tab \code{\link{fregre.lm}}  \cr
 \tab \code{\link{fregre.glm}}  \cr
-\tab \code{\link{fregre.plm}}  \cr
+\tab \code{\link{fregre.gsam}}  \cr
 \tab \code{\link{predict.fregre.fd}} \cr
-\tab \code{\link{predict.fregre.glm}} \cr
+\tab \code{\link{predict.fregre.kgam}} \cr
 \tab \code{\link{predict.fregre.plm}} \cr
-}
-
-	
+\tab \code{\link{predict.fregre.glm}} \cr
+\tab \code{\link{predict.fregre.gsam}} \cr
+}	
   D.- Functional Supervised Classification	\cr
 This section allows the estimation of the groups in a training set of functional data \code{fdata} class by different nonparametric methods of supervised classification. Once these classifiers have been trained, they can be used to predict on new functional data.\cr	
 \cr
-Package allows the estimation of the groups in a training set of functional data by different nonparametric methods of supervised classification. \cr
+Package allows the estimation of the groups in a training set of functional data by different methods of supervised classification. \cr
 \cr
-
--Kernel classification methods:\cr
 
 \tabular{ll}{
 \tab \code{\link{classif.knn}}  \cr
 \tab \code{\link{classif.kernel}} \cr
 \tab \code{\link{classif.glm}} \cr
+\tab \code{\link{classif.gsam}} \cr
+\tab \code{\link{classif.kgam}} \cr
 \tab \code{\link{summary.classif}} \cr
 \tab \code{\link{predict.classif}} \cr
 }
@@ -144,8 +148,8 @@ This section allows the estimation of the groups in a  functional data set \code
 \tabular{ll}{
 Package: \tab fda.usc\cr
 Type: \tab Package\cr
-Version: \tab 0.9.6\cr
-Date: \tab 2012-03-05\cr
+Version: \tab 0.9.7\cr
+Date: \tab 2012-05-03\cr
 License: \tab GPL-2 \cr
 LazyLoad: \tab yes\cr
 }

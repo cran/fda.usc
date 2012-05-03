@@ -45,7 +45,7 @@ if (class(data[[vfunc[i]]])[1]=="fdata"){
       if (is.null(basis.x[[vfunc[i]]]))  basis.x[[vfunc[i]]]<-create.fdata.basis(fdat,l=1:7)
       else   if (basis.x[[vfunc[i]]]$type=="pc" | basis.x[[vfunc[i]]]$type=="pls") bsp1=FALSE
       if (is.null(basis.b[[vfunc[i]]])& bsp1)  basis.b[[vfunc[i]]]<-create.fdata.basis(fdat)
-      else           if (basis.x[[vfunc[i]]]$type=="pc" | basis.x[[vfunc[i]]]$type=="pls") bsp2=FALSE
+      else           if (class(basis.x[[vfunc[i]]])=="fdata.comp" | basis.x[[vfunc[i]]]$type=="pls") bsp2=FALSE
       if (bsp1 & bsp2) {
           if (is.null(rownames(dat)))    rownames(fdat$data)<-1:nrow(dat)
           fdnames=list("time"=tt,"reps"=rownames(fdat[["data"]]),"values"="values")
@@ -79,9 +79,12 @@ if (class(data[[vfunc[i]]])[1]=="fdata"){
       else {
         l<-nrow(basis.x[[vfunc[i]]]$basis)
         vs <- t(basis.x[[vfunc[i]]]$basis$data)
-        Z<-basis.x[[vfunc[i]]]$x
+        Z<-basis.x[[vfunc[i]]]$x[,1:l]
         response = "y"
-        colnames(Z) = name.coef[[vfunc[i]]]=paste(vfunc[i], ".",rownames(basis.x[[vfunc[i]]]$basis$data),sep ="")
+        colnames(Z) = name.coef[[vfunc[i]]]=paste(vfunc[i], ".",colnames(Z),sep ="")
+#       colnames(Z) = name.coef[[vfunc[i]]]=paste(vfunc[i],".",rownames(basis.x[[vfunc[i]]]$basis$data),sep ="")
+#print(colnames(Z))
+        name.coef[[vfunc[i]]]<-colnames(Z)
         XX = cbind(XX,Z)
         vs.list[[vfunc[i]]]=basis.x[[vfunc[i]]]$basis
         mean.list[[vfunc[i]]]=basis.x[[vfunc[i]]]$mean

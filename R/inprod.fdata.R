@@ -30,7 +30,7 @@ if (any(nas1)) {
  for (i in 1:numgr) {
     for (ii in 1:numgr2) {
          f=w*(DATA1[i,]*DATA2[ii,])
-         mdist[i,ii]=int.simpson2(tt1,f,equi)
+         mdist[i,ii]=int.simpson2(tt1,f,equi,...)
 }}
 return(mdist)
 }

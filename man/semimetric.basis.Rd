@@ -7,7 +7,7 @@ Aproximates semi-metric distances for functional data of class \code{fdata} or \
 }
 \usage{
 semimetric.basis(fdata1, fdata2 = fdata1,nderiv=0,type.basis1=NULL,
-nbasis1=NULL,type.basis2=NULL,nbasis2=NULL,...)
+nbasis1=NULL,type.basis2=type.basis1,nbasis2=NULL,...)
 }
 \arguments{  
   \item{fdata1}{Functional data 1 or curve 1.}

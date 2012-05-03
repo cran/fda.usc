@@ -8,16 +8,16 @@ S.NW<-function (tt, h=NULL, Ker = Ker.norm,w=NULL,cv=FALSE) {
     }}
  else if (is.vector(tt))    tt=abs(outer(tt,tt, "-"))
  else stop("Error: incorrect arguments passed")
-      if (is.null(h)) {
+ if (is.null(h)) {
     h=quantile(tt,probs=0.15,na.rm=TRUE)
     cat("h=");print(h)
     }
   if (cv)  diag(tt)=Inf
-  k=Ker(tt/h)
-  if (is.null(w)) w<-rep(1,nrow(k))
-  k1<-sweep(k,1,w,FUN="*")   #antes un 2, aviso en prediccion
+  tt2<-as.matrix(sweep(tt,1,h,FUN="/"))
+  k<-Ker(tt2)
+  if (is.null(w)) w<-rep(1,len=ncol(tt))
+  k1<-sweep(k,2,w,FUN="*")
   S =k1/apply(k1,1,sum)
 return(S)
 }
-
 

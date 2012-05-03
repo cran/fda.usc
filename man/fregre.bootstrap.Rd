@@ -46,21 +46,19 @@ data(tecator)
 x=tecator$absorp.fdata[1:129]
 y=tecator$y$Fat[1:129]
 res.pc=fregre.pc(x,y,1:6)
-#res.boot=fregre.bootstrap(res,mue.boot=5,kmax.fix=TRUE)
 res.basis=fregre.basis(x,y)
-#res.boot2=fregre.bootstrap(res.basis,mue.boot=5,kmax.fix=TRUE)
 res.pls=fregre.pls(x,y)
-#res.boot2=fregre.bootstrap(res.pls,mue.boot=5,kmax.fix=TRUE)
+
 
 newx=tecator$absorp.fdata[-c(1:129)]
-newy=tecator$y$Fat[c(1:129)]
+newy=tecator$y$Fat[-c(1:129)]
 res.boot=fregre.bootstrap(res.pc,nb=5,newX=newx,kmax.fix=TRUE)
 res.boot1=fregre.bootstrap(res.basis,nb=5,newX=newx,kmax.fix=TRUE)
 res.boot2=fregre.bootstrap(res.pls,nb=5,newX=newx,kmax.fix=TRUE)
 
 predy=predict(res.pc,newx)
-plot(predy,col=2)
-points(newy)
+plot(predy-newy,col=2)
+
 # predicted responses by bootstrap
 #res.boot$ypred
 

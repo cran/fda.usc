@@ -17,9 +17,12 @@ integer={
          out},
 fd={
    r = mdata$basis[[3]]
-   nb<- mdata$basis[[4]]
+   if (is.null(argvals))
+     argvals= seq(r[1], r[2], len =mdata$basis$nbasis)
+    nb<- length(argvals)
+    tt = argvals
 #   tt = seq(r[1], r[2], len = length(mdata$fdnames$time))
-   argvals=tt = seq(r[1], r[2], len =nb)
+
    out[["data"]] = t(eval.fd(tt, mdata))
    if (!is.null(mdata$fdnames$reps)) rownames(out[["data"]]) = mdata$fdnames$reps
    else      rownames(out[["data"]]) =1:nrow( out[["data"]])
@@ -77,4 +80,5 @@ if (!is.null(names$ylab)) out$names$ylab<-names$ylab
 class(out)="fdata"
 return(out)
 }
+
 

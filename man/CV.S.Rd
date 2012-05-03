@@ -1,14 +1,13 @@
 \name{CV.S}
 \Rdversion{1.1}
 \alias{CV.S}
-\alias{FCV.S}
+
 \title{ The cross-validation (CV) score}
 \description{
 The cross-validation (CV)  score.
 }
 \usage{
 CV.S(y,S,W=diag(ncol(S)),trim=0,draw=FALSE,metric=metric.lp,...)
-FCV.S(y,S,W=diag(ncol(S)),trim=0,draw=FALSE,metric=metric.lp,...)
 }
 
 \arguments{

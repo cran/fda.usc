@@ -1,21 +1,24 @@
 \name{fregre.pc}
 \Rdversion{1.1}
 \alias{fregre.pc}
-\title{ Functional Regression with scalar response using Principal Components Analysis.}
+\title{ Functional (Ridge) Regression with scalar response using Principal Components Analysis.}
 \description{
- 	Computes functional regression between functional explanatory variables and scalar response using Principal Components Analysis.
+ 	Computes functional (ridge) regression between functional explanatory variables and scalar response using Principal Components Analysis.
 }
-\usage{fregre.pc(fdataobj,y,l=1:3,norm=TRUE)
+\usage{
+fregre.pc(fdataobj, y, l = NULL,rn = 0, ...) 
 }
 \arguments{
-   \item{fdataobj}{ \code{\link{fdata}} class object.}  
+   \item{fdataobj}{ \code{\link{fdata}} class object or \code{fdata.comp} class object created by \code{\link{create.pc.basis}} function.}  
 	\item{y}{ Scalar response with length \code{n}.}
-	\item{l}{ Vector of principal comoponents.}
-	\item{norm}{=TRUE the norm of eigenvectors \code{(rotation)}  is 1.} 
-  %\item{\dots}{ Further arguments passed to or from other methods.}
+	\item{l}{ Vector of principal components. If is null \code{l} (by default), \code{l=1:3}.}
+	\item{rn}{Ridge parameter.  Default value is rn=0, i.e. no penalization is used.} 
+	%If rn = FALSE (by default), rn=0.  If =TRUE, rn is a percentage of a larger singular values of centered functional data.} 
+  \item{\dots}{ Further arguments passed to or from other methods.}
 }
 \details{
-The principal components are calculated by \code{\link{svd}} decomposition in the \code{\link{fdata2pc}} function.
+The principal components are calculated by \code{\link{svd}} decomposition in the \code{\link{fdata2pc}} or \code{\link{fdata2pc}}functions.  \code{rn} controls the amount of shrinkage.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%se puede pasar una base en lugar del dato fucnional
 }
 \value{
 Return:\cr
@@ -24,26 +27,19 @@ Return:\cr
 %\item{a.est}{ Intercept parameter estimated}
 \item{coefficients}{ A named vector of coefficients.}
 \item{fitted.values}{  Estimated scalar response.}
-\item{lambda}{ Eigenvalues of the covariance/correlation matrix.}
-\item{vs}{ A matrix whose columns contain the eigenvectors selected by \code{l} index.}
-%\item{vs}{ Eigenvectors for each  principal components -PC-.}
-%\item{S}{ Smoothing matrix.}
-\item{Z}{ Matrix of centered \code{fdata} multiplied by the eigenvalues \code{vs}.}
-\item{H}{ Hat matrix.}
-\item{df}{ The residual degrees of freedom.}
 \item{residuals}{ \code{y}-\code{fitted values}.}
+\item{H}{ Hat matrix.}
+\item{df}{ The residual degrees of freedom. In ridge regression, \code{df(rn)} is the effective degrees of freedom.}
 \item{r2}{ Coefficient of determination.}
+\item{GCV}{ GCV criterion.}
 \item{sr2}{ Residual variance.}
+\item{l}{ Index of principal components selected.}
+\item{rn}{ Amount of shrinkage.}
+\item{fdata.comp}{ Fitted object in \code{\link{fdata2pc}} function.}
+\item{lm}{ \code{lm} object.}
 \item{fdataobj}{ Functional explanatory data.}
 \item{y}{ Scalar response.}
-\item{pf}{ Formula used in \code{lm} function}
-%\item{kn}{ Number of principal components.}
-\item{pc}{ \code{pc.svd.fdata} object.}
-\item{l}{ Index of principal components selected.}
-\item{lm}{ \code{lm} object.}
 }
-
-
 
 \references{
 
@@ -73,10 +69,13 @@ res=fregre.pc(x,y)
 summary(res)
 res2=fregre.pc(x,y,l=c(1,3,4))
 summary(res2)
-x.d=fdata.deriv(x)
-res3=fregre.pc(x.d,y,l=c(1,3,4))
+# Functional Ridge Regression
+res3=fregre.pc(x,y,l=c(1,3,4),rn=1)
 summary(res3)
-
+res4=fregre.pc(x,y,l=c(1,3,4),rn=10)
+summary(res4)
+betas<-c(res$beta.est,res2$beta.est,res3$beta.est,res4$beta.est)
+plot(betas)
 
 }
 \keyword{regression}

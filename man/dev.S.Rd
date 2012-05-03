@@ -1,27 +1,32 @@
-\name{GCV.S}
+\name{dev.S}
 \Rdversion{1.1}
-\alias{GCV.S}
-\title{ The generalized cross-validation (GCV) score.}
+\alias{dev.S}
+\title{ The deviance score .}
 \description{
- The generalized cross-validation (GCV) score.
+ Returns the deviance of a fitted model object by GCV score.
 }
 \usage{
-GCV.S(y,S,criteria="GCV",W=diag(1,ncol=ncol(S),nrow=nrow(S)),
-trim=0,draw=FALSE,metric=metric.lp,...)
+dev.S(y, S, obs,family = gaussian(),off,offdf,criteria="GCV",
+W = diag(1, ncol = ncol(S), nrow = nrow(S)), trim = 0, draw = FALSE,...)
 }
 
 \arguments{
   \item{y}{ Matrix  of  set cases with dimension (\code{n} x \code{m}), where \code{n} is the number of curves and \code{m} are the points observed in each curve.}
+    \item{obs}{ observed response.}
   \item{S}{ Smoothing matrix.}
+  \item{family}{ a description of the error distribution and link function to be used in the model. This can be a character string naming a family function, a family function or the result of a call to a family function. (See \code{\link{family}} for details of family functions.) }
+    \item{off}{ off}
+    \item{offdf}{ off, degrees of freedom}
   \item{criteria}{ The penalizing function. By default \emph{"Rice"} criteria. Possible values are \emph{"GCV"}, \emph{"AIC"}, \emph{"FPE"}, \emph{"Shibata"}, \emph{"Rice"}. }
   \item{W }{ Matrix of weights.}    
 	\item{trim}{ The alpha of the trimming.}
   \item{draw}{ =TRUE, draw the curves, the sample median and trimmed mean.}	  
-  \item{metric}{ Metric function, by default \code{\link{metric.lp}}.}
   \item{\dots}{ Further arguments passed to or from other methods.}  
 }
 
 \details{  
+up to a constant, minus twice the maximized log-likelihood. Where sensible, the constant is chosen so that a saturated model has deviance zero.\\
+
  \deqn{GCV(h)=p(h) \Xi(n^{-1}h^{-1})}{} \cr
 
  Where  \cr
@@ -51,23 +56,18 @@ Hardle, W. \emph{Applied Nonparametric Regression}. Cambridge University Press, 
 Febrero-Bande, M. and Oviedo de la Fuente, M.
 }
 \seealso{
-See Also as  \code{\link{min.np}}. \cr
+See Also as  \code{\link{GCV.S}}. \cr
 Alternative method:  \code{\link{CV.S}}
 }
 \examples{
 
 data(phoneme)
 mlearn<-phoneme$learn
-tt<-1:ncol(mlearn)
+np<-ncol(mlearn)
+tt<-mlearn[["argvals"]]
 S1 <- S.NW(tt,2.5)
-S2 <- S.LLR(tt,2.5)
-S3 <- S.KNN(tt,2.5)
-gcv1 <- GCV.S(mlearn, S1)
-gcv2 <- GCV.S(mlearn, S2)
-gcv3 <- GCV.S(mlearn, S3)
-gcv4 <- GCV.S(mlearn, S1,criteria="AIC")
-gcv5 <- GCV.S(mlearn, S1,trim=0.01,draw=TRUE)
-gcv1; gcv2; gcv3; gcv4; gcv5
+gcv1 <- dev.S(mlearn$data[1,],obs=(sample(150)), S1,off=rep(1,150),offdf=3)
+gcv2 <- dev.S(mlearn$data[1,],obs=sort(sample(150)), S1,off=rep(1,150),offdf=3)
  }
 
 \keyword{utilities} 

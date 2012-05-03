@@ -29,7 +29,7 @@ nn <- nrow(new.fdataobj)
  yp<- a1+b1
  }
  else {
-  if (object$call[[1]]=="fregre.pls") {
+  if (object$call[[1]]=="fregre.pls" | object$call[[1]]=="fregre.pls2") {
   a1<-object$coefficients[1]*rep(1,len=nrow(newx))
   object$beta.est$data<-matrix(object$beta.est$data,nrow=1)
 #  b2<-new.fdataobj$data%*%t(object$beta.est$data)
@@ -52,6 +52,7 @@ nn <- nrow(new.fdataobj)
  else {
  if (object$call[[1]]=="fregre.np" || object$call[[1]]=="fregre.np.cv"){
 # if (is.vector(newx))  newx <- t(as.matrix(newx))
+
  x=object$fdataobj
  h=object$h.opt
  n = nrow(x)
@@ -86,5 +87,4 @@ yp<-drop(yp)
 names(yp)<-gg
 return(yp)
 }
-
 

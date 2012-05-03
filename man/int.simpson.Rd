@@ -7,8 +7,8 @@
 Computes the integral of y with respect to x using simpson or trapezoid rule integration.
 }
 \usage{
-int.simpson(fdataobj,equi=TRUE,method="CSR")
-int.simpson2(x, y, equi = TRUE, method = "CSR") 
+int.simpson(fdataobj,equi=TRUE,method="TRAPZ")
+int.simpson2(x, y, equi = TRUE, method = "TRAPZ") 
 }
 \arguments{  
  \item{fdataobj}{ fdata objtect.}
