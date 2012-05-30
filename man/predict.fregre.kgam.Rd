@@ -1,9 +1,9 @@
 \name{predict.fregre.kgam}
 \Rdversion{1.1}
 \alias{predict.fregre.kgam}
-\title{ Predict method for functional generalized additive model of fregre.kgam fits object}
+\title{ Predict method for functional kernel generalized additive model of fregre.kgam fits object}
 \description{
- 	 Computes predictions for regression between functional  explanatory variables and scalar response using: basis representation.
+ 	 Computes predictions for regression between functional explanatory variables and scalar response using backfitting algorithm.
 }
 \usage{
 %predict.fregre.kgam(object, newx = NULL, type = "response", ...) 
@@ -25,14 +25,10 @@ The first item in the \code{data} list of \code{newx} argument is called \emph{"
 
 }
 \value{
-Return:\cr
-\item{predict.kgam}{ produces a vector of predictions or a matrix of predictions and bounds with column names fit, lwr, and upr if interval is set. If se.fit is TRUE, a list with the following components is returned: fit vector or matrix as above.} 
-\item{se.fit}{ standard error of predicted means.} 
-\item{residual.scale}{ residual standard deviations.}
-\item{df}{ degrees of freedom for residual.} 
+Return: \item{predict.kgam}{ produces a vector of predictions} 
 }
 \references{
-Febrero-Bande M. and Gonzalez-Maneiga W. (2011). \emph{Generalized Additive Models for Functional Data}. Recent Advances in functional Data Analyisis and Related Topics. Physica-Velag. \cr
+Febrero-Bande M. and Gonz\'{a}lez-Manteiga W. (2011). \emph{Generalized Additive Models for Functional Data}. Recent Advances in functional Data Analyisis and Related Topics. Physica-Velag. \cr
 McCullagh and Nelder (1989), \emph{Generalized Linear Models} 2nd ed. Chapman and Hall. \cr
 Opsomer J.D. and Ruppert D.(1997). \emph{Fitting a bivariate additive model by local polynomial regression}.Annals of Statistics, \code{25}, 186-211.
 }
@@ -45,19 +41,22 @@ See Also as:  \code{\link{fregre.gsam}}. \cr
 \examples{
 data(tecator)
 ind<-1:129
-data(tecator)
-x=tecator$absorp.fdata
-x.d1<-fdata.deriv(x)
-tt=x[["argvals"]]
-dataf=as.data.frame(tecator$y)
-f=Fat~x
-ldata=list("df"=dataf[ind,],"x"=x[ind],"x.d1"=x.d1[ind])
-res=fregre.kgam(Fat~x,data=ldata,family=gaussian())
-p<-predict.fregre.kgam(res,ldata)
-#res2=fregre.kgam(Fat~x+x.d1,data=ldata,family=gaussian())
-#p2<-predict.fregre.kgam(res2,ldata)
-# plot(p-ldata$df$Fat)
-# points(p2-ldata$df$Fat,col=2)
+ab=tecator$absorp.fdata
+ab2=fdata.deriv(ab,2)
+
+# Example: Binomial family 
+ycat=ifelse(tecator$y[,"Fat"]<15,0,1)
+yfat.cat<-ycat[ind]
+f<-yfat.cat~ab+ab2
+xlist=list("df"=data.frame(yfat.cat),"ab"=ab[ind],"ab2"=ab2[ind])
+
+# Time-consuming 
+res=fregre.kgam(f,family=binomial(),data=xlist,control=list(maxit=2))
+newxlist=list("ab"=ab[-ind],"ab2"=ab2[-ind])
+
+pred=predict(res,newxlist)
+table(ycat[-ind],ifelse(pred<.5,0,1))
+
 
 }
 \keyword{regression}

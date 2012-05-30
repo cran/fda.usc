@@ -4,6 +4,11 @@
 \title{ Functional regression with scalar response using non-parametric kernel estimation}
 \description{
  	Computes functional regression between functional explanatory variables and scalar response using kernel estimation.
+The non-parametric functional regression model can be written as follows
+\deqn{y_i =r(X_i)+\epsilon_i}{ y = r(X) + \epsilon} 
+where the unknown smooth real function \eqn{r} is estimated using kernel estimation by means of
+\deqn{\hat{r}(X)=\frac{\sum_{i=1}^{n}{K(h^{-1}d(X,X_{i}))y_{i}}}{\sum_{i=1}^{n}{K(h^{-1}d(X,X_{i}))}}}{\hat{r}(X)=(\sum_i K(d(X,X_i))y_i/h) / (\sum_i K(d(X,X_i)/h)) i=1,...,n}
+where \eqn{K} is an kernel function (see \code{Ker} argument), \code{h} is the smoothing parameter and \eqn{d} is a metric or a semi-metric (see \code{metric} argument).
 }
 \usage{
 fregre.np(fdataobj,y,h=NULL,Ker=AKer.norm,metric=metric.lp,
@@ -21,7 +26,7 @@ type.S=S.NW,par.S=list(w=1),...)
 }
 \details{ 
 The distance between curves is calculated using the \code{\link{metric.lp}} although any other semimetric could be used (see \code{\link{semimetric.basis}} or \code{\link{semimetric.NPFDA}} functions). 
-Different asymmetric kernels can be used, see   \code{\link{Kernel.asymmetric}}.\cr
+The kernel is applied to a metric or semi-metrics that provides non-negative values, so it is common to use asymmetric kernels. Different asymmetric kernels can be used, see   \code{\link{Kernel.asymmetric}}.\cr
 }
 \value{
 Return:\cr

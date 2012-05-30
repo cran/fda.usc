@@ -42,9 +42,10 @@ out.FM=depth.FM(fdataobj,trim=0.1,draw=TRUE)
 out.mode=depth.mode(fdataobj,trim=0.1,draw=TRUE)
 out.RP=depth.RP(fdataobj,trim=0.1,draw=TRUE)
 out.RT=depth.RP(fdataobj,trim=0.1,draw=TRUE)
-# Double Random Projections
-out.RPD=depth.RPD(fdataobj,deriv=c(0,1),dfunc2=depth.FM,trim=0.1,draw=TRUE)
-out<-c(out.FM$mtrim,out.mode$mtrim,out.RP$mtrim,out.RPD$mtrim)
-plot(out)
+## NOT RUN
+## Double Random Projections
+# out.RPD=depth.RPD(fdataobj,deriv=c(0,1),dfunc2=depth.FM,trim=0.1,draw=TRUE)
+# out<-c(out.FM$mtrim,out.mode$mtrim,out.RP$mtrim,out.RPD$mtrim)
+# plot(out)
 }
 \keyword{descriptive} 

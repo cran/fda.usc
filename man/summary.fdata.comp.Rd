@@ -34,7 +34,7 @@ See Also as \code{\link{fdata2pc}}, \code{\link{fdata2pls}}  and  \link[stats]{c
 }
 \examples{
 
-n= 500;tt= seq(0,1,len=101)
+n= 200;tt= seq(0,1,len=101)
 x0<-rproc2fdata(n,tt,sigma="wiener")
 x1<-rproc2fdata(n,tt,sigma=0.1)
 x<-x0*3+x1
@@ -42,9 +42,9 @@ beta = tt*sin(2*pi*tt)^2
 fbeta = fdata(beta,tt)
 y<-inprod.fdata(x,fbeta)+rnorm(n,sd=0.1)
 pc1=fdata2pc(x)
-pls1=fdata2pls(x,y)
 summary(pc1,y)
-summary(pls1)
+pls1=fdata2pls(x,y)
+summary(pls1,cor=TRUE)
 
 }
 \keyword{multivariate} 

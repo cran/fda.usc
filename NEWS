@@ -1,3 +1,8 @@
+Release 0.9.8 introduces a new function flm.test() that 
+allows to test for the Functional Linear Model with scalar 
+response for a given dataset. Is based on the new functions 
+PCvM.statistic(), Aijr() and rber.gold().
+A bug in fregre.kgam has been fixed. 
 
 Release 0.9.7
 New functions: 

@@ -50,17 +50,19 @@ Alternative method: \code{\link{classif.glm}}.
 }
 \examples{
 
+# Time-consuming: selection of 2 levels 
 data(phoneme)
-mlearn<-phoneme[["learn"]]
-glearn<-phoneme[["classlearn"]]
-mtest<-phoneme[["test"]]
-gtest<-phoneme[["classtest"]]
+mlearn<-phoneme[["learn"]][1:100]
+glearn<-as.numeric(phoneme[["classlearn"]][1:100])
 dataf<-data.frame(glearn)
 dat=list("df"=dataf,"x"=mlearn)
-a1<-classif.kgam(glearn~x,data=dat,control=list(maxit=2))
-#newdat<-list("x"=mtest)
-#p1<-predict.classif(a1,newdat)
-#table(gtest,p1)
-#sum(p1==gtest)/250
+a1<-classif.kgam(glearn~x,data=dat)
+summary(a1)
+mtest<-phoneme[["test"]][1:100]
+gtest<-as.numeric(phoneme[["classtest"]][1:100])
+newdat<-list("x"=mtest)
+p1<-predict.classif(a1,newdat)
+table(gtest,p1)
+
 }
 \keyword{classif}

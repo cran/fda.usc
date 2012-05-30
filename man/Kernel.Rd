@@ -8,7 +8,7 @@
 \alias{Ker.tri}
 \alias{Ker.quar}
 \alias{Ker.unif}
-\alias{rkernel}
+%\alias{rkernel}
 \title{ Symmetric  Smoothing Kernels.}
 \description{ Represent  symmetric  smoothing kernels:: normal,  cosine,  triweight, quartic and uniform.
 

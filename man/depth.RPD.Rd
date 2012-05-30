@@ -47,20 +47,20 @@ See Also as \code{\link{depth.RP}}, \code{\link{depth.FM}} and \code{\link{depth
 }
 \examples{
 
-#Ex: CanadianWeather data
-fdataobj<-fdata(t(CanadianWeather$dailyAv[,,1]))
-t=1:365
-# Double Random Projections
-out.RPD=depth.RPD(fdataobj,deriv=c(0,1),dfunc2=depth.RP,draw=TRUE)
-out.RPD2=depth.RPD(fdataobj,deriv=c(0,1),dfunc2=depth.RP,trim=0.1)
-out.RPD3=depth.RPD(fdataobj,deriv=c(0,1),dfunc2=depth.mode,draw=TRUE,
-method="fmm")
-out.RPD4=depth.RPD(fdataobj,deriv=c(0,1),dfunc2=depth.FM,draw=TRUE,
-method="fmm")
+## Not run
+## Double Random Projections in CanadianWeather data
+ 
+# fdataobj<-fdata(t(CanadianWeather$dailyAv[,,1]))
+# t=1:365
+# out.RPD=depth.RPD(fdataobj,deriv=c(0,1),dfunc2=depth.RP,draw=TRUE)
+# out.RPD2=depth.RPD(fdataobj,deriv=c(0,1),dfunc2=depth.mode,draw=TRUE,
+# method="fmm")
+# out.RPD3=depth.RPD(fdataobj,deriv=c(0,1),dfunc2=depth.FM,draw=TRUE,
+# method="fmm")
 
-plot(out.RPD$mtrim,type="l",lwd=2)
-lines(out.RPD2$mtrim,col=2,lwd=2,lty=2)
-lines(out.RPD3$mtrim,col=3,lwd=2,lty=3)
-lines(out.RPD4$mtrim,col=4,lwd=2,lty=4)
+# plot(out.RPD$mtrim,type="l",lwd=2)
+# lines(out.RPD2$mtrim,col=2,lwd=2,lty=2)
+# lines(out.RPD3$mtrim,col=3,lwd=2,lty=3)
+
 }
 \keyword{descriptive} 

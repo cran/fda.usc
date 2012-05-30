@@ -12,7 +12,7 @@ CV.S(y,S,W=diag(ncol(S)),trim=0,draw=FALSE,metric=metric.lp,...)
 
 \arguments{
   \item{y}{ Matrix  of  set cases with dimension (\code{n} x \code{m}), where \code{n} is the number of curves and \code{m} are the points observed in each curve.}
-  \item{S}{ Smoothing matrix.}
+  \item{S}{ Smoothing matrix, see \code{\link{S.NW}}, \code{\link{S.LLR}} or \eqn{S.KNN}.}
   \item{W }{ Matrix of weights.}    
 	\item{trim}{ The alpha of the trimming.}
   \item{draw}{ =TRUE, draw the curves, the sample median and trimmed mean.}	
@@ -21,15 +21,14 @@ CV.S(y,S,W=diag(ncol(S)),trim=0,draw=FALSE,metric=metric.lp,...)
   }
 
 \details{
-Compute  the leave-one-out cross-validation score.\cr
+Compute the leave-one-out cross-validation score.\cr
 A.-If \code{trim=0}:\cr
-\deqn{CV(h)=\frac{1}{n} \sum_{i=1}^{n}{\Bigg(\frac{y_i-r_{i}(x_i)}{(1-S_{ii})}\Bigg)^{2}w(x_{i})}}{}
-\deqn{S_{ii} \  is  \ the \  ith \  diagonal \  element \  of \  the \  smoothing  \ matrix  \ S }{}
+\deqn{CV(h)=\frac{1}{n} \sum_{i=1}^{n}{\Bigg(\frac{y_i-r_{i}(x_i)}{(1-S_{ii})}\Bigg)^{2}w(x_{i})}}{CV(h)=1/n\, \sum_i ((y_i\, -\, r_{i}(x_i))\, /\, (1\, -\, S_ii))^2\,  w(x_i),\, i=1,...,n} 
+\eqn{S_{ii}}{Sii} is the ith diagonal element of the smoothing matrix \eqn{S}{S}.
 
 B.-If \code{trim>0}:\cr
-\deqn{CV(h)=\frac{1}{l} \sum_{i=1}^{l}{\Bigg(\frac{y_i-r_{i}(x_i)}{(1-S_{ii})}\Bigg)^{2}w(x_{i})}}{}
-\deqn{S_{ii} \  is  \ the \  ith \  diagonal \  element \  of \  the \  smoothing  \ matrix  \ S }{}
-l: index of (1-trim) curves with less error.
+\deqn{CV(h)=\frac{1}{l} \sum_{i=1}^{l}{\Bigg(\frac{y_i-r_{i}(x_i)}{(1-S_{ii})}\Bigg)^{2}w(x_{i})}}{CV(h)=1/n\ \sum_i ((y_i-r_{i}(x_i))/(1-S_ii))^2 w(x_i),\, i=1,...,l}
+\eqn{S_{ii}}{Sii} is the ith diagonal element of the smoothing matrix \eqn{S}{S} and l the index of  \code{(1-trim)} curves with less error.
 }
 \value{
     \item{res}{ Returns CV score calculated for input parameters.  } 

@@ -3,7 +3,7 @@
 \alias{fdata.bootstrap}
 \title{ Bootstrap samples of a functional statistic}
 \description{
- fdata.bootstrap  provides  bootstrap samples for  functional data.
+ fdata.bootstrap  provides  bootstrap samples for functional data.
 }
 \usage{
 fdata.bootstrap(fdataobj,statistic=func.mean,alpha=0.05,nb=200,
@@ -19,6 +19,18 @@ smo=0.0,draw=FALSE,draw.control=NULL,...)
   \item{draw}{=TRUE, plot the bootstrap samples and the statistic.}
   \item{draw.control}{list that it specifies the \code{col}, \code{lty} and \code{lwd} for objects: \code{fdataobj}, \code{statistic}, \code{IN} and \code{OUT}.}
   \item{\dots}{Further arguments passed to or from other methods.}
+}
+\details{
+ The \code{fdata.bootstrap()} computes a confidence ball using bootstrap in the following way:
+\itemize{
+	\item Let \eqn{X_1(t),\ldots,X_n(t)}{X_1(t),...,X_n(t)} the original data and \eqn{T=T(X_1(t),\ldots,X_n(t))}{T=T(X_1(t),...,X_n(t))} the sample statistic.
+	
+	\item Calculate the \code{nb} bootstrap resamples \eqn{\left\{X_{1}^{*}{(t)},\cdots,X_{n}^{*}{(t)}\right\}}{(X*_1(t),...,X*_n(t))}, using the following scheme \eqn{X_{i}^{*}(t)=X_{i}(t)+Z(t)}{X*_i(t)=X_i(t)+Z(t)} where	\eqn{Z(t)}{Z(t)} is normally distributed with mean 0 and covariance matrix \eqn{\gamma\Sigma_x}{\gamma\Sigma_x}, where \eqn{\Sigma_x}{\Sigma_x} is the covariance matrix of \eqn{\left\{X_1(t),\ldots,X_n(t)\right\}}{(X*_1(t),...,X*_n(t))} and \eqn{\gamma}{\gamma} is the smoothing parameter.
+ 	\item Let \eqn{T^{*j}=T(X^{*j}_1(t),...,X^{*j}_n(t))}{T^{*j}=T(X^{*j}_1(t),...,X^{*j}_n(t))} the estimate using the \eqn{j} resample. 
+ 	\item Compute \eqn{d(T,T^{*j})}, \eqn{j=1,\ldots,nb}. Define the bootstrap confidence ball of level \eqn{1-\alpha}{1-\alpha} as \eqn{CB(\alpha)=X\in E}{CB(\alpha)=X \in E} such that \eqn{d(T,X)\leq d_{\alpha}}{d(T,X)<= d\alpha} being \eqn{d_{\alpha}}{d\alpha} the quantile \eqn{(1-\alpha)}{(1-\alpha)} of the distances between the bootstrap resamples and the sample estimate.
+}
+
+The \code{fdata.bootstrap} function allows us to define a statistic calculated on the \code{nb} resamples, control the degree of smoothing by \code{smo} argument and represent the confidence ball with level \eqn{1-\alpha}{1-\alpha} as those resamples that fulfill the condition of belonging to \eqn{CB(\alpha)}{CB(\alpha)}.  The \code{statistic} used by default is the mean (\code{\link{func.mean}}) but also other depth-based functions can be used (see \code{help(Descriptive)}). 
 }
 
 \value{

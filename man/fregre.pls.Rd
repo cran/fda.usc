@@ -2,9 +2,15 @@
 \Rdversion{1.1}
 \alias{fregre.pls}
 \title{ Functional PLS regression with scalar response}
-\description{ Compute partial least squares regression (PLSR) for functional data. }
-\usage{fregre.pls(fdataobj, y=NULL, l = NULL,...)}
+\description{ 
+Computes functional linear regression between functional explanatory variable \eqn{X(t)} and scalar response \eqn{Y} using partial least squares (PLS). 
+\deqn{Y=\big<X,\beta\big>+\epsilon=\int_{T}{X(t)\beta(t)dt+\epsilon}}{Y=<X,\beta>+\epsilon}
 
+where \eqn{ \big<  \cdot , \cdot \big>}{<.,.>} denotes the inner product on \eqn{L_2} and \eqn{\epsilon} are random errors with mean zero , finite variance \eqn{\sigma^2} and \eqn{E[X(t)\epsilon]=0}{E[X(t)\epsilon]=0}.\cr
+
+The functional partial least squared (FPLS) are calculated in \code{\link{fdata2pls}}  by alternative formulation of the NIPALS algorithm proposed by Kraemer and Sugiyama (2011).  
+}
+\usage{fregre.pls(fdataobj, y=NULL, l = NULL,...)}
 \arguments{
   \item{fdataobj}{ \code{\link{fdata}} class object.}  
 	\item{y}{ Scalar response with length \code{n}.}
@@ -12,7 +18,8 @@
   \item{\dots}{ Further arguments passed to or from other methods.} 
 }
 \details{
-The principal components are calculated by \code{NIPALS} algorithm in the \code{\link{fdata2pls}} function.  
+Functional partial least squares (FPLS) algorithm maximizes the covariance between \eqn{X(t)} and the scalar response \eqn{Y} via the partial least squares (PLS) components. Let \eqn{\left\{\tilde{\nu}_k\right\}_{k=1}^{\infty}}{{\nu_k}_k=1:\infty} the functional PLS components and \eqn{X_i(t)=\sum_{k=1}^{\infty}\tilde{\gamma}_{ik}\tilde{\nu}_k}{X_i(t)=\sum{k=1:\infty} \gamma_{ik} \nu_k} and  \eqn{\beta(t)=\sum_{k=1}^{\infty}\tilde{\beta}_k\tilde{\nu}_k}{\beta(t)=\sum{k=1:\infty} \beta_k \nu_k}. The functional linear model is estimated by:
+\deqn{ \hat{y}=\big<  X,\hat{\beta} \big> \approx \sum_{k=1}^{k_n}\tilde{\gamma}_{k}\tilde{\beta}_k  }{ y.est=<  X,\beta.est > \approx \sum{k=1:k_n} \gamma_k \beta_k }
 }
 \value{
 Return:
@@ -50,5 +57,4 @@ y<-tecator$y$Fat
 res=fregre.pls(x,y,c(1:8))
 summary(res)
 }
-
-\keyword{multivariate} 
+\keyword{regression}

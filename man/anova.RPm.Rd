@@ -3,8 +3,8 @@
 \alias{anova.RPm}
 \alias{anova.RPm.boot}
 \alias{summary.anova}
-\alias{intercambio.l}
-\alias{intercambio}
+%\alias{intercambio.l}
+%\alias{intercambio}
 \title{ Functional ANOVA with Random Project.}
 \description{
   The procedure is based on the analysis of randomly chosen one-dimensional projections. The function tests ANOVA models for functional data with continuous covariates and perform special contrasts for the factors in the formula.

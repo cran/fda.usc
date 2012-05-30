@@ -51,24 +51,20 @@ ndataf=as.data.frame(tecator$y[-ind,])
 nldata=list("df"=ndataf,"x"=newx)
 pred.plm=predict.fregre.plm(res.plm,nldata)
 
-# with 2nd derivative of functional data
-x.fd=fdata.deriv(x,nderiv=2)
-f2=Fat~Protein+x.fd
-ldata2=list("df"=dataf,"x.fd"=x.fd)
-res.plm2=fregre.plm(f2,ldata2)
-res.plm.trim2=fregre.plm(f2,ldata2,par.CV=list(trim=0.01))
-newx.fd=fdata.deriv(newx,nderiv=2)
-nldata2=list("df"=ndataf,"x.fd"=newx.fd)
-pred.plm2=predict.fregre.plm(res.plm2,nldata2)
-pred.plm.trim2=predict.fregre.plm(res.plm.trim2,nldata2)
+## with 2nd derivative of functional data
+# x.fd=fdata.deriv(x,nderiv=2)
+# f2=Fat~Protein+x.fd
+# ldata2=list("df"=dataf,"x.fd"=x.fd)
+# res.plm2=fregre.plm(f2,ldata2)
+# newx.fd=fdata.deriv(newx,nderiv=2)
+# nldata2=list("df"=ndataf,"x.fd"=newx.fd)
+# pred.plm2=predict.fregre.plm(res.plm2,nldata2)
 
-MEP.plm=((1/length(newy))*sum((newy-pred.plm)^2))/var(newy)
-MEP.plm2=((1/length(newy))*sum((newy-pred.plm2)^2))/var(newy)
-MEP.plm.trim2=((1/length(newy))*sum((newy-pred.plm.trim2)^2))/var(newy)
-par(mfrow=c(1,3))
-boxplot(newy-pred.plm,ylim=c(-5,5))
-boxplot(newy-pred.plm2,ylim=c(-5,5))
-boxplot(newy-pred.plm.trim2,ylim=c(-5,5))
+# MEP.plm=((1/length(newy))*sum((newy-pred.plm)^2))/var(newy)
+# MEP.plm2=((1/length(newy))*sum((newy-pred.plm2)^2))/var(newy)
+# par(mfrow=c(1,2))
+# boxplot(newy-pred.plm,ylim=c(-5,5))
+# boxplot(newy-pred.plm2,ylim=c(-5,5))
 
 }
 \keyword{regression}

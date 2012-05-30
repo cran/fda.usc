@@ -41,31 +41,31 @@ See also \code{\link{classif.knn}}, \code{\link{classif.kernel}} and \code{\link
 }
 \examples{
 
-
 data(phoneme)
 mlearn<-phoneme[["learn"]]
 glearn<-phoneme[["classlearn"]]
-mtest<-phoneme[["test"]]
-gtest<-phoneme[["classtest"]]
 
 #	ESTIMATION knn
-out1=classif.knn(glearn,mlearn,knn=c(3,5,7))
+out1=classif.knn(glearn,mlearn,knn=c(3,7))
 summary.classif(out1)
 #	PREDICTION knn
+mtest<-phoneme[["test"]][c(40:60,140:160,201:210)]
+gtest<-phoneme[["classtest"]][c(40:60,140:160,201:210)]
 pred1=predict.classif(out1,mtest)
 table(pred1,gtest)
 MisclasPredict <- sum(pred1 != gtest)/length(gtest)
 MisclasPredict
 
-#	ESTIMATION kernel
-h=2^(0:5)
-out2=classif.kernel(glearn,mlearn,h=h)
-summary.classif(out2)
+##	ESTIMATION kernel 
+# h=2^(0:5)
+# using metric distances computed in classif.knn
+# out2=classif.kernel(glearn,mlearn,h=h,metric=out1$mdist)
+# summary.classif(out2)
 #	PREDICTION kernel
-pred2=predict.classif(out2,mtest)
-table(pred2,gtest)
-MisclasPredict <- sum(pred2!= gtest)/length(gtest)
-MisclasPredict
+# pred2=predict.classif(out2,mtest)
+# table(pred2,gtest)
+# MisclasPredict <- sum(pred2!= gtest)/length(gtest)
+# MisclasPredict
 
 }
 \keyword{classif}

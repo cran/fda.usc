@@ -71,26 +71,22 @@ for (i in 1:50) mdata[i,]<- (sin(2*pi*a1))+rnorm(length(a1),sd=0.2)
 mdata<-fdata(mdata)
 nb<-floor(seq(5,29,len=5))
 l<-2^(-5:15)
-out1<-min.basis(mdata,type.CV = CV.S,lambda=l,numbasis=nb)
-out2<-min.basis(mdata,lambda=l,numbasis=nb)
-out3<-min.basis(mdata,lambda=l,numbasis=nb,type.basis="fourier")
-par(mfrow=c(1,3))
-matplot(t(out1$gcv),type="l",main="CV with bspline basis")
-matplot(t(out2$gcv),type="l",main="GCV with bspline basis")
-matplot(t(out3$gcv),type="l",main="GCV with fourier basis")
+out<-min.basis(mdata,lambda=l,numbasis=nb,type.basis="fourier")
+matplot(t(out$gcv),type="l",main="GCV with fourier basis")
+
+# out1<-min.basis(mdata,type.CV = CV.S,lambda=l,numbasis=nb)
+# out2<-min.basis(mdata,lambda=l,numbasis=nb)
 
 # variance calculations
 y<-mdata
-out<-out3
 i<-3
 z=qnorm(0.025/np)
-fdata.est<-out$S.opt%*%t(y)
+fdata.est<-out$fdata.est
 var.e<-Var.e(mdata,out$S.opt)
 var.y<-Var.y(mdata,out$S.opt)
 var.y2<-Var.y(mdata,out$S.opt,var.e)
 
-
-# plot estimated fdata and point confidence interval
+# estimated fdata and point confidence interval
 upper.var.e<-out$fdata.est[["data"]][i,]-z*sqrt(diag(var.e))
 lower.var.e<-out$fdata.est[["data"]][i,]+z*sqrt(diag(var.e))
 dev.new()
@@ -102,6 +98,7 @@ lines(upper.var.e,col=gray(.3),lwd=2,lty=2)
 lines(lower.var.e,col=gray(.3),lwd=2,lty=2)
 legend("top",legend=c("Var.y","Var.error"), col = c(gray(0.7),
 gray(0.3)),lty=c(1,2))
+
 }
 
 \keyword{nonparametric} 

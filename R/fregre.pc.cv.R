@@ -1,6 +1,12 @@
 #################################################################
 #################################################################
 fregre.pc.cv=function (fdataobj, y, kmax=8,rn=0,criteria = "SIC",...) {
+   sequen=FALSE
+   if (length(kmax)>1) {
+   sequen=TRUE
+   l<-kmax
+   kmax<-max(kmax)
+   }
 if (class(fdataobj)=="fdata.comp") {
     pc<-fdataobj
     fdataobj<-pc$fdataobj
@@ -55,29 +61,33 @@ else {
     cv.opt1 = Inf
     pc.opt1 = NA
     l = l2 = list()
-     c1 = matrix(1:kmax, nrow = 1)
-         num.pc = nrow(c1)
-     max.c = length(c1)
-     c0 = 1:kmax
-     use = rep(FALSE, kmax)
-     pc2<-pc
-     for (k in 1:kmax) {
-                cv.AIC <- rep(NA, max.c)
-                for (j in 1:max.c) {
-                  pc2$rotation <- pc$rotation#[c1[, j]]
-                  pc2$l <- pc$l[c1[, j]]
-                  out = fregre.pc(pc2, y,l=c1[, j],rn=rn[r],...)
-                  ck<-out$df
-                  s2 <- sum(out$residuals^2)/n
-                  cv.AIC[j]<-switch(criteria,
+    c1 = matrix(1:kmax, nrow = 1)
+    num.pc = nrow(c1)
+    max.c = length(c1)
+    c0 = 1:kmax
+    use = rep(FALSE, kmax)
+    pc2<-pc
+    for (k in 1:kmax) {
+       cv.AIC <- rep(NA, max.c)
+if (sequen) {
+   max.c=1
+   c1<-matrix(pc$l[1:k],ncol=1)
+   }
+   for (j in 1:max.c) {
+             pc2$rotation <- pc$rotation#[c1[, j]]
+             pc2$l <- pc$l[c1[, j]]
+             out = fregre.pc(pc2, y,l=c1[, j],rn=rn[r],...)
+             ck<-out$df
+             s2 <- sum(out$residuals^2)/n
+             cv.AIC[j]<-switch(criteria,
               "AIC"=log(s2) + 2 * (ck)/n,
               "AICc"=log(s2) + 2 * (ck)/(n - ck - 2),
               "SIC"=log(s2) + log(n) * ck/n,
               "SICc"=log(s2) + log(n) * ck/(n-ck-2),
               "HQIC"=log(s2) + 2*log(log(n)) * ck/n,
               "rho"={A<-out$residuals;B<-1-diag(out$H)/n; D1<-(A/B)^2;sum(D1)})
-                }
-                #peta en 2!!!
+              }
+        if (!sequen){
                 min.AIC = min(cv.AIC)
                 pc.opt1 <- c1[, which.min(cv.AIC)]
                 l[[k]] = pc.opt1[k]
@@ -87,7 +97,13 @@ else {
                 c1 = t(expand.grid(l))
                 ck = nrow(c1) + 1
                 max.c = ncol(c1)
-            }
+                }
+         else {
+                pc.opt1 <- 1:k
+                l[[k]] = k
+                l2[[k]] =drop(cv.AIC[1])
+                }
+     }
      mn = which.min(l2)
      MSC = as.numeric(l2)
      if ( MSC.min>MSC[mn]) {
@@ -115,7 +131,8 @@ else {
      max.c = length(c1)
      c0 = 1:kmax
      use = rep(FALSE, kmax)
-       for (k in 1:kmax) {
+     for (k in 1:kmax) {
+      if (sequen) {   max.c=1;   c1<-matrix(pc$l[1:k],ncol=1)   }
       cv.AIC <- rep(NA, max.c)
       cv.AIC2 <- matrix(NA,nrow=max.c,ncol=lenrn)
       rownames(cv.AIC2)<-1:max.c
@@ -133,7 +150,8 @@ else {
 #            cat(ck)
             }
           cv.AIC[j] <-sum(residuals2)/n
-          }
+      }
+     if (!sequen){
                 min.AIC = min(cv.AIC)
                 pc.opt1 <- c1[, which.min(cv.AIC)]
                 l[[k]] = pc.opt1[k]
@@ -143,31 +161,29 @@ else {
                 c1 = t(expand.grid(l))
                 ck = nrow(c1) + 1
                 max.c = ncol(c1)
-            }
-     mn = which.min(l2)
-     MSC = as.numeric(l2)
-     if ( MSC.min>MSC[mn]) {
-       min.rn<-r
-       MSC.min = MSC[mn]
-       pc.opt3<-pc.opt1[1:mn]
-       }
-    pc.order<-names(MSC)
-    pc.opt = pc.opt1[1:mn]
-    MSC2[r,]<-MSC
-    pc.opt2[r,]<-pc.opt1
-    setTxtProgressBar(pb,r)
-    }
+                }
+     else { pc.opt1 <- 1:k; l[[k]] = k;l2[[k]] =drop(cv.AIC[1]) }
+     }
+#    }
+   mn = which.min(l2)
+   MSC = as.numeric(l2)
+   if ( MSC.min>MSC[mn]) {   min.rn<-r; MSC.min = MSC[mn]
+                             pc.opt3<-pc.opt1[1:mn]       }
+   pc.order<-names(MSC)
+   pc.opt = pc.opt1[1:mn]
+   MSC2[r,]<-MSC
+   pc.opt2[r,]<-pc.opt1
+   setTxtProgressBar(pb,r)
+   }
     close(pb)
     }
- mn = which.min(l2)
- MSC = as.numeric(l2)
- names(pc.opt3)<-paste("PC", pc.opt3, sep = "")
+    mn = which.min(l2)
+    MSC = as.numeric(l2)
+    names(pc.opt3)<-paste("PC", pc.opt3, sep = "")
  rn.min<-rn[min.rn]
  fregre=fregre.pc(fdataobj,y,l=pc.opt,rn=rn.min,...)
  return(list("fregre.pc"=fregre,pc.opt = pc.opt3,rn.opt=rn.min,PC.order=pc.opt2,
  MSC.order=MSC2))
 }
 }
-#################################################################
-#################################################################
 

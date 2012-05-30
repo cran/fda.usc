@@ -12,9 +12,7 @@
 \alias{dim.fdata}
 \alias{ncol.fdata}
 \alias{nrow.fdata}
-\alias{traza}
 \alias{is.fdata}
-\alias{count.na}
 \alias{*.fdata}
 \alias{^.fdata}
 \alias{argvals}
@@ -40,8 +38,6 @@
 \method{is}{fdata}(fdataobj)
 \method{omit}{fdata}(fdataobj,y=NULL)
 \method{missing}{fdata}(fdataobj,basis=NULL)
-count.na(A)
-traza(A) 
 argvals(fdataobj)
 rangeval(fdataobj)
 %"[.fdist"(fdataobj, i = TRUE, j = TRUE,drop=FALSE)
@@ -51,7 +47,6 @@ rangeval(fdataobj)
  \item{i,j}{ Indices specifying elements to extract, replace. Indices are numeric or character vectors or empty}  
   \item{pot}{ Numeric value for exponentiation.}  
  \item{drop}{For \code{fdata} class object. If TRUE the result is coerced to the lowest possible dimension of  element \code{data}. This only works for extracting elements, not for the replacement.}
-   \item{A}{  Matrix  of  set cases with dimension (\code{n} x \code{m}), where \code{n} is the number of curves and \code{m} are the points observed in each curve. \code{traza}, return the trace of a functional data matrix.}
   \item{\dots}{ \code{fdata} objects to be concatenated. }
   \item{y}{ Vector}
   \item{basis}{ fd basis}

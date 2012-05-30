@@ -50,7 +50,7 @@ if (family$family=="binomial") {
 ####################    eps <- 0.001
 #    if (is.null(control$epsilon)) control$epsilon<-0.00
     eps<-control$epsilon
-    namesx<-xnames <- vfunc
+    namesx<- vfunc
     nvars <- length(vfunc)
     ynames <- if (is.matrix(y))  rownames(y)
               else names(y)
@@ -76,12 +76,14 @@ if (family$family=="binomial") {
     valideta <- unless.null(family$valideta, function(eta) TRUE)
     validmu <- unless.null(family$validmu, function(mu) TRUE)
     X = matrix(0, nrow = nobs, ncol = nvars + intercept)
-    colnames(X) = c(xnames, "Intercept")
+    colnames(X) = c(namesx, "Intercept")
     eqrank = c(rep(0, nvars), 1)
-    result = vector("list", nvars)
-    metric2 = metric = vector("list", nvars)
+#    result = vector("list", nvars)
+    metric<-metric2<-result<-list()
+#    metric2 = metric = vector("list", nvars)
     par.np2=par.np
-    names(metric2) = names(metric) = xnames
+#    names(eqrank)=names(metric2) = names(metric) = namesx
+    names(eqrank)<- c(namesx,"Intercept")
     X[, nvars + intercept] = rep(linkfun(mean(y)), nobs)
     if (control$trace)   cat("----Computing the distance matrix ----\n")
     for (i in 1:nvars) {
@@ -95,14 +97,15 @@ if (family$family=="binomial") {
                 par.metric[[namesx[i]]][-1])
         }
        if (is.null(par.np)) {
-
           par.np2[[namesx[i]]] =list(Ker=AKer.norm,type.S="S.NW",par.S=list(w=weights))
         }
 #       if (is.null(par.np[[namesx[i]]]$par.S)) par.np[[namesx[i]]]$par.S=list(w=weights)
        if (is.null(par.np[[namesx[i]]]$Ker)) par.np2[[namesx[i]]]$Ker=AKer.norm
        if (is.null(par.np[[namesx[i]]]$type.S)) par.np2[[namesx[i]]]$type.S="S.NW"
-       #        print(metric[[i]][1:3, 1:4])
-#        print(metric2[[i]][1:3, 1:4])
+       if (is.null(par.np[[namesx[i]]]$h)) {
+              par.np2[[namesx[i]]]$h = h.default(xlist[[namesx[i]]], len = 51,
+              prob = c(0.01,0.66),metric =  metric[[namesx[i]]])
+              }
     }
     eta = apply(X, 1, sum)
     mu = linkinv(eta)
@@ -144,41 +147,14 @@ if (family$family=="binomial") {
             z = ytilde - off   #################################################
             if (control$trace)                print(summary(ytilde))
             offdf = sum(eqrank[-i])
-            xfunc = xlist[[i]][good]
+            xfunc = xlist[[namesx[i]]][good]
             mgood<- metric[[namesx[i]]]
 #            class( mgood)<-"matrix"
 #            mgood<- mgood[good,good]
 #            attributes(mgood)<-c(attributes(mgood),attributes(metric[[namesx[i]]])[-1])
-            if (is.null(par.np[[namesx[i]]]$h)) {
-            h = range(h.default(xfunc, len = 3, prob = c(0.01,
-                0.66), metric = mgood))
-#print(h)
-#            h = h.default(xfunc,len=2,type.S=par.np2[[namesx[i]]]$type.S,
-#            Ker=par.np2[[namesx[i]]]$Ker, metric = mgood) #fuera el probs
-#print("h1");print(h)
-            h.r = h[2] - h[1]
-            h.opt = result[[namesx[i]]]$h.opt
-#print(h.opt)
-            if (is.null(h.opt)) {  h = seq(h[1], h[2], len = 31)    }
-            else {
-                h = range(result[[namesx[i]]]$h)
-                h.r = h[2] - h[1]
-                if (h.opt == h[1]) {
-                  h = seq(h[1], h[1] + 0.25 * h.r, len = 31)
-                }
-                if (h.opt == h[2]) {
-                  h = seq(h[2] - 0.25 * h.r, h[2], len = 31)
-                }
-                if (all(h.opt != h)) {
-                  h = seq(max(h[1], h.opt - 0.25 * h.r), min(h[2],
-                    h.opt + 0.25 * h.r), len = 31)
-                }
-            }
-            if (h.r/h[1] < control$epsilon) h = h.opt
-            }
-             else h<-par.np2[[namesx[i]]]$h
-             if (control$trace)                  cat("Range h:", range(h), length(h), "\n")
-# se pasa la matriz de distancias  en metrix
+            h<-par.np2[[namesx[i]]]$h
+             if (control$trace)   cat("Range h:", range(h), length(h), "\n")
+# se pasa la matriz de distancias  en metric
 #   res2 = fregre.np.cv(xfunc, z, h = h, type.CV = dev.S,
 #                metric = mgood, par.CV = list(obs = y[good],
 #                  family = family, off = off, offdf = offdf,weights = diag(weights)))
@@ -186,24 +162,23 @@ if (family$family=="binomial") {
            type.S=par.np2[[namesx[i]]]$type.S
            parS=par.np2[[namesx[i]]]$par.S
            parS$w=w
-if (is.function(type.S)) ty<-deparse(substitute(type.S))
-else ty<-type.S
+           if (is.function(type.S)) ty<-deparse(substitute(type.S))
+           else ty<-type.S
            res = fregre.np.cv(xfunc, z, h = h, type.CV = "dev.S", Ker=Ker,
            type.S=ty,par.S=parS,metric = mgood, par.CV = list(obs = y[good],
            family = family, off = off, offdf = offdf,W = diag(w)))
 #            res3 = fregre.plm(xfunc, z, h = h, type.CV = dev.S2,
 #                metric = metric[[i]][good, good], par.CV = list(obs = y[good],
 #                  family = family, off = off, offdf = offdf,weights = diag(weights)))
-            if (control$trace)
-                cat("Var:", xnames[[i]], " h.opt:", res$h.opt,
-                  " df:", res$df, "\n")
-            eqrank[i] = res$df
-            X[good, i] = res$fitted.values
-            result[[i]] = res
+           if (control$trace)
+            cat("Var:",namesx[[i]]," h.opt:", res$h.opt," df:",res$df,"\n")
+            
+           eqrank[namesx[i]] = res$df
+           X[good,namesx[i]] = res$fitted.values
+           result[[namesx[i]]] = res
         }
         X[, nvars + intercept] = rep(mean(ytilde - apply(X[good,
             1:nvars, drop = FALSE], 1, sum)), nobs)
-            
         eta <- apply(X, 1, sum)
         mu <- linkinv(eta <- eta + offset)
 #        mu <- linkinv(eta)
@@ -211,7 +186,6 @@ else ty<-type.S
         good <- (weights > 0) & (mu.eta.val != 0)
         ngoodobs <- as.integer(nobs - sum(mu.eta.val <= eps))
         dev <- sum(dev.resids(y,mu,weights))
-
         if (control$trace)   {
              par(mfrow = c(1, nvars + 1))
              if (length(table(y) > 10)) {colores = 1}
@@ -220,19 +194,17 @@ else ty<-type.S
              points(eta, y, col = colores, pch = 2)
              for (i in 1:nvars) {
                plot(X[, i], eta, col = colores, ylab = "Linear Predictor",
-                xlab = paste("f(", xnames[i], ")", sep = ""),
-                main = paste(xnames[i], "EqPar:", round(eqrank[i],1)))
+                xlab = paste("f(", namesx[i], ")", sep = ""),
+                main = paste(namesx[i], "EqPar:", round(eqrank[i],1)))
                if (length(table(y)) == 2) {
                 abline(h = 0)
                 abline(v = 0)
                 }
               }
         }
-
         cambio = apply((X - Xold)^2, 2, mean)
-        
         if (control$trace) {
-            cat("Cambio Iter:", iter, "EqRank:", sum(eqrank),
+            cat("Shift Iter:", iter, "EqRank:", sum(eqrank),
                 ngoodobs, "/", nobs, "\n")
              print(cambio)
              }

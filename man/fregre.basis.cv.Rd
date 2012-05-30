@@ -3,7 +3,8 @@
 \alias{fregre.basis.cv}
 \title{ Cross-validation Functional Regression with scalar response using basis representation. }
 \description{
-	Computes functional regression between functional explanatory variables and scalar response using basis representation by cross-validation method.
+	Computes functional regression between functional explanatory variables and scalar response using basis representation.
+	The function \code{fregre.basis.cv()} uses validation criterion defined by argument \code{type.CV} to estimate the number of basis elements and/or the penalized parameter (\code{lambda}) that best predicts the response.
 }
 \usage{
 fregre.basis.cv(fdataobj,y,basis.x=NULL,basis.b=NULL,
@@ -23,8 +24,12 @@ type.CV=GCV.S,par.CV=list(trim=0),...)
   \item{par.CV}{ List of parameters for \code{type.CV}: \code{trim}, the alpha of the trimming and \code{draw}.}	  
   \item{\dots}{ Further arguments passed to or from other methods.}
 }
-\details{ If \code{basis = NULL} creates  bspline basis.\cr 
+\details{ 
+
+If \code{basis = NULL} creates  bspline basis.\cr 
 If the functional covariate \code{fdataobj} is in a format \code{raw data}, such as matrix or data.frame, creates an object of class \code{fdata} with default attributes, see \code{\link{fdata}}.
+
+If \code{basis.x$type=``fourier''} and \code{basis.b$type=``fourier''}, the basis are orthonormal and the function decreases the number of fourier basis elements on the \eqn{min(k_{n1},k_{n2})}{min(k.x,k_b)}, where \eqn{k_{n1}}{k.x} and \eqn{k_{n2}}{k.b} are the number of basis element of  \code{basis.x} and  \code{basis.b} respectively.
 }
 \value{
 Return:\cr
@@ -40,7 +45,7 @@ Return:\cr
 \item{y}{ Scalar response.}
 \item{fdataobj}{ Functional explanatory data of class \code{fdata}.}
 \item{lambda.opt}{  \code{lambda} value that minimizes CV or GCV method.}
-\item{gcv.opt}{ Minimum value of CV or GCV method. If \code{lambda=0}, \code{gcv.opt=NA}.}
+\item{gcv.opt}{ Minimum value of CV or GCV method.}
 \item{basis.x.opt}{  Basis used for  functional explanatory data estimation  \code{fdata}.}
 \item{basis.b}{  Basis used for for functional \code{beta} parameter estimation.}
 \item{lm}{  Return \code{lm} object.}
@@ -58,20 +63,14 @@ Alternative method: \code{\link{fregre.pc.cv}} and   \code{\link{fregre.np.cv}}.
 \examples{
 
 data(tecator)
-x<-tecator$absorp.fdata
-y=tecator$y$Fat
+x<-tecator$absorp.fdata[1:129]
+y=tecator$y$Fat[1:129]
 tt=x[["argvals"]]
-a=seq(21,77,by=8)
-b=seq(5,17,by=4)
-l=2^(-4:15)
-res1=fregre.basis.cv(x,y)
-summary(res1)
-res2=fregre.basis.cv(x,y,a,b,lambda=l,type.CV=GCV.S,par.CV=list(trim=0.05))
-ind=c(7,8,9,13,14)
-rbind(c(res1[ind],res1$basis.x.opt$type,res1$basis.x.opt$nbasis,
-res1$basis.x.opt$type,res1$basis.b.opt$nbasis),
-c(res2[ind],res2$basis.x.opt$type,res2$basis.x.opt$nbasis,res2$basis.x.opt$type
-,res2$basis.b.opt$nbasis))
+b=seq(7,47,by=8)
+l=2^(-4:10)
+res=fregre.basis.cv(x,y,basis.b=b,type.basis="fourier",
+lambda=l,type.CV=GCV.S,par.CV=list(trim=0.15))
+summary(res)
 
 }
 \keyword{regression}

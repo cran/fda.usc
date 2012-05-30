@@ -48,6 +48,23 @@ rtt<-fdataobj[["rangeval"]]
   xcen=xx[[1]]
 	ymean=mean(y)
   ycen=y-ymean
+  if (basis.x$type=="fourier" &  basis.x$type=="fourier")
+  fou=TRUE
+  else fou=FALSE
+  if (fou)   {
+   if (basis.x$nbasis<basis.b$nbasis) {
+ #    cat("Warning: The number of fourier basis elements in basis.b \n
+ #    decrease to number of fourier basis elements in the basis.x \n")
+     cat("Warning: The nbasis=",basis.b$nbasis," of basis.b must be the same
+      of nbasis=",basis.x$nbasis," of basis.x; will be decreased by ",basis.b$nbasis-basis.x$nbasis,sep="","\n")
+      basis.b<-basis.x
+     }
+   if (basis.x$nbasis>basis.b$nbasis) {
+    cat("Warning: The nbasis=",basis.x$nbasis," of basis.x must be the same
+      of nbasis=",basis.b$nbasis," of basis.b; will be decreased by ",basis.x$nbasis-basis.b$nbasis,sep="","\n")
+     basis.x<-basis.b
+    }
+    }
   x.fd=Data2fd(argvals=tt,y=t(xcen$data),basisobj=basis.x)
   C=t(x.fd$coefs)
   J=inprod(basis.x,basis.b)
@@ -119,4 +136,5 @@ out<-list("call"=call,"b.est"=b.est,"a.est"=a.est,"fitted.values"=yp,"H"=S,
  class(out)="fregre.fd"
 return(out)
 }
+
 

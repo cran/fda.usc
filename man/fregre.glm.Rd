@@ -3,10 +3,17 @@
 \alias{fregre.glm}
 \title{ Fitting Functional Generalized Linear Models}
 \description{
-	Computes functional regression between functional (and non functional) explanatory variables and scalar response using basis representation.
+Computes functional generalized linear model between functional covariate \eqn{X^j(t)}{X_j(t)} (and non functional covariate \eqn{Z^j}{Z_j}) and scalar response \eqn{Y} using basis representation.
+	
+This function is an extension of the linear regression models: \code{\link{fregre.lm}} where the \eqn{E[Y|X,Z]} is related to the linear prediction \eqn{\eta} via a link function \eqn{g(.)}. 
+
+\deqn{g(E[Y|X,Z])=\eta=\alpha+\sum_{j=1}^{p}\beta_{j}Z^{j}+\sum_{k=1}^{q}\frac{1}{\sqrt{T_k}}\int_{T_k}{X^{k}(t)\beta_{k}(t)dt}}{g(E[Y|X,Z])= \eta = \alpha + \sum \beta_j Z_j+\sum < X_k(t) , \beta_k(t) >}
+
+where \eqn{Z=\left[ Z^1,\cdots,Z^p  \right]}{ Z = [Z_1 ,..., Z_p]} are the non functional covariates and \eqn{X(t)=\left[ X^{1}(t_1),\cdots,X^{q}(t_q)  \right]}{X(t) = [ X_1(t_1) ,..., X_q(t_q)]} are the functional ones. 
 }
 \usage{
-fregre.glm(formula,family = gaussian(),data,basis.x=NULL,basis.b=NULL,CV=FALSE,...)
+fregre.glm(formula,family = gaussian(),data,
+basis.x=NULL,basis.b=NULL,CV=FALSE,...)
 }
 \arguments{
   \item{formula}{ an object of class \code{formula} (or one that can be coerced to that class): a symbolic description of the model to be fitted. The details of model specification are given under \code{Details}.} 
@@ -14,7 +21,7 @@ fregre.glm(formula,family = gaussian(),data,basis.x=NULL,basis.b=NULL,CV=FALSE,.
   \item{data}{ List that containing the variables in the model. } 
   %\item{weigths}{ weights}
 	\item{basis.x}{ List of basis for functional explanatory data estimation.}
-	\item{basis.b}{ List of basis for functional beta parameter estimation.}
+	\item{basis.b}{ List of basis for \eqn{\beta(t)} parameter estimation.}
 	\item{CV}{ =TRUE, Cross-validation (CV) is done .}	
   \item{\dots}{ Further arguments passed to or from other methods.}
 }
@@ -23,7 +30,7 @@ The first item in the \code{data} list  is called \emph{"df"} and  is a data fra
 
 Functional covariates of class  \code{fdata} or \code{fd} are introduced in the following items in the \code{data} list.\cr
 \code{basis.x} is a list of basis  for represent each functional covariate. The basis object can be created by the function: \code{\link{create.pc.basis}}, \code{\link{pca.fd}} \code{\link{create.pc.basis}}, \code{\link{create.fdata.basis}} o  \code{\link{create.basis}}.\cr
-\code{basis.b} is a list of basis  for represent each functional beta parameter. If \code{basis.x} is a list of functional principal components basis (see \code{\link{create.pc.basis}} or \code{\link{pca.fd}}) the argument \code{basis.b} is ignored. 
+\code{basis.b} is a list of basis  for represent each \eqn{\beta(t)}  parameter. If \code{basis.x} is a list of functional principal components basis (see \code{\link{create.pc.basis}} or \code{\link{pca.fd}}) the argument \code{basis.b} is ignored. 
 
 %When using functional data derived recommend using a number of basis to represent beta lower than the number of basis used to represent the functional data. 
 }
@@ -34,11 +41,13 @@ Return \code{glm} object plus:\cr
 \item{beta.l}{ List of estimated beta parameter of functional covariates.}
 \item{data}{ List that containing the variables in the model.}
 \item{formula}{ formula.}
-\item{CV}{ \$y.pred predicted response by cross-validation.}	
+\item{CV}{  predicted response by cross-validation.}	
 }
 \references{
 Ramsay, James O., and Silverman, Bernard W. (2006), \emph{ Functional Data Analysis}, 2nd ed., Springer, New York. \cr
+
 McCullagh and Nelder (1989), \emph{Generalized Linear Models} 2nd ed. Chapman and Hall. \cr
+
 Venables, W. N. and Ripley, B. D. (2002) \emph{Modern Applied Statistics with S}, New York: Springer. 
 
 

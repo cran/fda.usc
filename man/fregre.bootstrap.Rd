@@ -45,22 +45,23 @@ See Also as: \code{\link{fregre.pc}}, \code{\link{fregre.pls}}, \code{\link{freg
 data(tecator)
 x=tecator$absorp.fdata[1:129]
 y=tecator$y$Fat[1:129]
-res.pc=fregre.pc(x,y,1:6)
+
 res.basis=fregre.basis(x,y)
-res.pls=fregre.pls(x,y)
-
-
 newx=tecator$absorp.fdata[-c(1:129)]
 newy=tecator$y$Fat[-c(1:129)]
-res.boot=fregre.bootstrap(res.pc,nb=5,newX=newx,kmax.fix=TRUE)
-res.boot1=fregre.bootstrap(res.basis,nb=5,newX=newx,kmax.fix=TRUE)
-res.boot2=fregre.bootstrap(res.pls,nb=5,newX=newx,kmax.fix=TRUE)
-
-predy=predict(res.pc,newx)
+nb<-10 # Time-consuming
+res.boot1=fregre.bootstrap(res.basis,nb=nb,newX=newx,kmax.fix=TRUE)
+predy=predict(res.basis,newx)
 plot(predy-newy,col=2)
 
-# predicted responses by bootstrap
-#res.boot$ypred
+## predicted responses by bootstrap
+# res.boot1$ypred
+
+## With FPC and FPLS basis
+# res.pc=fregre.pc(x,y,1:6)
+# res.pls=fregre.pls(x,y)
+# res.boot2=fregre.bootstrap(res.pls,nb=5,newX=newx,kmax.fix=TRUE)
+# res.boot3=fregre.bootstrap(res.pc,nb=5,newX=newx,kmax.fix=TRUE)
 
 }
 \keyword{ regression }

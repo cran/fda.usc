@@ -60,21 +60,22 @@ Alternative method:  \code{\link{min.basis}}
 
 # Exemple, phoneme DATA
 data(phoneme)
-mlearn<-phoneme$learn
-np<-ncol(mlearn)
-out1<-min.np(mlearn,type.CV=CV.S,type.S=S.LLR)
-#h=out1$h
-#out2<-min.np(mlearn,type.S=S.KNN,h=h)
-#out3<-min.np(mlearn,type.CV=CV.S,type.S=S.NW,h=h)
-#out4<-min.np(mlearn,type.CV=GCV.S,type.S=S.LLR,criteria="Rice",h=h,
-#par.CV=list(trim=0.01,draw=TRUE))
-#out5<-min.np(mlearn,type.CV=GCV.S,type.S=S.LLR,criteria="Rice",h=h,
-#par.CV=list(trim=0.1,draw=TRUE))
-#out6<-min.np(mlearn,Ker=Ker.epa,type.CV=GCV.S,type.S=S.LLR,
-#criteria="Rice",h=h,par.CV=list(trim=0.1,draw=TRUE))
-#plot(out5$gcv)
-#lines(out4$gcv,col=2)
-#lines(out6$gcv,col=4)
+mlearn<-phoneme$learn[1:100]
+
+out1<-min.np(mlearn,type.CV=CV.S,type.S=S.NW)
+ np<-ncol(mlearn)
+# h=out1$h
+# out2<-min.np(mlearn,type.S=S.KNN,h=h)
+# out3<-min.np(mlearn,type.CV=CV.S,type.S=S.NW,h=h)
+# out4<-min.np(mlearn,type.CV=GCV.S,type.S=S.LLR,criteria="Rice",h=h,
+# par.CV=list(trim=0.01,draw=TRUE))
+# out5<-min.np(mlearn,type.CV=GCV.S,type.S=S.LLR,criteria="Rice",h=h,
+# par.CV=list(trim=0.1,draw=TRUE))
+# out6<-min.np(mlearn,Ker=Ker.epa,type.CV=GCV.S,type.S=S.LLR,
+# criteria="Rice",h=h,par.CV=list(trim=0.1,draw=TRUE))
+# plot(out5$gcv)
+# lines(out4$gcv,col=2)
+# lines(out6$gcv,col=4)
 
 # variance calculations
 y<-mlearn

@@ -1,23 +1,16 @@
 \name{fdata2pls}
 \Rdversion{1.1}
 \alias{fdata2pls}
-\alias{vvtz}
-\alias{dvvtz}
-\alias{dA}
 \title{ Partial least squares components for functional data.}
 \description{ Compute partial least squares (PLS) components for functional data. }
 \usage{ 
 fdata2pls(fdataobj,y,ncomp=2,...)
-dA(w, A, dw)
-vvtz(v, z)
-dvvtz(v, z, dv, dz) 
  }
 \arguments{
   \item{fdataobj}{ \code{\link{fdata}} class object.}  
 	\item{y}{ Scalar response with length \code{n}.}
   \item{ncomp}{The number of components to include in the model.}
   \item{\dots}{ Further arguments passed to or from other methods.}
-  \item{w,A,dw,v,z,dv,dz}{ Auxiliary arguments}
 }
 \details{
  %SIMPLS algorithm (de Jong, 1993)
@@ -34,7 +27,6 @@ The partial least squares are calculated by \code{NIPALS} algorithm.
      \item{C}{ The matched call.}     
 }
 \references{ 
-Preda C. and Saporta G. \emph{PLS regression on a stochastic process}. Comput. Statist. Data Anal. 48 (2005): 149{-}158.\cr
 Kraemer, N., Sugiyama M. (2011). \emph{The Degrees of Freedom of Partial Least Squares Regression}. Journal of the American Statistical Association. Volume 106, 697-705.
 }
 \author{ Febrero-Bande, M. and Oviedo de la Fuente, M. }

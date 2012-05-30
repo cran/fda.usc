@@ -123,7 +123,7 @@ cat("\n-Residual variance: ",
 #      print(object$Lfdobj)
     }
     if (object$call[[1]]=="fregre.np") {
-     cat(" *** Summary  non-parametric Regression for Functional data *** \n\n")
+     cat(" *** Summary non-parametric Regression for Functional data *** \n\n")
      cat("-Call: ");    print(object$call)
      cat("\n-Bandwidth (h): ",object$h.opt)
     cat("\n-R squared: ",object$r2)
@@ -133,7 +133,7 @@ cat("\n-Residual variance: ",
     }
   if (object$call[[1]]=="fregre.np.cv") {
 
-     cat(" *** Summary  non-parametric Regression for Functional data *** \n\n")
+     cat(" *** Summary non-parametric Regression for Functional data *** \n\n")
      cat("-Call: ");    print(object$call)
      cat("\n-Bandwidth (h): ",object$h.opt)
     cat("\n-R squared: ",object$r2)
@@ -166,6 +166,7 @@ cat("\n-Residual variance: ",
    }
    else  return(invisible(object)) #draw=FALSE
     if (draw) {
+      oldpar <- par()
       C<-match.call()
       lenC=length(C)
       j=1
@@ -210,13 +211,12 @@ abline(v=times.influ*lim.influ,col=2,lwd=2,lty=2)
 #  plot(density(object$residuals),main="Residuals")
     qqnorm(object$residuals,main="Residuals")
     boxplot(object$residuals,main="Residuals")
+    par(mfrow=c(1,1))
     }
 #    cat("\n")
 return(invisible(list("Influence"=influence,"i.influence"=i.influence,
 "i.atypical"=i.atypical)))
 }
-
-
 ##############################################################################
 ##############################################################################
 summary.fregre.kgam<-function(object,draw=TRUE,selec=NULL,times.influ=3,...){
@@ -245,8 +245,8 @@ summary.fregre.kgam<-function(object,draw=TRUE,selec=NULL,times.influ=3,...){
     tab[i,3]<-round(object$eqrank[[i]],1)
     }
     print(tab)
-    cat("edf: Equivalent degrees of freedom\n")
     cat("****    ****    ****    ****    ****    ****\n\n")
+    cat("edf: Equivalent degrees of freedom\n")
     rowname<-rownames(res[[1]]$fdataobj)
     if (is.null(rowname)) rowname<-1:n
     else rowname<-rownames(x)
@@ -359,6 +359,7 @@ text(influence[i.influence],i.influence,rowname[i.influence],cex=0.7)
                 }
                 }
     }
+    par(mfrow=c(1,1))
     }
     cat("\n")
 return(invisible(list("Influence"=influence,"object"=object)))
@@ -394,8 +395,8 @@ print.fregre.kgam<-function(x,digits = max(3, getOption("digits") - 3),...){
     tab[i,3]<-round(object$eqrank[i],1)
     }
     print(tab)
-    cat("edf: Equivalent degrees of freedom\n")
     cat("****    ****    ****    ****    ****    ****\n")
+    cat("edf: Equivalent degrees of freedom\n")
     residual.df <- nobs - sum(object$eqrank)
     w<-object$prior.weights
     ycen = y - mean(y)
@@ -445,4 +446,5 @@ kgam.H<-function(object,inverse="solve") {
  }
 ##############################################################################
 ##############################################################################
+
 

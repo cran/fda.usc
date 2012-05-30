@@ -4,7 +4,8 @@
 \alias{kgam.H}
 \title{ Fitting Functional Generalized Additive Models.}
 \description{
-	Computes functional regression between functional  explanatory variables and scalar response using backfitting algorithm.
+	Computes functional regression between functional explanatory variables \eqn{(X^{1}(t_1),...,X^{q}(t_q))}{(X(t_1),...,X(t_q))} and scalar response \eqn{Y} using backfitting algorithm.
+	
 }
 \usage{
 fregre.kgam(formula,family = gaussian(),data, weights= rep(1,nobs),
@@ -17,7 +18,7 @@ kgam.H(object,inverse="solve")
   \item{data}{ List that containing the variables in the model. }
  \item{family}{ a description of the error distribution and link function to be used in the model. This can be a character string naming a family function, a family function or the result of a call to a family function. (See \code{\link{family}} for details of family functions). }
   \item{weights}{ weights}
-  \item{par.metric}{ List of arguments by covariable to pass to the \code{metric} function by covariable.}
+  \item{par.metric}{ List of arguments by covariate to pass to the \code{metric} function by covariate.}
   \item{par.np}{  List of arguments to pass to the \code{fregre.np.cv} function }
   \item{offset}{this can be used to specify an a priori known component to be included in the linear predictor during fitting.}	     
   \item{control}{ a list of parameters for controlling the fitting process, by default: \code{maxit}, \code{epsilon}, \code{trace} and \code{inverse}}
@@ -26,7 +27,13 @@ kgam.H(object,inverse="solve")
   \item{\dots}{ Further arguments passed to or from other methods.}
 }
 \details{  
-The \code{kgam.H} function returns the hat matrix. Joint estimation of the hat matrix is performed combined  the hat matrix calculated in the \code{\link{fregre.np.cv}} function.
+
+The smooth  functions  \eqn{f(.)} are estimated nonparametrically  using a iterative local scoring algorithm by applying  Nadaraya-Watson weighted kernel smoothers using \code{\link{fregre.np.cv}} in each step, see Febrero-Bande and Gonzalez-Manteiga (2011) for more details.  
+
+Consider the fitted response \eqn{\hat{Y}=g^{-1}(H_{Q}y)}{g(Y.est)=Hy}, where \eqn{H_{Q}}{H} is the weighted hat matrix.\cr
+Opsomer and Ruppert (1997)  solves a system  of equations for fit the unknowns \eqn{f(\cdot)}{f(.)} computing the additive smoother matrix \eqn{H_k}{H_k} such that \eqn{\hat{f}_k (X^k)=H_{k}Y}{f.est_k(X_k)=H_k Y} and \eqn{H_Q=H_1+,\cdots,+H_q}{H= H_1+,...,+H_q}. The additive model is fitted as follows:
+     \deqn{\hat{Y}=g^{-1}\Big(\sum_i^q \hat{f_i}(X_i)\Big)}{g(y.est)=\sum(i:q) f.est_i(X_i)}
+
 }
 \value{
 \item{result}{ List of non-parametric estimation by covariate.}
@@ -44,11 +51,11 @@ The \code{kgam.H} function returns the hat matrix. Joint estimation of the hat m
 \item{eqrank}{  List that containing the variables in the model.}
 \item{prior.weights}{ Asymmetric kernel used.}
 \item{y}{ Scalar response.}
-\item{H}{ Hat matrix.}
+\item{H}{ Hat matrix, see Opsomer  and Ruppert(1997) for more details.}
 \item{converged}{ conv.}
 }
 \references{
-Febrero-Bande M. and Gonzalez-Maneiga W. (2011). \emph{Generalized Additive Models for Functional Data}. Recent Advances in functional Data Analyisis and Related Topics. Physica-Velag. \cr
+Febrero-Bande M. and Gonzalez-Manteiga W. (2011). \emph{Generalized Additive Models for Functional Data}. Recent Advances in functional Data Analyisis and Related Topics. Physica-Velag. \cr
 McCullagh and Nelder (1989), \emph{Generalized Linear Models} 2nd ed. Chapman and Hall. \cr
 Opsomer J.D. and Ruppert D.(1997). \emph{Fitting a bivariate additive model by local polynomial regression}.Annals of Statistics, \code{25}, 186-211.
 }
@@ -56,17 +63,38 @@ Opsomer J.D. and Ruppert D.(1997). \emph{Fitting a bivariate additive model by l
 Febrero-Bande, M. and Oviedo de la Fuente, M.
 }
 \seealso{
-See Also as:  \code{\link{fregre.glm}} and  \code{\link{fregre.np.cv}}\cr
+See Also as:   \code{\link{fregre.gsam}}, \code{\link{fregre.glm}} and  \code{\link{fregre.np.cv}}\cr
 }
 \examples{
 data(tecator)
-ab=tecator$absorp.fdata
-ab1=fdata.deriv(ab,1)
+ab=tecator$absorp.fdata[1:100]
 ab2=fdata.deriv(ab,2)
-yfat=as.integer(cut(tecator$y[,"Fat"],c(0,15,100)))-1
-# Ajuste simple
-xlist=list("df"=data.frame(yfat),"ab2"=ab2,"ab"=ab)
-f<-yfat~ab+ab2
-res=fregre.kgam(f,data=xlist,family=binomial("logit"),control=list(maxit=2))
+yfat=tecator$y[1:100,"Fat"]
+
+# Example 1: # Changing the argument par.np and family
+yfat.cat=ifelse(yfat<15,0,1)
+xlist=list("df"=data.frame(yfat.cat),"ab"=ab,"ab2"=ab2)
+f2<-yfat.cat~ab+ab2
+
+par.NP<-list("ab"=list(Ker=AKer.norm,type.S="S.NW"),
+"ab2"=list(Ker=AKer.norm,type.S="S.NW"))
+res2=fregre.kgam(f2,family=binomial(),data=xlist,
+par.np=par.NP)
+res2
+
+## Example 3: Changing the argument par.metric and family link
+# par.metric=list("ab"=list(metric=semimetric.deriv,nderiv=2,nbasis=15),
+# "ab2"=list("metric"=semimetric.basis))
+# res3=fregre.kgam(f2,family=binomial("probit"),data=xlist,
+# par.metric=par.metric,control=list(maxit=2,trace=FALSE))
+# summary(res3)
+
+## Example 3: Gaussian family (by default)
+## Only 1 iteration (by default maxit=100)
+# xlist=list("df"=data.frame(yfat),"ab"=ab,"ab2"=ab2)
+# f<-yfat~ab+ab2
+# res=fregre.kgam(f,data=xlist,control=list(maxit=1,trace=FALSE))
+# res
+
 }
 \keyword{regression}

@@ -59,7 +59,7 @@ Summary function for  \code{\link{fregre.pc}}, \code{\link{fregre.basis}}, \code
 \examples{
 
 # Ex 1. Simulated data
-n= 500;tt= seq(0,1,len=101)
+n= 200;tt= seq(0,1,len=101)
 x0<-rproc2fdata(n,tt,sigma="wiener")
 x1<-rproc2fdata(n,tt,sigma=0.1)
 x<-x0*3+x1
@@ -69,12 +69,13 @@ y<-inprod.fdata(x,fbeta)+rnorm(n,sd=0.1)
 
 # Functional regression
 res=fregre.pc(x,y,l=c(1:5))
-summary.fregre.fd(res)
-summary.fregre.fd(res,3)
-summary.fregre.fd(res,3,draw=FALSE)
-summary.fregre.fd(res,3,ask=TRUE)
+summary(res,3,ask=TRUE)
 
-res2=fregre.pls(x,y,l=c(1:4))
-summary.fregre.fd(res2)
+# res2=fregre.pls(x,y,l=c(1:4))
+# summary(res2)
+
+# res3=fregre.pls(x,y)
+# summary(res3)
+
 }
 \keyword{print}

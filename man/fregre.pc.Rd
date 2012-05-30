@@ -3,7 +3,12 @@
 \alias{fregre.pc}
 \title{ Functional (Ridge) Regression with scalar response using Principal Components Analysis.}
 \description{
- 	Computes functional (ridge) regression between functional explanatory variables and scalar response using Principal Components Analysis.
+Computes functional (ridge) regression between functional explanatory variable \eqn{X(t)} and scalar response \eqn{Y} using Principal Components Analysis. 	
+
+\deqn{Y=\big<X,\beta\big>+\epsilon=\int_{T}{X(t)\beta(t)dt+\epsilon}}{Y=<X,\beta>+\epsilon}
+
+where \eqn{ \big<  \cdot , \cdot \big>}{<.,.>} denotes the inner product on \eqn{L_2} and \eqn{\epsilon} are random errors with mean zero , finite variance \eqn{\sigma^2} and \eqn{E[X(t)\epsilon]=0}{E[X(t)\epsilon]=0}.
+ 
 }
 \usage{
 fregre.pc(fdataobj, y, l = NULL,rn = 0, ...) 
@@ -17,8 +22,19 @@ fregre.pc(fdataobj, y, l = NULL,rn = 0, ...)
   \item{\dots}{ Further arguments passed to or from other methods.}
 }
 \details{
-The principal components are calculated by \code{\link{svd}} decomposition in the \code{\link{fdata2pc}} or \code{\link{fdata2pc}}functions.  \code{rn} controls the amount of shrinkage.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%se puede pasar una base en lugar del dato fucnional
+The function computes the \eqn{\left\{\nu_k\right\}_{k=1}^{\infty}}{\nu_1,...,\nu_\infty} orthonormal basis of functional principal components to represent the functional data as \eqn{X_i(t)=\sum_{k=1}^{\infty}\gamma_{ik}\nu_k}{X(t)=\sum_(k=1:\infty) \gamma_k \nu_k} and the functional parameter as \eqn{\beta(t)=\sum_{k=1}^{\infty}\beta_k\nu_k}{\beta(t)=\sum_(k=1:\infty) \beta_k \nu_k}, where \eqn{\gamma_{ik}=\Big< X_i(t),\nu_k\Big>}{\gamma_k= < X(t), \nu_k >} and \eqn{\beta_{k}=\Big<\beta,\nu_k\Big>}{\beta_k=<\beta,\nu_k>}. \cr
+
+The estimation of \eqn{\beta(t)} can be made by a few principal components (PC) under the assumption that \eqn{\beta_{k}=0}, for \eqn{k>k_n}  and the integral can be approximated by:\cr
+    
+\deqn{\hat{y}=\Big<X,\hat{\beta} \Big>=\sum_{k=1}^{k_{n}}{\gamma_{ik}\hat{\beta}_{k}}}{y.est= < X ,\beta.est > = \sum_{k=1:k_n} \gamma_{ik}\beta.est_k}
+where, \deqn{\hat{\beta}_{(1:k_{n})}=\sum_{k=1}^{k_n}\frac{\gamma_{.k}^{T}y}{n\lambda_{k}}}{\beta.est_(1:k_n)=\sum_{k=1:k_n} \gamma_{.k}' y / (n\lambda_k)}
+and  \eqn{\gamma_{(1:k_{n})}}{\gamma_(1:k_n)} is the (\eqn{n},\eqn{k_{n}}) matrix with \eqn{k_n} principal components estimation of \eqn{\beta} scores and \eqn{\lambda_i} the eigenvalues of the PC.\cr
+
+\deqn{\hat{y}=\Big<X,\hat{\beta^{Ridge}} \Big>=\sum_{k=1}^{k_{n}}{\gamma_{ik}\hat{\beta}_{k}}}{y.est=<X,\beta.est^{Ridge}>=\sum_{k=1:k_n} \gamma_{ik} \beta.est_k}
+where, \deqn{\hat{\beta}_{(1:k_{n})}=\sum_{k=1}^{k_n}\frac{\gamma_{.k}^{T}y}{n\lambda_{k}+rn}}{\beta.est_(1:k_{n})=\sum_{k=1:k_n} \gamma_{.k}'y / (n \lambda_k+rn)}
+
+The response can also be fitted by: \deqn{\hat{y}=\sum_{k=1}^{k_n} \nu_k^{T}(\nu_k^{T}\nu_k)^{-1}\nu_k^{T}y}{y.est=\sum_{k=1:k_n} \nu_k'(\nu_k'\nu_k)^{-1}\nu_k'y}\cr
+and for ridge regression by: \deqn{\hat{y}=\nu_k^{T}(\nu_k^{T}\nu_k+rnI)^{-1}\nu_k^{T}y}{y.est=\nu_k'(\nu_k'\nu_k+rnI)^{-1}\nu_k'y}
 }
 \value{
 Return:\cr
@@ -47,8 +63,7 @@ Cai TT, Hall P. 2006. \emph{Prediction in functional linear regression}. Annals 
 
 Cardot H, Ferraty F, Sarda P. 1999. \emph{Functional linear model}. Statistics and Probability Letters 45: 11{-}22.\cr 
 
-Hall P, Hosseini{-}Nasab M. 2006. \emph{On properties of functional principal components analysis}. Journal of the Royal Statistical
-Society B 68: 109{-}126.
+Hall P, Hosseini{-}Nasab M. 2006. \emph{On properties of functional principal components analysis}. Journal of the Royal Statistical Society B 68: 109{-}126.
 }
 \author{
 Febrero-Bande, M. and Oviedo de la Fuente, M.

@@ -6,8 +6,8 @@
 \alias{semimetric.hshift}
 \alias{semimetric.mplsr}
 \alias{semimetric.pca}
-\alias{mplsr}
-\alias{hshift}
+%\alias{mplsr}
+%\alias{hshift}
 \title{Proximities between  functional data (semi-metrics)}
 \description{
 Computes semi-metric distances of functional data based on Ferraty F and Vieu, P. (2006).\cr

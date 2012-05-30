@@ -3,14 +3,18 @@
 \alias{fregre.basis}
 \title{ Functional Regression with scalar response using basis representation.}
 \description{
-	Computes functional regression between functional explanatory variable and scalar response using basis representation.
+Computes functional regression between functional explanatory variable \eqn{X(t)} and scalar response \eqn{Y} using basis representation. 	
+
+\deqn{Y=\big<X,\beta\big>+\epsilon=\int_{T}{X(t)\beta(t)dt+\epsilon}}{Y=<X,\beta>+\epsilon}
+
+where \eqn{ \big< \cdot , \cdot \big>}{<.,.>} denotes the inner product on \eqn{L_2} and \eqn{\epsilon} are random errors with mean zero, finite variance \eqn{\sigma^2} and \eqn{E[X(t)\epsilon]=0}{E[X(t)\epsilon]=0}.
 }
 \usage{
 fregre.basis(fdataobj,y,basis.x=NULL,basis.b=NULL,
 lambda=0,Lfdobj=vec2Lfd(c(0,0),rtt),...)
 }
 \arguments{
-  \item{fdataobj}{ \code{\link{fdata}} class object.}  
+  \item{fdataobj}{ \code{\link{fdata}} class object.} 
 	\item{y}{ Scalar response with length \code{n}.}
 	\item{basis.x}{ Basis for functional explanatory data \code{fdataobj}.}
 	\item{basis.b}{  Basis for functional beta parameter.}
@@ -18,8 +22,22 @@ lambda=0,Lfdobj=vec2Lfd(c(0,0),rtt),...)
   \item{Lfdobj}{ See \link[fda]{eval.penalty}.}   	
   \item{\dots}{ Further arguments passed to or from other methods.}
 }
-\details{ If \code{basis=}\emph{NULL} creates the bspline basis. \cr
-If the functional covariate \code{fdataobj} is in a format \emph{"raw data"}, such as matrix or data.frame, creates an object of class "fdata" with default attributes, see \code{\link{fdata}}.
+\details{
+%Fits functional regression between functional explanatory variable and scalar response using basis representation.
+The function uses the basis representation proposed by Ramsay and Silverman (2005) to model the relationship between the scalar response and the functional covariate  by basis representation of the observed functional data \eqn{X(t)\approx\sum_{k=1}^{k_{n1}} c_k \xi_k(t)}{X(t)} and the unknown functional parameter \eqn{\beta(t)\approx\sum_{k=1}^{k_{n2}} b_k \phi_k(t)}{\beta(t)}. \cr
+
+The functional linear models estimated by the expression:
+\deqn{\hat{y}= \big< X,\hat{\beta} \big> = C^{T}\psi(t)\phi^{T}(t)\hat{b}=\tilde{X}\hat{b}}{y.est= < X,\beta.est > = C'\psi\phi' \beta.est=Z\beta.est}
+where \eqn{\tilde{X}(t)=C^{T}\psi(t)\phi^{T}(t)}{Z=C'\psi\phi'}, and \eqn{\hat{b}=(\tilde{X}^{T}\tilde{X})^{-1}\tilde{X}^{T}y}{\beta.est=(Z'Z)^{-1}Z'y} and so, \eqn{\hat{y}=\tilde{X}\hat{b}=\tilde{X}(\tilde{X}^{T}\tilde{X})^{-1}\tilde{X}^{T}y=Hy}{y.est=Z(Z'Z)^{-1}Z'y} where	\eqn{H} is the hat matrix with degrees of freedom: \eqn{df=tr(H)}.\cr
+
+If  \eqn{\lambda>0}{\lambda>0} then \code{fregre.basis} incorporates a roughness penalty: \cr
+\eqn{\hat{y}=\tilde{X}\hat{b}=\tilde{X}(\tilde{X}^{T}\tilde{X}+\lambda R_0)^{-1}\tilde{X}^{T}y= H_{\lambda}y}{y.est=Z(Z'Z+\lambda R_0)^{-1} Z'y= H_{\lambda}y} where \eqn{R_0} is the penalty matrix.\cr
+
+This  function  allows covariates of class \code{fdata}, \code{matrix},  \code{data.frame} or directly covariates of class \code{fd}.  The function also gives default values to arguments \code{basis.x} and  \code{basis.b} for representation on the basis of functional data \eqn{X(t)} and the functional parameter \eqn{\beta(t)}, respectively. 
+
+If \code{basis=}\code{NULL} creates the \code{bspline} basis by \code{\link{create.bspline.basis}}. \cr
+If the functional covariate \code{fdataobj} is a  matrix or data.frame, it creates an object of class "fdata" with default attributes, see \code{\link{fdata}}.\cr
+If \code{basis.x$type=``fourier''} and \code{basis.b$type=``fourier''}, the basis are orthonormal and the function decreases the number of fourier basis elements on the \eqn{min(k_{n1},k_{n2})}{min(k.x,k_b)}, where \eqn{k_{n1}}{k.x} and \eqn{k_{n2}}{k.b} are the number of basis element of  \code{basis.x} and  \code{basis.b} respectively.
 }
 \value{
 Return:\cr
@@ -45,7 +63,7 @@ Febrero-Bande, M. and Oviedo de la Fuente, M.
 }
 \seealso{
 See Also as:   \code{\link{fregre.basis.cv}}, \code{\link{summary.fregre.fd}} and \code{\link{predict.fregre.fd}}.\cr
-Alternative method: \code{\link{fregre.pc}} and   \code{\link{fregre.np}}.
+Alternative method: \code{\link{fregre.pc}} and \code{\link{fregre.np}}.
 }
 \examples{
 
@@ -57,8 +75,6 @@ ind=1:129
 x=absorp[ind,]
 y=tecator$y$Fat[ind]
 tt=absorp[["argvals"]]
-
-
 res1=fregre.basis(x,y)
 summary(res1)
 basis1=create.bspline.basis(rangeval=range(tt),nbasis=19)

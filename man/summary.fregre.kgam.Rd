@@ -56,15 +56,18 @@ Febrero-Bande, M. and Oviedo de la Fuente, M.
 Summary function for  \code{\link{fregre.kgam}}.
 }
 \examples{
+
 data(tecator)
-ab=tecator$absorp.fdata
+ind<-1:129
+ab=tecator$absorp.fdata[ind]
 ab2=fdata.deriv(ab,2)
-yfat=as.integer(cut(tecator$y[,"Fat"],c(0,15,100)))-1
-# Ajuste simple
+yfat=as.integer(cut(tecator$y[ind,"Fat"],c(0,15,100)))-1
 xlist=list("df"=data.frame(yfat),"ab2"=ab2,"ab"=ab)
 f<-yfat~ab+ab2
 res=fregre.kgam(f,data=xlist,family=binomial("logit"),control=list(maxit=2))
 summary(res)
 res
+
+
 }
 \keyword{print}

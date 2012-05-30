@@ -4,6 +4,16 @@
 \title{ Fitting Functional Linear Models}
 \description{
 	Computes functional regression between functional (and non functional) explanatory variables and scalar response using basis representation.
+
+This section is presented as an extension of the linear regression models: \code{\link{fregre.pc}}, \code{\link{fregre.pls}} and \code{\link{fregre.basis}}. Now, the scalar response \eqn{Y} is estimated by more than one functional covariate \eqn{X^j(t)}  and  also more than one  non functional covariate \eqn{Z^j}. The regression model is given by:
+\deqn{E[Y|X,Z]=\alpha+\sum_{j=1}^{p}\beta_{j}Z^{j}+\sum_{k=1}^{q}\frac{1}{\sqrt{T_k}}\int_{T_k}{X^{k}(t)\beta_{k}(t)dt}
+}{E[Y|X,Z]=\alpha+\sum_j \beta_j Z^j + \sum_k <X^k,\beta_k>}
+
+where \eqn{Z=\left[ Z^1,\cdots,Z^p  \right]}{Z=[Z^1,...,Z^p]} are the non functional covariates, \eqn{X(t)=\left[ X^{1}(t_1),\cdots,X^{q}(t_q)  \right]}{X(t)=[X^1(t),...,X^q(t)]} are the functional ones and \eqn{\epsilon} are random errors with mean zero , finite variance \eqn{\sigma^2} and \eqn{E[X(t)\epsilon]=0}{E[X(t)\epsilon]=0}. 
+%The functional linear model is estimated by the expression:
+%\deqn{\hat{y}=\tilde{X}\hat{b}=\tilde{X}(\tilde{X}^{T}\tilde{X})^{-1}\tilde{X}^{T}y=Hy}
+%where \eqn{\tilde{X}=\left[Z^{1},\cdots,Z^{p},(C^{1})^{T}\psi(t_1)\phi^{T}(t_1),\cdots,(C^{q})^{T}\psi(t_q)\phi^{T}(t_q)\right]}
+%are the non functional covariates and the basis representation of functional covariates .
 }
 \usage{
 fregre.lm(formula,data,basis.x=NULL,basis.b=NULL,...)
@@ -13,15 +23,13 @@ fregre.lm(formula,data,basis.x=NULL,basis.b=NULL,...)
   \item{data}{ List that containing the variables in the model. }
 	\item{basis.x}{ List of basis for functional explanatory data estimation.}
 	\item{basis.b}{ List of basis for functional beta parameter estimation.}
-
   \item{\dots}{ Further arguments passed to or from other methods.}
 }
 \details{ 
-The first item in the \code{data} list  is called \emph{"df"} and  is a data frame  with the response and non functional explanatory variables, as \code{\link{lm}}.\cr
+The first item in the \code{data} list  is called \emph{"df"} and  is a data frame  with the response and non functional explanatory variables, as \code{\link{lm}}. Functional covariates of class  \code{fdata} or \code{fd} are introduced in the following items in the \code{data} list.\cr
 
-Functional covariates of class  \code{fdata} or \code{fd} are introduced in the following items in the \code{data} list.\cr
-\code{basis.x} is a list of basis  for represent each functional covariate. The basis object can be created by the function: \code{\link{create.pc.basis}}, \code{\link{pca.fd}} \code{\link{create.pc.basis}}, \code{\link{create.fdata.basis}} o  \code{\link{create.basis}}\cr
-\code{basis.b} is a list of basis  for represent each functional beta parameter. If \code{basis.x} is a list of functional principal components basis (see \code{\link{create.pc.basis}} or \code{\link{pca.fd}}) the argument \code{basis.b} \emph{(is unnecessary and)} is ignored. 
+\code{basis.x} is a list of basis  for represent each functional covariate. The basis object can be created by the function: \code{\link{create.pc.basis}}, \code{\link{pca.fd}} \code{\link{create.pc.basis}}, \code{\link{create.fdata.basis}} or  \code{\link{create.basis}}.\cr
+\code{basis.b} is a list of basis  for represent each functional \eqn{\beta_k} parameter. If \code{basis.x} is a list of functional principal components basis (see \code{\link{create.pc.basis}} or \code{\link{pca.fd}}) the argument \code{basis.b} \emph{(is unnecessary and)} is ignored. 
 }
 \value{
 Return \code{lm} object plus:\cr

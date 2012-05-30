@@ -29,7 +29,7 @@ nn <- nrow(new.fdataobj)
  yp<- a1+b1
  }
  else {
-  if (object$call[[1]]=="fregre.pls" | object$call[[1]]=="fregre.pls2") {
+  if (object$call[[1]]=="fregre.pls" ) {
   a1<-object$coefficients[1]*rep(1,len=nrow(newx))
   object$beta.est$data<-matrix(object$beta.est$data,nrow=1)
 #  b2<-new.fdataobj$data%*%t(object$beta.est$data)
@@ -47,6 +47,9 @@ nn <- nrow(new.fdataobj)
   C=t(x.fd$coefs)
   if (is.vector(object$b.est)) object$b.est<-matrix(object$b.est,ncol=1,nrow=length(object$b.est))
   yp=object$a.est* rep(1,len=nn) + C%*%object$J%*%object$b.est
+   if (isfdata) {
+    return(fdata(yp,y$argvals,y$rtt,y$names))
+    }
   yp <- matrix(yp,ncol=1,nrow=nn)
   }
  else {
@@ -76,6 +79,7 @@ nn <- nrow(new.fdataobj)
   par.S$tt<-nmdist
   par.S$cv=FALSE
   H<-do.call(a2,par.S)
+#print(y.mat)
   yp=H%*%y.mat
  if (isfdata) {
     return(fdata(yp,y$argvals,y$rtt,y$names))
