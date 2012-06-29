@@ -183,7 +183,7 @@ if (sequen) {
  rn.min<-rn[min.rn]
  fregre=fregre.pc(fdataobj,y,l=pc.opt,rn=rn.min,...)
  return(list("fregre.pc"=fregre,pc.opt = pc.opt3,rn.opt=rn.min,PC.order=pc.opt2,
- MSC.order=MSC2))
+ MSC.order=MSC2,criteria=criteria))
 }
 }
 

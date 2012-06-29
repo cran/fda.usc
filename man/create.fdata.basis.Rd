@@ -9,8 +9,8 @@
 \usage{
 create.fdata.basis(fdataobj,l=1:5,maxl=max(l),type.basis="bspline",
 rangeval=fdataobj$rangeval,class.out="fd")
-create.pc.basis(fdataobj,l=1:5,norm=TRUE,basis=NULL,...)
-create.pls.basis(fdataobj, y, l = 1:5) 
+create.pc.basis(fdataobj,l=1:5,norm=TRUE,basis=NULL,rn=0,...)
+create.pls.basis(fdataobj, y, l = 1:5,rn=0) 
 create.raw.fdata(fdataobj, l = 1:ncol(fdataobj))
 }
 \arguments{
@@ -23,6 +23,7 @@ create.raw.fdata(fdataobj, l = 1:ncol(fdataobj))
   \item{norm}{=TRUE the norm of eigenvectors \code{basis} is 1.} 
   \item{class.out}{=="fd" basisfd class, =="fdata" fdata class.}
 	\item{basis}{ "fd" basis object.}    
+   \item{rn}{ Ridge parameter.}    
  \item{\dots}{ Further arguments passed to or from other methods.}
 }
 %\details{ }

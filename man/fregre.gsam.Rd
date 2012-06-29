@@ -61,7 +61,7 @@ Febrero-Bande, M. and Oviedo de la Fuente, M.
 }
 \seealso{
 See Also as:  \code{\link{predict.fregre.gsam}} and \code{\link{summary.gam}}.\cr
-Alternative methods: \code{\link{fregre.glm}} and \code{\link{fregre.kgam}}.
+Alternative methods: \code{\link{fregre.glm}} and \code{\link{fregre.gkam}}.
 }
 \examples{
 
@@ -69,7 +69,7 @@ data(tecator)
 x=tecator$absorp.fdata
 #tecator$y$Fat=floor(tecator$y$Fat)
 x.d1<-fdata.deriv(x)
-tt=x[["argvals"]]
+tt<-x[["argvals"]]
 dataf=as.data.frame(tecator$y)
 nbasis.x=11;nbasis.b=5
 basis1=create.bspline.basis(rangeval=range(tt),nbasis=nbasis.x)
@@ -80,9 +80,11 @@ basis.b=list("x"=basis2,"x.d1"=basis2)
 ldata=list("df"=dataf,"x"=x,"x.d1"=x.d1)
 res=fregre.gsam(Fat~Water+s(Protein)+x+s(x.d1),ldata,family=gaussian(),
 basis.x=basis.x,basis.b=basis.b)
-res2=fregre.gsam(Fat~te(Protein,k=3)+x,data=ldata,family=gaussian())
 res
-summary(res2)
+
+## Not run
+# res2=fregre.gsam(Fat~te(Protein,k=3)+x,data=ldata,family=gaussian())
+# summary(res2)
 
 ##  dropind basis pc
 # basis.pc0=create.pc.basis(x,c(2,4,7))

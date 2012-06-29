@@ -34,7 +34,7 @@ rangeval=fdataobj$rangeval,class.out="fd"){
 #}
 #######################
 #######################
-create.pc.basis<-function(fdataobj,l=1:5,norm=TRUE,basis=NULL,...){
+create.pc.basis<-function(fdataobj,l=1:5,norm=TRUE,basis=NULL,rn=0,...){
  tt<-fdataobj$argvals
  rtt<-fdataobj$rangeval
  dropind=NULL
@@ -48,15 +48,19 @@ create.pc.basis<-function(fdataobj,l=1:5,norm=TRUE,basis=NULL,...){
  if (is.null(basis)) {
    pc.fdata<-fdata(pc.fdata,tt,rtt,fdataobj$names)
    out <- list(fdataobj.pc=pc.fdata,basis = basis.pc, x = pc$x, mean = pc$mean,
-   fdataobj.cen = pc$fdataobj.cen,fdataobj = pc$fdataobj,l = l,type = "pc")
+   fdataobj.cen = pc$fdataobj.cen,fdataobj = pc$fdataobj,l = l,
+   rn=rn,type = "pc")
    class(out) <- "fdata.comp"
    }
  else {
       fdobj<- Data2fd(argvals = tt, y = t(pc.fdata),basisobj = basis)
       out<-list()
       out$harmonics<-fdobj
+      colnames(out$harmonics$coefs)<-rownames(fdataobj$data)
       out$values<-pc$newd^2
       out$scores<-pc$x[,l]
+      rownames(out$scores)<-rownames(fdataobj$data)
+      out$rn<-rn
       out$varprop<-out$values[l]/sum(out$values)
       out$meanfd<- Data2fd(argvals = tt, y = pc$mean$data[1,],basisobj = basis)
 #      fdobj$type = "pca"
@@ -68,13 +72,13 @@ create.pc.basis<-function(fdataobj,l=1:5,norm=TRUE,basis=NULL,...){
 
 #######################
 #######################
-create.pls.basis<-function(fdataobj,y,l=1:5){
+create.pls.basis<-function(fdataobj,y,l=1:5,rn=0){
      pls<-fdata2pls(fdataobj,y,ncomp=max(l))
      basis=pls$rotation[l,]
      rownames(basis$data)<-paste("PLS",l,sep="")
 #     if (length(l)==1)   x=as.matrix(pls$x[,l],ncol=1)
 #     else    x=pls$x[,l]
-return(list("basis"=basis,"x"=pls$x,"mean"=pls$mean,
+return(list("basis"=basis,"x"=pls$x,"mean"=pls$mean,"rn"=rn,
 "fdataobj.cen"=pls$"fdataobj.cen","fdataobj"=pls$fdataobj,
 "l"=l,"type"="pls","y"=y))
 }

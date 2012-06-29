@@ -17,6 +17,7 @@ names<-fdataobj[["names"]]
     df <- array(NA, dim = c(lenh))
     for (i in 1:lenh) {
         S2 <- type.S(tt, h[i], Ker)
+        if (is.null(par.CV$trim)) par.CV$trim<-0
         gcv[i] <- type.CV(fdataobj,S=S2, W=W,trim=par.CV$trim,draw=par.CV$draw, ...)#####
         df[i]<-traza(S2)
     }

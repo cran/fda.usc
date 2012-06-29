@@ -1,4 +1,4 @@
-fregre.kgam=function (formula,family = gaussian(),data, weights= rep(1,nobs),
+fregre.gkam=function (formula,family = gaussian(),data, weights= rep(1,nobs),
      par.metric = NULL,par.np=NULL,offset=NULL,
      control = list(maxit = 100,epsilon = 0.001, trace = FALSE, inverse="solve"),...)
 {
@@ -107,7 +107,8 @@ if (family$family=="binomial") {
               prob = c(0.01,0.66),metric =  metric[[namesx[i]]])
               }
     }
-    eta = apply(X, 1, sum)
+#    eta = apply(X, 1, sum)
+     eta = rowSums(X)
     mu = linkinv(eta)
     conv <- FALSE
     for (iter in 1L:control$maxit) {
@@ -134,9 +135,8 @@ if (family$family=="binomial") {
    #  z <- (eta - offset)[good] + (y - mu)[good]/mu.eta.val[good]        #GLM
      ytilde <- (eta - offset)[good] + (y - mu)[good]/mu.eta.val[good]
 #        ytilde <- eta[good] + (y - mu)[good]/mu.eta.val[good] #ANTES
-        w <- sqrt((weights[good] * mu.eta.val[good]^2)/variance(mu)[good])##################################################3
-        X[, nvars + intercept] = rep(mean(ytilde - apply(X[good,
-            1:nvars, drop = FALSE], 1, sum)), nobs)
+        w <- sqrt((weights[good] * mu.eta.val[good]^2)/variance(mu)[good])##################################################
+        X[, nvars + intercept] = rep(mean(ytilde - apply(X[good,1:nvars, drop = FALSE], 1, sum)), nobs)
         if (control$trace)
             cat("#------------------------------------------------\n")
         if (control$trace)
@@ -154,7 +154,6 @@ if (family$family=="binomial") {
 #            attributes(mgood)<-c(attributes(mgood),attributes(metric[[namesx[i]]])[-1])
             h<-par.np2[[namesx[i]]]$h
              if (control$trace)   cat("Range h:", range(h), length(h), "\n")
-# se pasa la matriz de distancias  en metric
 #   res2 = fregre.np.cv(xfunc, z, h = h, type.CV = dev.S,
 #                metric = mgood, par.CV = list(obs = y[good],
 #                  family = family, off = off, offdf = offdf,weights = diag(weights)))
@@ -173,13 +172,14 @@ if (family$family=="binomial") {
            if (control$trace)
             cat("Var:",namesx[[i]]," h.opt:", res$h.opt," df:",res$df,"\n")
             
-           eqrank[namesx[i]] = res$df
-           X[good,namesx[i]] = res$fitted.values
-           result[[namesx[i]]] = res
+           eqrank[namesx[i]] <- res$df
+           X[good,namesx[i]] <- res$fitted.values
+           result[[namesx[i]]] <- res
         }
         X[, nvars + intercept] = rep(mean(ytilde - apply(X[good,
             1:nvars, drop = FALSE], 1, sum)), nobs)
-        eta <- apply(X, 1, sum)
+#        eta <- apply(X, 1, sum)
+        eta <- rowSums(X)
         mu <- linkinv(eta <- eta + offset)
 #        mu <- linkinv(eta)
         mu.eta.val <- mu.eta(eta)
@@ -202,7 +202,8 @@ if (family$family=="binomial") {
                 }
               }
         }
-        cambio = apply((X - Xold)^2, 2, mean)
+#        cambio = apply((X - Xold)^2, 2, mean)
+        cambio = colMeans((X - Xold)^2)
         if (control$trace) {
             cat("Shift Iter:", iter, "EqRank:", sum(eqrank),
                 ngoodobs, "/", nobs, "\n")
@@ -220,7 +221,8 @@ if (family$family=="binomial") {
                     call. = FALSE)
                 ii <- ii + 1
                 X <- (X + Xold)/2
-                eta <- apply(X, 1, sum)
+#                eta <- apply(X, 1, sum)
+	         eta <- rowSums(X)
                 mu <- linkinv(eta)
             }
             boundary <- TRUE
@@ -252,7 +254,8 @@ if (family$family=="binomial") {
             warning("kgam.fit: fitted rates numerically 0 occurred",
                 call. = FALSE)
     }
-    residuals <- (y - mu)/mu.eta(eta) ##### ok??
+    residuals <- (y - mu)/
+    (eta) ##### ok??
     nr <- min(sum(good), nvars)
     names(residuals) <- ynames
     names(mu) <- ynames
@@ -276,7 +279,7 @@ if (family$family=="binomial") {
         linear.predictors = eta, deviance = dev, aic = aic.model,
         null.deviance = nulldev, iter = iter, weights = wt, eqrank = eqrank,
         prior.weights = weights, y = y0, converged = conv,H=H)
-    class(res) <- "fregre.kgam"
+    class(res) <- "fregre.gkam"
     res
 }
 

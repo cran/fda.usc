@@ -1,12 +1,12 @@
-\name{classif.kgam}
+\name{classif.gkam}
 \Rdversion{1.1}
-\alias{classif.kgam}
-\title{ Classification Fitting Functional Generalized Additive Models}
+\alias{classif.gkam}
+\title{ Classification Fitting Functional Generalized Kernel Additive Models}
 \description{
 	Computes functional classification using functional explanatory variables using backfitting algorithm.
 }
 \usage{
-classif.kgam(formula,family = binomial(),data,weights = rep(1, nobs),
+classif.gkam(formula,family = binomial(),data,weights = rep(1, nobs),
  par.metric = NULL,par.np=NULL, offset=NULL,
  control = list(maxit = 100,epsilon = 0.001, trace = FALSE ,inverse="solve"),...)
 
@@ -45,7 +45,7 @@ Opsomer J.D. and Ruppert D.(1997). \emph{Fitting a bivariate additive model by l
 Febrero-Bande, M. and Oviedo de la Fuente, M.
 }
 \seealso{
-See Also as:  \code{\link{fregre.kgam}}.\cr
+See Also as:  \code{\link{fregre.gkam}}.\cr
 Alternative method: \code{\link{classif.glm}}.
 }
 \examples{
@@ -56,7 +56,7 @@ mlearn<-phoneme[["learn"]][1:100]
 glearn<-as.numeric(phoneme[["classlearn"]][1:100])
 dataf<-data.frame(glearn)
 dat=list("df"=dataf,"x"=mlearn)
-a1<-classif.kgam(glearn~x,data=dat)
+a1<-classif.gkam(glearn~x,data=dat)
 summary(a1)
 mtest<-phoneme[["test"]][1:100]
 gtest<-as.numeric(phoneme[["classtest"]][1:100])

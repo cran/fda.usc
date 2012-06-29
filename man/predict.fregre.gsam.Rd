@@ -40,16 +40,15 @@ Muller HG and Stadtmuller U. (2005). \emph{Generalized functional linear models.
 Febrero-Bande, M. and Oviedo de la Fuente, M.
 }
 \seealso{
-See Also as:  \code{\link{fregre.lm}}. \cr
+See Also as:  \code{\link{fregre.glm}} and  \code{\link{fregre.gkam}},. \cr
 }
 \examples{
 data(tecator)
 ind<-1:129
 data(tecator)
 x=tecator$absorp.fdata
-#tecator$y$Fat=floor(tecator$y$Fat)
 x.d1<-fdata.deriv(x)
-tt=x[["argvals"]]
+tt<-x[["argvals"]]
 dataf=as.data.frame(tecator$y)
 nbasis.x=11;nbasis.b=7
 basis1=create.bspline.basis(rangeval=range(tt),nbasis=nbasis.x)
@@ -67,18 +66,18 @@ b<-predict.fregre.gsam(res,ldata)
 points(a,tecator$y$Fat[ind],col=2)
 
 
-res=fregre.gsam(Fat~s(Water,k=3)+s(x.d1,k=3)+s(x,k=3),data=ldata,family=gaussian(),basis.x=basis.x,basis.b=basis.b)
-newldata=list("df"=dataf[-ind,],"x"=x[-ind],"x.d1"=x.d1[-ind])
-pred<-predict.fregre.gsam(res,newldata)
-plot(pred,tecator$y$Fat[-ind])
+# res=fregre.gsam(Fat~s(Water,k=3)+s(x.d1,k=3)+s(x,k=3),data=ldata,family=gaussian(),basis.x=basis.x,basis.b=basis.b)
+# newldata=list("df"=dataf[-ind,],"x"=x[-ind],"x.d1"=x.d1[-ind])
+# pred<-predict.fregre.gsam(res,newldata)
+# plot(pred,tecator$y$Fat[-ind])
 
-res.glm=fregre.glm(Fat~Water+x.d1+x,data=ldata,family=gaussian(),basis.x=basis.x,basis.b=basis.b)
-pred.glm<-predict.fregre.glm(res.glm,newldata)
-newy<-tecator$y$Fat[-ind]
-points(pred.glm,tecator$y$Fat[-ind],col=2)
+# res.glm=fregre.glm(Fat~Water+x.d1+x,data=ldata,family=gaussian(),basis.x=basis.x,basis.b=basis.b)
+# pred.glm<-predict.fregre.glm(res.glm,newldata)
+# newy<-tecator$y$Fat[-ind]
+# points(pred.glm,tecator$y$Fat[-ind],col=2)
 
-((1/length(newy))*sum((drop(newy)-pred)^2))/var(newy)
-((1/length(newy))*sum((newy-pred.glm)^2))/var(newy)                                                                                                                  
+# ((1/length(newy))*sum((drop(newy)-pred)^2))/var(newy)
+# ((1/length(newy))*sum((newy-pred.glm)^2))/var(newy)                                                                                                                  
 
 }
 \keyword{regression}

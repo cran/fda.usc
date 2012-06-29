@@ -167,14 +167,16 @@ for (i in 1:length(vfunc)) {
  else{
 	if(class(data[[vfunc[i]]])[1]=="fdata"){
      beta.est<-z$coefficients[name.coef[[vfunc[i]]]]*vs.list[[vfunc[i]]]
-     beta.est$data<-apply(beta.est$data,2,sum)
+#     beta.est$data<-apply(beta.est$data,2,sum)
+     beta.est$data<-colSums(beta.est$data)
      beta.est$names$main<-"beta.est"
      beta.est$data <- matrix(as.numeric(beta.est$data),nrow=1)
      beta.l[[vfunc[i]]]<-beta.est
      }
  else {
      beta.est<-z$coefficients[name.coef[[vfunc[i]]]]*t(vs.list[[vfunc[i]]])
-     beta.est<-apply(beta.est,2,sum)
+#     beta.est<-apply(beta.est,2,sum)
+     beta.est<-colSums(beta.est)
      beta.l[[vfunc[i]]]<-fd(beta.est,basis.x[[vfunc[i]]]$harmonics$basis)
       }
 }

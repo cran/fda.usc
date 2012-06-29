@@ -42,7 +42,8 @@ z<-rproc2fdata(nproj,t,sigma=proj,norm=TRUE,...)
    mtrim=matrix(NA,nrow=nl,ncol=m)
    for (j in 1:length(trim)) {
                     lista=which(dep>=quantile(dep,probs=trim[j],na.rm=TRUE))
-                    mtrim[j,]=apply(data[lista,],2,mean)
+#                    mtrim[j,]=apply(data[lista,],2,mean)
+                    mtrim[j,]=colMeans(data[lista,])
                         }
    tr<-paste("RP.tr",trim*100,"\u0025",sep="")
    med<-fdata(med,t,rtt,names1)

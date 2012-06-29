@@ -1,15 +1,15 @@
-\name{summary.fregre.kgam}
+\name{summary.fregre.gkam}
 \Rdversion{1.1}
-\alias{summary.fregre.kgam}
-\alias{print.fregre.kgam}
+\alias{summary.fregre.gkam}
+\alias{print.fregre.gkam}
 
-\title{ Summarizes information from fregre.kgam objects. }
+\title{ Summarizes information from fregre.gkam objects. }
 \description{
-	Summary function for \code{\link{fregre.kgam}} function.
+	Summary function for \code{\link{fregre.gkam}} function.
 }
 \usage{
-\method{summary}{fregre.kgam}(object,draw=TRUE,selec = NULL, times.influ = 3,\dots)
-\method{print}{fregre.kgam}(x, digits = max(3, getOption("digits") - 3),\dots)
+\method{summary}{fregre.gkam}(object,draw=TRUE,selec = NULL, times.influ = 3,\dots)
+\method{print}{fregre.gkam}(x, digits = max(3, getOption("digits") - 3),\dots)
 }
 \arguments{
   \item{object,x}{ Estimated by functional regression, \code{fregre.fd} object.}
@@ -53,20 +53,20 @@ If \code{ask}=FALSE draw graphs in one window, by default. If \code{ask}=TRUE, d
 Febrero-Bande, M. and Oviedo de la Fuente, M.
 }
 \seealso{
-Summary function for  \code{\link{fregre.kgam}}.
+Summary function for  \code{\link{fregre.gkam}}.
 }
 \examples{
-
-data(tecator)
-ind<-1:129
-ab=tecator$absorp.fdata[ind]
-ab2=fdata.deriv(ab,2)
-yfat=as.integer(cut(tecator$y[ind,"Fat"],c(0,15,100)))-1
-xlist=list("df"=data.frame(yfat),"ab2"=ab2,"ab"=ab)
-f<-yfat~ab+ab2
-res=fregre.kgam(f,data=xlist,family=binomial("logit"),control=list(maxit=2))
-summary(res)
-res
+## Not run
+# data(tecator)
+# ind<-1:129
+# ab=tecator$absorp.fdata[ind]
+# ab2=fdata.deriv(ab,2)
+# yfat=as.integer(cut(tecator$y[ind,"Fat"],c(0,15,100)))-1
+# xlist=list("df"=data.frame(yfat),"ab2"=ab2,"ab"=ab)
+# f<-yfat~ab+ab2
+# res=fregre.gkam(f,data=xlist,family=binomial("logit"),control=list(maxit=2))
+# summary(res)
+# res
 
 
 }

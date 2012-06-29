@@ -1,5 +1,5 @@
 \name{fda.usc-package}
-\Rdversion{0.9.8}
+\Rdversion{0.9.8.1}
 \alias{fda.usc-package}
 \alias{fda.usc}
 \docType{package}
@@ -81,18 +81,18 @@ The functions included in this section allow the estimation of different functio
   C.2. Functional  and non functional explanatory covariates.\cr
 The functions in this section extends those regression models in previous section in several ways.  \cr
 Semifunctional partial linear regression \code{\link{fregre.plm}}  is an extension of functional nonparameric regression  \code{\link{fregre.np}}  allowing  include non-functional variables.\cr
-Functional generalized additive model using backfitting algorithm \code{\link{fregre.kgam}} is an extension of functional nonparameric regression  \code{\link{fregre.np}}  allowing  include  more than one functional variables.\cr
+Functional generalized additive model using backfitting algorithm \code{\link{fregre.gkam}} is an extension of functional nonparameric regression  \code{\link{fregre.np}}  allowing  include  more than one functional variables.\cr
 Functional  linear regression \code{\link{fregre.lm}}, functional generalized linear regression \code{\link{fregre.glm}} and 
 functional generalized spectral additive model \code{\link{fregre.gsam}}  are an extensions of  \code{\link{fregre.basis}} and \code{\link{fregre.pc}} allowing  include  more than one functional variable and other non-functional variables, as \code{\link{lm}} or \code{\link{glm}} functions.\cr
 
 \tabular{ll}{
 \tab \code{\link{fregre.plm}}  \cr
-\tab \code{\link{fregre.kgam}}  \cr
+\tab \code{\link{fregre.gkam}}  \cr
 \tab \code{\link{fregre.lm}}  \cr
 \tab \code{\link{fregre.glm}}  \cr
 \tab \code{\link{fregre.gsam}}  \cr
 \tab \code{\link{predict.fregre.fd}} \cr
-\tab \code{\link{predict.fregre.kgam}} \cr
+\tab \code{\link{predict.fregre.gkam}} \cr
 \tab \code{\link{predict.fregre.plm}} \cr
 \tab \code{\link{predict.fregre.glm}} \cr
 \tab \code{\link{predict.fregre.gsam}} \cr
@@ -108,7 +108,7 @@ Package allows the estimation of the groups in a training set of functional data
 \tab \code{\link{classif.kernel}} \cr
 \tab \code{\link{classif.glm}} \cr
 \tab \code{\link{classif.gsam}} \cr
-\tab \code{\link{classif.kgam}} \cr
+\tab \code{\link{classif.gkam}} \cr
 \tab \code{\link{summary.classif}} \cr
 \tab \code{\link{predict.classif}} \cr
 }
@@ -148,8 +148,8 @@ This section allows the estimation of the groups in a  functional data set \code
 \tabular{ll}{
 Package: \tab fda.usc\cr
 Type: \tab Package\cr
-Version: \tab 0.9.8\cr
-Date: \tab 2012-05-30\cr
+Version: \tab 0.9.8.1\cr
+Date: \tab 2012-06-29\cr
 License: \tab GPL-2 \cr
 LazyLoad: \tab yes\cr
 }

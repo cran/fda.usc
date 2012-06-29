@@ -19,6 +19,7 @@
 \alias{rangeval}
 \alias{missing.fdata}
 \alias{omit.fdata}
+\alias{omit2.fdata}
 \title{ fda.usc internal functions}
 \description{Internal undocumentation functions for fda.usc package}
 \usage{

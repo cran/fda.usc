@@ -17,7 +17,8 @@ S.NW<-function (tt, h=NULL, Ker = Ker.norm,w=NULL,cv=FALSE) {
   k<-Ker(tt2)
   if (is.null(w)) w<-rep(1,len=ncol(tt))
   k1<-sweep(k,2,w,FUN="*")
-  S =k1/apply(k1,1,sum)
+#  S =k1/apply(k1,1,sum)
+  S =k1/rowSums(k1)
 return(S)
 }
 

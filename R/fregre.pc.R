@@ -11,14 +11,14 @@ if (class(fdataobj)=="fdata.comp") {
 
 
     x <- fdataobj[["data"]]
-    tt <- fdataobj[["argvals"]]
+    tt <- fdataobj[["argvals"]]                                                    
    }
 else {
  if (is.null(l)) l<- 1:3
  if (!is.fdata(fdataobj))    fdataobj = fdata(fdataobj)
-  omit<-omit.fdata(fdataobj,y)
-  fdataobj<-omit[[1]]
-  y<-omit[[2]]
+#  omit<-omit.fdata(fdataobj,y)
+#  fdataobj<-omit[[1]]
+#  y<-omit[[2]]
   tt<-fdataobj[["argvals"]]
   x<-fdataobj[["data"]]
   pc<-fdata2pc(fdataobj,ncomp=max(l),...)
@@ -73,7 +73,8 @@ if (rn>0) {
      coefs<-drop(coefs)
     names(coefs)<-c("Intercept",cnames)
     beta.est<-coefs[-1]*pc$rotation[l]
-    beta.est$data<-apply(beta.est$data,2,sum)
+#    beta.est$data<-apply(beta.est$data,2,sum)
+     beta.est$data<-colSums(beta.est$data)
     beta.est$names$main<-"beta.est"
     beta.est$data <- matrix(as.numeric(beta.est$data),nrow=1)
     e<-y-yp
@@ -117,7 +118,8 @@ else {
     for (i in 1:length(cnames)) pf <- paste(pf,"+",cnames[i],sep="")
     object.lm = lm(formula = pf, data =dataf , x = TRUE,y = TRUE)
     beta.est<-object.lm$coefficients[2:(lenl+1)]*pc$rotation[l]
-    beta.est$data<-apply(beta.est$data,2,sum)
+#    beta.est$data<-apply(beta.est$data,2,sum)
+     beta.est$data<-colSums(beta.est$data)
     beta.est$names$main<-"beta.est"
     beta.est$data <- matrix(as.numeric(beta.est$data),nrow=1)
 #    H<-diag(hat(Z, intercept = TRUE),ncol=n)

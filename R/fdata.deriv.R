@@ -1,10 +1,11 @@
 fdata.deriv<-function(fdataobj,nderiv=1,method="bspline",class.out='fdata'
 ,nbasis=NULL,...) {
  if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
-  nas1<-apply(fdataobj$data,1,count.na)
+ nas1<-apply(fdataobj$data,1,count.na)
  if (any(nas1))  stop("fdataobj contain ",sum(nas1)," curves with some NA value \n")
  DATA<-fdataobj[["data"]]
  tt=fdataobj[["argvals"]]
+  rtt=fdataobj[["rangeval"]]
  labels=fdataobj[["names"]]
  ndist=ncol(DATA)
  if (method=="diff") {
@@ -14,10 +15,11 @@ fdata.deriv<-function(fdataobj,nderiv=1,method="bspline",class.out='fdata'
    ab=matrix(NA,ncol=ndist,nrow=2)
    ab[1,2:ndist]=a
    ab[2,1:(ndist-1)]=a
-   res[i,]=apply(ab,2,mean,na.rm=TRUE)
+#   res[i,]=apply(ab,2,mean,na.rm=TRUE)
+   res[i,]=colMeans(ab,na.rm=TRUE)
   }
   labels$main<-paste("d(",labels$main,",",nderiv,")",sep="")
-  res<-fdata(res,tt,names=labels)
+  res<-fdata(res,tt,rtt,names=labels)
  }
   else {
       if (any(method==c("fmm", "periodic", "natural", "monoH.FC"))) {
@@ -27,7 +29,7 @@ fdata.deriv<-function(fdataobj,nderiv=1,method="bspline",class.out='fdata'
          res[i,]=f1(tt,deriv=nderiv)
         }
           labels$main<-paste("d(",labels$main,",",nderiv,")",sep="")
-         res<-fdata(res,tt,names=labels)
+         res<-fdata(res,tt,rtt,names=labels)
        }
       else{
       if (any(method==c("bspline","exponential", "fourier",
@@ -38,11 +40,12 @@ fdata.deriv<-function(fdataobj,nderiv=1,method="bspline",class.out='fdata'
       if (class.out=='fdata') {
          ff<-eval.fd(tt,res)
          labels$ylab<-paste("d(",labels$ylab,",",nderiv,")",sep="")
-         res=fdata(t(ff),tt,names=labels)
+         res=fdata(t(ff),tt,rtt,names=labels)
          }
       }
   }
 }
 res
 }
+
 

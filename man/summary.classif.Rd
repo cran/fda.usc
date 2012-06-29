@@ -56,7 +56,9 @@ mlearn<-phoneme[["learn"]]
 glearn<-phoneme[["classlearn"]]
 out=classif.knn(glearn,mlearn,knn=c(3,5,7))
 summary.classif(out)
-out2=classif.kernel(glearn,mlearn,h=2^(0:5))
-summary.classif(out2)
+
+## Not run
+# out2=classif.kernel(glearn,mlearn,h=2^(0:5))
+#summary.classif(out2)
 }
 \keyword{print}

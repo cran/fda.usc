@@ -1,5 +1,4 @@
 
-
 CV.S <-function (y, S, W = diag(ncol(S)), trim = 0, draw = FALSE,metric=metric.lp,...)
 {
     n = ncol(S)

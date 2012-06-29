@@ -19,7 +19,8 @@ rtt<-fdataobj[["rangeval"]]
         auxdt<-sqrt(as.vector(func.trimvar.mode(bmuestra,trim=trim,...)[["data"]]))
         d<-matrix(NA,nrow=n,ncol=m)
         for (j in 1:m){d[,j]<-1-abs(.5-rank(bmuestra[,j][["data"]],ties.method="average")/n)}
-        ans<-apply(d,1,sum)
+#        ans<-apply(d,1,sum)
+        ans<-rowSums(d)
         rid<-rank(ans,ties.method="first")
         bmuestra.trim<-bmuestra[rid>=floor(trim*n),]
         for (j in 1:(n-floor(trim*n)))

@@ -1,16 +1,16 @@
-\name{predict.fregre.kgam}
+\name{predict.fregre.gkam}
 \Rdversion{1.1}
-\alias{predict.fregre.kgam}
-\title{ Predict method for functional kernel generalized additive model of fregre.kgam fits object}
+\alias{predict.fregre.gkam}
+\title{ Predict method for functional generalized kernel additive model of fregre.gkam fits object}
 \description{
  	 Computes predictions for regression between functional explanatory variables and scalar response using backfitting algorithm.
 }
 \usage{
 %predict.fregre.kgam(object, newx = NULL, type = "response", ...) 
-\method{predict}{fregre.kgam}(object, newx = NULL, type = "response",\dots)
+\method{predict}{fregre.gkam}(object, newx = NULL, type = "response",\dots)
 }
 \arguments{
-   \item{object}{ \code{fregre.kgam} object.}
+   \item{object}{ \code{fregre.gkam} object.}
   \item{newx}{ An optional data list in which to look for variables with which to predict. If omitted, the fitted values are used. List of new explanatory data.}
   \item{type}{ Type of prediction (response or model term).}
   \item{\dots}{ Further arguments passed to or from other methods.}
@@ -51,7 +51,7 @@ f<-yfat.cat~ab+ab2
 xlist=list("df"=data.frame(yfat.cat),"ab"=ab[ind],"ab2"=ab2[ind])
 
 # Time-consuming 
-res=fregre.kgam(f,family=binomial(),data=xlist,control=list(maxit=2))
+res=fregre.gkam(f,family=binomial(),data=xlist,control=list(maxit=2))
 newxlist=list("ab"=ab[-ind],"ab2"=ab2[-ind])
 
 pred=predict(res,newxlist)

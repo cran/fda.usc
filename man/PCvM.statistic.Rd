@@ -1,15 +1,15 @@
 \name{PCvM.statistic}
 \alias{PCvM.statistic}
-\alias{Aijr}
+\alias{Adot}
 
 \title{PCvM statistic for the Functional Linear Model with scalar response}
 \description{
-  Projected Cramer-von Mises statistic (PCvM) for the Functional Linear Model with scalar response (FLM), \eqn{Y=\big<X,\beta\big>+\varepsilon,}{Y=<X,\beta>+\epsilon.}
+  Projected Cramer-von Mises statistic (PCvM) for the Functional Linear Model with scalar response (FLM): \eqn{Y=\big<X,\beta\big>+\varepsilon}{Y=<X,\beta>+\epsilon}.
  }
 
 \usage{
-PCvM.statistic (X, residuals, p, Aijr0)
-Aijr (X, inpr)
+PCvM.statistic (X, residuals, p, Adot.vec)
+Adot (X, inpr)
 }
 
 \arguments{
@@ -17,24 +17,24 @@ Aijr (X, inpr)
   It is used to compute the matrix of inner products.}
   \item{residuals}{Residuals of the estimated FLM.}
   \item{p}{Number of elements of the functional basis where the functional covariate is represented.}
-  \item{Aijr0}{Output from the \code{Aijr} function (see Details). Computed if not given.}
+  \item{Adot.vec}{Output from the \code{Adot} function (see Details). Computed if not given.}
   \item{inpr}{Matrix of inner products of \code{X}. Computed if not given.}
  }
 
 \details{
-In order to optimize the computation of the statistic, the critical parts of these two functions are programmed in FORTRAN. The hardest part corresponds to the function \code{Aijr}, which involves the computation of an \code{\link{array}} of dimension \code{c(n,n,n)}.
-As this array is symmetric for the first pair of dimensions, the order of the method can be reduced from \eqn{O(n^3)}{O(n^3)} to \eqn{O\big(\frac{n^3+n^2}{2}\big)}{O((n^3+n^2)/2)}. The value of \code{Aijr} is a vector of length \eqn{\frac{n^3+n^2}{2}}{(n^3+n^2)/2} 
-containing the unique values of the original three dimensional array.
+In order to optimize the computation of the statistic, the critical parts of these two functions are programmed in FORTRAN. The hardest part corresponds to the function \code{Adot}, which involves the computation of a symmetric matrix of dimension \eqn{n\times n}{n x n} where each entry is a sum of \eqn{n}{n} elements.
+As this matrix is symmetric, the order of the method can be reduced from \eqn{O(n^3)}{O(n^3)} to \eqn{O\big(\frac{n^3-n^2}{2}\big)}{O((n^3-n^2)/2)}. The memory requirement can also be reduced to \eqn{O\big(\frac{n^2-n+2}{2}\big)}{O((n^2-n+2)/2)}. The value of \code{Adot} is a vector of length \eqn{\frac{n^2-n+2}{2}}{(n^2-n+2)/2} 
+where the first element is the common diagonal element and the rest are the lower triangle entries of the matrix, sorted by rows (see Examples).
 }
 
 \value{
- For \code{PCvM.statistic}, the value of the statistic. For \code{Aijr}, a suitable output to be used in the argument \code{Aijr0}.
+ For \code{PCvM.statistic}, the value of the statistic. For \code{Adot}, a suitable output to be used in the argument \code{Adot.vec}.
 }
 
 \references{
 
 Escanciano, J. C. (2006). A consistent diagnostic test for regression models using projections. Econometric
-Theory, 22, 1030-1051.
+Theory, 22, 1030-1051. \url{http://dx.doi.org/10.1017/S0266466606060506}
 
 Garcia-Portugues, E., Gonzalez-Manteiga, W. and Febrero-Bande, M. (2012). A goodness--of--fit test for the functional linear model with scalar
 response. \url{http://arxiv.org/abs/1205.6167}
@@ -43,7 +43,7 @@ response. \url{http://arxiv.org/abs/1205.6167}
 
 \note{No NA's are allowed in the functional covariate.}
 
-\author{Eduardo Garcia-Portugues. Please, report bugs and suggestions to \email{eduardo.garcia@usc.es}}
+\author{Eduardo Garcia-Portugues. Please, report bugs and suggestions to \if{latex}{\cr}\email{eduardo.garcia@usc.es}}
 
 \seealso{\code{\link{flm.test}}}
 
@@ -52,8 +52,15 @@ response. \url{http://arxiv.org/abs/1205.6167}
 # Functional process
 X=rproc2fdata(n=10,t=seq(0,1,l=101))
 
-# Aijr
-Aijr(X)
+# Adot
+Adot.vec=Adot(X)
+
+# Obtain the entire matrix Adot
+Ad=diag(rep(Adot.vec[1],dim(X$data)[1]))
+Ad[upper.tri(Ad,diag=FALSE)]=Adot.vec[-1]
+Ad=t(Ad)
+Ad=Ad+t(Ad)-diag(diag(Ad))
+Ad
 
 # Statistic
 PCvM.statistic(X,residuals=rnorm(10),p=5)
@@ -61,10 +68,3 @@ PCvM.statistic(X,residuals=rnorm(10),p=5)
 }
 
 \keyword{htest}
-
-\keyword{flm}
-\keyword{test}
-\keyword{functional}
-\keyword{linear}
-\keyword{model}
-

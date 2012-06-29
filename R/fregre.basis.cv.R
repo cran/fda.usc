@@ -2,9 +2,9 @@ fregre.basis.cv=function(fdataobj,y,basis.x=NULL,basis.b=NULL,type.basis=NULL,la
 Lfdobj=vec2Lfd(c(0,0),rtt),type.CV=GCV.S,par.CV=list(trim=0),...){
 call<-match.call()
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
-        omit <- omit.fdata(fdataobj, y)
-        fdataobj <- omit[[1]]
-        y <- omit[[2]]
+#        omit <- omit.fdata(fdataobj, y)
+#        fdataobj <- omit[[1]]
+#        y <- omit[[2]]
 x<-fdataobj[["data"]]
 tt<-fdataobj[["argvals"]]
 rtt<-fdataobj[["rangeval"]]

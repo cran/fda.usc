@@ -7,7 +7,7 @@
  Converts \code{fdata} class object into \code{fd} class object using \code{Data2fd} function.
 }
 \usage{
-fdata2fd(fdataobj,type.basis=NULL,nbasis=NULL,nderiv=0,...)
+fdata2fd(fdataobj,type.basis=NULL,nbasis=NULL,nderiv=0,lambda=NULL,...)
 }
 
 \arguments{
@@ -15,6 +15,7 @@ fdata2fd(fdataobj,type.basis=NULL,nbasis=NULL,nderiv=0,...)
    \item{type.basis}{ Type of basis. A function \code{create."type.basis".basis}  must exists. By default, \code{bspline} basis is used.} 
    \item{nbasis}{ Number of basis which is used in \code{create.basis} function.}  
    \item{nderiv}{  Order of derivation which is used in \code{deriv.fd} function (optional).} 
+   \item{lambda}{ Weight on the smoothing operator specified by \code{nderiv}.}
   \item{\dots}{ Further arguments passed to or from other methods.}
   }    
 \value{

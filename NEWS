@@ -1,8 +1,19 @@
+Release 0.9.8.1 introduces new functions flm.Ftest() and 
+dfv.test(). The first performs a functional F-test and the 
+second implements the test of Delsol, Ferraty and Vieu (2010). 
+Function flm.test() now has a better computational performance 
+and function Aijr() has been replaced by Adot().
+New argument lambda in fdata2fd() function.
+New argument rn in create.pc.basis() function.
+fregre.lm() allows penalization as fregre.basis() and fregre.pc() 
+-ridge regression-.
+fregre.kgam() has been renamed to fregre.gkam().
+
 Release 0.9.8 introduces a new function flm.test() that 
 allows to test for the Functional Linear Model with scalar 
 response for a given dataset. Is based on the new functions 
 PCvM.statistic(), Aijr() and rber.gold().
-A bug in fregre.kgam has been fixed. 
+A bug in fregre.kgam has been fixed.
 
 Release 0.9.7
 New functions: 

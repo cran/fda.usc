@@ -1,6 +1,7 @@
 predict.fregre.fd<-function(object,new.fdataobj=NULL,...){
 if (is.null(object)) stop("No fregre.fd object entered")
-if (is.null(new.fdataobj)) stop("No newx entered")
+#if (is.null(new.fdataobj)) stop("No newx entered")
+if (is.null(new.fdataobj)) return(object$fitted.values)
 if (!is.fdata(new.fdataobj)) new.fdataobj=fdata(new.fdataobj,object$fdataobj[["argvals"]],object$fdataobj[["rangeval"]],object$fdataobj[["names"]])
 y=object$y
 isfdata<-is.fdata(y)
@@ -40,8 +41,6 @@ nn <- nrow(new.fdataobj)
  if (object$call[[1]]=="fregre.basis" || object$call[[1]]=="fregre.basis.cv"){
   x=newx
   basis.x=object$basis.x.opt             #
-# 	xmean=apply(x,2,mean)
-#  xcen=sweep(x,2,xmean,FUN="-")
   xcen<-fdata.cen(new.fdataobj,object$mean)[[1]]
 	x.fd=Data2fd(argvals=tt,y=t(xcen$data),basisobj=basis.x)
   C=t(x.fd$coefs)

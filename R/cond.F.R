@@ -28,7 +28,8 @@ ndist=length(y0)
       Fc =1-drop(t(Wy)%*%WW/s)
  }
  else  {
-    s=apply(WW,2,sum,na.rm=TRUE)
+#    s=apply(WW,2,sum,na.rm=TRUE)
+    s=colSums(WW,na.rm=TRUE)
     s=diag(1/s,nrow=length(s),ncol=length(s))
     Fc =1-drop((t(Wy)%*%WW)%*%s)
     }

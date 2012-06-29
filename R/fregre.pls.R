@@ -11,9 +11,9 @@ if (class(fdataobj)=="fdata.comp") {
    }
 else {
  if (is.null(l)) l<- 1:3
- omit<-omit.fdata(fdataobj,y)
- fdataobj<-omit[[1]]
- y<-omit[[2]]
+# omit<-omit.fdata(fdataobj,y)
+# fdataobj<-omit[[1]]
+# y<-omit[[2]]
  lenl<-max(l)
  pc<-fdata2pls(fdataobj,y,lenl,...)
 }
@@ -39,7 +39,8 @@ else {
 #   pf=paste(pf,"-1")
     object.lm = lm(formula = pf, data =df , x = TRUE,y = TRUE)
     beta.est<-object.lm$coefficients[2:(lenl+1)]*pc$rotation[l]
-    beta.est$data<-apply(beta.est$data,2,sum)
+#    beta.est$data<-apply(beta.est$data,2,sum)
+     beta.est$data<-colSums(beta.est$data)
     beta.est$names$main<-"beta.est"
     beta.est$data <- matrix(as.numeric(beta.est$data),nrow=1)
 #    pc$df

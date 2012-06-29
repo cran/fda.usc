@@ -92,7 +92,7 @@ names(cv.AIC) = paste("PLS",1:kmax , sep = "")
     fregre=fregre.pls(fdataobj,y,l=1:pc.opt,...)
     MSC.min = cv.AIC[pc.opt]
     return(list("fregre.pls"=fregre,pls.opt = 1:pc.opt,
-    MSC.min = MSC.min,MSC = cv.AIC))
+    MSC.min = MSC.min,MSC = cv.AIC,criteria=criteria))
 }
 #################################################################
 #################################################################

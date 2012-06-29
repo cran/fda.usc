@@ -1,6 +1,6 @@
 #######################
 #######################
-classif.kgam=function(formula,family = binomial(),data,weights = rep(1, nobs),
+classif.gkam=function(formula,family = binomial(),data,weights = rep(1, nobs),
  par.metric = NULL,par.np=NULL, offset=NULL,
  control = list(maxit = 100,epsilon = 0.001, trace = FALSE, inverse="solve"),...){
 C<-match.call()
@@ -26,7 +26,7 @@ prob.group<-array(NA,dim=c(n,ngroup))
 if (ngroup==2) {
       newy<-ifelse(y==ny[1],0,1)
       newdata$df[[response]]<-newy
-      a[[1]]<-fregre.kgam(formula,family=family,data=newdata,weights=weights,par.metric=par.metric,par.np=par.np,offset=offset,control=control)
+      a[[1]]<-fregre.gkam(formula,family=family,data=newdata,weights=weights,par.metric=par.metric,par.np=par.np,offset=offset,control=control)
       yest<-ifelse(a[[1]]$fitted.values<.5,ny[1],ny[2])
       tab<-table(yest,y)
       prob[1]=tab[1,1]/sum(tab[,1])
@@ -45,7 +45,7 @@ else {
    for (i in 1:ngroup) {
                newy<-ifelse(y==ny[i],0,1)
               newdata$df[[response]]<-newy
-              a[[i]]<-fregre.kgam(formula,family=family,data=newdata,weigths=weights,
+              a[[i]]<-fregre.gkam(formula,family=family,data=newdata,weigths=weights,
               par.metric=par.metric,par.np=par.np,offset=offset,control=control,...)
               prob.group[,i]<-a[[i]]$fitted.values
             }

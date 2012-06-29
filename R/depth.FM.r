@@ -23,7 +23,8 @@ for (i in 1:m){
 #        d[,i]<-1-abs(.5-rank(fdata[,i],ties.method="average")/n)
     }
 tr<-paste("FM.tr",trim*100,"\u0025",sep="")
-ans<-apply(d,1,mean,na.rm=TRUE)
+#ans2<-apply(d,1,mean,na.rm=TRUE)
+ans<-rowMeans(d,na.rm=TRUE)
 #    rid<-rank(ans,ties.method="first")
 k=which.max(ans)
 med=data[k,]

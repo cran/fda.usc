@@ -5,7 +5,7 @@
 
 ##############################################
 ## File created by Eduardo García-Portugués ##
-## using code from library fda.usc 			##
+## using code from library fda.usc          ##
 ##############################################
 
 # Modification of the fda.usc fregre.basis.cv function to force the same number of elements in the basis of x and beta

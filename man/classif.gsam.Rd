@@ -48,7 +48,7 @@ Febrero-Bande, M. and Oviedo de la Fuente, M.
 }
 \seealso{
 See Also as:  \code{\link{fregre.gsam}}.\cr
-Alternative method: \code{\link{classif.glm}}.
+Alternative method: \code{\link{classif.np}}, \code{\link{classif.glm}} and  \code{\link{classif.gkam}}.
 }
 \examples{
 

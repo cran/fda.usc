@@ -64,7 +64,7 @@ basis2=create.bspline.basis(rangeval=range(tt),nbasis=13)
 basis.x=list("x"=basis1)
 basis.b=list("x"=basis2)
 
-#ex 1.
+## with x as functional data
 f=Fat~Protein+x
 res.lm=fregre.lm(f,ldata,basis.x=basis.x,basis.b=basis.b)
 summary(res.lm)
@@ -72,18 +72,18 @@ pred.lm=predict.fregre.lm(res.lm,newldata)
 MEP.lm=((1/length(newy))*sum((newy-pred.lm)^2))/var(newy)
 MEP.lm
 
-# with 2nd derivative of functional data
-f2=Fat~Protein+x.d2
-basis.x2=list("x.d2"=basis1)
-basis.b2=list("x.d2"=basis2)
-res.lm2=fregre.lm(f2,ldata,basis.x=basis.x2,basis.b=basis.b2)
-summary(res.lm2)
-pred.lm2=predict.fregre.lm(res.lm2,newldata)
-MEP.lm2=((1/length(newy))*sum((newy-pred.lm2)^2))/var(newy)
-MEP.lm2
+## with 2nd derivative of x as functional data
+# f2=Fat~Protein+x.d2
+# basis.x2=list("x.d2"=basis1)
+# basis.b2=list("x.d2"=basis2)
+# res.lm2=fregre.lm(f2,ldata,basis.x=basis.x2,basis.b=basis.b2)
+# summary(res.lm2)
+# pred.lm2=predict.fregre.lm(res.lm2,newldata)
+# MEP.lm2=((1/length(newy))*sum((newy-pred.lm2)^2))/var(newy)
+# MEP.lm2
 
-plot(newy,pred.lm)
-points(newy,pred.lm2,col=2)
+# plot(newy,pred.lm)
+# points(newy,pred.lm2,col=2)
 
 }
 \keyword{regression}

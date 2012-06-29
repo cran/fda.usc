@@ -62,7 +62,8 @@ else {
     k = which.max(dep)
     med = data[k, ]
     lista = which(dep >= quantile(dep, probs = trim))
-    mtrim = apply(data[lista, ], 2, mean, na.rm = TRUE)
+#    mtrim = apply(data[lista, ], 2, mean, na.rm = TRUE)
+    mtrim = colMeans(data[lista, ], na.rm = TRUE)
     tr <- paste("RPD.tr", trim * 100, "%", sep = "")
     med <- fdata(med, tt, rtt, names1)
     mtrim <- fdata(mtrim, tt, rtt, names2)

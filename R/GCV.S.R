@@ -1,4 +1,3 @@
-
 GCV.S=function(y,S,criteria="GCV",W=diag(1,ncol=ncol(S),nrow=nrow(S)),
 trim=0,draw=FALSE,metric=metric.lp,...){
     isfdata<-is.fdata(y)

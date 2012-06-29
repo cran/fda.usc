@@ -45,7 +45,7 @@ Febrero-Bande, M. and Oviedo de la Fuente, M.
 }
 \seealso{
 See Also as:  \code{\link{fregre.glm}}.\cr
-%Alternative method: \code{\link{classif.gsam}}.
+%Alternative method: \code{\link{classif.gsam}} and \code{\link{classif.gkam}}.
 }
 \examples{
 data(phoneme)

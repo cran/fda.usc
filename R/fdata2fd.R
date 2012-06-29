@@ -1,9 +1,10 @@
-fdata2fd=function(fdataobj,type.basis=NULL,nbasis=NULL,nderiv=0,...) {
+fdata2fd=function(fdataobj,type.basis=NULL,nbasis=NULL,nderiv=0,lambda=NULL,...) {
 if (is.fdata(fdataobj)) DATA=fdataobj[["data"]]
 else stop("No fdata object")
 np=ncol(DATA)
 tt =fdataobj[["argvals"]]
 rtt<-fdataobj[["rangeval"]]
+if (is.null(lambda)) lambda=3e-08/diff(rtt)
 if (is.null(nbasis)) {
        nbasis=ifelse(floor(np/3) > floor((np - nderiv - 4)/2),
        floor((np - nderiv - 4)/2), floor(np/3))
@@ -40,7 +41,8 @@ if (is.null(nbasis)) {
   }
  b1.1<- do.call(a1, as)
  class(DATA)="matrix"
- fd1.1 <- Data2fd(argvals=tt,y=t(DATA),basisobj=b1.1) ######
+
+ fd1.1 <- Data2fd(argvals=tt,y=t(DATA),basisobj=b1.1,lambda=lambda,...) ######
  if (nderiv>0) fd1.1=deriv.fd(fd1.1,int2Lfd(nderiv)) #######
  fd1.1
 }

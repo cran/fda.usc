@@ -1,14 +1,14 @@
-\name{fregre.kgam}
+\name{fregre.gkam}
 \Rdversion{1.1}
-\alias{fregre.kgam}
+\alias{fregre.gkam}
 \alias{kgam.H}
-\title{ Fitting Functional Generalized Additive Models.}
+\title{ Fitting Functional Generalized Kernel Additive Models.}
 \description{
 	Computes functional regression between functional explanatory variables \eqn{(X^{1}(t_1),...,X^{q}(t_q))}{(X(t_1),...,X(t_q))} and scalar response \eqn{Y} using backfitting algorithm.
 	
 }
 \usage{
-fregre.kgam(formula,family = gaussian(),data, weights= rep(1,nobs),
+fregre.gkam(formula,family = gaussian(),data, weights= rep(1,nobs),
      par.metric = NULL,par.np=NULL,offset=NULL,
      control = list(maxit = 100,epsilon = 0.001, trace = FALSE, inverse="solve"),...)
 kgam.H(object,inverse="solve")
@@ -78,14 +78,14 @@ f2<-yfat.cat~ab+ab2
 
 par.NP<-list("ab"=list(Ker=AKer.norm,type.S="S.NW"),
 "ab2"=list(Ker=AKer.norm,type.S="S.NW"))
-res2=fregre.kgam(f2,family=binomial(),data=xlist,
+res2=fregre.gkam(f2,family=binomial(),data=xlist,
 par.np=par.NP)
 res2
 
-## Example 3: Changing the argument par.metric and family link
+## Example 2: Changing the argument par.metric and family link
 # par.metric=list("ab"=list(metric=semimetric.deriv,nderiv=2,nbasis=15),
 # "ab2"=list("metric"=semimetric.basis))
-# res3=fregre.kgam(f2,family=binomial("probit"),data=xlist,
+# res3=fregre.gkam(f2,family=binomial("probit"),data=xlist,
 # par.metric=par.metric,control=list(maxit=2,trace=FALSE))
 # summary(res3)
 
@@ -93,7 +93,7 @@ res2
 ## Only 1 iteration (by default maxit=100)
 # xlist=list("df"=data.frame(yfat),"ab"=ab,"ab2"=ab2)
 # f<-yfat~ab+ab2
-# res=fregre.kgam(f,data=xlist,control=list(maxit=1,trace=FALSE))
+# res=fregre.gkam(f,data=xlist,control=list(maxit=1,trace=FALSE))
 # res
 
 }

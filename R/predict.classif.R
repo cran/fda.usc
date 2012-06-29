@@ -170,11 +170,11 @@ predict.classif<-function(object,new.fdataobj=NULL,type="class",...)
                  group.pred<-(factor(yest,levels=lev))
                   pgrup<-prob.group #######
     }
-    if (object$C[[1]] == "classif.kgam") {
+    if (object$C[[1]] == "classif.gkam") {
         prob <- ngroup <- length(table(object$group))
         if (ngroup == 2) {
 
-            prob.group <- predict.fregre.kgam(object$fit[[1]],
+            prob.group <- predict.fregre.gkam(object$fit[[1]],
                newx = new.fdataobj,...)
             yest <- ifelse(prob.group < 0.5,lev[1],lev[2])
         }
@@ -182,7 +182,7 @@ predict.classif<-function(object,new.fdataobj=NULL,type="class",...)
             prob.group <- array(NA, dim = c(nrow(new.fdataobj[[1]]),
                 ngroup))
             for (i in 1:ngroup) {
-                prob.group[, i] <- predict.fregre.kgam(object$fit[[i]],
+                prob.group[, i] <- predict.fregre.gkam(object$fit[[i]],
                   newx = new.fdataobj, ...)
             }
             yest <- apply(prob.group, 1, which.min)
@@ -213,12 +213,12 @@ predict.classif<-function(object,new.fdataobj=NULL,type="class",...)
         group.pred<-(factor(yest,levels=lev))
          pgrup<-prob.group #######
     }
-    if (object$C[[1]] == "classif.kgam2boost") {
+    if (object$C[[1]] == "classif.gkam2boost") {
         newdata <- object$data
         newdata[[2]] <- new.fdataobj
         prob <- ngroup <- length(table(object$group))
         if (ngroup == 2) {
-            prob.group <- predict.fregre.kgam(object$fit[[1]],
+            prob.group <- predict.fregre.gkam(object$fit[[1]],
                 newx = newdata, ...)
             yest <- ifelse(prob.group < 0.5,lev[1],lev[2])
         }
@@ -226,7 +226,7 @@ predict.classif<-function(object,new.fdataobj=NULL,type="class",...)
             prob.group <- array(NA, dim = c(nrow(new.fdataobj[[1]]),
                 ngroup))
             for (i in 1:ngroup) {
-                prob.group[, i] <- predict.fregre.kgam(object$fit[[i]],
+                prob.group[, i] <- predict.fregre.gkam(object$fit[[i]],
                   newx = newdata, ...)
             }
             yest <- apply(prob.group, 1, which.min)

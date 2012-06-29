@@ -36,12 +36,14 @@ mdist=metric(fdataobj,fdataobj,...)
 h=quantile(mdist+diag(Inf,nrow(mdist)),probs=h,na.rm=TRUE)
 #    ans<-apply(mdist/h,1,skernel.norm) #see Kernel
 ans<-Ker.norm(mdist/h)
-ans<-apply(ans,1,sum,na.rm=TRUE)
+ans<-rowSums(ans,na.rm=TRUE)
+#ans<-apply(ans,1,sum,na.rm=TRUE)
 if (scale) ans=as.vector(scale(ans,center=min(ans,na.rm=TRUE),scale=(max(ans,na.rm=TRUE)-min(ans,na.rm=TRUE))))
 k=which.max(ans)
 med=data[k,]
 lista=which(ans>=quantile(ans,probs=trim,na.rm=TRUE))
-mtrim=apply(data[lista,],2,mean)
+#mtrim=apply(data[lista,],2,mean)
+mtrim<-colMeans(data[lista,])
 tr<-paste("mode.tr",trim*100,"\u0025",sep="")
 if (fdat) {
 med<-fdata(med,tt,rtt,names1)

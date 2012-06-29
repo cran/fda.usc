@@ -22,14 +22,17 @@ mplsr <- function(X, Y, K = 5,...)
 	Y <- as.matrix(Y)
 	dx <- dim(X)
 	nbclass <- ncol(Y)
-	xbar <- apply(X, 2, sum)/dx[1]
-	ybar <- apply(Y, 2, sum)/dx[1]
+#	xbar <- apply(X, 2, sum)/dx[1]
+#	ybar <- apply(Y, 2, sum)/dx[1]
+	xbar <- colSums(X)/dx[1]
+	ybar <- colSums(Y)/dx[1]
 	X0 <- X - outer(rep(1, dx[1]), xbar)
 	Y0 <- Y - outer(rep(1, dx[1]), ybar)
 	W <- matrix(0, dx[2], K)
 	P <- matrix(0, dx[2], K)
 	Q <- matrix(0, nbclass, K)
-	sumofsquaresY <- apply(Y0^2, 2, sum)
+#	sumofsquaresY <- apply(Y0^2, 2, sum)
+	sumofsquaresY <-colSums(Y0^2)
 	u <- Y0[, order(sumofsquaresY)[nbclass]]
 	tee <- 0
 	for(i in 1:K) {

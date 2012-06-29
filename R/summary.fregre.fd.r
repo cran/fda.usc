@@ -219,7 +219,7 @@ return(invisible(list("Influence"=influence,"i.influence"=i.influence,
 }
 ##############################################################################
 ##############################################################################
-summary.fregre.kgam<-function(object,draw=TRUE,selec=NULL,times.influ=3,...){
+summary.fregre.gkam<-function(object,draw=TRUE,selec=NULL,times.influ=3,...){
    cat(" *** Summary Functional Data Regression with backfiting algorithm *** \n")
  print(object$family,"\n")
     nobs <- n<-length(object$y)
@@ -369,7 +369,7 @@ return(invisible(list("Influence"=influence,"object"=object)))
 
 ##############################################################################
 ##############################################################################
-print.fregre.kgam<-function(x,digits = max(3, getOption("digits") - 3),...){
+print.fregre.gkam<-function(x,digits = max(3, getOption("digits") - 3),...){
  object<-x
  print(object$family,"\n")
 # cat("Algorithm converged?",ifelse(object$converged,"Yes","No")," Number  of iterations ",object$iter,"\n")
@@ -421,10 +421,12 @@ kgam.H<-function(object,inverse="solve") {
  II=diag(n)
  unos<-matrix(1,ncol=n,nrow=n)/n
  M<-object[[1]]$H
- MM=sweep(M,1,apply(M,1,mean),"-")
+# MM=sweep(M,1,apply(M,1,mean),"-")
+ MM=sweep(M,1,rowSums(M),"-")
  if (lenH>1) {
   for (i in 2:lenH) {
-   MMaux=sweep(object[[i]]$H,1,apply(object[[i]]$H,1,mean),"-")
+#   MMaux=sweep(object[[i]]$H,1,apply(object[[i]]$H,1,mean),"-")
+   MMaux=sweep(object[[i]]$H,1,rowMeans(object[[i]]$H),"-")
    MM<-rbind(MM,MMaux)
    }
   }

@@ -6,7 +6,7 @@
 
 ##############################################
 ## File created by Eduardo García-Portugués ##
-## using code from library fda.usc 			##
+## using code from library fda.usc          ##
 ##############################################
 
 # Generation of centred random variables with unit variance for the wild bootstrap
@@ -16,11 +16,11 @@ rber.gold=function(n){
 	return(res)
 }
 
-# Aijr function to call Fortran code
-Aijr=function(X,inpr){
+# Adot function to call Fortran code
+Adot=function(X,inpr){
 	
 	# Check if the Fortran function is correctly loaded
-	if(!is.loaded("aijr")) stop("Fortran function aijr is not loaded")
+	if(!is.loaded("adot")) stop("Fortran function adot is not loaded")
 	
 	# Compute the inproduct
 	if(missing(inpr)){
@@ -36,21 +36,21 @@ Aijr=function(X,inpr){
 	# Number of functions in X
 	n=dim(inpr)[1]
 	
-	# Check for repeated interior products (will cause error in the aijr subroutine)
+	# Check for repeated interior products (will cause error in the adot subroutine)
 	if(anyDuplicated(diag(inpr))){
 		diag(inpr)=diag(inpr)*(1+rexp(n,rate=1000))
 	}
 	
 	# Call Fortran function
-	res=.Fortran("aijr",n=as.integer(n),inprod=matrix(as.double(inpr),nrow=n,ncol=n),Aijr_vec=numeric((n^3+n^2)/2))
+	res=.Fortran("adot",n=as.integer(n),inprod=t(inpr)[upper.tri(inpr,diag=TRUE)],Adot_vec=as.double(rep(0,(n*n-n+2)/2)))$Adot_vec
 	
 	# Return result
-	return(res$Aijr_vec)
+	return(res)
 	
 }
 
 # PCvM statistic
-PCvM.statistic=function(X,residuals,p,Aijr0){
+PCvM.statistic=function(X,residuals,p,Adot.vec){
 	
 	# Check if the Fortran function is correctly loaded
 	if(!is.loaded("pcvm_statistic")) stop("Fortran function pcvm_statistic is not loaded")
@@ -64,13 +64,12 @@ PCvM.statistic=function(X,residuals,p,Aijr0){
 	}else if(is.fdata(X)){
 		if(n!=dim(X$data)[1]) stop("Incompatible lenghts of X.fdata and residuals")
 	}
-	
-	
-	# Compute Aijr if missing
-	if(missing(Aijr0)) Aijr0=Aijr(X)
+		
+	# Compute Adot.vec if missing
+	if(missing(Adot.vec)) Adot.vec=Adot(X)
 	
 	# Call Fortran function
-	res=n^(-2)*pi^((p/2)-1)/gamma(p/2+1)*.Fortran("pcvm_statistic",n=as.integer(n),Aijr_vec=Aijr0,residuals=residuals,statistic=0)$statistic
+	res=n^(-2)*pi^((p/2)-1)/gamma(p/2+1)*.Fortran("pcvm_statistic",n=as.integer(n),Adot_vec=Adot.vec,residuals=residuals,statistic=0)$statistic
 	
 	return(res)
 
@@ -79,6 +78,9 @@ PCvM.statistic=function(X,residuals,p,Aijr0){
 # PCvM test for the composite hypothesis with bootstrap calibration
 flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type.basis="bspline",show.prog=TRUE,plot.it=TRUE,B.plot=100,G=200,...){
 	
+	# Check B.plot
+	if(plot.it & B.plot>B) stop("B.plot must be less or equal than B")
+	
 	# Center the data first
 	X.fdata=fdata.cen(X.fdata)$Xcen
 	Y=Y-mean(Y)
@@ -86,13 +88,9 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 	# Number of functions
 	n=dim(X.fdata)[1]
 	
-	# Bootstrap residuals
-	if(B.plot>B) stop("B.plot must be less or equal than B")
-	e.hat.star=matrix(ncol=n,nrow=B)
-	boot.beta.est=list()
+	if(show.prog) cat("Computing estimation of beta... ")	
 	
 	## COMPOSITE HYPOTHESIS ##
-	if(show.prog) cat("Computing estimation of beta... ")
 	if(is.null(beta0.fdata)){
 
 		## 1. Optimal estimation of beta and the basis order ##
@@ -105,7 +103,7 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 				meth="PCvM test for the functional linear model using optimal PC basis representation"
 
 				# Choose the number of basis elements: SIC is probably the best criteria
-				mod.pc=fregre.pc.cv(fdataobj=X.fdata,y=Y,kmax=10,criteria="SIC")
+				mod.pc=fregre.pc.cv(fdataobj=X.fdata,y=Y,kmax=1:10,criteria="SIC")
 				p.opt=length(mod.pc$pc.opt)
 				ord.opt=mod.pc$pc.opt
 				
@@ -132,25 +130,25 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 				meth=paste("PCvM test for the functional linear model using a representation in a PC basis of ",p,"elements") 
 				
 				# Estimation of beta on the given fixed basis
-				mod.fixed=fregre.pc(fdataobj=X.fdata,y=Y,l=1:p)
+				mod.pc=fregre.pc(fdataobj=X.fdata,y=Y,l=1:p)
 				p.opt=p
-				ord.opt=mod.fixed$l
+				ord.opt=mod.pc$l
 
 				# PC components to be passed to the bootstrap
-				pc.comp=mod.fixed$pc
-				pc.comp$l=mod.fixed$l
+				pc.comp=mod.pc$pc
+				pc.comp$l=mod.pc$l
 				
 				# Express X.fdata and beta.est in the basis
 				if(p!=1){
-					X.est=fdata(mdata=mod.fixed$fdata.comp$x[,mod.fixed$l]%*%mod.fixed$fdata.comp$rotation$data[mod.fixed$l,],argvals=X.fdata$argvals,rangeval=X.fdata$rangeval)
+					X.est=fdata(mdata=mod.pc$fdata.comp$x[,mod.pc$l]%*%mod.pc$fdata.comp$rotation$data[mod.pc$l,],argvals=X.fdata$argvals,rangeval=X.fdata$rangeval)
 				}else{
-					X.est=fdata(mdata=mod.fixed$fdata.comp$x[,mod.fixed$l]%*%t(mod.fixed$fdata.comp$rotation$data[mod.fixed$l,]),argvals=X.fdata$argvals,rangeval=X.fdata$rangeval)
+					X.est=fdata(mdata=mod.pc$fdata.comp$x[,mod.pc$l]%*%t(mod.pc$fdata.comp$rotation$data[mod.pc$l,]),argvals=X.fdata$argvals,rangeval=X.fdata$rangeval)
 				}
-				beta.est=mod.fixed$beta.est
+				beta.est=mod.pc$beta.est
 				norm.beta.est=norm.fdata(beta.est)
 				
 				# Compute the residuals
-				e=mod.fixed$residuals
+				e=mod.pc$residuals
 			
 			}
 			
@@ -189,25 +187,25 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 				meth=paste("PCvM test for the functional linear model using a representation in a PLS basis of ",p,"elements") 
 			
 				# Estimation of beta on the given fixed basis
-				mod.fixed=fregre.pc(fdataobj=X.fdata,y=Y,l=1:p)
+				mod.pls=fregre.pc(fdataobj=X.fdata,y=Y,l=1:p)
 				p.opt=p
-				ord.opt=mod.fixed$l
+				ord.opt=mod.pls$l
 
 				# PLS components to be passed to the bootstrap
-				pls.comp=mod.fixed$fdata.comp
-				pls.comp$l=mod.fixed$l
+				pls.comp=mod.pls$fdata.comp
+				pls.comp$l=mod.pls$l
 				
 				# Express X.fdata and beta.est in the basis
 				if(p!=1){
-					X.est=fdata(mdata=mod.fixed$fdata.comp$x[,mod.fixed$l]%*%mod.fixed$fdata.comp$rotation$data[mod.fixed$l,],argvals=X.fdata$argvals,rangeval=X.fdata$rangeval)
+					X.est=fdata(mdata=mod.pls$fdata.comp$x[,mod.pls$l]%*%mod.pls$fdata.comp$rotation$data[mod.pls$l,],argvals=X.fdata$argvals,rangeval=X.fdata$rangeval)
 				}else{
-					X.est=fdata(mdata=mod.fixed$fdata.comp$x[,mod.fixed$l]%*%t(mod.fixed$fdata.comp$rotation$data[mod.fixed$l,]),argvals=X.fdata$argvals,rangeval=X.fdata$rangeval)
+					X.est=fdata(mdata=mod.pls$fdata.comp$x[,mod.pls$l]%*%t(mod.pls$fdata.comp$rotation$data[mod.pls$l,]),argvals=X.fdata$argvals,rangeval=X.fdata$rangeval)
 				}
-				beta.est=mod.fixed$beta.est
+				beta.est=mod.pls$beta.est
 				norm.beta.est=norm.fdata(beta.est)
 				
 				# Compute the residuals
-				e=mod.fixed$residuals
+				e=mod.pls$residuals
 			
 			}
 			
@@ -239,17 +237,17 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 
 				# Estimation of beta on the given fixed basis
 				basis.opt=do.call(what=paste("create.",type.basis,".basis",sep=""),args=list(rangeval=X.fdata$rangeval,nbasis=p,...))
-				mod.fixed=fregre.basis(fdataobj=X.fdata,y=Y,basis.x=basis.opt,basis.b=basis.opt)
+				mod.basis=fregre.basis(fdataobj=X.fdata,y=Y,basis.x=basis.opt,basis.b=basis.opt)
 				p.opt=p
 				ord.opt=1:p.opt
 
 				# Express X.fdata and beta.est in the basis
-				X.est=mod.fixed$x.fd
-				beta.est=mod.fixed$beta.est
+				X.est=mod.basis$x.fd
+				beta.est=mod.basis$beta.est
 				norm.beta.est=norm.fd(beta.est)
 				
 				# Compute the residuals
-				e=mod.fixed$residuals
+				e=mod.basis$residuals
 			
 			}
 			
@@ -353,74 +351,88 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 	
 	# Start up
 	pcvm.star=numeric(B)
-	dif.beta.norms=numeric(B)
+	e.hat.star=matrix(ncol=n,nrow=B)
 	
-	# Calculus of the Aijr
-	Aijr0=Aijr(X.est)
+	# Calculus of the Adot.vec
+	Adot.vec=Adot(X.est)#*detR
 		
 	# REAL WORLD
-	pcvm=PCvM.statistic(X=X.est,residuals=e,p=p.opt,Aijr0=Aijr0)
+	pcvm=PCvM.statistic(X=X.est,residuals=e,p=p.opt,Adot.vec=Adot.vec)
 	
 	# BOOTSTRAP WORLD 
 	if(show.prog) cat("Done.\nBootstrap calibration...\n ")
 	if(show.prog) pb=txtProgressBar(style=3)
-	for(i in 1:B){
-		
-		# Generate bootstrap errors
-		e.hat=e*rber.gold(n)
 
-		## COMPOSITE HYPOTHESIS ##
-		if(is.null(beta0.fdata)){
+	## COMPOSITE HYPOTHESIS ##
+	if(is.null(beta0.fdata)){
+					
+		# Calculate the design matrix of the linear model
+		# This allows to resample efficiently the residuals without estimating again the beta
+		if(est.method=="pc"){
+			
+			if(is.null(p)){
+				# Design matrix for the PC estimation
+				X.matrix=mod.pc$fregre.pc$lm$x
+			}else{
+				# Design matrix for the PC estimation
+				X.matrix=mod.pc$lm$x
+			}
+			
+		}else if(est.method=="pls"){
+
+			if(is.null(p)){	
+				# Design matrix for the PLS estimation
+				X.matrix=mod.pls$fregre.pls$lm$x
+			}else{
+				# Design matrix for the PLS estimation
+				X.matrix=mod.pls$lm$x
+			}		
+		}else if(est.method=="basis"){
+
+			if(is.null(p)){	
+				# Design matrix for the basis estimation
+				X.matrix=mod.basis$lm$x
+			}else{
+				# Design matrix for the basis estimation
+				X.matrix=mod.basis$lm$x
+			}		
+		}
 		
+		# Bootstrap resampling
+		for(i in 1:B){
+		
+			# Generate bootstrap errors
+			e.hat=e*rber.gold(n)
+	
 			# Calculate Y.star
 			Y.star=Y-e+e.hat
 			
-			# Calculate the estimated bootstrap errors
-			if(est.method=="pc"){
-			
-				# Bootstrap model and residuals
-				mod.pc.boot=fregre.pc.mod(fdataobj=X.fdata,y=Y.star,pc=pc.comp)
-				e.hat.star[i,]=mod.pc.boot$residuals
-				
-				# Estimated bootstrap beta
-				boot.beta.est[[i]]=mod.pc.boot$beta.est
-				
-			}else if(est.method=="pls"){
-			
-				# Bootstrap model and residuals
-				mod.pls.boot=fregre.plsr.mod(fdataobj=X.fdata,y=Y.star,pls=pls.comp)
-				e.hat.star[i,]=mod.pls.boot$residuals
-				
-				# Estimated bootstrap beta
-				boot.beta.est[[i]]=mod.pls.boot$beta.est
-			
-			}else if(est.method=="basis"){
-			
-				# Bootstrap model and residuals
-				mod.basis.boot=fregre.basis(fdataobj=X.fdata,y=Y.star,basis.b=basis.opt,basis.x=basis.opt)
-				e.hat.star[i,]=mod.basis.boot$residuals
-				
-				# Estimated bootstrap beta
-				boot.beta.est[[i]]=mod.basis.boot$beta.est
-			
-			}
-			
-			# Calculate PCVM.star
-			pcvm.star[i]=PCvM.statistic(X=X.est,residuals=e.hat.star[i,],p=p.opt,Aijr0=Aijr0)
-		
-		## SIMPLE HYPOTHEIS ##
-		}else{
-		
-			# Generate bootstrap errors
-			e.hat.star[i,]=e.hat
+			# Residuals from the bootstrap estimated model
+			e.hat.star[i,]=(diag(rep(1,n))-X.matrix%*%solve(t(X.matrix)%*%X.matrix)%*%t(X.matrix))%*%Y.star
 		
 			# Calculate PCVM.star
-			pcvm.star[i]=PCvM.statistic(X=X.est,residuals=e.hat.star[i,],p=p.opt,Aijr0=Aijr0)
+			pcvm.star[i]=PCvM.statistic(X=X.est,residuals=e.hat.star[i,],p=p.opt,Adot.vec=Adot.vec)
+			
+			if(show.prog) setTxtProgressBar(pb,i/B)
 		
 		}
+					
+	## SIMPLE HYPOTHEIS ##
+	}else{
 		
-		if(show.prog) setTxtProgressBar(pb,i/B)
+		# Bootstrap resampling
+		for(i in 1:B){
+				
+			# Generate bootstrap errors
+			e.hat.star[i,]=e*rber.gold(n)
 		
+			# Calculate PCVM.star
+			pcvm.star[i]=PCvM.statistic(X=X.est,residuals=e.hat.star[i,],p=p.opt,Adot.vec=Adot.vec)
+				
+			if(show.prog) setTxtProgressBar(pb,i/B)
+		
+		}
+					
 	}
 
 	## 3. MC estimation of the p-value and order the result ##
@@ -428,13 +440,12 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 	# Compute the p-value
 	pvalue<-sum(pcvm.star>pcvm)/B
 	
-
 	## 4. Graphical representation of the integrated process ##
 	
 	if(show.prog) cat("\nDone.\nComputing graphical representation... ")
 	if(is.null(beta0.fdata) & plot.it){
 	
-		gamma=rproc2fdata(n=G,t=X.fdata$argvals)
+		gamma=rproc2fdata(n=G,t=X.fdata$argvals,sigma="OU",par.list=list(theta=2/diff(range(X.fdata$argvals))))
 		gamma=gamma/drop(norm.fdata(gamma))
 		ind=drop(inprod.fdata(X.fdata,gamma))
 		
@@ -463,8 +474,7 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 		
 		# Plot
 		dev.new()
-		main=ifelse(is.null(beta0.fdata),expression(paste("Integrated processs ",R[n]," for composite hypothesis")),expression(paste("Integrated processs ",R[n]," for simple hypothesis")))
-		plot(u,mean.proc,ylim=c(min(mean.proc,mean.boot.proc),max(mean.proc,mean.boot.proc))*1.05,type="l",xlab=expression(paste(symbol("\341"),list(X, gamma),symbol("\361"))),ylab=expression(R[n](u)),main=main)
+		plot(u,mean.proc,ylim=c(min(mean.proc,mean.boot.proc),max(mean.proc,mean.boot.proc))*1.05,type="l",xlab=expression(paste(symbol("\341"),list(X, gamma),symbol("\361"))),ylab=expression(R[n](u)),main="")
 		for(i in 1:B.plot) lines(u,mean.boot.proc[i,],lty=2,col=gray(0.8))
 		lines(u,mean.proc)
 		text(x=0.75*u[1],y=0.75*min(mean.proc,mean.boot.proc),labels=sprintf("p-value=%.3f",pvalue))
@@ -476,9 +486,11 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 	# Result: class htest
 	names(pcvm)="PCvM statistic"
 	result<-structure(list(statistic=pcvm,boot.statistics=pcvm.star,p.value=pvalue,method=meth,B=B,type.basis=type.basis,
-							beta.est=beta.est,boot.beta.est=boot.beta.est,p=p.opt,ord=ord.opt,data.name="Y=<X,b>+e"))
+							beta.est=beta.est,p=p.opt,ord=ord.opt,data.name="Y=<X,b>+e"))
 							
 	class(result)<-"htest"
 	return(result)
 	
 }
+
+
