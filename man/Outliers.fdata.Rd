@@ -15,7 +15,7 @@ Procedure for detecting funcitonal outliers.
 \usage{
 outliers.thres.lrt(fdataobj,nb=200,smo=0.05,trim=0.10,...)
 outliers.lrt(fdataobj,nb=200,smo=0.05,trim=0.10,...)
-outliers.depth.trim(fdataobj,nb=200,smo=0.05,trim=0.05,
+outliers.depth.trim(fdataobj,nb=200,smo=0.05,trim=0.01,
 dfunc=depth.mode,...)
 outliers.depth.pond(fdataobj,nb=200,smo=0.05,dfunc=depth.mode,...)
 %quantile.outliers.pond(fdataobj,dfunc=depth.mode,
@@ -57,13 +57,17 @@ quantile.outliers.pond and quantile.outliers.trim functions provides the quantil
 }
 \references{
 Cuevas A, Febrero M, Fraiman R. 2006.  \emph{On the use of bootstrap for estimating functions with functional data.} Computational Statistics and Data Analysis 51: 1063{-}1074.\cr
-\cr
-Febrero-Bande, M., Galeano, P., and Gonzalez-Manteiga, W. (2008).  \emph{Outlier detection in functional data by depth measures with application to identify abnormal NOx levels}. Environmetrics 19, 4, 331{-}345. \cr
 
-Febrero-Bande, M., Galeano, P. and Gonzalez-Manteiga, W.	 (2007). \emph{A functional analysis of NOx levels: location and scale estimation and outlier detection}. Computational Statistics 22, 3, 411{-}427
+Febrero-Bande, M., Galeano, P., and Gonzalez-Manteiga, W. (2008).  \emph{Outlier detection in functional data by depth measures with application to identify abnormal NOx levels}. Environmetrics 19, 4, 331{-}345. 
+
+Febrero-Bande, M., Galeano, P. and Gonzalez-Manteiga, W.	 (2007). \emph{A functional analysis of NOx levels: location and scale estimation and outlier detection}. Computational Statistics 22, 3, 411{-}427.
+
+Febrero-Bande,  M., Oviedo de la Fuente, M. (2012).  \emph{Statistical Computing in Functional Data Analysis: The R Package fda.usc.}
+Journal of Statistical Software, 51(4), 1-28. \url{http://www.jstatsoft.org/v51/i04/}
+
 }
 \author{
-Febrero-Bande, M. and Oviedo de la Fuente, M.
+Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 \seealso{
 See Also: \code{\link{fdata.bootstrap}}, \code{\link{Depth}}.

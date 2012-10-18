@@ -23,10 +23,12 @@ prob.group<-array(NA,dim=c(n,ngroup))
 if (ngroup==2) {
       newy<-ifelse(y==ny[1],0,1)
       newdata$df$y<-newy
+      print("antes")
       a[[1]]<-fregre.gsam(formula,data=newdata,family=family,weights=weights,basis.x=basis.x,
       basis.b=basis.b,CV=CV,...)
+            print(a[[1]])
       yest<-ifelse(a[[1]]$fitted.values<.5,ny[1],ny[2])
-    tab<-table(yest,y)
+      tab<-table(yest,y)
       prob[1]=tab[1,1]/sum(tab[,1])
       dtab<-dim(tab)
       if (dtab[1]==dtab[2])    {
@@ -43,8 +45,7 @@ else {
    colnames(prob.group)<-ny
    for (i in 1:ngroup) {
               newy<-ifelse(y==ny[i],0,1)
-              newdata$df[[response]]<-newy
-              
+              newdata$df[[response]]<-newy                
               a[[i]]<-fregre.gsam(formula,data=newdata,family=family,weights=weights,
               basis.x=basis.x,basis.b=basis.b,CV=CV,...)
               prob.group[,i]<-a[[i]]$fitted.values
@@ -62,4 +63,5 @@ prob.classification=prob,prob.group=prob.group,C=C,m=m,max.prob=max.prob,fit=a)
 class(output)="classif"
 return(output)
 }
+
 

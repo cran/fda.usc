@@ -12,7 +12,7 @@ NOx levels measured every hour by a control station in Poblenou in Barcelona (Sp
 \format{
   The format is:\cr
  \code{..$nox}:  \code{fdata} class object with: \cr
- i.- \code{"data"}: Matrix  with 127 curves (rows) discretized in 24 points or argvals (columns).\cr
+ i.- \code{"data"}: Matrix  with 115 curves (rows) discretized in 24 points or argvals (columns).\cr
  ii.- \code{"argvals": 0:23}\cr
  iii.- \code{"rangeval"=(0,23)}: range(\code{"argvals"}), \cr
  iv.- \code{"names"} list with:  \code{main} an overall title "NOx  data set",	\code{xlab} title for \code{x} axis "Hours" and \code{ylab} title for \code{y} axis  "NOx (mglm^3)".\cr

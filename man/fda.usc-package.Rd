@@ -1,5 +1,6 @@
+      
 \name{fda.usc-package}
-\Rdversion{0.9.8.1}
+\Rdversion{1.0.0}
 \alias{fda.usc-package}
 \alias{fda.usc}
 \docType{package}
@@ -49,6 +50,7 @@ B.1-Depth methods \code{\link{Depth}}:\cr
 \tab \code{\link{depth.FM}} \cr
 \tab \code{\link{depth.mode}} \cr
 \tab \code{\link{depth.RP}} \cr
+\tab \code{\link{depth.RT}} \cr
 \tab \code{\link{depth.RPD}} \cr
 \tab \code{\link{Descriptive}} \cr
 }
@@ -58,8 +60,6 @@ B.2-Functional Outliers detection methods:\cr
 \tab \code{\link{outliers.depth.pond}} \cr
 \tab \code{\link{outliers.thres.lrt}} \cr
 \tab \code{\link{outliers.lrt}} \cr
-\tab \code{\link{quantile.outliers.trim}} \cr
-\tab \code{\link{quantile.outliers.pond}} \cr
 }
   C.- Functional Regression with Scalar Response	\cr
 
@@ -78,7 +78,7 @@ The functions included in this section allow the estimation of different functio
 \tab \code{\link{predict.fregre.fd}} \cr
 }
 
-  C.2. Functional  and non functional explanatory covariates.\cr
+  C.2. Functional and non functional explanatory covariates.\cr
 The functions in this section extends those regression models in previous section in several ways.  \cr
 Semifunctional partial linear regression \code{\link{fregre.plm}}  is an extension of functional nonparameric regression  \code{\link{fregre.np}}  allowing  include non-functional variables.\cr
 Functional generalized additive model using backfitting algorithm \code{\link{fregre.gkam}} is an extension of functional nonparameric regression  \code{\link{fregre.np}}  allowing  include  more than one functional variables.\cr
@@ -96,7 +96,15 @@ functional generalized spectral additive model \code{\link{fregre.gsam}}  are an
 \tab \code{\link{predict.fregre.plm}} \cr
 \tab \code{\link{predict.fregre.glm}} \cr
 \tab \code{\link{predict.fregre.gsam}} \cr
-}	
+}
+
+C.3. Test for the functional linear model (FLM).\cr	
+\tabular{ll}{
+\tab \code{\link{flm.Ftest}}, F-test for the FLM with scalar response  \cr
+\tab \code{\link{flm.test}}, Goodness-of-fit test for the FLM with scalar response  \cr
+\tab \code{\link{PCvM.statistic}},  PCvM statistic for the FLM with scalar response  \cr
+}
+
   D.- Functional Supervised Classification	\cr
 This section allows the estimation of the groups in a training set of functional data \code{fdata} class by different nonparametric methods of supervised classification. Once these classifiers have been trained, they can be used to predict on new functional data.\cr	
 \cr
@@ -140,6 +148,7 @@ This section allows the estimation of the groups in a  functional data set \code
 \tab \code{\link{Kernel.asymmetric}} \cr
 \tab \code{\link{Kernel.integrate}} \cr
 \tab \code{\link{metric.lp}} \cr 
+\tab \code{\link{metric.dist}} \cr 
 \tab \code{\link{semimetric.NPFDA}} \cr 
 \tab \code{\link{semimetric.basis}} \cr 
 }
@@ -148,13 +157,18 @@ This section allows the estimation of the groups in a  functional data set \code
 \tabular{ll}{
 Package: \tab fda.usc\cr
 Type: \tab Package\cr
-Version: \tab 0.9.8.1\cr
-Date: \tab 2012-06-29\cr
+Version: \tab 1.0.0\cr
+Date: \tab 2012-10-18\cr
 License: \tab GPL-2 \cr
 LazyLoad: \tab yes\cr
+Url: \url{ http://eio.usc.es/pub/MAESFE/}, \url{http://eio.usc.es/pub/gi1914/}
 }
 }
 \author{
-Febrero-Bande, M. <manuel.febrero@usc.es>  and Oviedo de la Fuente, M. <manuel.oviedo@usc.es> 
+Manuel Febrero-Bande <manuel.febrero@usc.es> and\cr Manuel Oviedo de la Fuente <manuel.oviedo@usc.es> 
+}
+\references{
+Febrero-Bande,  M., Oviedo de la Fuente, M. (2012).  \emph{Statistical Computing in Functional Data Analysis: The R Package fda.usc.}
+Journal of Statistical Software, 51(4), 1-28. \url{http://www.jstatsoft.org/v51/i04/}
 }
 \keyword{ package }

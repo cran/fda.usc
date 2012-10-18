@@ -47,7 +47,7 @@ Return:\cr
 \references{
 Hartigan, J. A. and Wong, M. A. (1979). \emph{A K{-}means clustering algorithm}. Applied Statistics 28, 100 \-108.}
 \author{
-Febrero-Bande, M. and Oviedo de la Fuente, M.
+Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 \seealso{
 See Also generic \link[stats]{kmeans} function.

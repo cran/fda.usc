@@ -37,7 +37,7 @@ B.-If \code{trim>0}:\cr
 Wasserman, L. \emph{All of Nonparametric Statistics}. Springer Texts in Statistics, 2006.
 }
 \author{
-Febrero-Bande, M. and Oviedo de la Fuente, M.
+Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 \seealso{
 See Also as  \code{\link{min.np}} \cr

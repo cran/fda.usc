@@ -22,7 +22,7 @@ prob2<-prob<-ngroup<-nlevels(y)
 if (ngroup==2) {
       newy<-ifelse(y==ny[1],0,1)
       newdata$df$y<-newy
-      a[[1]]<-fregre.glm(formula,data=newdata,family,basis.x,basis.b,CV=CV,...)
+      a[[1]]<-fregre.glm(formula,data=newdata,family,basis.x,basis.b,CV=CV,...)       
       yest<-ifelse(a[[1]]$fitted.values<.5,ny[1],ny[2])
       tab<-table(yest,y)
       prob[1]=tab[1,1]/sum(tab[,1])
@@ -60,5 +60,4 @@ class(output)="classif"
 return(output)
 }
 
-
-
+ 

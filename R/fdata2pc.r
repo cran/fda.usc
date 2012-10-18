@@ -21,11 +21,14 @@ fdata2pc<-function (fdataobj,  ncomp = 2,norm = TRUE,...)
     Jmin <- min(c(J, n))
     Xcen.fdata$data
     eigenres <- svd(Xcen.fdata$data)
+#        eigenres2 <- eigen(t(Xcen.fdata$data)%*%Xcen.fdata$data)
     v <- eigenres$v
+#v <- eigenres2$vectors  
+#lmbd<-eigenres2$values
     u <- eigenres$u
-    d <- eigenres$d
+    newd<-d <- eigenres$d
     D <- diag(d)
-   delta=1
+    delta=1
     vs <- fdata(t(v), tt, rtt, list(main = "fdata2pc", xlab = "t",
         ylab = "rotation"))
     scores <- matrix(0, ncol = J, nrow = n)
@@ -45,14 +48,14 @@ fdata2pc<-function (fdataobj,  ncomp = 2,norm = TRUE,...)
     }
     else {
         scores[, 1:Jmin] <- inprod.fdata(Xcen.fdata, vs, ...)
-        newd <- d
     }
     colnames(scores) <- paste("PC", 1:J, sep = "")
     l <- 1:ncomp
-    out <- list(call=C,d = newd, rotation = vs[1:ncomp],
+    out <- list(call=C,d = newd[1:ncomp], rotation = vs[1:ncomp],
          x = scores, fdataobj.cen = Xcen.fdata,
-         mean = xmean, fdataobj = fdataobj,l=l)
+         mean = xmean, fdataobj = fdataobj,l=l,u=u[,1:ncomp])
     class(out) = "fdata.comp"
     return(out)
 }
+    
 

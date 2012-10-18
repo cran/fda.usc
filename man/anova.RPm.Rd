@@ -56,7 +56,7 @@ Cuesta-Albertos, J.A., Febrero-Bande, M. \emph{A simple multiway ANOVA for funct
 Test 2010, DOI \bold{10.1007/s11749-010-0185-3}.
 }
 \author{
-Cuesta-Albertos, J.A., Febrero-Bande, M. and Oviedo de la Fuente, M.
+Cuesta-Albertos, J.A., Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 \seealso{
 See Also as: \code{\link{anova.hetero}} 

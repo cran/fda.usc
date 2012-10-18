@@ -28,7 +28,7 @@ The first item in the \code{data} list of \code{newx} argument is called \emph{"
 Return: \item{predict.kgam}{ produces a vector of predictions} 
 }
 \references{
-Febrero-Bande M. and Gonz\'{a}lez-Manteiga W. (2011). \emph{Generalized Additive Models for Functional Data}. Recent Advances in functional Data Analyisis and Related Topics. Physica-Velag. \cr
+Febrero-Bande M. and Gonz\'{a}lez-Manteiga W. (2011). \emph{Generalized Additive Models for Functional Data}. Recent Advances in functional Data Analysis and Related Topics. Physica-Velag. \cr
 McCullagh and Nelder (1989), \emph{Generalized Linear Models} 2nd ed. Chapman and Hall. \cr
 Opsomer J.D. and Ruppert D.(1997). \emph{Fitting a bivariate additive model by local polynomial regression}.Annals of Statistics, \code{25}, 186-211.
 }
@@ -41,21 +41,21 @@ See Also as:  \code{\link{fregre.gsam}}. \cr
 \examples{
 data(tecator)
 ind<-1:129
-ab=tecator$absorp.fdata
-ab2=fdata.deriv(ab,2)
+ ab=tecator$absorp.fdata
+ ab2=fdata.deriv(ab,2)
 
-# Example: Binomial family 
-ycat=ifelse(tecator$y[,"Fat"]<15,0,1)
-yfat.cat<-ycat[ind]
-f<-yfat.cat~ab+ab2
-xlist=list("df"=data.frame(yfat.cat),"ab"=ab[ind],"ab2"=ab2[ind])
+## Example: Binomial family 
+ ycat=ifelse(tecator$y[,"Fat"]<15,0,1)
+ yfat.cat<-ycat[ind]
+ f<-yfat.cat~ab+ab2
+ xlist=list("df"=data.frame(yfat.cat),"ab"=ab[ind],"ab2"=ab2[ind])
 
-# Time-consuming 
-res=fregre.gkam(f,family=binomial(),data=xlist,control=list(maxit=2))
-newxlist=list("ab"=ab[-ind],"ab2"=ab2[-ind])
+## Time-consuming 
+# res=fregre.gkam(f,family=binomial(),data=xlist,control=list(maxit=2))
+# newxlist=list("ab"=ab[-ind],"ab2"=ab2[-ind])
 
-pred=predict(res,newxlist)
-table(ycat[-ind],ifelse(pred<.5,0,1))
+# pred=predict(res,newxlist)
+# table(ycat[-ind],ifelse(pred<.5,0,1))
 
 
 }

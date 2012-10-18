@@ -13,10 +13,12 @@ else {if (x$C[[1]]=='classif.kernel'| x$C[[1]]=='classif.np') {
    }
 else {if  (x$C[[1]]=='classif.gsam' | x$C[[1]]=='classif.gsam2boost'|
 x$C[[1]]=='classif.glm' |x$C[[1]]== 'classif.glm2boost' |
-x$C[[1]]=='classif.kgam' | x$C[[1]]=='classif.kgam2boost'|
+x$C[[1]]=='classif.gkam' | x$C[[1]]=='classif.gkam2boost'|
  x$C[[1]]=='classif.tree' |   x$C[[1]]=='classif.tree2boost'){
    cat("\n-Probability of correct classification: ",round(x$max.prob,4),"\n")
      }
+     if (x$C[[1]]=='classif.DD'){
+    cat("\n-Probability of correct classification: ",round(1-x$misclassification,4),"\n")}
      }
 }
 cat("\n")

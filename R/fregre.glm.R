@@ -14,7 +14,7 @@ basis.b=NULL,CV=FALSE,...){
  vint=setdiff(terms,vtab)
  vfunc=setdiff(vfunc2,vint)
  vnf=c(vnf2,vint)
- off<-attr(tf,"offset")
+off<-attr(tf,"offset")
 name.coef=nam=par.fregre=beta.l=list()
  kterms=1
  if (length(vnf)>0) {
@@ -33,12 +33,14 @@ else {
  XX=data$df[response]
 names(XX)=response
 }
+#print(paste("Non functional covariate:",vnf))
 #print(paste("Functional covariate:",vfunc))
-if (length(vfunc)>0) {
- mean.list=vs.list=JJ=list()
  bsp1<-bsp2<-TRUE
- for (i in 1:length(vfunc)) {
-if (class(data[[vfunc[i]]])[1]=="fdata"){
+ lenfunc<-length(vfunc)>0
+ if (lenfunc) {
+  mean.list=vs.list=JJ=list()
+  for (i in 1:length(vfunc)) {
+    if (class(data[[vfunc[i]]])[1]=="fdata"){
       tt<-data[[vfunc[i]]][["argvals"]]
       rtt<-data[[vfunc[i]]][["rangeval"]]
       fdat<-data[[vfunc[i]]];      dat<-data[[vfunc[i]]]$data
@@ -75,7 +77,7 @@ if (class(data[[vfunc[i]]])[1]=="fdata"){
            kterms <- kterms + 1
            }
         JJ[[vfunc[i]]]<-J
-}
+    }
       else {
         l<-nrow(basis.x[[vfunc[i]]]$basis)
         vs <- t(basis.x[[vfunc[i]]]$basis$data)
@@ -190,7 +192,9 @@ if (class(data[[vfunc[i]]])[1]=="fdata"){
     else {
      z=glm(formula=pf,data=XX,family=family,x=TRUE,y=TRUE,...)
      }
+
     z$call<-z$call[1:2]
+if (lenfunc) {    
     for (i in 1:length(vfunc)) {
       if (bsp1) beta.l[[vfunc[i]]]=fd(z[[1]][name.coef[[vfunc[i]]]],basis.b[[vfunc[i]]])
        else{
@@ -210,17 +214,18 @@ if (class(data[[vfunc[i]]])[1]=="fdata"){
       }
       }
     }
-
+# z$sr2<-sum(z$residuals^2)/z$df.residual
  z$beta.l=beta.l
- z$formula=pf
- z$mean=mean.list
- z$formula.ini=formula
  z$basis.x=basis.x
  z$basis.b=basis.b
+ z$mean=mean.list
+ z$formula=pf
  z$JJ<-JJ
+ z$vs.list=vs.list
+ }
+ z$formula.ini=formula
  z$data=z$data
  z$XX=XX
- z$vs.list=vs.list
  class(z)<-c(class(z),"fregre.glm")
  z
 }

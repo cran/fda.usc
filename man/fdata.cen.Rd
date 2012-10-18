@@ -20,7 +20,7 @@ Return:\cr  two \code{fdata} class objects with:
 \item{meanX}{ Functional mean substracted.}
 }
 \author{
-Febrero-Bande, M. and Oviedo de la Fuente, M.
+Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 \seealso{
 See Also as  \code{\link{fdata}}} 

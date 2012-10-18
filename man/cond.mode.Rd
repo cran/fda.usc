@@ -23,7 +23,7 @@ Ferraty, F. and Vieu, P. (2006). \emph{Nonparametric functional data analysis.}
 Springer Series in Statistics, New York.
 }
 \author{
-Febrero-Bande, M. and Oviedo de la Fuente, M.
+Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 \seealso{
 See Also as:  \code{\link{cond.F}},  \code{\link{cond.quantile}}  and  \link[stats]{splinefun} . 
@@ -46,11 +46,13 @@ ind=101;ind2=101:110
 pr0=x[ind];pr10=x[ind2]
 ndist=161
 gridy=seq(-1.598069,1.598069, len=ndist)
-# Conditional Function
+## Conditional Function
 I=5
-res = cond.F(pr10[I], gridy, prx, pry, h=1)
-mcond=cond.mode(res)
-mcond2=cond.mode(res,method="diff")
+## Time consuming
+# res = cond.F(pr10[I], gridy, prx, pry, h=1)
+
+# mcond=cond.mode(res)
+# mcond2=cond.mode(res,method="diff")
 
 
 

@@ -17,13 +17,17 @@ The  \code{\link{depth.RPD}} function also involves the derivatives of each curv
 }
 
 \references{
-Cuevas, A., Febrero-Bande, M. and Fraiman, R. (2007). \emph{Robust estimation and classification for functional data via projection-based depth notions.} Computational Statistics 22, 3, 481{-}496 \cr
+Cuevas, A., Febrero-Bande, M. and Fraiman, R. (2007). \emph{Robust estimation and classification for functional data via projection-based depth notions.} Computational Statistics 22, 3, 481{-}496.
 
-Febrero-Bande, M., Galeano, P., and Gonzalez-Manteiga, W. (2008).  \emph{Outlier detection in functional data by depth measures with application to identify abnormal NOx levels}. Environmetrics 19, 4, 331{-}345 \cr
+Febrero-Bande, M., Galeano, P., and Gonzalez-Manteiga, W. (2008).  \emph{Outlier detection in functional data by depth measures with application to identify abnormal NOx levels}. Environmetrics 19, 4, 331{-}345.
 
-Fraiman R, Muniz G. 2001.  \emph{Trimmed means for functional data.} Test 10: 419{-}440.\cr
+Fraiman R, Muniz G. 2001.  \emph{Trimmed means for functional data.} Test 10: 419{-}440.
+
 Cuesta Albertos, J. A. and Nieto Reyes, A.  \emph{The Random Tukey Depth.}
-Computational Statistics and Data Analysis (2008), Vol. 52, Issue 11, 4979{-}4988.\cr
+Computational Statistics and Data Analysis (2008), Vol. 52, Issue 11, 4979{-}4988.
+
+Febrero-Bande,  M., Oviedo de la Fuente, M. (2012).  \emph{Statistical Computing in Functional Data Analysis: The R Package fda.usc.}
+Journal of Statistical Software, 51(4), 1-28. \url{http://www.jstatsoft.org/v51/i04/}
 }
 \author{
 Febrero-Bande, M., and Oviedo de la Fuente, M.

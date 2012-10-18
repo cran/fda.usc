@@ -28,8 +28,11 @@ The partial least squares are calculated by \code{NIPALS} algorithm.
 }
 \references{ 
 Kraemer, N., Sugiyama M. (2011). \emph{The Degrees of Freedom of Partial Least Squares Regression}. Journal of the American Statistical Association. Volume 106, 697-705.
+
+Febrero-Bande,  M., Oviedo de la Fuente, M. (2012).  \emph{Statistical Computing in Functional Data Analysis: The R Package fda.usc.}
+Journal of Statistical Software, 51(4), 1-28. \url{http://www.jstatsoft.org/v51/i04/}
 }
-\author{ Febrero-Bande, M. and Oviedo de la Fuente, M. }
+\author{ Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es} }
 \seealso{
 %See Also as:  \code{\link{fdata2pc}}. \cr
 Used in: \code{\link{fregre.pls}}, \code{\link{fregre.pls.cv}}.\cr

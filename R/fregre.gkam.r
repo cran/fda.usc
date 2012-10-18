@@ -110,6 +110,7 @@ if (family$family=="binomial") {
 #    eta = apply(X, 1, sum)
      eta = rowSums(X)
     mu = linkinv(eta)
+    
     conv <- FALSE
     for (iter in 1L:control$maxit) {
         dev <- devold <- sum(dev.resids(y, mu, weights))
@@ -254,8 +255,8 @@ if (family$family=="binomial") {
             warning("kgam.fit: fitted rates numerically 0 occurred",
                 call. = FALSE)
     }
-    residuals <- (y - mu)/
-    (eta) ##### ok??
+
+    residuals <- (y - mu)#/     (eta) ##### ok??
     nr <- min(sum(good), nvars)
     names(residuals) <- ynames
     names(mu) <- ynames
@@ -273,12 +274,16 @@ if (family$family=="binomial") {
     aic.model <- aic(y, nobs, mu, weights, dev) + 2 * sum(eqrank)
     names(result)<-namesx
     H<-kgam.H(result,control$inverse)
+    
+    sr2<-sum(residuals^2)/(nobs - sum(eqrank))
+    print(sum(eqrank))
+    print(sum(diag(H)))
 #    if (family$family=="binomial" & !is.factor(y)) y<-factor(y)
     res <- list(result = result, residuals = residuals, fitted.values = mu,
         effects = X, alpha = mean(X[, nvars + intercept]), family = family,
         linear.predictors = eta, deviance = dev, aic = aic.model,
         null.deviance = nulldev, iter = iter, weights = wt, eqrank = eqrank,
-        prior.weights = weights, y = y0, converged = conv,H=H)
+        prior.weights = weights, y = y0, converged = conv,H=H,sr2=sr2)
     class(res) <- "fregre.gkam"
     res
 }

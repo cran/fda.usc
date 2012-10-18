@@ -44,20 +44,21 @@ Return \code{gam} object plus:\cr
 \item{CV}{ \$y.pred predicted response by cross-validation.}	
 }
 \references{
-Muller HG and Stadtmuller U. (2005). \emph{Generalized functional linear models.}  Ann. Statist.33 774-805.\cr
+Muller HG and Stadtmuller U. (2005). \emph{Generalized functional linear models.}  Ann. Statist.33 774-805.
 
-Wood (2001) \emph{mgcv:GAMs and Generalized Ridge Regression for R}. R News 1(2):20-25.\cr
+Wood (2001) \emph{mgcv:GAMs and Generalized Ridge Regression for R}. R News 1(2):20-25.
 
-Ramsay, James O., and Silverman, Bernard W. (2006), \emph{ Functional Data Analysis}, 2nd ed., Springer, New York. \cr
+Ramsay, James O., and Silverman, Bernard W. (2006), \emph{ Functional Data Analysis}, 2nd ed., Springer, New York. 
 
-Ramsay, James O., and Silverman, Bernard W. (2006), \emph{ Functional Data Analysis}, 2nd ed., Springer, New York. \cr
+Ramsay, James O., and Silverman, Bernard W. (2006), \emph{ Functional Data Analysis}, 2nd ed., Springer, New York. 
 
-McCullagh and Nelder (1989), \emph{Generalized Linear Models} 2nd ed. Chapman and Hall. \cr
+McCullagh and Nelder (1989), \emph{Generalized Linear Models} 2nd ed. Chapman and Hall. 
 
-Venables, W. N. and Ripley, B. D. (2002) \emph{Modern Applied Statistics with S}, New York: Springer. \cr
+Venables, W. N. and Ripley, B. D. (2002) \emph{Modern Applied Statistics with S}, New York: Springer.
 }
+\note{If the formula only contains a non functional explanatory variables (multivariate covariates), the function compute a standard  \code{\link{glm}} procedure.}
 \author{
-Febrero-Bande, M. and Oviedo de la Fuente, M.
+Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 \seealso{
 See Also as:  \code{\link{predict.fregre.gsam}} and \code{\link{summary.gam}}.\cr

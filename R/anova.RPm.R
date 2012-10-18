@@ -3,6 +3,8 @@ hetero=TRUE,pr=FALSE,w=rep(1,ncol(object)),nboot=0,contrast=NULL,...){
   if (is.data.frame(object)) data=as.matrix(object)
   else if (is.fdata(object)) data=object[["data"]]
   if (class(fdata)=="data.fac") data.fac=as.matrix(data.fac) #new
+  min.data.fac<-min(table(data.fac))
+  if (min.data.fac==0)  stop("Contingency table of factor levels (data.fac argument) contains 0 counts  values")
   nrow=nrow(data);ncol=ncol(data)
   bonf=(1-alpha)/RP
   nprRP=max(RP)
@@ -152,3 +154,4 @@ if (!is.null(contrast)) res$contrast=contrast
  class(res)="anova.RPm"
 return(res)
 }
+

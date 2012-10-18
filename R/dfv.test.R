@@ -26,9 +26,6 @@ dfv.statistic=function(X.fdata,Y,h=quantile(x=metric.lp(X.fdata),probs=c(0.05,0.
 # Delsol, Ferraty and Vieu test for the simple hypothesis of no interaction with bootstrap calibration
 dfv.test=function(X.fdata,Y,B=5000,h=quantile(x=metric.lp(X.fdata),probs=c(0.05,0.10,0.15,0.25,0.50)),K=function(x)2*dnorm(abs(x)),weights=rep(1,dim(X.fdata$data)[1]),d=metric.lp,show.prog=TRUE){
 	
-	# Center the response
-	Y=Y-mean(Y)
-	
 	# REAL WORLD
 	dist=d(X.fdata,X.fdata)
 	Tn=dfv.statistic(X.fdata=X.fdata,Y=Y,h=h,K=K,weights=weights,dist=dist)

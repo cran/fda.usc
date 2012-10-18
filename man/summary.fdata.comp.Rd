@@ -22,29 +22,29 @@ If \code{ask}=TRUE, draw each graph in a window, waiting to confirm the change o
 If \code{ask}=FALSE draw graphs in one window.	 
 }
 \references{
-Becker, R. A., Chambers, J. M. and Wilks, A. R. (1988). \emph{The New S Language}. Wadsworth \& Brooks/Cole. \cr
+Becker, R. A., Chambers, J. M. and Wilks, A. R. (1988). \emph{The New S Language}. Wadsworth \& Brooks/Cole. 
 
 Venables, W. N. and B. D. Ripley (2002). \emph{Modern Applied Statistics with S}. Springer-Verlag. 
 }
 \author{
-Febrero-Bande, M. and Oviedo de la Fuente, M.
+Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 \seealso{
 See Also as \code{\link{fdata2pc}}, \code{\link{fdata2pls}}  and  \link[stats]{cor}
 }
 \examples{
-
-n= 200;tt= seq(0,1,len=101)
-x0<-rproc2fdata(n,tt,sigma="wiener")
-x1<-rproc2fdata(n,tt,sigma=0.1)
-x<-x0*3+x1
-beta = tt*sin(2*pi*tt)^2
-fbeta = fdata(beta,tt)
-y<-inprod.fdata(x,fbeta)+rnorm(n,sd=0.1)
-pc1=fdata2pc(x)
-summary(pc1,y)
-pls1=fdata2pls(x,y)
-summary(pls1,cor=TRUE)
+## Not run 
+# n= 200;tt= seq(0,1,len=101)
+# x0<-rproc2fdata(n,tt,sigma="wiener")
+# x1<-rproc2fdata(n,tt,sigma=0.1)
+# x<-x0*3+x1
+# beta = tt*sin(2*pi*tt)^2
+# fbeta = fdata(beta,tt)
+# y<-inprod.fdata(x,fbeta)+rnorm(n,sd=0.1)
+# pc1=fdata2pc(x)
+# summary(pc1,y)
+# pls1=fdata2pls(x,y)
+# summary(pls1,cor=TRUE)
 
 }
 \keyword{multivariate} 

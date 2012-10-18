@@ -11,7 +11,7 @@ basis.x=NULL,basis.b=NULL,CV=FALSE,...)
 }
 \arguments{
  \item{formula}{ an object of class \code{formula} (or one that can be coerced to that class): a symbolic description of the model to be fitted. The details of model specification are given under \code{Details}.}
-  \item{data}{ List that containing the variables in the model. }
+  \item{data}{ List that containing the variables in the model.}
  \item{family}{ a description of the error distribution and link function to be used in the model. This can be a character string naming a family function, a family function or the result of a call to a family function. (See \code{\link{family}} for details of family functions). }
 	\item{basis.x}{ List of basis for functional explanatory data estimation.}
 	\item{basis.b}{ List of basis for functional beta parameter estimation.}
@@ -35,13 +35,18 @@ Return \code{glm} object plus:\cr
   \item{prob.group}{ Matrix of predicted class probabilities. For each functional point shows the probability of each possible group membership.} 
   }
 \references{
-Ramsay, James O., and Silverman, Bernard W. (2006), \emph{ Functional Data Analysis}, 2nd ed., Springer, New York. \cr
-McCullagh and Nelder (1989), \emph{Generalized Linear Models} 2nd ed. Chapman and Hall. \cr
+Ramsay, James O., and Silverman, Bernard W. (2006), \emph{ Functional Data Analysis}, 2nd ed., Springer, New York. 
+
+McCullagh and Nelder (1989), \emph{Generalized Linear Models} 2nd ed. Chapman and Hall. 
+
 Venables, W. N. and Ripley, B. D. (2002) \emph{Modern Applied Statistics with S}, New York: Springer. 
 %Wood (2001) mgcv:GAMs and Generalized Ridge Regression for R. R News 1(2):20-25 
 }
+
+\note{If the formula only contains a non functional explanatory variables (multivariate covariates), the function compute a standard  \code{\link{glm}} procedure.}
+
 \author{
-Febrero-Bande, M. and Oviedo de la Fuente, M.
+Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 \seealso{
 See Also as:  \code{\link{fregre.glm}}.\cr

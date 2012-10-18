@@ -13,15 +13,16 @@ fdata.deriv(fdataobj,nderiv=1,method="bspline",class.out='fdata'
   \item{fdataobj}{ \code{\link{fdata}} class object.}     
   \item{nderiv}{  Order of derivation, by defalult \code{nderiv}=1.}
   \item{method}{ Type of derivative method, for more information see \bold{details}.}  
-	\item{class.out}{ Class of functional data returned: \code{fdata} or \code{fd} class.}      
+  \item{class.out}{ Class of functional data returned: \code{fdata} or \code{fd} class.}      
   \item{nbasis}{ Number of Basis for \code{fdatataobj\$DATA}. It is only used if method =\emph{"bspline"}, \emph{"exponential"}, \emph{"fourier"}, \emph{"monomial"} or \emph{"polynomial"}}
   \item{\dots}{ Further arguments passed to or from other methods.}    
 }
 \details{
-
-If method =\emph{"bspline"}, \emph{"exponential"}, \emph{"fourier"}, \emph{"monomial"} or \emph{"polynomial"} \code{fdata.deriv} function creates a basis to represent the functional data. The functional data are converted to class \code{fd} using the \code{\link{Data2fd}} function and the basis indicated in the \code{method}.  Finally, the function  calculates the derivative of order \code{nderiv} of curves using \code{\link{deriv.fd}} function.\cr
-If \code{method}=\emph{"fmm"}, \emph{"periodic"}, \emph{"natural"} or  \emph{"monoH.FC"} is used \code{\link{splinefun}} function.\cr
-If \code{method}=\emph{"diff"}, raw derivation is applied.  Not recommended to use this method when the values are not equally spaced.\cr
+\itemize{
+\item If method =\emph{"bspline"}, \emph{"exponential"}, \emph{"fourier"}, \emph{"monomial"} or \emph{"polynomial"} \code{fdata.deriv} function creates a basis to represent the functional data. The functional data are converted to class \code{fd} using the \code{\link{Data2fd}} function and the basis indicated in the \code{method}.  Finally, the function  calculates the derivative of order \code{nderiv} of curves using \code{\link{deriv.fd}} function.\cr
+\item If \code{method}=\emph{"fmm"}, \emph{"periodic"}, \emph{"natural"} or  \emph{"monoH.FC"} is used \code{\link{splinefun}} function.\cr
+\item If \code{method}=\emph{"diff"}, raw derivation is applied.  Not recommended to use this method when the values are not equally spaced.\cr
+}
 }
 \value{
  Returns the derivative of functional data of \code{fd} class if \code{class.out}="\emph{fd}" or \cr
@@ -31,8 +32,6 @@ If \code{method}=\emph{"diff"}, raw derivation is applied.  Not recommended to u
 See also  \code{\link{deriv.fd}}, \code{\link{splinefun}} and \code{\link{fdata}}  
 }
 \examples{
-
-
 
 data(tecator)
 absorp=tecator$absorp.fdata

@@ -32,6 +32,10 @@ fdataequal<-TRUE
 "==.fdata"<-function(fdata1,fdata2){
 eps=1e-14
 fdataequal<-TRUE
+d1<-dim(fdata1)
+d2<-dim(fdata2)
+if (d1[1]!=d2[1]) return(FALSE)#print("Different dimensions in rows")
+if (d1[2]!=d2[2]) return(FALSE)#print("Different dimensions in columns")
  if (!(all(fdata1[["data"]] == fdata2[["data"]]))) {
     res<-fdata1[["data"]] - fdata2[["data"]]
     if (!all(abs(res)<eps))        {
@@ -192,10 +196,10 @@ c.fdata<-function(...) {
             stop("Objects must all have the same argvals")
         if (any(unlist(fdataj$rangeval) != unlist(rangeval)))
             stop("Objects must all have the same rangeval")
-        if (any(unlist(fdataj$names) != unlist(names)))        {
+#        if (any(unlist(fdataj$names) != unlist(names)))        {
             #print("Concatenate main names")
-            names$main<-paste(names$main,"_",fdataj$names$main,sep="")
-            }
+#            names$main<-paste(names$main,"_",fdataj$names$main,sep="")
+#            }
         if (length(dim(fdataj$data)) != ndim)
             stop("Objects must all have the same number of multiple functions")
     }
@@ -213,6 +217,7 @@ c.fdata<-function(...) {
     concatfdata <- fdata(data, argvals,rangeval, names)
     return(concatfdata)
 }
+
 ################################################################################
 count.na<-function(A){any(is.na(A))}
 

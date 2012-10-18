@@ -32,7 +32,7 @@ else {
  d<-object$d
  if (is.null(object$rn)) rn<-0
  pr.x2<-(d^2+rn)/sum(d^2+rn)
- names(pr.x2)<-colnames(out2)
+ names(pr.x2)<-colnames(out2)[l]
  }
 # print(pr.x2)
  C<-match.call()

@@ -51,12 +51,12 @@ Type of Asymmetric kernel:
 }
 \references{
 Ferraty, F. and Vieu, P. (2006). \emph{Nonparametric functional data analysis.}
-Springer Series in Statistics, New York. \cr
+Springer Series in Statistics, New York. 
 
 Hardle, W. \emph{Applied Nonparametric Regression}. Cambridge University Press, 1994.
 }
 \author{
-Febrero-Bande, M. and Oviedo de la Fuente, M.
+Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 \examples{
 y=qnorm(seq(.1,.9,len=100))

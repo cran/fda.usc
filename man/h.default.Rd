@@ -24,19 +24,20 @@ Ker = "AKer.norm", type.S ="S.NW",...)
 Returns the vector of smoothing parameter or bandwidth \code{h}.
 }
 \author{
-Febrero-Bande, M. and Oviedo de la Fuente, M.
+Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 \seealso{
 See Also as   \code{\link{metric.lp}}, \code{\link{Kernel}} and \code{\link{S.NW}}. \cr
 Function used in \code{\link{fregre.np}} and \code{\link{fregre.np.cv}} function.
 }
 \examples{
-data(aemet)
-h1<-h.default(aemet$temp,prob=c(0.025, 0.25),len=2)
-mdist<-metric.lp(aemet$temp)
-h2<-h.default(aemet$temp,len=2,metric=mdist)
-h3<-h.default(aemet$temp,len=2,metric=semimetric.pca,q=2)
-h4<-h.default(aemet$temp,len=2,metric=semimetric.pca,q=4)
-h1;h2;h3;h4
+##  Not run 
+# data(aemet)
+# h1<-h.default(aemet$temp,prob=c(0.025, 0.25),len=2)
+# mdist<-metric.lp(aemet$temp)
+# h2<-h.default(aemet$temp,len=2,metric=mdist)
+# h3<-h.default(aemet$temp,len=2,metric=semimetric.pca,q=2)
+# h4<-h.default(aemet$temp,len=2,metric=semimetric.pca,q=4)
+# h1;h2;h3;h4
 }
 \keyword{nonparametric} 

@@ -1,3 +1,42 @@
+
+FGCV.S=function(y,S,criteria="GCV",W=diag(1,ncol=ncol(S),nrow=nrow(S)),
+trim=0,draw=FALSE,metric=metric.lp,...){
+    isfdata<-is.fdata(y)
+     if (!isfdata)  stop("y is not a fdata class object")
+    tab=list("GCV","AIC","FPE","Shibata","Rice")
+    type.i=pmatch(criteria,tab)
+    n=ncol(S);l=1:n
+
+         y2=(y$data)
+         y.est=(S%*%y2)
+         y.est<-fdata(y.est,y$argvals, y$rangeval, y$names)
+         e <- y - y.est
+         ee <- drop(norm.fdata(e,metric=metric,...)[,1]^2)
+         if (trim>0) {
+            e.trunc=quantile(ee,probs=(1-trim),na.rm=TRUE,type=4)
+            ind<-ee<=e.trunc
+            if (draw)  plot(y,col=(2-ind))
+            l<-which(abs(ee)<=e.trunc)
+            res = mean(ee[ind],na.rm=TRUE)
+            }
+        else  res = mean(ee, na.rm = TRUE)
+    d<-diag(S)[l]
+    if (is.na(type.i))   {
+                   if (mean(d,na.rm=TRUE)>0.5) vv=Inf
+                   else   vv= 1/(1-2*mean(d,na.rm=TRUE))        }
+    else {
+        vv<-switch(type.i,
+                   "1"=if (type.i==1)  vv=(1-mean(d,na.rm=TRUE))^(-2),
+                   "2"=if (type.i==2)  vv= exp(2*mean(d)),
+                   "3"=if (type.i==3)  vv=(1+mean(d,na.rm=TRUE))/(1-mean(d,na.rm=TRUE)),
+                   "4"=if (type.i==4)  vv=(1+2*mean(d,na.rm=TRUE)),
+                   "5"=if (type.i==5)  {
+                           if (mean(d,na.rm=TRUE)>0.5) vv=Inf
+                           else   vv= 1/(1-2*mean(d,na.rm=TRUE))   }
+                  )
+         }
+return(res*vv/n) }
+
 GCV.S=function(y,S,criteria="GCV",W=diag(1,ncol=ncol(S),nrow=nrow(S)),
 trim=0,draw=FALSE,metric=metric.lp,...){
     isfdata<-is.fdata(y)

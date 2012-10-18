@@ -105,7 +105,9 @@ else {
  names(XX)=response
 }
 #print(paste("Functional covariate:",vfunc))
-if (length(vfunc)>0) {
+ bsp1<-bsp2<-TRUE
+ lenfunc<-length(vfunc)>0
+if (lenfunc) {
 k=1
  mean.list=vs.list=JJ=list()
  bsp1<-bsp2<-TRUE
@@ -220,6 +222,7 @@ k=1
         response = "y"
         colnames(Z) = name.coef[[vfunc[i]]]=paste(vfunc[i], ".",colnames(basis.x[[vfunc[i]]]$harmonics$coefs),sep ="")
         XX = cbind(XX,Z)
+        
         vs.list[[vfunc[i]]]=vs
         mean.list[[vfunc[i]]]=basis.x[[vfunc[i]]]$meanfd
         if (fnf2[i]==1) sm2<-TRUE
@@ -240,63 +243,39 @@ k=1
     par.fregre$data=XX
     ndatos<-nrow(XX)
     yp<-rep(NA,ndatos)
-    if (CV) {
-     print("CV")
-#     #################### reconstruccion nombre variables sm
-      z=gam(formula=par.fregre$formula,data=XX,family=family,...)
-      names2<-NULL
-       for (i in 1:nterms)
-         if  (sm[i]==0)  {
-            if (nf[i]==1)         names2 <- c(names2,terms[i])
-            else                  names2 <- c(names2,terms[i])
-            }
-        else {
-       n.smooth <- length(z$smooth)
-       if (n.smooth > 0) {
-        cat("\nEstimated degrees of freedom:\n")
-        for (i in 1:n.smooth) names2 <- c(names2,z[[1]][z$smooth[[i]]$first.para:z$smooth[[i]]$last.para])
-        }
-        }
-     for (k in 1:ndatos) {
-        x1<-XX[-k,]
-       z=gam(formula=par.fregre$formula,data=x1,family=family,...)    #####   ei1
-       for (i in 1:length(vfunc)) {
-             yp[k]=predict.gam(object=z,newdata =XX[k,],type="response")
-       }
-       z=gam(formula=par.fregre$formula,data=XX,family=family,...)
-       dev.resids<-family$dev.resids(XX[[response]],yp,1) #sum(dev.resids=z$deviance)
-       z$CV<-list("y.pred"=yp,"dev.resids"=dev.resids)
-      }
-      }
-    else {
     z=gam(formula=par.fregre$formula,data=XX,family=family,weights=weights,...)
-    }
 #################### reconstruccion nombre variables sm
- names2<-NULL
- for (i in 1:nterms)
-  if  (sm[i]==0)  {
-            if (nf[i]==1)         names2 <- c(names2,terms[i])
-            else                  names2 <- c(names2,terms[i])
-            }
-  else {
-       n.smooth <- length(z$smooth)
-       if (n.smooth > 0) {
+# names2<-NULL
+# for (i in 1:nterms)
+#  if  (sm[i]==0)  {
+#            if (nf[i]==1)         names2 <- c(names2,terms[i])
+#            else                  names2 <- c(names2,terms[i])
+#            }
+#  else {
+#       n.smooth <- length(z$smooth)
+#       if (n.smooth > 0) {
 #        cat("\nEstimated degrees of freedom:\n")
-        for (i in 1:n.smooth) names2 <- c(names2,z[[1]][z$smooth[[i]]$first.para:z$smooth[[i]]$last.para])
-        }
+#        for (i in 1:n.smooth) names2 <- c(names2,z[[1]][z$smooth[[i]]$first.para:z$smooth[[i]]$last.para])
+#        }
+#}
+ if (lenfunc) {
+  z$mean=mean.list
+  z$basis.x=basis.x
+  z$basis.b=basis.b
+  z$JJ<-JJ
+  z$vs.list=vs.list
+  z$vfunc<-vfunc
 }
  z$formula=pf
- z$mean=mean.list
  z$formula.ini=formula
- z$basis.x=basis.x
- z$basis.b=basis.b
- z$JJ<-JJ
  z$data=z$data
  z$XX=XX
- z$vs.list=vs.list
- z$vfunc<-vfunc
-  z$nnf<-nnf
-   class(z)<-c(class(z),"fregre.gsam")
+ z$nnf<-nnf
+ class(z)<-c(class(z),"fregre.gsam")
 z
 }
 
+
+
+ 
+ 

@@ -25,16 +25,19 @@ fdata2pc(fdataobj,  ncomp = 2,norm = TRUE,...)
 }
 \references{
 Venables, W. N. and B. D. Ripley (2002). \emph{Modern Applied Statistics with S}. Springer-Verlag. 
+
+Febrero-Bande,  M., Oviedo de la Fuente, M. (2012).  \emph{Statistical Computing in Functional Data Analysis: The R Package fda.usc.}
+Journal of Statistical Software, 51(4), 1-28. \url{http://www.jstatsoft.org/v51/i04/}
 }
 \author{
-Febrero-Bande, M. and Oviedo de la Fuente, M.
+Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 \seealso{
 See Also as  \link[base]{svd} and  \link[stats]{varimax}.
 }
 \examples{
 
-n= 500;tt= seq(0,1,len=101)
+n= 200;tt= seq(0,1,len=101)
 x0<-rproc2fdata(n,tt,sigma="wiener")
 x1<-rproc2fdata(n,tt,sigma=0.1)
 x<-x0*3+x1

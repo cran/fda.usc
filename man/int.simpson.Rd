@@ -24,7 +24,7 @@ If method="TRAPZ", Trapezoid rule integration is used.
 %If \code{x} is a fdata class object it computes the integral of \code{x$data} with Respect to \code{x$argvals}.
 }
 \author{
-Febrero-Bande, M. and Oviedo de la Fuente, M.
+Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 \seealso{
 See also  \code{\link{integrate}}.

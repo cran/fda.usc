@@ -38,7 +38,7 @@ dfv.test (X.fdata, Y, B=5000, h=quantile(x=metric.lp(X.fdata),
 \details{
  
  The Delsol, Ferraty and Vieu statistic is defined as \deqn{T_n=\int\bigg(\sum_{i=1}^n(Y_i-m(X_i))K\bigg(\frac{d(X,X_i)}{h}\bigg)\bigg)^2\omega(X)dP_X(X)}{T_n=\int(\sum_{i=1}^n(Y_i-m(X_i))K(\frac{d(X,X_i)}{h}))^2\omega(X)dP_X(X)}
- and in the case of no interaction with \bold{centred} scalar response (when \eqn{H_0:\,m(X)=0}{H_0: m(X)=0} holds), its sample version is computed from \deqn{T_n=\frac{1}{n}\sum_{j=1}^n\bigg(\sum_{i=1}^n Y_iK\bigg(\frac{d(X_j,X_i)}{h}\bigg)\bigg)^2\omega(X_j).}{T_n=\frac{1}{n}\sum_{j=1}^n(\sum_{i=1}^n Y_iK(\frac{d(X_j,X_i)}{h}))^2\omega(X_j).}
+ and in the case of no interaction with centred scalar response (when \eqn{H_0:\,m(X)=0}{H_0: m(X)=0} holds), its sample version is computed from \deqn{T_n=\frac{1}{n}\sum_{j=1}^n\bigg(\sum_{i=1}^n Y_iK\bigg(\frac{d(X_j,X_i)}{h}\bigg)\bigg)^2\omega(X_j).}{T_n=\frac{1}{n}\sum_{j=1}^n(\sum_{i=1}^n Y_iK(\frac{d(X_j,X_i)}{h}))^2\omega(X_j).}
  The sample version implemented here does not consider a splitting of the sample, as the authors comment in their paper. The statistic is computed by the function \code{dfv.statistic} and, before applying the test, the response \eqn{Y}{Y} is centred. The distribution of the test statistic is approximated by a wild bootstrap on the residuals, using the \emph{golden section bootstrap}.
  
  Please note that if a grid of bandwidths is passed, a harmless warning message will prompt at the end of the test (it comes from returning several p-values in the \code{htest} class).

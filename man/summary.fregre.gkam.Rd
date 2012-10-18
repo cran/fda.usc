@@ -50,13 +50,13 @@ If \code{ask}=FALSE draw graphs in one window, by default. If \code{ask}=TRUE, d
 \item{object}{ Object.}
 }
 \author{
-Febrero-Bande, M. and Oviedo de la Fuente, M.
+Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 \seealso{
 Summary function for  \code{\link{fregre.gkam}}.
 }
 \examples{
-## Not run
+## Time consuming
 # data(tecator)
 # ind<-1:129
 # ab=tecator$absorp.fdata[ind]

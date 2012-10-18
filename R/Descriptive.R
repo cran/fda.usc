@@ -44,3 +44,10 @@ func.trimvar.RPD=function(fdataobj,...){
  lista=depth.RPD(fdataobj,...)$ltrim
  func.var(fdataobj[lista,])}
 
+
+func.trim.RT=function(fdataobj,...){depth.RT(fdataobj,...)$mtrim}
+func.med.RT=function(fdataobj,...){ depth.RT(fdataobj,...)$median}
+func.trimvar.RT=function(fdataobj,...){
+ lista=depth.RT(fdataobj,...)$ltrim
+ func.var(fdataobj[lista,])}
+

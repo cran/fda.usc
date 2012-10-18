@@ -11,7 +11,7 @@
 fregre.gkam(formula,family = gaussian(),data, weights= rep(1,nobs),
      par.metric = NULL,par.np=NULL,offset=NULL,
      control = list(maxit = 100,epsilon = 0.001, trace = FALSE, inverse="solve"),...)
-kgam.H(object,inverse="solve")
+kgam.H(object,inverse="svd")
        }
 \arguments{
 \item{formula}{ an object of class \code{formula} (or one that can be coerced to that class): a symbolic description of the model to be fitted. The details of model specification are given under \code{Details}.}
@@ -23,7 +23,7 @@ kgam.H(object,inverse="solve")
   \item{offset}{this can be used to specify an a priori known component to be included in the linear predictor during fitting.}	     
   \item{control}{ a list of parameters for controlling the fitting process, by default: \code{maxit}, \code{epsilon}, \code{trace} and \code{inverse}}
   \item{object}{ List that containing the Hat matrix for each variable in the model.}
-  \item{inverse}{ ="solve" (by default) or ="svd" method.}
+  \item{inverse}{ ="svd" (by default) or ="solve" method.}
   \item{\dots}{ Further arguments passed to or from other methods.}
 }
 \details{  
@@ -55,7 +55,7 @@ Opsomer and Ruppert (1997)  solves a system  of equations for fit the unknowns \
 \item{converged}{ conv.}
 }
 \references{
-Febrero-Bande M. and Gonzalez-Manteiga W. (2011). \emph{Generalized Additive Models for Functional Data}. Recent Advances in functional Data Analyisis and Related Topics. Physica-Velag. \cr
+Febrero-Bande M. and Gonzalez-Manteiga W. (2011). \emph{Generalized Additive Models for Functional Data}. Recent Advances in functional Data Analysis and Related Topics. Physica-Velag. \cr
 McCullagh and Nelder (1989), \emph{Generalized Linear Models} 2nd ed. Chapman and Hall. \cr
 Opsomer J.D. and Ruppert D.(1997). \emph{Fitting a bivariate additive model by local polynomial regression}.Annals of Statistics, \code{25}, 186-211.
 }
@@ -66,25 +66,25 @@ Febrero-Bande, M. and Oviedo de la Fuente, M.
 See Also as:   \code{\link{fregre.gsam}}, \code{\link{fregre.glm}} and  \code{\link{fregre.np.cv}}\cr
 }
 \examples{
-data(tecator)
-ab=tecator$absorp.fdata[1:100]
-ab2=fdata.deriv(ab,2)
-yfat=tecator$y[1:100,"Fat"]
+ data(tecator)
+ ab=tecator$absorp.fdata[1:100]
+ ab2=fdata.deriv(ab,2)
+ yfat=tecator$y[1:100,"Fat"]
 
-# Example 1: # Changing the argument par.np and family
-yfat.cat=ifelse(yfat<15,0,1)
-xlist=list("df"=data.frame(yfat.cat),"ab"=ab,"ab2"=ab2)
-f2<-yfat.cat~ab+ab2
+## Example 1: # Changing the argument par.np and family
+ yfat.cat=ifelse(yfat<15,0,1)
+ xlist=list("df"=data.frame(yfat.cat),"ab"=ab,"ab2"=ab2)
+ f2<-yfat.cat~ab+ab2
 
-par.NP<-list("ab"=list(Ker=AKer.norm,type.S="S.NW"),
-"ab2"=list(Ker=AKer.norm,type.S="S.NW"))
-res2=fregre.gkam(f2,family=binomial(),data=xlist,
-par.np=par.NP)
-res2
+ par.NP<-list("ab"=list(Ker=AKer.norm,type.S="S.NW"),
+ "ab2"=list(Ker=AKer.norm,type.S="S.NW"))
+# res2=fregre.gkam(f2,family=binomial(),data=xlist,
+# par.np=par.NP)
+# res2
 
 ## Example 2: Changing the argument par.metric and family link
-# par.metric=list("ab"=list(metric=semimetric.deriv,nderiv=2,nbasis=15),
-# "ab2"=list("metric"=semimetric.basis))
+ par.metric=list("ab"=list(metric=semimetric.deriv,nderiv=2,nbasis=15),
+ "ab2"=list("metric"=semimetric.basis))
 # res3=fregre.gkam(f2,family=binomial("probit"),data=xlist,
 # par.metric=par.metric,control=list(maxit=2,trace=FALSE))
 # summary(res3)

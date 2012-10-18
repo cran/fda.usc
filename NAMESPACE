@@ -7,8 +7,7 @@ import(fda)
 import(splines)
 import(MASS) 
 import(mgcv)
-
-
+import(pls)
 
 # exportPattern("^[^\\.]")
 #export(.checkMFClasses, .getXlevels, .MFclass)
@@ -19,7 +18,8 @@ anova.hetero,anova.RPm,argvals,
 AKer.norm,AKer.cos,AKer.epa,AKer.tri,AKer.quar,AKer.unif,
 create.pc.basis,create.pls.basis,create.fdata.basis,classif.glm,classif.gsam,classif.gkam,classif.np,classif.knn,classif.kernel,
 cond.F,cond.mode,cond.quantile,create.fdata.basis,CV.S, 
-depth.FM,depth.mode, depth.RP,depth.RPD,dev.S,dis.cos.cor,fdata,fdata.bootstrap,dim.fdata,
+
+depth.FM,depth.mode, depth.RP,depth.RPD,depth.RT,dev.S,dis.cos.cor,fdata,fdata.bootstrap,dim.fdata,
 fdata.cen,fdata.deriv,fdata2fd,fdata2pc,fdata2pls,FDR,fregre.basis,fregre.basis.cv,fregre.bootstrap,fregre.glm,FDR,
 fregre.gsam,fregre.gkam,fregre.lm,fregre.np,fregre.np.cv,fregre.pc,fregre.pc.cv,fregre.plm,fregre.pls,fregre.pls.cv,
 func.mean,func.var,func.trim.FM,func.trim.mode,func.trim.RP,func.trim.RPD,func.med.FM,func.med.mode,func.med.RP,func.med.RPD,func.trimvar.FM,func.trimvar.mode,func.trimvar.RP,func.trimvar.RPD,
@@ -27,8 +27,8 @@ GCV.S,
 h.default,
 IKer.norm,IKer.cos,IKer.epa,IKer.tri,IKer.quar,IKer.unif,
 influence.fdata,influence.quan,inprod.fdata,int.simpson,is.fdata,
-Kernel,Ker.norm,Ker.cos,Ker.epa,Ker.tri,Ker.quar,Ker.unif,Kernel.asymmetric,Kernel.integrate,kmeans.fd,metric.lp,
-min.basis,min.np,missing.fdata,
+Kernel,Ker.norm,Ker.cos,Ker.epa,Ker.tri,Ker.quar,Ker.unif,Kernel.asymmetric,Kernel.integrate,kmeans.fd,
+metric.dist,metric.lp,min.basis,min.np,missing.fdata,
 norm.fd,norm.fdata,ncol.fdata,nrow.fdata,
 outliers.thres.lrt,outliers.lrt,outliers.depth.trim,outliers.depth.pond,omit.fdata,
 plot.fdata,predict.classif,predict.fregre.fd,predict.fregre.glm,predict.fregre.gsam,
@@ -41,8 +41,9 @@ summary.fdata.comp,summary.fregre.fd,summary.fregre.gkam,summary.anova,
 Var.y,Var.e,
 title.fdata,
 flm.Ftest,flm.test,PCvM.statistic,rber.gold,Adot,
-Ftest.statistic,dfv.statistic,dfv.test,
-fregre.gkam
+Ftest.statistic,dfv.statistic,dfv.test
+#fregre.basis.func,fregre.basis.func.cv,
+#fregre.pc.func,fregre.np.func,fregre.np.func.cv,fregre.lm.func,FGCV.S,FCV.S
 )
 
 #count.na,traza: fda.usc.internal.Rd

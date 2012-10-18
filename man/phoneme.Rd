@@ -32,7 +32,7 @@ Ferraty, F. and Vieu, P. (2006). \emph{NPFDA in practice}. Free access on line a
 \url{http://www.lsp.ups-tlse.fr/staph/npfda/}
 }
 \author{
-Febrero-Bande, M and Oviedo de la Fuente, Manuel
+Manuel Febrero-Bande and Manuel Oviedo de la Fuente <manuel.oviedo@usc.es>
 }
 \examples{
 data(phoneme)

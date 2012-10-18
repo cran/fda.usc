@@ -45,7 +45,7 @@ If the object is returned from the function: \code{\link{classif.kernel}}\cr
 }
   \item{object}{ Estimated by kernel classification.}
 }  
-\author{Febrero-Bande, M. and Oviedo de la Fuente, M.}
+\author{Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}}
 \seealso{
 See Also as:
 \code{\link{classif.knn}}, \code{\link{classif.kernel}} \cr
@@ -54,10 +54,9 @@ See Also as:
 data(phoneme)
 mlearn<-phoneme[["learn"]]
 glearn<-phoneme[["classlearn"]]
-out=classif.knn(glearn,mlearn,knn=c(3,5,7))
-summary.classif(out)
-
-## Not run
+## Not run, time consuming
+# out=classif.knn(glearn,mlearn,knn=c(3,5,7))
+# summary.classif(out)
 # out2=classif.kernel(glearn,mlearn,h=2^(0:5))
 #summary.classif(out2)
 }

@@ -9,27 +9,31 @@
 Plot object of class \code{fdata}.
 }
 \usage{
-%plot.fdata(x,type,main,xlab,ylab,...)
-%lines.fdata(x,...)
-%title.fdata(x,main=NULL,xlab=NULL,ylab=NULL,rownames=NULL) 
 \method{plot}{fdata}(x,type,main,xlab,ylab,\dots)
 \method{lines}{fdata}(x,\dots)
 \method{title}{fdata}(x,main=NULL,xlab=NULL,ylab=NULL,rownames=NULL) 
 }
 \arguments{
-  \item{x}{ \code{fdata} class object with:  i.- \code{"data"}: matrix  of  set cases with dimension (\code{n} x \code{m}), where \code{n} is the number of curves and \code{m} are the discretization points observed in each curve, ii.- \code{"argvals"}: the discretizations points values, iii.- \code{"rangeval"}: range of the discretizations points values, iv.- \code{"names"} (optional) list with  \code{main} an overall title, \code{xlab} title for \code{x} axis and \code{ylab} title for \code{y} axis.}   
+  \item{x}{ \code{fdata} class object with: 
+\itemize{
+		\item \code{"data"}: matrix  of  set cases with dimension (\code{n} x \code{m}), where \code{n} is the number of curves and \code{m} are the points observed in each curve
+    \item \code{"rangeval"}: the discretizations points values, if not provided:  \code{1:m}
+    \item \code{"rangeval"}: range of the discretizations points values, range(\code{argvals}) by default. 
+    \item \code{"names"}: (optional) list with  \code{main} an overall title,	\code{xlab} title for \code{x} axis and \code{ylab} title for \code{y} axis.
+    }  }
+%   i.- \code{"data"}: matrix  of  set cases with dimension (\code{n} x \code{m}), where \code{n} is the number of curves and \code{m} are the discretization points observed in each curve, ii.- \code{"argvals"}: the discretizations points values, iii.- \code{"rangeval"}: range of the discretizations points values, iv.- \code{"names"} (optional) list with  \code{main} an overall title, \code{xlab} title for \code{x} axis and \code{ylab} title for \code{y} axis.}   
   \item{type}{1-character string giving the type of plot desired. The following values are possible, for details, see plot: "l" for lines (by default),"p" for points, , "o" for overplotted points and lines, "b", "c" for (empty if "c") points joined by lines, "s" and "S" for stair steps and "h" for histogram-like vertical lines. Finally, "n" does not produce any points or lines.}
   \item{main}{an overall title for the plot: see \code{\link{title}}.}
-	\item{xlab}{xlab title for x axis, as in plot.}  
-	\item{ylab}{ylab title for y axis, as in plot.}	
-	\item{rownames}{row names.}		
+  \item{xlab}{xlab title for x axis, as in plot.}  
+  \item{ylab}{ylab title for y axis, as in plot.}	
+  \item{rownames}{row names.}		
   \item{\dots}{ Further arguments passed to \link[graphics]{matplot} function.}
   }
 \details{  
 Plot \code{fdata} object.
 }
 \author{
-Febrero-Bande, M and Oviedo de la Fuente, Manuel
+Manuel Febrero Bande and Manuel Oviedo de la Fuente <manuel.oviedo@usc.es>
 }
 \seealso{
 See Also as \code{\link{fdata}} 

@@ -51,7 +51,7 @@ If \code{ask}=FALSE draw graphs in one window, by default. If \code{ask}=TRUE, d
 \item{i.atypical}{ Index of possible atypical curves or possible outliers.}
 }
 \author{
-Febrero-Bande, M. and Oviedo de la Fuente, M.
+Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 \seealso{
 Summary function for  \code{\link{fregre.pc}}, \code{\link{fregre.basis}}, \code{\link{fregre.pls}},  \code{\link{fregre.np}} and \code{\link{fregre.plm}}.

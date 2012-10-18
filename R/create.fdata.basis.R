@@ -39,10 +39,29 @@ create.pc.basis<-function(fdataobj,l=1:5,norm=TRUE,basis=NULL,rn=0,...){
  rtt<-fdataobj$rangeval
  dropind=NULL
  pc<-fdata2pc(fdataobj,norm=norm,ncomp=max(l),...)
+ vs<-pc$rotation$data
+# if (is.vector(pc$u)) pc$u<-matrix(pc$u,ncol=1)
+ if (length(l)==1) {
+   if (is.matrix(pc$u)) {
+     pc$u<-matrix(pc$u[,l],ncol=1) 
+     vs<-matrix(vs[l,],nrow=1) 
+    pc.fdata<-pc$u%*%matrix(pc$d[l])%*%vs     
+     }
+   else { 
+        print(dim(pc$u))
+        pc$u<-matrix(pc$u,ncol=1) 
+        pc$rotation$data<-matrix(vs[l,],ncol=1)
+        pc.fdata<-pc$u%*%(pc$d)%*%vs        
+        }
+
+  }
+ else  pc.fdata<-pc$u[,l]%*%diag(pc$d[l])%*%vs[l,]
+ pc.fdata<-sweep(pc.fdata,2,matrix(pc$mean$data,ncol=1),"+")
  basis.pc = pc$rotation[l, ]
  rownames(basis.pc$data) <- paste("PC", l, sep = "")
 # pc.fdata<-inprod.fdata(x,pc$rotation)%*%pc$rotation$data
- pc.fdata<-inprod.fdata(fdataobj,basis.pc)%*%basis.pc$data
+# pc.fdata<-inprod.fdata(fdataobj,basis.pc)%*%basis.pc$data
+
  basisobj<-pc
  fdnames<- colnames(pc$x[,l])
  if (is.null(basis)) {
@@ -69,6 +88,7 @@ create.pc.basis<-function(fdataobj,l=1:5,norm=TRUE,basis=NULL,rn=0,...){
  return(out)
  # min.basis vs min.np
 }
+
 
 #######################
 #######################

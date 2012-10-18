@@ -3,6 +3,8 @@ alpha=0.95,z=NULL,nboot=500,hetero=FALSE,contrast=NULL,pr=FALSE,...){
   if (is.data.frame(object)) object=as.matrix(object)
   else if (is.fdata(object)) object=object[["data"]]
   if (class(object)=="data.fac") data.fac=as.matrix(data.fac) #new
+  min.data.fac<-min(table(data.fac))
+  if (min.data.fac==0)  stop("Contingency table of factor levels (data.fac argument) contains 0 counts  values")
   nrow=nrow(object);ncol=ncol(object)
  nprRP=max(RP)
  if (!is.null(z) & is.matrix(z)) nprRP=nrow(z)

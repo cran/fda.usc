@@ -81,10 +81,6 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 	# Check B.plot
 	if(plot.it & B.plot>B) stop("B.plot must be less or equal than B")
 	
-	# Center the data first
-	X.fdata=fdata.cen(X.fdata)$Xcen
-	Y=Y-mean(Y)
-	
 	# Number of functions
 	n=dim(X.fdata)[1]
 	
@@ -93,6 +89,10 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 	## COMPOSITE HYPOTHESIS ##
 	if(is.null(beta0.fdata)){
 
+		# Center the data first
+		X.fdata=fdata.cen(X.fdata)$Xcen
+		Y=Y-mean(Y)
+		
 		## 1. Optimal estimation of beta and the basis order ##
 		
 		if(est.method=="pc"){
@@ -354,7 +354,7 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 	e.hat.star=matrix(ncol=n,nrow=B)
 	
 	# Calculus of the Adot.vec
-	Adot.vec=Adot(X.est)#*detR
+	Adot.vec=Adot(X.est)
 		
 	# REAL WORLD
 	pcvm=PCvM.statistic(X=X.est,residuals=e,p=p.opt,Adot.vec=Adot.vec)

@@ -23,7 +23,7 @@ par.list=list("scale"=1,"theta"=1/3),norm=FALSE,...)
   Return a \code{fdata} class object.
   }  
 \author{
-Febrero-Bande, M. and Oviedo de la Fuente, M.
+Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 \examples{
 par(mfrow=c(3,2))

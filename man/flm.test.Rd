@@ -136,11 +136,11 @@ pcvm.sim
 # flm.test(X,Y,B=5000)
 
 # Estimated beta
-dev.new()
-plot(pcvm.sim$beta.est)
+# dev.new()
+# plot(pcvm.sim$beta.est)
 
 # Simple hypothesis: do not reject beta=beta0
-flm.test(X,Y,beta0.fdata=beta0,B=50,B.plot=50,G=100)
+# fflm.test(X,Y,beta0.fdata=beta0,B=50,B.plot=50,G=100)
 # flm.test(X,Y,beta0.fdata=beta0,B=5000) 
 
 

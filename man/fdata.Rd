@@ -1,35 +1,42 @@
 \name{fdata}
 \Rdversion{1.1}
 \alias{fdata}
-\title{ Converts raw data or other functional data classes into fdata class.
+\title{
+Converts raw data or other functional data classes into fdata class.
 }
 \description{
-
-Create a functional data object of class \code{fdata} from (\code{matrix, data.frame, numeric, integer, fd, fds, fts} or \code{sfts}) class data.
+Create a functional data object of class \code{fdata} from (\code{matrix, data.frame, numeric, integer,} \code{fd, fds, fts} or \code{sfts}) class data.
 }
 \usage{
-fdata(mdata,argvals=NULL,rangeval=NULL,names=NULL)
+fdata(mdata,argvals=NULL,rangeval=NULL,names=NULL,fdata2d=FALSE)
 }
 
 \arguments{
   \item{mdata}{ Matrix  of  set cases with dimension (\code{n} x \code{m}), where \code{n} is the number of curves and \code{m} are the points observed in each curve.}
   \item{argvals}{ Argvals, by default:  \code{1:m}.}
-  \item{rangeval}{ Range of discretization points, by default:  range(\code{argvals}).}
+  \item{rangeval}{ (optional) Range of discretization points, by default:  range(\code{argvals}).}
   \item{names}{ (optional) list with tree components:  \code{main} an overall title,	\code{xlab} title for \code{x} axis and \code{ylab} title for \code{y} axis.}
+   \item{fdata2d}{ TRUE class fdata2d, the functional data is observed in at least a two grids (the \code{argvals} is a list of vectors). By default \code{fdata2d=FALSE} the functional data is observed in a single grid (the \code{argvals} is a vector). }
 }
 
 \value{
-Return \code{fdata} class object with: i.- \code{"data"}: matrix  of  set cases with dimension (\code{n} x \code{m}), where \code{n} is the number of curves and \code{m} are the points observed in each curve, ii.- \code{"rangeval"}: the discretizations points values, if not provided:  \code{1:m},  iii.- \code{"rangeval"}: range of the discretizations points values, by default:  range(\code{argvals}) , iv.- \code{"names"} (optional) list with  \code{main} an overall title,	\code{xlab} title for \code{x} axis and \code{ylab} title for \code{y} axis.
+Return \code{fdata} class object with: 
+\itemize{
+		\item \code{"data"}: matrix  of  set cases with dimension (\code{n} x \code{m}), where \code{n} is the number of curves and \code{m} are the points observed in each curve
+    \item \code{"rangeval"}: the discretizations points values, if not provided:  \code{1:m}
+    \item \code{"rangeval"}: range of the discretizations points values, by default:  range(\code{argvals}) 
+    \item \code{"names"}: (optional) list with  \code{main} an overall title,	\code{xlab} title for \code{x} axis and \code{ylab} title for \code{y} axis.
+    }
 }
+\references{Febrero-Bande,  M., Oviedo de la Fuente, M. (2012).  \emph{Statistical Computing in Functional Data Analysis: The R Package fda.usc.}
+Journal of Statistical Software, 51(4), 1-28. \url{http://www.jstatsoft.org/v51/i04/}}
 \author{
-Febrero-Bande, M. and Oviedo de la Fuente, M.
+Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 \seealso{
 See Also as \code{\link{plot.fdata}}}
 
 \examples{
-
-
 
 data(phoneme)
 mlearn<-phoneme$learn[1:4,1:150]

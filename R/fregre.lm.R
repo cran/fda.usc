@@ -181,7 +181,7 @@ for (i in 1:length(vfunc)) {
       }
 }
 }
-
+# z$sr2<-sum(z$residuals^2)/z$df.residual
  z$beta.l=beta.l
  z$formula=pf
  z$mean=mean.list

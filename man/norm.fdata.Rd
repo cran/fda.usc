@@ -26,7 +26,7 @@ By default it computes the L2-norm with \code{p = 2} and weights \code{w} with l
 The observed points on each curve are equally spaced (by default) or not. 
 }
 \author{
-Febrero-Bande, M. and Oviedo de la Fuente, M.
+Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 \seealso{
 See also  \code{\link{metric.lp}} and \code{\link{norm}}\cr

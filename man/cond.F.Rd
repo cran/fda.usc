@@ -34,7 +34,7 @@ Ferraty, F. and Vieu, P. (2006). \emph{Nonparametric functional data analysis.}
 Springer Series in Statistics, New York.
 }
 \author{
-Febrero-Bande, M. and Oviedo de la Fuente, M.
+Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 \seealso{
 See Also as:  \code{\link{cond.mode}} and \code{\link{cond.quantile}}. 
@@ -60,12 +60,12 @@ ndist=61
 gridy=seq(-1.598069,1.598069, len=ndist)
 # Conditional Function
 res1 = cond.F(pr10, gridy, prx, pry,p=1)
-res2 = cond.F(pr10, gridy, prx, pry,h=0.3)
-res3 = cond.F(pr10, gridy, prx, pry,g=0.25,h=0.3)
+# res2 = cond.F(pr10, gridy, prx, pry,h=0.3)
+# res3 = cond.F(pr10, gridy, prx, pry,g=0.25,h=0.3)
 
-plot(res1$Fc[,1],type="l",ylim=c(0,1))
-lines(res2$Fc[,1],type="l",col=2)
-lines(res3$Fc[,1],type="l",col=3)
+# plot(res1$Fc[,1],type="l",ylim=c(0,1))
+# lines(res2$Fc[,1],type="l",col=2)
+# lines(res3$Fc[,1],type="l",col=3)
 
 
 

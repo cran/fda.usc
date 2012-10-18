@@ -29,12 +29,11 @@ Return: \cr
 }
 \note{It only works with categorical variables.}
 \references{
-
 Brunner, E., Dette, H., Munk, A. \emph{Box-Type Approximations in Nonparametric Factorial Designs.}
 Journal of the American Statistical Association, Vol. 92, No. 440 (Dec., 1997), pp. 1494{-}1502.
 }
 \author{
-Febrero-Bande, M. and Oviedo de la Fuente, M.
+Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 \seealso{
 See Also as:  \code{\link{anova.RPm}} 

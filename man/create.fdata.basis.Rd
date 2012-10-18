@@ -34,10 +34,10 @@ create.raw.fdata(fdataobj, l = 1:ncol(fdataobj))
     \item{type}{ type of basis}  
 }
 \references{
-Ramsay, James O. and Silverman, Bernard W. (2006), \emph{Functional Data Analysis}, 2nd ed., Springer, New York. \cr
+Ramsay, James O. and Silverman, Bernard W. (2006), \emph{Functional Data Analysis}, 2nd ed., Springer, New York. 
 }
 \author{
-Febrero-Bande, M. and Oviedo de la Fuente, M.
+Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 \seealso{
 See Also as  \link[fda]{create.basis} and   \code{\link{fdata2pc}}.

@@ -52,7 +52,7 @@ summary.fregre.fd<-function(object,times.influ=3,times.sigma=3,draw=TRUE,...){
 #     print(summary(object$lm))
      var.1<-apply(object$fdata.comp$x, 2, var)
      pr.x= var.1/sum(var.1)
- cat("\n-With",length(object$l),"Principal Components is  explained ",round(sum(pr.x[object$l])*100
+ cat("\n-With",length(object$l),"Principal Components is explained ",round(sum(pr.x[object$l])*100
  ,2),"%\n of the variability of explicative variables. \n -Variability for each  principal components -PC- (%):\n")
     print(round(pr.x[object$l] * 100, 2))
     }
@@ -413,8 +413,10 @@ return(invisible(object))
 
 ##############################################################################
 ##############################################################################
-kgam.H<-function(object,inverse="solve") {
+kgam.H<-function(object,inverse="svd") {
  lenH<-length(object)
+ if (lenH==1) return(object[[1]]$H)
+ else {
  SS.list<-SS2<-list()
  n<-ncol(object[[1]]$H)
  SS<-matrix(NA,ncol=(lenH)*n,nrow=(lenH)*n)
@@ -422,11 +424,11 @@ kgam.H<-function(object,inverse="solve") {
  unos<-matrix(1,ncol=n,nrow=n)/n
  M<-object[[1]]$H
 # MM=sweep(M,1,apply(M,1,mean),"-")
- MM=sweep(M,1,rowSums(M),"-")
+ MM=sweep(M,1,rowMeans(M),"-")
  if (lenH>1) {
   for (i in 2:lenH) {
 #   MMaux=sweep(object[[i]]$H,1,apply(object[[i]]$H,1,mean),"-")
-   MMaux=sweep(object[[i]]$H,1,rowMeans(object[[i]]$H),"-")
+  MMaux=sweep(object[[i]]$H,1,rowMeans(object[[i]]$H),"-")
    MM<-rbind(MM,MMaux)
    }
   }
@@ -445,8 +447,7 @@ kgam.H<-function(object,inverse="solve") {
   for (i in 2:lenH) {HH=HH+H2[(n*(i-1)+1):(n*i),]  }
   }
   HH
+  }
  }
 ##############################################################################
 ##############################################################################
-
-

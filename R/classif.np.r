@@ -13,7 +13,7 @@ classif.np(group,fdataobj,h,Ker,metric,type.CV,type.S=S.NW,par.CV=par.CV,par.S=p
 classif.np=function(group,fdataobj,h=NULL,Ker=AKer.norm,metric=metric.lp,
 type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0),par.S=list(),...){
 y<-group
-if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
+if (is.fdata(fdataobj)) {
 nas<-apply(fdataobj$data,1,count.na)
 nas.g<-is.na(y)
 C<-match.call()
@@ -42,6 +42,11 @@ if (any(nas) & any(nas.g))  {
 x<-fdataobj[["data"]]
 tt<-fdataobj[["argvals"]]
 rtt<-fdataobj[["rangeval"]]
+}
+else {
+  x<-fdataobj
+  metric=mdist=metric.dist(x,...)
+  }
    C<-match.call()
    mf <- match.call(expand.dots = FALSE)
    m<-match(c("y", "fdataboj","h","Ker","metric","type.CV","type.S","par.CV","par.S"),names(mf),0L)
@@ -61,7 +66,8 @@ lenh <- length(h)
 gcv=cv.error <- array(NA, dim = c(lenh))
 par.S2<-par.S
 lenh=length(h)
-if (!is.factor(y)) y<-as.factor(y)
+if (!is.factor(group)) group<-as.factor(group)
+group<-y<-factor(group,levels=levels(group)[which(table(group)>0)])
 ny<-levels(y)
 numg=nlevels(y)
 Y=array(0,dim=c(numg,n))
@@ -136,6 +142,5 @@ prob.classification=prob.classification,"max.prob"=1-misclass)
 class(out)="classif"
 return(out)
 }
-
 
 

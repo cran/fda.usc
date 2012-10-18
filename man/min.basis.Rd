@@ -43,13 +43,17 @@ Smoothing  matrix is performed by \code{\link{S.basis}}. \code{W} is the matrix 
     \item{numbasis}{ Number of basis to use.}
 }
 \references{
-Ramsay, James O., and Silverman, Bernard W. (2006), \emph{ Functional Data Analysis}, 2nd ed., Springer, New York. \cr
+Ramsay, James O., and Silverman, Bernard W. (2006), \emph{ Functional Data Analysis}, 2nd ed., Springer, New York. 
 
-Wasserman, L. \emph{All of Nonparametric Statistics}. Springer Texts in Statistics, 2006. \cr
+Wasserman, L. \emph{All of Nonparametric Statistics}. Springer Texts in Statistics, 2006. 
 
-Hardle, W. \emph{Applied Nonparametric Regression}. Cambridge University Press, 1994.}
+Hardle, W. \emph{Applied Nonparametric Regression}. Cambridge University Press, 1994.
+
+Febrero-Bande,  M., Oviedo de la Fuente, M. (2012).  \emph{Statistical Computing in Functional Data Analysis: The R Package fda.usc.}
+Journal of Statistical Software, 51(4), 1-28. \url{http://www.jstatsoft.org/v51/i04/}
+                                         }
 \author{
-Febrero-Bande, M. and Oviedo de la Fuente, M.
+Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 \seealso{
 See Also as  \code{\link{S.basis}}. \cr

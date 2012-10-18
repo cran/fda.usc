@@ -22,7 +22,7 @@ By default it uses weights \code{w=1}.
 The observed points on each curve are equally spaced (by default) or not. 
 }
 \author{
-Febrero-Bande, M. and Oviedo de la Fuente, M.
+Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 \seealso{
 See also   \link[fda]{inprod} and \code{\link{norm.fdata}}

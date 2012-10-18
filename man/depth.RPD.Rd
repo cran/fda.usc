@@ -6,12 +6,13 @@
 The depth.RPD function implements a depth measure based on random projections and using several derivatives. 
 }
 \usage{
-depth.RPD(fdataobj,nproj=50,proj=1,deriv=c(0,1),trim=0.25,
+depth.RPD(fdataobj,fdataori=fdataobj,nproj=50,proj=1,deriv=c(0,1),trim=0.25,
 dfunc2=depth.mode,method="fmm",draw=FALSE,...)
 }
 
 \arguments{
-   \item{fdataobj}{ \code{\link{fdata}} class object.}    
+ \item{fdataobj}{  A set of new curves to evaluate the depth. \code{\link{fdata}} class object. }    
+ \item{fdataori}{  A set of original curves where the depth is computed.  \code{\link{fdata}} class object.}   
    \item{nproj}{ Number of random projection.}
   \item{deriv}{  Number of derivatives described in integer vector \code{deriv}. \code{=0} means no derivative.}
   \item{proj}{  if is a character: create the random projection using a covariance matrix by process indicated in the argument (by default, proj=1, sigma=diag(ncol(fdataobj))), else if is a  matrix of random projection provided by the user.} 
@@ -33,11 +34,14 @@ dfunc2=depth.mode,method="fmm",draw=FALSE,...)
     \item{proj}{ The projection value of each point on the curves.}
  }
 \references{
-Cuevas, A., Febrero-Bande, M. and Fraiman, R. (2007). \emph{Robust estimation and classification for functional data via projection-based depth notions.} Computational Statistics 22, 3, 481{-}496.\cr 
+Cuevas, A., Febrero-Bande, M. and Fraiman, R. (2007). \emph{Robust estimation and classification for functional data via projection-based depth notions.} Computational Statistics 22, 3, 481{-}496.
 
-Febrero-Bande, M., Galeano, P., and Gonzalez-Manteiga, W. (2008).  \emph{Outlier detection in functional data by depth measures with application to identify abnormal NOx levels}. Environmetrics 19, 4, 331{-}345. \cr 
+Febrero-Bande, M., Galeano, P., and Gonzalez-Manteiga, W. (2008).  \emph{Outlier detection in functional data by depth measures with application to identify abnormal NOx levels}. Environmetrics 19, 4, 331{-}345. 
 
-J. A. Cuesta-Albertos, R. Fraiman and T. Ransford. \emph{Random projections and goodness-of-fit tests in infinite-dimensional spaces.} Boletim da Sociedade Brasileira de Matematica (2006), 37(4), 1{-}25. \cr
+J. A. Cuesta-Albertos, R. Fraiman and T. Ransford. \emph{Random projections and goodness-of-fit tests in infinite-dimensional spaces.} Boletim da Sociedade Brasileira de Matematica (2006), 37(4), 1{-}25. 
+
+Febrero-Bande,  M., Oviedo de la Fuente, M. (2012).  \emph{Statistical Computing in Functional Data Analysis: The R Package fda.usc.}
+Journal of Statistical Software, 51(4), 1-28. \url{http://www.jstatsoft.org/v51/i04/}
 }
 \author{
 Febrero-Bande, M., and Oviedo de la Fuente, M.

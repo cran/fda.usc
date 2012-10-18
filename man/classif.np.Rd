@@ -45,6 +45,8 @@ type.CV = GCV.S,par.CV=list(trim=0),par.S=list(),...)
   \item{h}{ Vector of smoothing parameter or bandwidht.}
    \item{C}{ A call of function \code{classif.kernel}.}
 }
+\note{If  \code{fdataobj} is a data.frame the function considers the case of multivariate covariates. \cr
+\code{\link{metric.dist}} function is used to compute the distances between the rows of a data matrix (as \code{\link{dist}} function.  }
 \references{
 Ferraty, F. and Vieu, P. (2006). \emph{Nonparametric functional data analysis.}
 Springer Series in Statistics, New York.
@@ -52,8 +54,9 @@ Springer Series in Statistics, New York.
 Ferraty, F. and Vieu, P. (2006). \emph{NPFDA in practice}. Free access on line at
 \url{http://www.lsp.ups-tlse.fr/staph/npfda/}
 }
+
 \author{
-Febrero-Bande, M. and Oviedo de la Fuente, M.
+Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 
 \seealso{

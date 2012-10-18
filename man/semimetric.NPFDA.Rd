@@ -79,8 +79,9 @@ where \eqn{mh} is the maximum horizontal shifted allowed.
 }
 \references{
 Ferraty, F. and Vieu, P. (2006). \emph{Nonparametric functional data analysis.}
-Springer Series in Statistics, New York.\cr
-Ferraty, F. and Vieu, P. (2006). \emph{NPFDA in practice}. \cr
+Springer Series in Statistics, New York.
+
+Ferraty, F. and Vieu, P. (2006). \emph{NPFDA in practice}. 
 Free access on line at \url{http://www.lsp.ups-tlse.fr/staph/npfda/}
 }
 \seealso{

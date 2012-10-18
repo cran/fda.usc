@@ -32,12 +32,12 @@ Return:\cr
 \item{df}{ degrees of freedom for residual.} 
 }
 \references{
-Ramsay, James O., and Silverman, Bernard W. (2006), \emph{ Functional Data Analysis}, 2nd ed., Springer, New York. \cr
-Muller HG and Stadtmuller U. (2005). \emph{Generalized functional linear models.}  Ann. Statist. 33, 774-805.
+Ramsay, James O., and Silverman, Bernard W. (2006), \emph{ Functional Data Analysis}, 2nd ed., Springer, New York. 
 
+Muller HG and Stadtmuller U. (2005). \emph{Generalized functional linear models.}  Ann. Statist. 33, 774-805.
 }
 \author{
-Febrero-Bande, M. and Oviedo de la Fuente, M.
+Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 \seealso{
 See Also as:  \code{\link{fregre.glm}} and  \code{\link{fregre.gkam}},. \cr
@@ -57,21 +57,24 @@ f=Fat~s(Protein)+s(x)
 basis.x=list("x"=basis1,"x.d1"=basis1)
 basis.b=list("x"=basis2,"x.d1"=basis2)
 ldata=list("df"=dataf[ind,],"x"=x[ind],"x.d1"=x.d1[ind])
-res=fregre.gsam(Fat~Water+s(Protein)+x+s(x.d1),data=ldata,family=gaussian(),basis.x=basis.x,basis.b=basis.b)
+res=fregre.gsam(Fat~Water+s(Protein)+x+s(x.d1),data=ldata,family=gaussian(),
+basis.x=basis.x,basis.b=basis.b)
 res2=fregre.gsam(Fat~te(Protein,k=3)+x,data=ldata,family=gaussian())
 
 a<-predict.fregre.gsam(res)
 plot(a,tecator$y$Fat[ind])
-b<-predict.fregre.gsam(res,ldata)
-points(a,tecator$y$Fat[ind],col=2)
+b<-predict.fregre.gsam(res2,ldata)
+points(b,tecator$y$Fat[ind],col=2)
 
 
-# res=fregre.gsam(Fat~s(Water,k=3)+s(x.d1,k=3)+s(x,k=3),data=ldata,family=gaussian(),basis.x=basis.x,basis.b=basis.b)
+# res=fregre.gsam(Fat~s(Water,k=3)+s(x.d1,k=3)+s(x,k=3),data=ldata,
+# family=gaussian(),basis.x=basis.x,basis.b=basis.b)
 # newldata=list("df"=dataf[-ind,],"x"=x[-ind],"x.d1"=x.d1[-ind])
 # pred<-predict.fregre.gsam(res,newldata)
 # plot(pred,tecator$y$Fat[-ind])
 
-# res.glm=fregre.glm(Fat~Water+x.d1+x,data=ldata,family=gaussian(),basis.x=basis.x,basis.b=basis.b)
+# res.glm=fregre.glm(Fat~Water+x.d1+x,data=ldata,family=gaussian(),
+# basis.x=basis.x,basis.b=basis.b)
 # pred.glm<-predict.fregre.glm(res.glm,newldata)
 # newy<-tecator$y$Fat[-ind]
 # points(pred.glm,tecator$y$Fat[-ind],col=2)

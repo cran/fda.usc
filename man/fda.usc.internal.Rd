@@ -38,6 +38,7 @@
 \method{ncol}{fdata}(fdataobj)
 \method{is}{fdata}(fdataobj)
 \method{omit}{fdata}(fdataobj,y=NULL)
+\method{omit2}{fdata}(fdataobj,index.na=FALSE)
 \method{missing}{fdata}(fdataobj,basis=NULL)
 argvals(fdataobj)
 rangeval(fdataobj)
@@ -51,5 +52,10 @@ rangeval(fdataobj)
   \item{\dots}{ \code{fdata} objects to be concatenated. }
   \item{y}{ Vector}
   \item{basis}{ fd basis}
+\item{index.na}{ Return the index of NA elements}  
+}
+\references{
+Febrero-Bande,  M., Oviedo de la Fuente, M. (2012).  \emph{Statistical Computing in Functional Data Analysis: The R Package fda.usc.}
+Journal of Statistical Software, 51(4), 1-28. \url{http://www.jstatsoft.org/v51/i04/}
 }
 \keyword{math}  

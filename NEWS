@@ -1,3 +1,19 @@
+
+
+
+Release 1.0.0 was released in Oct. 2012 as the working version to
+accompany 'Febrero-Bande, M. and  Oviedo de la Fuente, M. (2012).
+'Statistical Computing in Functional Data Analysis: The R Package fda.usc.
+Journal of Statistical Software, 51(4), 1-28., URL http://www.jstatsoft.org/v51/i04/.'
+New functions added: 
+    depth.RT() implements a random Tukey depth (RT)
+	and its corresponding  some shortcut functions.
+    metric.dist() methods as wrappers for dist(),
+New arguments in depth.FM(), depth.RP(), depth.mode() and fdata().
+The functions: fregre.glm(), fregre.gsam(), fregre.gkam(), classif.np(),
+classif.glm(), classi.glm() allow functional and multivariate analysis. 
+
+
 Release 0.9.8.1 introduces new functions flm.Ftest() and 
 dfv.test(). The first performs a functional F-test and the 
 second implements the test of Delsol, Ferraty and Vieu (2010). 
@@ -8,6 +24,7 @@ New argument rn in create.pc.basis() function.
 fregre.lm() allows penalization as fregre.basis() and fregre.pc() 
 -ridge regression-.
 fregre.kgam() has been renamed to fregre.gkam().
+
 
 Release 0.9.8 introduces a new function flm.test() that 
 allows to test for the Functional Linear Model with scalar 

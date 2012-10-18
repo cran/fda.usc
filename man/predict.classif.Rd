@@ -33,28 +33,27 @@ Ferraty, F. and Vieu, P. (2006). \emph{NPFDA in practice}. Free access on line a
 Ramsay, James O., and Silverman, Bernard W. (2006), \emph{ Functional Data Analysis}, 2nd ed., Springer, New York. 
 
 Ramsay, James O., and Silverman, Bernard W. (2002), \emph{ Applied Functional Data Analysis}, Springer, New York. 
-
 }
-\author{Febrero-Bande, M. and Oviedo de la Fuente, M.}
+\author{Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}}
 \seealso{ 
 See also \code{\link{classif.knn}}, \code{\link{classif.kernel}} and \code{\link{summary.classif}} .
 }
 \examples{
 
 data(phoneme)
-mlearn<-phoneme[["learn"]]
-glearn<-phoneme[["classlearn"]]
+mlearn<-phoneme[["learn"]][1:100]
+glearn<-phoneme[["classlearn"]][1:100]
 
 #	ESTIMATION knn
-out1=classif.knn(glearn,mlearn,knn=c(3,7))
+out1=classif.knn(glearn,mlearn,knn=3)
 summary.classif(out1)
 #	PREDICTION knn
-mtest<-phoneme[["test"]][c(40:60,140:160,201:210)]
-gtest<-phoneme[["classtest"]][c(40:60,140:160,201:210)]
+mtest<-phoneme[["test"]][1:100]
+gtest<-phoneme[["classtest"]][1:100]
 pred1=predict.classif(out1,mtest)
 table(pred1,gtest)
-MisclasPredict <- sum(pred1 != gtest)/length(gtest)
-MisclasPredict
+#MisclasPredict <- sum(pred1 != gtest)/length(gtest)
+#MisclasPredict
 
 ##	ESTIMATION kernel 
 # h=2^(0:5)

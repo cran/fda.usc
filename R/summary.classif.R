@@ -26,15 +26,15 @@ correct classification: max.prob=",object$max.prob,"\n")
     "\nwith highest probability of correct classification max.prob= ",
     object$max.prob,"\n")
     }}
-    if (object$C[[1]]=='classif.kgam' | object$C[[1]]=='classif.kgam2boost' |
+    if (object$C[[1]]=='classif.gkam' | object$C[[1]]=='classif.gkam2boost' |
      object$C[[1]]=='classif.gsam2boost' | object$C[[1]]=='classif.gsam'
      | object$C[[1]]=='classif.glm'| object$C[[1]]=='classif.glm2boost'){
    cat("\n-Probability of correct classification: ",round(object$max.prob,4),"\n")
     }
     if (object$C[[1]]=='classif.tree'|object$C[[1]]=='classif.tree2boost'){
-   cat("\n-Probability of correct classification: ",round(object$max.prob,4),"\n")
-#
-    }
+   cat("\n-Probability of correct classification: ",round(object$max.prob,4),"\n")}
+   if (object$C[[1]]=='classif.DD'){
+   cat("\n-Probability of correct classification: ",round(1-object$misclassification,4),"\n")}
 cat("\n")
 output<-object
 }
