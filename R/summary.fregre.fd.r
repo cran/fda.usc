@@ -78,22 +78,24 @@ summary.fregre.fd<-function(object,times.influ=3,times.sigma=3,draw=TRUE,...){
 #-Variability for each  Partial Least Squares -PLS- (%):\n")
 #    print(round(pr.x[object$l] * 100, 2))
     }
- #    if (object$call[[1]]=="fregre.ppls") {
-#     cat(" *** Summary Functional Regression with Penalized Partial Least Squares ***\n")
-#      object$lm$call<-object$call
-#      print(summary(object$lm))
-#            cat("\n-R squared: ",object$r2)
-#      cat("\n-Residual variance: ",
-#            object$sr2,"on ",n-object$df," degrees of freedom\n")
-#       cat("-Lambda penalty: ",object$lambda)
-       #     object$lm$call<-object$call
+    if (object$call[[1]]=="fregre.ppls") {
+     cat(" *** Summary Functional Regression with Penalized Partial Least Squares ***\n")
+            cat("-Call: ");    print(object$call)
+            cat("\n")
+            print(object$coefs)
+            cat("\n-R squared: ",object$r2)
+#            cat("\n-Residual variance: ",object$sr2,"\n")
+              cat("\n-Residual variance: ",
+            object$sr2,"on ",n-object$df," degrees of freedom\n")
+       cat("-Lambda penalty: ",object$lambda)
+      #     object$lm$call<-object$call
 #     print(summary(object$lm))
 #     var.1<-apply(object$fdata.comp$x, 2, var)
 #     pr.x= var.1/sum(var.1)
 # cat("\n-With",length(object$l),"Partial Least Squares is  explained ",round(sum(pr.x[object$l])*100
 # ,2),"%\n of the variability of explicative variables. \n -Variability for each Partial Least Squares -PLS- (%):\n")
 #    print(round(pr.x[object$l] * 100, 2))
-#    }
+    }
 
     if (object$call[[1]]=="fregre.basis") {
      cat(" *** Summary Functional Data Regression with representation in Basis *** \n")

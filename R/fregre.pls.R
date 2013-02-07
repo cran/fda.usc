@@ -43,6 +43,10 @@ else {
      beta.est$data<-colSums(beta.est$data)
     beta.est$names$main<-"beta.est"
     beta.est$data <- matrix(as.numeric(beta.est$data),nrow=1)
+   if (pc$norm)  {
+     sd.X <- sqrt(apply(fdataobj$data, 2, var))
+     beta.est$data<-  beta.est$data/sd.X
+   }         
 #    pc$df
 #    H<-diag(hat(Z, intercept = TRUE),ncol=n)
  # H2<-lm.influence(object.lm, do.coef = T)$hat# o bien

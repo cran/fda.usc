@@ -1,4 +1,9 @@
 
+Release 1.0.4:
+A bug in fregre.pls() function has been fixed in the case of the FPLS basis are created with the argument norm is TRUE (the curves are centred and scaled). 
+A bug in outliers.depth.trim() function has been fixed in the case of the procedure requires more than one iteration step.
+
+
 Release 1.0.3 introduces new function classif.depth() that fits a nonparametric classification procedure based on maximum depth measure.
 Penalized FPC an FPLS basis are computed in create.pc.basis and create.pls.basis by the new arguments "lambda" and "P".
 A bug in predict.fregre.fd() function has been fixed (in the case of the "object" is fitted using funtional partial least square basis). 

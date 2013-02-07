@@ -28,7 +28,7 @@ rtt<-new.fdataobj[["rangeval"]]
 nn <- nrow(new.fdataobj)
 np <- ncol(new.fdataobj)
  if (is.null(rownames(newx)))         rownames(newx) <- 1:nn
- if (object$call[[1]]=="fregre.pc" ) {
+ if (object$call[[1]]=="fregre.pc" || object$call[[1]]=="fregre.ppc") {
   Z<- inprod.fdata(fdata.cen(new.fdataobj,object$fdata.comp$mean)[[1]],object$fdata.comp$rotation)
   colnames(Z)<-names(object$lm$coefficients[-1])
   XX<-data.frame(Z)   
@@ -51,7 +51,7 @@ np <- ncol(new.fdataobj)
     }
  }
 else{
-  if (object$call[[1]]=="fregre.pls") {
+  if (object$call[[1]]=="fregre.pls" || object$call[[1]]=="fregre.ppls") {
   newXcen<-fdata.cen(new.fdataobj,object$fdata.comp$mean)[[1]]
   if (object$fdata.comp$norm)  {
     sd.X <- sqrt(apply(object$fdataobj$data, 2, var))

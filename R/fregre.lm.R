@@ -14,11 +14,15 @@ fregre.lm=function(formula,data,basis.x=NULL,basis.b=NULL,rn=0,weights=rep(1,n),
  vfunc=setdiff(vfunc2,vint)
  vnf=c(vnf2,vint)
  off<-attr(tf,"offset")
-name.coef=nam=par.fregre=beta.l=list()
+ name.coef=nam=par.fregre=beta.l=list()
  kterms=1
  n<-length(data[["df"]][,response])
+ XX=data.frame(data[["df"]][,c(response)],weights)
+ namxx=names(XX)=c(response,"weights")
 if (length(vnf)>0) {
- XX=cbind(data[[1]][,c(response,vnf2)],weights)
+
+ XX=data.frame(XX,data[["df"]][,c(vnf)])
+ names(XX)=c(namxx,vnf)
  for ( i in 1:length(vnf)){
 #     print(paste("Non functional covariate:",vnf[i]))
      if (kterms > 1)   pf <- paste(pf, "+", vnf[i], sep = "")
@@ -31,10 +35,10 @@ if   (attr(tf,"intercept")==0) {
      pf<- paste(pf,-1,sep="")
      }
 }
-else {
- XX=data.frame(data[[1]][,response],weights)
- names(XX)=c(response,"weights")
-}
+#else {
+# XX=data.frame(data[["df"]][,response],weights)
+# names(XX)=c(response,"weights")
+#}
 #print(paste("Functional covariate:",vfunc))
 if (length(vfunc)>0) {
  mean.list=vs.list=JJ=list()
@@ -166,13 +170,18 @@ if (length(vfunc)>0) {
 
     par.fregre$formula=pf
     par.fregre$data=XX
-     y<-XX[,1]    
-    if (rn==0) z=lm(formula=pf,data=XX,x=TRUE,y=TRUE,...) #incluir  penalizacion
+    y<-XX[,1]    
+    scores<-as.matrix(cbind(rep(1,n),XX[,-(1:2)]))     
+    W<-diag(weights) 
+    if (rn==0) {
+      z=lm(formula=pf,data=XX,...) 
+      S<-solve(t(scores)%*%W%*%scores)          
+#       S<-diag(coef(summary(z))[,2])
+      class(z)<-c(class(z),"fregre.lm")
+      }      
     else {
-      scores<-as.matrix(cbind(rep(1,n),XX[,-(1:2)]))
       mat<-rn*diag(ncol(scores))
-      mat[1,1]<-0
-      W<-diag(weights) 
+      mat[1,1]<-0    
       ddd<-t(scores)%*%W  
       S<-solve(t(scores)%*%W%*%scores+mat)       #incluir pesos solve(W)
       Cinv<-S%*%t(scores)%*%W                    #incluir pesos W repetri proceso hasta que no cambie la prediccion   
@@ -188,6 +197,18 @@ if (length(vfunc)>0) {
       names(coefs)<-c("Intercept",cnames)
       z$coefficients<-coefs
       z$mean.list<-mean.list
+      z$df.residual<-n-df
+      z$H<-H
+      z$r2 <- 1 - sum(z$residuals^2)/sum(ycen^2)      
+      if  (class(basis.x[[vfunc[1]]])=="basisfd") {
+        z$call[[1]] = "fregre.basis"
+        z$lambda<-rn
+        }
+       else {
+        if  (basis.x[[vfunc[1]]]$type=="pc")  z$call[[1]] = "fregre.pc"
+        if  (basis.x[[vfunc[1]]]$type=="pls")  z$call[[1]] = "fregre.pls"        
+        }             
+      class(z)<-c("fregre.fd","fregre.lm")
     }       
 #    z$call<-z$call[1:2]
 for (i in 1:length(vfunc)) {
@@ -199,7 +220,16 @@ for (i in 1:length(vfunc)) {
      beta.est$data<-colSums(beta.est$data)
      beta.est$names$main<-"beta.est"
      beta.est$data <- matrix(as.numeric(beta.est$data),nrow=1)
-     beta.l[[vfunc[i]]]<-beta.est
+     beta.est$names$main<-"beta.est"
+     beta.est$data <- matrix(as.numeric(beta.est$data),nrow=1)
+           if  (basis.x[[vfunc[i]]]$type=="pls") {
+             if (basis.x[[vfunc[i]]]$norm)  {
+              sd.X <- sqrt(apply(data[[vfunc[i]]]$data, 2, var))
+              beta.est$data<-  beta.est$data/sd.X
+             }      
+            }  
+ 
+     beta.l[[vfunc[i]]]<-beta.est     
      }
  else {
      beta.est<-z$coefficients[name.coef[[vfunc[i]]]]*t(vs.list[[vfunc[i]]])
@@ -208,8 +238,9 @@ for (i in 1:length(vfunc)) {
      beta.l[[vfunc[i]]]<-fd(beta.est,basis.x[[vfunc[i]]]$harmonics$basis)
       }
 }
-}
-# z$sr2<-sum(z$residuals^2)/z$df.residual
+}   
+ z$sr2<-sum(z$residuals^2)/z$df.residual
+ z$Vp=z$sr2*S
  z$beta.l=beta.l
  z$formula=pf
  z$mean=mean.list
@@ -220,14 +251,8 @@ for (i in 1:length(vfunc)) {
  z$data=z$data
  z$XX=XX
  z$data<-data
+ z$fdataobj<-data[[vfunc[1]]]
  z$rn<-rn
- z$vs.list=vs.list   ##### transformarlo en Data2fd(tt,vs.list,basisobj=basisobj)
- class(z)<-c(class(z),"fregre.lm")
+ z$vs.list=vs.list   
  z
 }     
-
-
-
-
-
-

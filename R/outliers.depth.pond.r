@@ -11,24 +11,25 @@ if (is.null(n) && is.null(m)) stop("ERROR IN THE DATA DIMENSIONS")
 scale=FALSE
 cutoff<-median(quantile.outliers.pond(x,dfunc=dfunc,nb=nb,smo=smo,...))
     hay<-1
-    outliers<-c();dep.out<-c()
+    outliers<-dep.out<-ite<-c()
     curvasgood<-fdataobj
     row.names(curvasgood[["data"]])=1:n
     dd<-dfunc(curvasgood,...)     
     modal<-FALSE
+        ii<-1
     if (!is.null(dd$dist)) {
       modal=TRUE   
       dd<-dfunc(curvasgood,...)
           }
-    d<-dd$dep 
-    
+    d<-dd$dep             
     while (hay==1){
 #          d=dfunc(curvasgood,...)$dep
           if (is.null(outliers)){dtotal<-d}
-          fecha<-as.numeric(row.names(curvasgood[["data"]])[d<cutoff])
-          elim<-which(d<cutoff)
+          cutt<-d<cutoff
+          elim<-which(cutt)
+          fecha<-as.numeric(row.names(curvasgood[["data"]])[cutt])        
           if (length(elim)>0){
-             dep.out<-c(dep.out,d[d<cutoff])
+             dep.out<-c(dep.out,d[elim])
              curvasgood<-curvasgood[-elim,]
              outliers<-c(outliers,fecha)
           }
@@ -42,10 +43,12 @@ cutoff<-median(quantile.outliers.pond(x,dfunc=dfunc,nb=nb,smo=smo,...))
           else dd<-dfunc(curvasgood,...)
           d<-dd$dep 
           }
+          ite<-c(ite,rep(ii,length(elim)))
+          ii<-ii+1
     }
-outliers<-rownames(fdataobj[["data"]])[outliers]    
-return(list("outliers"=outliers,"quantile"=cutoff,"dep"=dtotal,"dep.out"=dep.out))
-c(outliers,cutoff,dtotal,dep.out)
+outliers<-rownames(fdataobj[["data"]])[outliers]  
+names(dep.out)<-NULL      
+return(list("outliers"=outliers,"dep.out"=dep.out,"iteration"=ite,"quantile"=cutoff,"Dep"=dtotal))
 }
 
  

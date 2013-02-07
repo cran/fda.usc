@@ -1,7 +1,7 @@
 outliers.depth.trim<-function(fdataobj,nb=200,smo=0.05,trim=0.01,
 dfunc=depth.mode,...){
  if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
-  nas1<-apply(fdataobj$data,1,count.na)
+ nas1<-apply(fdataobj$data,1,count.na)
  if (any(nas1))  stop("fdataobj contain ",sum(nas1)," curves with some NA value \n")         
  x<-fdataobj[["data"]]
  tt<-fdataobj[["argvals"]]
@@ -13,8 +13,8 @@ dfunc=depth.mode,...){
     cutoff<-median(quantile.outliers.trim(fdataobj,dfunc=dfunc,nb=nb,smo=smo,
     trim=trim,scale=FALSE,...))
     hay<-1
-    outliers<-c()
-    dep.out<-c()
+    outliers<-dep.out<-ite<-c()
+    ii<-1
     curvasgood<-fdataobj
     dd<-dfunc(curvasgood,trim=trim,...)     
     modal<-FALSE
@@ -23,16 +23,16 @@ dfunc=depth.mode,...){
       dd<-dfunc(curvasgood,trim=trim,...)
           }
     d<-dd$dep          
-    rownames(curvasgood[["data"]])=1:n
-    while (hay==1){            
+    rwn=names(d)=rownames(curvasgood[["data"]])=1:n
+    while (hay==1){              
           if (is.null(outliers)){dtotal<-d}
-          fecha<-as.numeric(rownames(curvasgood[["data"]])[d<cutoff])            
-          elim<-which(d<cutoff)
+          cutt<-d<cutoff
+          fecha<-as.numeric(rownames(curvasgood[["data"]])[cutt])            
+          elim<-which(cutt)
           if (length(elim)>0){
-             dep.out<-c(dep.out,d[d<cutoff])
+             dep.out<-c(dep.out,d[elim])
              curvasgood<-curvasgood[-elim,]
-             outliers<-c(outliers,elim)
-      
+             outliers<-c(outliers,fecha)     
           }    
         if (length(elim)==0 || length(outliers)>n/5){hay<-0}
         else {
@@ -44,8 +44,10 @@ dfunc=depth.mode,...){
           else dd<-dfunc(curvasgood,trim=trim,...)
           d<-dd$dep 
           }
-    }
+          ite<-c(ite,rep(ii,length(elim)))
+          ii<-ii+1
+   }
 outliers<-rownames(fdataobj[["data"]])[outliers]    
-return(list("outliers"=outliers,"quantile"=cutoff,"Dep"=dtotal,"dep.out"=dep.out))
-c(outliers,cutoff,dtotal,dep.out)
+names(dep.out)<-NULL    
+return(list("outliers"=outliers,"dep.out"=dep.out,"iteration"=ite,"quantile"=cutoff,"Dep"=dtotal))
 }

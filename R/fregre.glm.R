@@ -83,8 +83,7 @@ else {
         l<-basis.x[[vfunc[i]]]$l
         lenl<-length(l)
         vs <- t(basis.x[[vfunc[i]]]$basis$data)
-        Z<-basis.x[[vfunc[i]]]$x[,l,drop=FALSE]
-   
+        Z<-basis.x[[vfunc[i]]]$x[,l,drop=FALSE]     
         response = "y"
         colnames(Z) = name.coef[[vfunc[i]]]=paste(vfunc[i], ".",colnames(Z),sep ="")      
 #       colnames(Z) = name.coef[[vfunc[i]]]=paste(vfunc[i],".",rownames(basis.x[[vfunc[i]]]$basis$data),sep ="")
@@ -206,6 +205,12 @@ if (lenfunc) {
             beta.est$data<-colSums(beta.est$data)
             beta.est$names$main<-"beta.est"
             beta.est$data <- matrix(as.numeric(beta.est$data),nrow=1)
+            if  (basis.x[[vfunc[i]]]$type=="pls") {
+             if (basis.x[[vfunc[i]]]$norm)  {
+              sd.X <- sqrt(apply(data[[vfunc[i]]]$data, 2, var))
+              beta.est$data<-  beta.est$data/sd.X
+             }      
+            }  
             beta.l[[vfunc[i]]]<-beta.est
             }
        else {

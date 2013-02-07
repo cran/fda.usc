@@ -49,11 +49,11 @@ ii.-\code{outliers.depth.trim} function uses trimmed data.\cr
 quantile.outliers.pond and quantile.outliers.trim functions provides the quantiles of the bootstrap samples for functional outlier detection by data ponderation amd trimmed data respectively. Bootstrap smoothing function (\code{\link{fdata.bootstrap}} with \code{nb} resamples) is applied to these weighted or trimmed data. If \code{smo=0} smoothed bootstrap is not performed.  The function returns a vector of size \code{1}x\code{nb} with quantiles of the bootstrap samples.
   }
 \value{
-  \item{outliers}{ Indexes of functional outliers.}
+  \item{outliers}{ Indexes of functional outlier.}
+  \item{dep.out}{ Depth value of functional outlier.}      
+  \item{dep.out}{ Iteration in which the  functional outlier is detected.}        
   \item{quantile}{ Threshold for outlier detection.}  
   \item{dep}{ Depth value of functional data.}
-	\item{dep.out}{ Depth value of functional outliers.}    
-
 }
 \references{
 Cuevas A, Febrero M, Fraiman R. 2006.  \emph{On the use of bootstrap for estimating functions with functional data.} Computational Statistics and Data Analysis 51: 1063{-}1074.\cr

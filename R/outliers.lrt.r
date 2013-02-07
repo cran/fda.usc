@@ -27,7 +27,7 @@ n<-nrow(fdataobj)
           fecha<-as.numeric(row.names(curvasgood[["data"]])[maximo==aux])
           elim<-which(maximo==aux)
           if (maximo>out.thres.lrt){
-             curvasgood<-curvasgood[-elim,]
+             curvasgood<-curvasgood[elim,]
              outliers<-c(outliers,fecha)
              valor.estadistico<-c(valor.estadistico,maximo)
              nout<-nout+1

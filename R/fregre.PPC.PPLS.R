@@ -1,3 +1,4 @@
+
 ################################################################
 ################################################################
 D.penalty<- function(tt) {
@@ -188,7 +189,7 @@ sd.X <- sqrt(apply(X, 2, var))
  #   TT = X %*% V  ## son los scores
     l<-1:ncomp
     colnames(scores) <- paste("PLS", l, sep = "")
-    outlist = list(call=C,df = DoF, rotation=V2,x=scores,lambda=lambda,P=P,norm=norm,
+    outlist = list(call=C,df = DoF, rotation=V2,x=scores,lambda=lambda,P=P,
     fdataobj=fdataobj,y=y0,l=l,fdataobj.cen=center$Xcen,mean=mean.X,Yhat = Yhat,yhat = yhat)
 #    Yhat = Yhat, coyhat = yhat,efficients = coefficients,intercept = intercept,
 #     RSS = RSS,TT=TT, sigmahat = sigmahat,covariance = covariance,
@@ -196,7 +197,6 @@ sd.X <- sqrt(apply(X, 2, var))
     class(outlist)<-"fdata.comp"
     return(outlist)
 }
-
 
 ###############
 ################################################################
@@ -260,7 +260,7 @@ fdata2ppc<-function (fdataobj,  ncomp = 2,norm = TRUE,lambda=0,P=c(0,0,1),...)
     l <- 1:ncomp
     out <- list(call = C,d = newd, rotation = vs[1:ncomp],x = scores,
     lambda = lambda,P=P, fdataobj.cen = Xcen.fdata,
-    mean = xmean, fdataobj = fdataobj,l=l)
+    mean = xmean, fdataobj = fdataobj,l=l,u=u[,1:ncomp,drop=FALSE])
     class(out) = "fdata.comp"
     return(out)
 }
@@ -491,7 +491,7 @@ else {
     beta.est<-object.lm$coefficients[2:(lenl+1)]*pc$rotation[l]
     beta.est$data<-apply(beta.est$data,2,sum)
     beta.est$names$main<-"beta.est"
-    beta.est$data <- matrix(as.numeric(beta.est$data),nrow=1)
+    beta.est$data <- matrix(as.numeric(beta.est$data),nrow=1) 
     Z=cbind(rep(1,len=n),Z)
     S=solve(t(Z)%*%Z)
     H<-Z%*%S%*%t(Z)
@@ -499,12 +499,13 @@ else {
     df<-traza(H)
     rdf<-n-df
     sr2 <- sum(e^2)/rdf
+    Vp<-sr2*S 
     r2 <- 1 - sum(e^2)/sum(ycen^2)
     r2.adj<- 1 - (1 - r2) * ((n -    1)/ rdf)
     GCV <- sum(e^2)/rdf^2
  out <- list(call = C, beta.est = beta.est,coefficients=object.lm$coefficients,
  fitted.values =object.lm$fitted.values, residuals = object.lm$residuals,
- H=H,df = df,r2=r2, GCV=GCV,sr2 = sr2, l = l,lambda=lambda,P=P, fdata.comp=pc,rn=0,
+ H=H,df = df,r2=r2, GCV=GCV,sr2 = sr2, Vp=Vp,l = l,lambda=lambda,P=P, fdata.comp=pc,
  lm=object.lm,fdataobj = fdataobj,y = y)
  #pc=pc,pf = pf,Z=Z
  class(out) = "fregre.fd"
@@ -556,6 +557,12 @@ else {
     beta.est$data<-apply(beta.est$data,2,sum)
     beta.est$names$main<-"beta.est"
     beta.est$data <- matrix(as.numeric(beta.est$data),nrow=1)
+            if  (pc$type=="pls") {
+             if (pc$norm)  {
+              sd.X <- sqrt(apply(fdataobj$data, 2, var))
+              beta.est$data<-  beta.est$data/sd.X
+             }      
+            }     
 #    H<-diag(hat(Z, intercept = TRUE),ncol=n)
  # H2<-lm.influence(object.lm, do.coef = T)$hat# o bien
  #    I <- diag(1/(n*pc$lambdas[l]), ncol = lenl) #1/n
@@ -564,30 +571,23 @@ else {
     H<-Z%*%S%*%t(Z)
     e<-object.lm$residuals
 #    df = traza(H)
-    df<-pc$df[lenl]+1
+   df<-pc$df[lenl]+1
     rdf<-n-df
     sr2 <- sum(e^2)/rdf
+    Vp<-sr2*S 
     r2 <- 1 - sum(e^2)/sum(ycen^2)
     r2.adj<- 1 - (1 - r2) * ((n -    1)/ rdf)
     GCV <- sum(e^2)/rdf^2
-  
-        colnames(Z)[1] = "(Intercept)"
-        std.error = sqrt(diag(S) *sr2)
-        t.value =object.lm$coefficients/std.error
-        p.value = 2 * pt(abs(t.value), n - df, lower.tail = FALSE)
-        coefficients <- cbind(object.lm$coefficients, std.error, t.value, p.value)
-        colnames(coefficients) <- c("Estimate", "Std. Error",
-            "t value", "Pr(>|t|)")
- out <- list(call = C, beta.est = beta.est,coefficients=object.lm$coefficients, coefs=coefficients,
+ out <- list(call = C, beta.est = beta.est,coefficients=object.lm$coefficients,
  fitted.values =object.lm$fitted.values, residuals = object.lm$residuals,
- H=H,df = df,r2=r2, GCV=GCV,sr2 = sr2, l = l,lambda=lambda,P=P, fdata.comp=pc,rn=0,
+ H=H,df = df,r2=r2, GCV=GCV,sr2 = sr2, Vp=Vp,l = l,lambda=lambda,P=P, fdata.comp=pc,
  lm=object.lm,fdataobj = fdataobj,y = y)
     class(out) = "fregre.fd"
     return(out)
 }
 #################################################################
 #################################################################
-    
+
 
 #################################################################
 #################################################################
