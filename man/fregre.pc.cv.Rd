@@ -3,36 +3,36 @@
 \alias{fregre.pc.cv}
 %\alias{fregre.combn}
 \title{Vaidation criteria for Functional Principal Component (and Ridge)  Regression using selection of number of Principal Components}
-\description{																						
+\description{
 Functional regression with scalar response using selection of number of principal components through cross-validation. The algorithm selects the principal components with best estimates the response. The	select is performed by cross-validation (CV) or  model selection criteria (MSC).  After is computing  functional regression using the best selection of principal components (PC).
-	}
+}
 \usage{
 fregre.pc.cv(fdataobj, y, kmax = 8, rn = 0, 
    criteria = "SIC",weights= rep(1,n), ...) 
 }
 \arguments{
-   \item{fdataobj}{ \code{\link{fdata}} class object or \code{fdata.comp} class object created by \code{\link{create.pc.basis}} function.} 
-	\item{y}{ Scalar response with length \code{n}.}
-	\item{kmax}{ Maximum number of principal comoponents.}
-	\item{criteria}{ Type of cross-validation (CV) or  Model Selecttion Criteria (MSC) applied. Possible values are \emph{"CV"}, \emph{"AIC"}, \emph{"AICc"}, \emph{"SIC"} and \emph{"SICc"}.} 	
-		\item{rn}{Ridge parameter. Default value is \code{rn=0}, i.e. no penalization is used. If =TRUE, a sequence of values is provided}
-		\item{weights}{ weights}
- \item{\dots}{ Further arguments passed to \code{\link{fregre.pc}}}  
+ \item{fdataobj}{ \code{\link{fdata}} class object or \code{fdata.comp} class object created by \code{\link{create.pc.basis}} function.} 
+\item{y}{ Scalar response with length \code{n}.}
+\item{kmax}{ Maximum number of principal comoponents.}
+\item{criteria}{ Type of cross-validation (CV) or  Model Selecttion Criteria (MSC) applied. Possible values are \emph{"CV"}, \emph{"AIC"}, \emph{"AICc"}, \emph{"SIC"} and \emph{"SICc"}.} 	
+\item{rn}{Ridge parameter. Default value is \code{rn=0}, i.e. no penalization is used. If =TRUE, a sequence of values is provided}
+\item{weights}{ weights}
+\item{\dots}{ Further arguments passed to \code{\link{fregre.pc}}}  
 }
 \details{
 The algorithm selects the best principal components \code{pc.opt} from the first \code{kmax} PC and (optionally) the best ridge parameter \code{rn.opt} from a sequence of non-negative numbers \code{rn}. \cr
 
 If \code{kmax} is a integer (by default and recomended) the procedure is as follows  (see example 1):
-	\itemize{
-		\item Calculate the best principal component (\emph{pc.order[1]}) between \code{kmax} by \code{\link{fregre.pc}}.
- \item Calculate the second-best principal component (\code{pc.order [2]}) between the \code{(kmax-1)} by \code{\link{fregre.pc}} and calculate the criteria value of the two principal  components.
- \item The process (point 1 and 2) is repeated until \code{kmax} principal component (\emph{pc.order[kmax]}).
- \item The process (point 1, 2 and 3) is repeated for each \code{rn} value.
- \item The method selects the principal components (\code{pc.opt}=\code{pc.order[1:k.min]}) and (optionally) the ridge parameter with minimum MSC criteria.
+\itemize{
+\item Calculate the best principal component (\emph{pc.order[1]}) between \code{kmax} by \code{\link{fregre.pc}}.
+\item Calculate the second-best principal component (\code{pc.order [2]}) between the \code{(kmax-1)} by \code{\link{fregre.pc}} and calculate the criteria value of the two principal  components.
+\item The process (point 1 and 2) is repeated until \code{kmax} principal component (\emph{pc.order[kmax]}).
+\item The process (point 1, 2 and 3) is repeated for each \code{rn} value.
+\item The method selects the principal components (\code{pc.opt}=\code{pc.order[1:k.min]}) and (optionally) the ridge parameter with minimum MSC criteria.
  }
 If \code{kmax} is a sequence of integer the procedure is as follows (see example 2):
-	\itemize{
-		\item 	The method selects the  best principal components  with minimum MSC criteria by stepwise regression using  \code{\link{fregre.pc}} in each step.
+\itemize{
+\item The method selects the  best principal components  with minimum MSC criteria by stepwise regression using  \code{\link{fregre.pc}} in each step.
  \item The process (point 1) is repeated for each \code{rn} value.\cr 
  \item The method selects the principal components (\code{pc.opt}=\code{pc.order[1:k.min]}) and (optionally) the ridge parameter with minimum MSC criteria.\cr
  }
@@ -81,7 +81,7 @@ Return:\cr
 \item{pc.opt}{ Index of principal components selected.}
 \item{rn.opt}{ Ridge parameter selected.}
 \item{PC.order}{Matrix whose columns correspond to the selected index of each principal component with the lowest MSC value by each ridge parameter value (in rows)}
-\item{MSC.order}{ Model Selection Criteria (MSC) value for complete sequence principal components selected  by ridge parameter value in each iteration.}
+\item{MSC.order}{ Model Selection Criteria (MSC) value for complete sequence principal components selected by ridge parameter value in each iteration.}
 }
 \references{
 Cai T., Hall P. 2006. \emph{Prediction in functional linear regression}. Annals of Statistics 34: 2159{-}2179.
@@ -110,24 +110,21 @@ y=apply(aemet$logprec$data,1,sum)
 # Example 1: criteria selects the best FPC (recommended)
 # kmax is a integer (maximum FPC to consider)
 out1=fregre.pc.cv(x,y,8,criteria="AICc")
-
  
 ## Example 2: Three equivalent outputs
 ## using the functional data
-# out2=fregre.pc.cv(x,y,8,criteria="SICc") 
+# out2=fregre.pc.cv(x,y,8,criteria="SICc")
 
 ## using the FPC components (recommended)
-# pc<-fdata2pc(x,8) 											
+# pc<-fdata2pc(x,8) 
 # out111=fregre.pc.cv(pc,y,criteria="SICc")
 
 ## using the FPC components
 # out11=fregre.pc.cv(out1$fregre.pc$fdata.comp,y,criteria="SICc") 
 
-
 ## Example 3: stepwise selection criteria (unrecommended)
 ## kmax is a sequence of integer
 # out3=fregre.pc.cv(x,y,1:8,criteria="AICc")
 # out4=fregre.pc.cv(x,y,1:8,criteria="SICc")
-
 }
 \keyword{regression}

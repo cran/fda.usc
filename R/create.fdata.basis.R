@@ -20,7 +20,7 @@ rangeval=fdataobj$rangeval,class.out="fd"){
 } 
 #######################
 #######################
-create.pc.basis<-function(fdataobj,l=1:5,norm=TRUE,basis=NULL,rn=0,
+create.pc.basis<-function(fdataobj,l=1:5,norm=TRUE,basis=NULL,
 lambda=0,P = c(0, 0, 1),...){
  tt<-fdataobj$argvals
  rtt<-fdataobj$rangeval
@@ -39,7 +39,7 @@ lambda=0,P = c(0, 0, 1),...){
    pc.fdata<-fdata(pc.fdata,tt,rtt,fdataobj$names)
    out <- list(fdataobj.pc=pc.fdata,basis = basis.pc, x = pc$x, mean = pc$mean,
    fdataobj.cen = pc$fdataobj.cen,fdataobj = fdataobj,l = l,norm=norm,
-   rn=rn,lambda=lambda,P=P,type = "pc")
+   lambda=lambda,P=P,type = "pc")
    class(out) <- "fdata.comp"
    }
  else {
@@ -50,7 +50,6 @@ lambda=0,P = c(0, 0, 1),...){
       out$values<-pc$newd^2
       out$scores<-pc$x[,l,drop=FALSE]
       rownames(out$scores)<-rownames(fdataobj$data)
-      out$rn<-rn
       out$varprop<-out$values[l]/sum(out$values)
       out$meanfd<- Data2fd(argvals = tt, y = pc$mean$data[1,],basisobj = basis)
       class(out) <- "pca.fd"
@@ -61,13 +60,12 @@ lambda=0,P = c(0, 0, 1),...){
  
 #######################
 #######################
-create.pls.basis<-function(fdataobj,y,l=1:5,norm=TRUE,
-                           rn=0,lambda=0,P = c(0, 0, 1),...){
+create.pls.basis<-function(fdataobj,y,l=1:5,norm=TRUE,lambda=0,P = c(0, 0, 1),...){
 if (lambda>0) pls<-fdata2ppls(fdataobj,y,norm=norm,ncomp=max(l),lambda=lambda,P=P,...)
  else  pls<-fdata2pls(fdataobj,y,norm=norm,ncomp=max(l),...)
      basis=pls$rotation[l,,drop=FALSE]
      rownames(basis$data)<-paste("PLS",l,sep="")
-out<-list("basis"=basis,"x"=pls$x,"mean"=pls$mean,"rn"=rn,
+out<-list("basis"=basis,"x"=pls$x,"mean"=pls$mean,
 "fdataobj.cen"=pls$fdataobj.cen,"fdataobj"=fdataobj,norm=norm,
 "l"=l,"type"="pls","y"=y)
 class(out)<-"fdata.comp"

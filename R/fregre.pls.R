@@ -37,10 +37,10 @@ else {
     pf <- paste(response, "~", sep = "")
     for (i in 1:length(cnames)) pf <- paste(pf,"+",cnames[i],sep="")
 #   pf=paste(pf,"-1")
-    object.lm = lm(formula = pf, data =XX , ...)
+    object.lm = lm(formula = pf, data =XX ,x = TRUE, y = TRUE, ...)
     beta.est<-object.lm$coefficients[2:(lenl+1)]*pc$rotation[l]
 #    beta.est$data<-apply(beta.est$data,2,sum)
-     beta.est$data<-colSums(beta.est$data)
+    beta.est$data<-colSums(beta.est$data)
     beta.est$names$main<-"beta.est"
     beta.est$data <- matrix(as.numeric(beta.est$data),nrow=1)
    if (pc$norm)  {
@@ -65,21 +65,18 @@ else {
     r2.adj<- 1 - (1 - r2) * ((n -    1)/ rdf)
     GCV <- sum(e^2)/rdf^2
     GCV <- sum(e^2)/(n - df)^2
-#        object.lm$coefficients <- coefs
-#        object.lm$rank <- df
-        Z=cbind(rep(1,len=n),Z)
-        colnames(Z)[1] = "(Intercept)"
-        std.error = sqrt(diag(S) *sr2)
-        t.value =object.lm$coefficients/std.error
-        p.value = 2 * pt(abs(t.value), n - df, lower.tail = FALSE)
-        coefficients <- cbind(object.lm$coefficients, std.error, t.value, p.value)
-        colnames(coefficients) <- c("Estimate", "Std. Error",
-            "t value", "Pr(>|t|)")
-        class(object.lm) <- "lm"
- out <- list(call = C, beta.est = beta.est,coefficients=object.lm$coefficients,
- fitted.values =object.lm$fitted.values, residuals = object.lm$residuals,
- H=H,df = df,r2=r2, GCV=GCV,sr2 = sr2,Vp=Vp, l = l, fdata.comp=pc, coefs=coefficients,
- lm=object.lm,fdataobj = fdataobj,y = y,XX=XX)
+    Z=cbind(rep(1,len=n),Z)
+    colnames(Z)[1] = "(Intercept)"
+    std.error = sqrt(diag(S) *sr2)
+    t.value =object.lm$coefficients/std.error
+    p.value = 2 * pt(abs(t.value), n - df, lower.tail = FALSE)
+    coefficients <- cbind(object.lm$coefficients, std.error, t.value, p.value)
+    colnames(coefficients) <- c("Estimate", "Std. Error","t value", "Pr(>|t|)")
+    class(object.lm) <- "lm"
+    out <- list(call = C, beta.est = beta.est,coefficients=object.lm$coefficients,
+    fitted.values =object.lm$fitted.values, residuals = object.lm$residuals,
+    H=H,df = df,r2=r2, GCV=GCV,sr2 = sr2,Vp=Vp, l = l, fdata.comp=pc, coefs=coefficients,
+    lm=object.lm,fdataobj = fdataobj,y = y,XX=XX)
     class(out) = "fregre.fd"
     return(out)
 }

@@ -9,8 +9,8 @@
 \usage{
 create.fdata.basis(fdataobj,l=1:5,maxl=max(l),type.basis="bspline",
 rangeval=fdataobj$rangeval,class.out="fd")
-create.pc.basis(fdataobj,l=1:5,norm=TRUE,basis=NULL,rn=0,lambda=0,P=c(0,0,1),...)
-create.pls.basis(fdataobj, y, l = 1:5,norm=TRUE,rn=0,lambda=0,P=c(0,0,1),...)
+create.pc.basis(fdataobj,l=1:5,norm=TRUE,basis=NULL,lambda=0,P=c(0,0,1),...)
+create.pls.basis(fdataobj, y, l = 1:5,norm=TRUE,lambda=0,P=c(0,0,1),...)
 create.raw.fdata(fdataobj, l = 1:ncol(fdataobj))
 }
 \arguments{
@@ -23,7 +23,6 @@ create.raw.fdata(fdataobj, l = 1:ncol(fdataobj))
   \item{norm}{=TRUE the norm of eigenvectors \code{basis} is 1.} 
   \item{class.out}{=="fd" basisfd class, =="fdata" fdata class.}
 	\item{basis}{ "fd" basis object.}    
-  \item{rn}{ Ridge parameter.}   
   \item{lambda}{ Amount of penalization. Default value is 0, i.e. no penalization is used.}
   \item{P}{ If P is a vector:  coefficients to define the penalty matrix object. By default P=c(0,0,1) penalize the second derivative (curvature) or acceleration.
   If P is a matrix:  the penalty matrix object.} 

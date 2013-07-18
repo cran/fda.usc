@@ -8,14 +8,21 @@
 }
 \usage{
 %predict.fregre.fd(object,new.fdataobj=NULL,...)
-\method{predict}{fregre.fd}(object,new.fdataobj=NULL,se.fit=FALSE,\dots)
+\method{predict}{fregre.fd}(object,new.fdataobj=NULL,se.fit=FALSE,scale = NULL,df=df,
+    interval = "none", level = 0.95,weights = 1, pred.var = res.var/weights,\dots)
 }
 \arguments{
    \item{object}{ \code{fregre.fd} object.}
   \item{new.fdataobj}{ New functional explanatory data of \code{fdata} class.}
   \item{se.fit}{=TRUE (not default) standard error estimates are returned for each prediction.}
+  \item{scale}{	Scale parameter for std.err. calculation.}
+  \item{df}{Degrees of freedom for scale.}
+  \item{interval}{Type of interval calculation.}
+  \item{level}{Tolerance/confidence level.}
+  \item{pred.var}{the variance(s) for future observations to be assumed for prediction intervals. See \code{link{predict.lm}} for more details.}
+  \item{weights}{variance weights for prediction. This can be a numeric vector or a one-sided model formula. In the latter case, it is interpreted as an expression evaluated in newdata}
   \item{\dots}{ Further arguments passed to or from other methods.}
-}
+  }
 \details{ 
 Predicts from a fitted \code{fregre.basis} object,see  \code{\link{fregre.basis}} or \code{\link{fregre.basis.cv}}\cr
 Predicts from a fitted \code{fregre.pc} object,see  \code{\link{fregre.pc}} or \code{\link{fregre.pc.cv}}\cr
@@ -23,10 +30,12 @@ Predicts from a fitted \code{fregre.pls} object,see  \code{\link{fregre.pls}} or
 Predicts from a fitted \code{fregre.np} object, see  \code{\link{fregre.np}} or \code{\link{fregre.np.cv}}.
 }
 \value{
-If \code{se.fit = FALSE}, a vector of predictions of scalar response is returned.\cr
+If \code{se.fit = FALSE}, a vector of predictions of scalar response is returned or a matrix of predictions and bounds with column names fit, lwr, and upr if interval is set.\cr
 If \code{se.fit =TRUE}  a list with the following components is returned: 
-\item{fit}{Predictions of scalar response}
-\item{se.fit}{Associated standard error estimates of predictions}
+\item{fit}{ A vector of predictions or a matrix of predictions and bounds as above}
+\item{se.fit}{ Associated standard error estimates of predictions}
+\item{residual.scale}{ Residual standard deviations}
+\item{df}{ Degrees of freedom for residual}
 %If \code{se.fit} is TRUE then a 2 item list is returned with items (both arrays) fit and se.fit containing predictions and associated standard error estimates, otherwise an array of predictions of scalar response is returned.
 }
 \references{

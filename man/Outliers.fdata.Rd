@@ -39,9 +39,9 @@ nb=200,smo=0.05,ns=0.01,\dots)
     
   }
   \details{ 
-Outlier detection in functional data by likelihood ratio test (\code{outliers.depth.lrt}). The threshold for outlier detection is given by the 
- \code{outliers.lrt}.\cr
-
+Outlier detection in functional data by likelihood ratio test (\code{outliers.lrt}). The threshold for outlier detection is given by the 
+ \code{outliers.thres.lrt}.\cr
+                      
 Outlier detection in functional data by depth measures: \cr
 i.-\code{outliers.depth.pond} function weights the data according to depth.\cr
 ii.-\code{outliers.depth.trim} function uses trimmed data.\cr

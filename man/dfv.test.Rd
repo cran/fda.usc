@@ -19,7 +19,7 @@ dfv.test (X.fdata, Y, B=5000, h=quantile(x=metric.lp(X.fdata),
           probs=c(0.05,0.10,0.15,0.25,0.50)),
           K=function(x)2*dnorm(abs(x)),
           weights=rep(1,dim(X.fdata$data)[1]),d=metric.lp,
-          show.prog=TRUE)
+          verbose=TRUE)
 }
 
 \arguments{
@@ -32,7 +32,7 @@ dfv.test (X.fdata, Y, B=5000, h=quantile(x=metric.lp(X.fdata),
   \item{weights}{A vector of weights for the sample data. The default is the uniform weights \code{rep(1,dim(X.fdata$data)[1])}.}
   \item{d}{Semimetric to use in the kernel smoothers. By default is the \eqn{L^2}{L^2} distance given by \code{\link{metric.lp}}.}
   \item{dist}{Matrix of distances of the functional data, used to save time in the bootstrap calibration. If not given, the matrix is automatically computed using the semimetric \code{d}.}
-  \item{show.prog}{Either to show or not information about computing progress.}
+  \item{verbose}{Either to show or not information about computing progress.}
 }
 
 \details{

@@ -17,7 +17,8 @@
 }
 }
 \usage{
-\method{predict}{fregre.lm}(object,newx=NULL,type="response",se.fit=FALSE,\dots)
+\method{predict}{fregre.lm}(object,newx=NULL,type="response",se.fit=FALSE,scale = NULL,df=df,
+    interval = "none", level = 0.95,weights = 1, pred.var = res.var/weights, \dots)
 \method{predict}{fregre.plm}(object,newx=NULL,\dots)
 \method{predict}{fregre.glm}(object,newx=NULL,type="response",\dots)
 \method{predict}{fregre.gsam}(object, newx = NULL, type = "response",\dots)
@@ -28,6 +29,12 @@
   \item{newx}{ An optional data list in which to look for variables with which to predict. If omitted, the fitted values are used. List of new explanatory data.}
   \item{type}{ Type of prediction (response or model term).}
   \item{se.fit}{=TRUE (not default) standard error estimates are returned for each prediction.}
+ \item{scale}{	Scale parameter for std.err. calculation.}
+  \item{df}{Degrees of freedom for scale.}
+  \item{interval}{Type of interval calculation.}
+  \item{level}{Tolerance/confidence level.}
+  \item{pred.var}{the variance(s) for future observations to be assumed for prediction intervals. See \code{link{predict.lm}} for more details.}
+  \item{weights}{variance weights for prediction. This can be a numeric vector or a one-sided model formula. In the latter case, it is interpreted as an expression evaluated in newdata}  
   \item{\dots}{ Further arguments passed to or from other methods.}
 }
 \details{ 

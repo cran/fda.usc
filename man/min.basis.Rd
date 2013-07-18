@@ -11,7 +11,7 @@ Functional data estimation via basis representation using cross-validation (CV) 
 %type.basis="bspline",par.CV=list(trim=0,draw=FALSE),...) 
 \method{min}{basis}(fdataobj,type.CV=GCV.S,W=NULL,lambda=0,
 numbasis=floor(seq(ncol(fdataobj)/16,ncol(fdataobj)/2,len=10)),
-type.basis="bspline",par.CV=list(trim=0,draw=FALSE),\dots)
+type.basis="bspline",par.CV=list(trim=0,draw=FALSE),verbose=FALSE,\dots)
 }
 
 \arguments{
@@ -22,6 +22,7 @@ type.basis="bspline",par.CV=list(trim=0,draw=FALSE),\dots)
   \item{numbasis}{ Number of basis to use.}
   \item{type.basis}{ Character string which determines type of basis. By default \emph{"bspline"}.}
   \item{par.CV}{ List of parameters for type.CV: trim, the alpha of the trimming and \code{draw=TRUE}.}	  
+  \item{verbose}{ If \code{TRUE} information about  GCV values and input parameters is printed. Default is \code{FALSE}.}
    \item{\dots}{ Further arguments passed to or from other methods. Arguments to be passed by default to \link[fda]{create.basis}. }
 }
 
@@ -41,6 +42,7 @@ Smoothing  matrix is performed by \code{\link{S.basis}}. \code{W} is the matrix 
     \item{gcv.opt}{ Minimum  of CV or GCV method.}
     \item{lambda}{ A roughness penalty. By default, no penalty \code{lambda=0}.}
     \item{numbasis}{ Number of basis to use.}
+    \item{verbose}{ If \code{TRUE} information about  GCV values and input parameters is printed. Default is \code{FALSE}.}
 }
 \references{
 Ramsay, James O., and Silverman, Bernard W. (2006), \emph{ Functional Data Analysis}, 2nd ed., Springer, New York. 

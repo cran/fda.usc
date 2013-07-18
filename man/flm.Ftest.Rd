@@ -10,14 +10,14 @@
 
 \usage{
 Ftest.statistic (X.fdata, Y)
-flm.Ftest (X.fdata, Y, B=5000, show.prog=TRUE)
+flm.Ftest (X.fdata, Y, B=5000, verbose=TRUE)
 }
 
 \arguments{
   \item{X.fdata}{Functional covariate for the FLM. The object must be in the class \code{\link{fdata}}.}
   \item{Y}{Scalar response for the FLM. Must be a vector with the same number of elements as functions are in \code{X.fdata}.}
   \item{B}{Number of bootstrap replicates to calibrate the distribution of the test statistic. \code{B=5000} replicates are the recommended for carry out the test, although for exploratory analysis (\bold{not inferential}), an acceptable less time-consuming option is \code{B=500}.}
-  \item{show.prog}{Either to show or not information about computing progress.}
+  \item{verbose}{Either to show or not information about computing progress.}
  }
 
 \details{
@@ -73,11 +73,11 @@ Y0=drop(inprod.fdata(X,beta0)+rnorm(50,sd=0.1))
 Y1=drop(inprod.fdata(X,beta1)+rnorm(50,sd=0.1))
 
 # Do not reject H0
-flm.Ftest(X,Y0,B=100)
+#flm.Ftest(X,Y0,B=100)
 # flm.Ftest(X,Y0,B=5000)
 
 # Reject H0
-flm.Ftest(X,Y1,B=100)
+#flm.Ftest(X,Y1,B=100)
 # flm.Ftest(X,Y1,B=5000)
 
 }

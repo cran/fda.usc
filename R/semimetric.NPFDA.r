@@ -1,10 +1,8 @@
 #####################################################################
 #####################################################################
 #####################################################################
-mplsr <- function(X, Y, K = 5,...)
+mplsr <- function(X, Y, ncomp = 2,lambda=0,P=c(0,0,1),...)
 {
-# Copyright (c) October 1993, Mike Denham.
-# Comments and Complaints to: snsdenhm@reading.ac.uk
 #
 # Orthogonal Scores Algorithm for PLS (Martens and Naes, pp. 121--123)
 #
@@ -17,10 +15,17 @@ mplsr <- function(X, Y, K = 5,...)
 #
 # Returned Value is the vector of PLS regression coefficients
 #
+	dx <- dim(X)
+	J<-dx[2]
+  if (is.fdata(X)) {
+   X<-X$data
+   arg<-X$argvals
+  }
+  else arg<-1:J
+  K<-ncomp
 	tol <- 1e-10
 	X <- as.matrix(X)
 	Y <- as.matrix(Y)
-	dx <- dim(X)
 	nbclass <- ncol(Y)
 #	xbar <- apply(X, 2, sum)/dx[1]
 #	ybar <- apply(Y, 2, sum)/dx[1]
@@ -28,26 +33,34 @@ mplsr <- function(X, Y, K = 5,...)
 	ybar <- colSums(Y)/dx[1]
 	X0 <- X - outer(rep(1, dx[1]), xbar)
 	Y0 <- Y - outer(rep(1, dx[1]), ybar)
-	W <- matrix(0, dx[2], K)
-	P <- matrix(0, dx[2], K)
+  Xtotvar <- sum(X0 * X0)
+	PP<-W <- matrix(0, dx[2], K)
 	Q <- matrix(0, nbclass, K)
 #	sumofsquaresY <- apply(Y0^2, 2, sum)
 	sumofsquaresY <-colSums(Y0^2)
 	u <- Y0[, order(sumofsquaresY)[nbclass]]
 	tee <- 0
+	cee<-numeric(K)
+  M<-NULL
+  if (lambda>0) { 
+     if (is.vector(P))  {     P<-P.penalty(arg,P)          }
+     M <- solve( diag(J) + lambda*P)
+  }                              	
 	for(i in 1:K) {
 		test <- 1 + tol
 		while(test > tol) {
 			w <- crossprod(X0, u)
+      if (!is.null(M)) { w <- M %*% w}		
 			w <- w/sqrt(crossprod(w)[1])
 			W[, i] <- w
 			teenew <- X0 %*% w
-			test <- sum((tee - teenew)^2)
-			tee <- teenew
-			cee <- crossprod(tee)[1]
-			p <- crossprod(X0, (tee/cee))
-			P[, i] <- p
-			q <- crossprod(Y0, tee)[, 1]/cee
+			test <- sum((tee- teenew)^2)       #norm.fdata(tee,teenew)
+			tee<- teenew			
+			cee[i] <- crossprod(tee)[1]
+#			print(crossprod(tee)[1])
+			p <- crossprod(X0, (tee/cee[i]))
+			PP[, i] <- p
+			q <- crossprod(Y0, tee)[, 1]/cee[i]
 			u <- Y0 %*% q
 			u <- u/crossprod(q)[1]
 		}
@@ -55,10 +68,19 @@ mplsr <- function(X, Y, K = 5,...)
 		X0 <- X0 - tee %*% t(p)
 		Y0 <- Y0 - tee %*% t(q)
 	}
-	COEF <- W %*% solve(crossprod(P, W)) %*% t(Q)
-	b0 <- ybar - t(COEF) %*% xbar
-	list(b0 = b0, COEF = COEF)
+  tQ=solve(crossprod(PP, W)) %*% t(Q)	
+  COEF <- W %*% tQ
+	b0 <- ybar - t(COEF) %*% xbar   
+
+#	fitted <- drop(tee) *drop(tQ) + rep(ybar, each = dx[1])
+  residuals <- Y0     
+  fitted <- drop(Y-Y0)
+#Yscores = u,Yloadings=t(q),  
+ list(b0 = b0, COEF = COEF,scores=tee,loadings=p,loading.weights = W,
+ projection=W,Xmeans=xbar,Ymeans=ybar,fitted.values = fitted,
+ residuals = residuals,cee=cee,Xvar=colSums(PP*PP)*cee,Xtotvar=Xtotvar)
 }
+
 #####################################################################
 #####################################################################
 #####################################################################
@@ -474,7 +496,7 @@ else {
 	n <- nrow(DATA1)
 	COVARIANCE <- t(DATA1) %*% DATA1/n
 	ei=eigen(COVARIANCE, symmetric = TRUE)
-	EIGENVECTORS <- matrix(eigen(COVARIANCE, symmetric = TRUE)$vectors[, 1:q],ncol=q)
+	EIGENVECTORS <- matrix(ei$vectors[, 1:q],ncol=q)
 	COMPONENT1 <- DATA1 %*% EIGENVECTORS
 	if(twodatasets) {    		COMPONENT2 <- DATA2 %*% EIGENVECTORS	}
 	else {		COMPONENT2 <- COMPONENT1	}
@@ -492,3 +514,8 @@ else {
 #####################################################################
 #####################################################################
 
+
+X=rproc2fdata(n=10,t=1:101,sigma="OU")
+a<-semimetric.fourier(X,nderiv=1,nbasis=27)
+b<-metric.dist(fdata.deriv(X,method="fourier",nbasis=27)$data)
+a/b

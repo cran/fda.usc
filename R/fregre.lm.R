@@ -1,4 +1,5 @@
-fregre.lm=function(formula,data,basis.x=NULL,basis.b=NULL,rn=0,weights=rep(1,n),...){
+fregre.lm<-function(formula,data,basis.x=NULL,basis.b=NULL,
+rn,lambda,weights=rep(1,n),...){
  tf <- terms.formula(formula)
  terms <- attr(tf, "term.labels")
  nt <- length(terms)
@@ -6,7 +7,7 @@ fregre.lm=function(formula,data,basis.x=NULL,basis.b=NULL,rn=0,weights=rep(1,n),
         response <- as.character(attr(tf, "variables")[2])
         pf <- rf <- paste(response, "~", sep = "")
     } else pf <- rf <- "~"
- vtab<-rownames(attr(tf,"factors"))
+ vtab<-rownames(attr(tf,"factors"))                                                    
  vnf=intersect(terms,names(data$df))
  vnf2=intersect(vtab[-1],names(data$df)[-1])
  vfunc2=setdiff(terms,vnf)
@@ -19,10 +20,10 @@ fregre.lm=function(formula,data,basis.x=NULL,basis.b=NULL,rn=0,weights=rep(1,n),
  n<-length(data[["df"]][,response])
  XX=data.frame(data[["df"]][,c(response)],weights)
  namxx=names(XX)=c(response,"weights")
-if (length(vnf)>0) {
-
- XX=data.frame(XX,data[["df"]][,c(vnf)])
- names(XX)=c(namxx,vnf)
+ if (length(vnf)>0) {          
+#print(paste("Functional covariate:",vnf))
+# XX=data.frame(XX,data[["df"]][,c(vnf)])    # si es facotr poner k-1 variables dummies
+# names(XX)=c(namxx,vnf)
  for ( i in 1:length(vnf)){
 #     print(paste("Non functional covariate:",vnf[i]))
      if (kterms > 1)   pf <- paste(pf, "+", vnf[i], sep = "")
@@ -34,12 +35,25 @@ if   (attr(tf,"intercept")==0) {
 #     print("No intecept")
      pf<- paste(pf,-1,sep="")
      }
+#  contrasts = NULL
+    mf<-as.data.frame(model.matrix(formula(pf),data$df))
+    vnf2<-names(mf)[-1]
+    pf <- rf <- paste(response, "~", sep = "")
+    for ( i in 1:length(vnf2))  pf<-paste(pf, "+", vnf2[i], sep = "")
+    XX <- data.frame(XX,mf)
 }
-#else {
-# XX=data.frame(data[["df"]][,response],weights)
-# names(XX)=c(response,"weights")
-#}
+else {
+    XX <- data.frame(XX,model.matrix(formula(paste(pf, "1")),data$df))
+    names(XX)[3]<-"(Intercept)"
+}
 #print(paste("Functional covariate:",vfunc))
+if (missing(rn))    {    rn0=FALSE;                    rn=list()}
+else rn0<-TRUE
+if (missing(lambda))    {    lambda0=FALSE;                    lambda=list()}
+else lambda0<-TRUE
+mat<-rep(0,len=ncol(XX)-2)
+imat2<-ncol(XX)-2
+mat2<-diag(0,nrow=imat2)
 if (length(vfunc)>0) {
  mean.list=vs.list=JJ=list()
  bsp1<-bsp2<-TRUE
@@ -80,34 +94,52 @@ if (length(vfunc)>0) {
           J=inprod(basis.x[[vfunc[i]]],basis.b[[vfunc[i]]])
           Z =t(x.fd$coefs) %*% J
           colnames(J)=colnames(Z) = name.coef[[vfunc[i]]]=paste(vfunc[i],".",basis.b[[vfunc[i]]]$names,sep="")
-          XX = cbind(XX,Z)
+          XX = data.frame(XX,Z)
           for ( j in 1:length(colnames(Z))){
            if (kterms >= 1)  pf <- paste(pf, "+", colnames(Z)[j], sep = "")
            else pf <- paste(pf, colnames(Z)[j], sep = "")
            kterms <- kterms + 1
            }
         	JJ[[vfunc[i]]]<-J
+           nbasisb<- basis.b[[vfunc[i]]]$nbasis
+         R=diag(0,ncol= nbasisb,nrow=nbasisb)
+         R<-eval.penalty(basis.b[[vfunc[i]]],Lfdobj = int2Lfd(2))
+        mat2<-diag(0,nrow=imat2+nbasisb)
+        if (!is.null(lambda[[vfunc[i]]]))  {
+        mat2<-diag(0,nrow=imat2+nbasisb)
+        mat2[(imat2+1):(imat2+nbasisb),(imat2+1):(imat2+nbasisb)]<-lambda[[vfunc[i]]]*R
+        imat2<-imat2+nbasisb
+        }     
 				}
       else {
-
-        l<-basis.x[[vfunc[i]]]$l
-        vs <- t(basis.x[[vfunc[i]]]$basis$data)        
-        
-        basis.x[[vfunc[i]]]$x<-basis.x[[vfunc[i]]]$x[,l,drop=FALSE]
-        Z<-basis.x[[vfunc[i]]]$x
+        basis<-basis.x[[vfunc[i]]]
+        l<-basis$l
+        vs <- t(basis$basis$data)           
+        basis$x<-basis$x[,l,drop=FALSE]
+        Z<-basis$x
         response = "y"
-        colnames(Z) = name.coef[[vfunc[i]]]=paste(vfunc[i], ".",rownames(basis.x[[vfunc[i]]]$basis$data),sep ="")
-        XX = cbind(XX,Z)
-        vs.list[[vfunc[i]]]=basis.x[[vfunc[i]]]$basis
-        mean.list[[vfunc[i]]]=basis.x[[vfunc[i]]]$mean
+        colnames(Z) = name.coef[[vfunc[i]]]=paste(vfunc[i], ".",rownames(basis$basis$data),sep ="")
+        XX =data.frame(XX,Z)
+        vs.list[[vfunc[i]]]=basis$basis
+        mean.list[[vfunc[i]]]=basis$mean
         for ( j in 1:length(colnames(Z))){
             if (kterms >= 1)  pf <- paste(pf, "+", name.coef[[vfunc[i]]][j], sep = "")
            else pf <- paste(pf, name.coef[[vfunc[i]]][j], sep = "")
            kterms <- kterms + 1
            }
-        #   pf=paste(pf,"-1")
-      }
-    }
+        if (!is.null(rn[[vfunc[i]]]))  {
+           mat<-c(mat,rep(rn[[vfunc[i]]],len=length(l)))
+           }     
+        else          mat<-c(mat,rep(0,len=length(l)))
+        mat2<-diag(0,nrow=imat2+length(l))
+        if (!is.null(lambda[[vfunc[i]]]))  {
+        mat2<-diag(0,nrow=imat2+length(l))
+        R<-P.penalty(1:length(l))
+        mat2[(imat2+1):(imat2+length(l)),(imat2+1):(imat2+length(l))]<-R
+        imat2<-imat2+length(l)
+        }                    
+   }
+  }
  	else {
  		if(class(data[[vfunc[i]]])[1]=="fd"){
       fdat<-data[[vfunc[i]]]
@@ -138,7 +170,7 @@ if (length(vfunc)>0) {
           x.fd<-center.fd(x.fd)
           Z =t(x.fd$coefs) %*% J
           colnames(J)=colnames(Z) = name.coef[[vfunc[i]]]=paste(vfunc[i],".",basis.b[[vfunc[i]]]$names,sep="")
-          XX = cbind(XX,Z)
+          XX = data.frame(XX,Z)
           for ( j in 1:length(colnames(Z))){
            if (kterms >= 1)  pf <- paste(pf, "+", colnames(Z)[j], sep = "")
            else pf <- paste(pf, colnames(Z)[j], sep = "")
@@ -152,7 +184,7 @@ if (length(vfunc)>0) {
         Z<-basis.x[[vfunc[i]]]$scores
         response = "y"
         colnames(Z) = name.coef[[vfunc[i]]]=paste(vfunc[i], ".",colnames(basis.x[[vfunc[i]]]$harmonics$coefs),sep ="")
-        XX = cbind(XX,Z)
+        XX = data.frame(XX,Z)
         vs.list[[vfunc[i]]]=vs
         mean.list[[vfunc[i]]]=basis.x[[vfunc[i]]]$meanfd
         for ( j in 1:length(colnames(Z))){
@@ -165,58 +197,84 @@ if (length(vfunc)>0) {
    else stop("Please, enter functional covariate")
    }
   }  }
-  
  if (!is.data.frame(XX)) XX=data.frame(XX)
-
     par.fregre$formula=pf
     par.fregre$data=XX
     y<-XX[,1]    
-    scores<-as.matrix(cbind(rep(1,n),XX[,-(1:2)]))     
-    W<-diag(weights) 
-    if (rn==0) {
-      z=lm(formula=pf,data=XX,...) 
-      S<-solve(t(scores)%*%W%*%scores)          
-#       S<-diag(coef(summary(z))[,2])
+    scores<-as.matrix(XX[,-(1:2)])     
+#    scores<-as.matrix(XX)     
+    W<-diag(weights)  
+    if (!rn0 & !lambda0) {
+      z=lm(formula=pf,data=XX,x=TRUE,...)
+      e<-z$residuals
+#      S<-solve(t(scores)%*%W%*%scores)          
+       S<-diag(coef(summary(z))[,2])
       class(z)<-c(class(z),"fregre.lm")
       }      
     else {
-      mat<-rn*diag(ncol(scores))
-      mat[1,1]<-0    
-      ddd<-t(scores)%*%W  
-      S<-solve(t(scores)%*%W%*%scores+mat)       #incluir pesos solve(W)
+       if (lambda0) { S<-solve(t(scores)%*%W%*%scores+mat2)           }             
+       if (rn0) {
+             mat<-diag(mat)
+             S<-solve(t(scores)%*%W%*%scores+mat)       
+       }      
+       if (rn0 & lambda0) warning("Only ridge penalization is done by rn argument (lambda argument is ignored)")               
+#      ddd<-t(scores)%*%W  
+#      S<-solve(t(scores)%*%W%*%scores+mat+mat2)       #incluir pesos solve(W)
       Cinv<-S%*%t(scores)%*%W                    #incluir pesos W repetri proceso hasta que no cambie la prediccion   
       ycen = y - mean(y)
       coefs<-Cinv%*%XX[,1]
       z<-list()      
-      z$fitted.values<-drop(scores%*%coefs)
-      z$residuals<-XX[,1]- z$fitted.values
+      z$fitted.values<-yp<-drop(scores%*%coefs)
+      e<-z$residuals<-XX[,1]- z$fitted.values      
+################################################################################
+################################################################################
+################################################################################           
       H<-scores%*%Cinv
       df<-traza(H)
       coefs<-drop(coefs)
-      cnames<-names(XX[,-(1:2)])
-      names(coefs)<-c("Intercept",cnames)
+#      cnames<-names(XX[,-(1:2)])
+#      names(coefs)<-c("Intercept",cnames)  
       z$coefficients<-coefs
       z$mean.list<-mean.list
       z$df.residual<-n-df
       z$H<-H
-      z$r2 <- 1 - sum(z$residuals^2)/sum(ycen^2)      
+      z$r2 <- 1 - sum(z$residuals^2)/sum(ycen^2)       
       if  (class(basis.x[[vfunc[1]]])=="basisfd") {
         z$call[[1]] = "fregre.basis"
-        z$lambda<-rn
         }
        else {
         if  (basis.x[[vfunc[1]]]$type=="pc")  z$call[[1]] = "fregre.pc"
         if  (basis.x[[vfunc[1]]]$type=="pls")  z$call[[1]] = "fregre.pls"        
         }             
-      class(z)<-c("fregre.fd","fregre.lm")
-    }       
+    class(z)<-c("fregre.fd","fregre.lm")
+    rdf<-n-df
+    sr2 <- sum(e^2)/ rdf
+    r2 <- 1 - sum(e^2)/sum(ycen^2)
+    r2.adj<- 1 - (1 - r2) * ((n -    1)/ rdf)
+    GCV <- sum(e^2)/(n - df)^2
+        z$residuals <- drop(e)
+        z$fitted.values <- yp
+        z$y <- y
+        z$rank <- df
+        z$df.residual <-  rdf
+        Z=cbind(rep(1,len=n),Z)
+        colnames(Z)[1] = "(Intercept)"
+        std.error = sqrt(diag(S) *sr2)
+        t.value = coefs/std.error
+        p.value = 2 * pt(abs(t.value), n - df, lower.tail = FALSE)
+        coefficients <- cbind(coefs, std.error, t.value, p.value)
+        colnames(coefficients) <- c("Estimate", "Std. Error",
+            "t value", "Pr(>|t|)")
+        z$coefs<-coefficients    
+        class(z) <- "lm"
+}       
 #    z$call<-z$call[1:2]
 for (i in 1:length(vfunc)) {
  if (bsp1) beta.l[[vfunc[i]]]=fd(z[[1]][name.coef[[vfunc[i]]]],basis.b[[vfunc[i]]])
  else{
 	if(class(data[[vfunc[i]]])[1]=="fdata"){
+#     beta.est<-z$coefficients[name.coef[[vfunc[i]]]]*vs.list[[vfunc[i]]]
      beta.est<-z$coefficients[name.coef[[vfunc[i]]]]*vs.list[[vfunc[i]]]
-#     beta.est$data<-apply(beta.est$data,2,sum)
      beta.est$data<-colSums(beta.est$data)
      beta.est$names$main<-"beta.est"
      beta.est$data <- matrix(as.numeric(beta.est$data),nrow=1)
@@ -238,8 +296,8 @@ for (i in 1:length(vfunc)) {
      beta.l[[vfunc[i]]]<-fd(beta.est,basis.x[[vfunc[i]]]$harmonics$basis)
       }
 }
-}   
- z$sr2<-sum(z$residuals^2)/z$df.residual
+}
+ z$sr2<-sum(e^2)/z$df.residual
  z$Vp=z$sr2*S
  z$beta.l=beta.l
  z$formula=pf
@@ -252,7 +310,26 @@ for (i in 1:length(vfunc)) {
  z$XX=XX
  z$data<-data
  z$fdataobj<-data[[vfunc[1]]]
- z$rn<-rn
+ z$rn<-rn0
+ z$lambda<-lambda0
  z$vs.list=vs.list   
+## z$ar<-aa
+ class(z)<-c("lm","fregre.lm")
  z
 }     
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

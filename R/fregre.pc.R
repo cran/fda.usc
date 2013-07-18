@@ -8,8 +8,6 @@ if (class(fdataobj)=="fdata.comp") {
        l<-pc$l
        }
     else if (length(l)>nrow(pc$rotation)) stop("Incorrect value for  argument l")
-
-
     x <- fdataobj[["data"]]
     tt <- fdataobj[["argvals"]]                                                    
    }
@@ -23,7 +21,7 @@ else {
   x<-fdataobj[["data"]]
   pc<-fdata2pc(fdataobj,ncomp=max(l))
 }
-#f (rn==TRUE) rn<-0.05*(pc$newd[1]^2)
+
     rtt <- fdataobj[["rangeval"]]
     names <- fdataobj[["names"]]
     n = nrow(x); np <- ncol(x);lenl = length(l)
@@ -44,29 +42,15 @@ else {
  if (rn>0) {
     xmean<-pc$mean
     d<-pc$newd[l]
-#    v<-pc$rotation[l,l]
     D<-diag(d)
-#    u<-pc$newu[,l]
     diagJ<-diag(J)
     lenrn<-length(rn)
- #    betapred2<-solve(D^2+rn*diag(J))%*%t(scores)%*%ycen
- #    ypred2<-scores%*%betapred2+ymean
-#    coefs<-solve(t(scores)%*%scores+rn*diagJ)%*%t(scores)%*%ycen
-#    yp<-scores%*%coefs +ymean
-#    a0<-ymean#- (coefs)%*%t(xmean)
-
-#    Z=cbind(rep(1,len=n),Z)
-#    S=solve(t(Z)%*%Z)
-#    H<-Z%*%S%*%t(Z)
-#    coefs<-c(a0,coefs)
-################################## ESTIMANDO LA CONSTANTE #######
-#     scores<-pc$x[,l]#inprod.fdata(fdataobj,pc$rotation)
-     scores<-cbind(rep(1,n),pc$x[,l])
-     mat<-rn*diag(J+1)
-     mat[1,1]<-0
+    scores<-cbind(rep(1,n),pc$x[,l])
+    mat<-rn*diag(J+1)
+    mat[1,1]<-0
 #     xx2<-t(scores)%*%scores
-     S<-solve(t(scores)%*%W%*%scores+mat)       #incluir pesos solve(W)
-     Cinv<-S%*%t(scores)%*%W                    #incluir pesos W repetri proceso hasta que no cambie la prediccion   
+     S<-solve(t(scores)%*%W%*%scores+mat)       
+     Cinv<-S%*%t(scores)%*%W                    
      #comprobar y ver el siguiente
      coefs<-Cinv%*%y
      yp<-drop(scores%*%coefs)
@@ -97,6 +81,7 @@ else {
 #        vcov2 = sr2 * Cinv
 #        std.error = sqrt(diag(vcov2))
         std.error = sqrt(diag(S) *sr2)
+        Vp<-sr2*S 
         t.value = coefs/std.error
         p.value = 2 * pt(abs(t.value), n - df, lower.tail = FALSE)
         coefficients <- cbind(coefs, std.error, t.value, p.value)
@@ -107,7 +92,7 @@ else {
 #        names(b.est) <- rownames(coefficients)[-1]
     out <- list(call = C, beta.est = beta.est,coefficients=coefs,
     fitted.values =yp,residuals = e,H=H,df = df,r2=r2,GCV=GCV,
-    sr2 = sr2,l = l,rn=rn,fdata.comp=pc,lm=object.lm,
+    sr2 = sr2,Vp=Vp,l = l,rn=rn,fdata.comp=pc,lm=object.lm,
     coefs=coefficients,fdataobj = fdataobj,y = y)
 ##################################
 }
@@ -118,7 +103,7 @@ else {
     colnames(dataf)<-c("y",cnames,"weights")
     pf <- paste(response, "~", sep = "")
     for (i in 1:length(cnames)) pf <- paste(pf,"+",cnames[i],sep="")
-    object.lm = lm(formula = pf,data=data.frame(dataf),weights=weights,...)
+    object.lm = lm(formula = pf,data=data.frame(dataf),weights=weights,x = TRUE, y = TRUE,...)
     beta.est<-object.lm$coefficients[2:(lenl+1)]*pc$rotation[l]
 #    beta.est$data<-apply(beta.est$data,2,sum)
     beta.est$data<-colSums(beta.est$data)
@@ -128,25 +113,22 @@ else {
 ##    H<-lm.influence(object.lm, do.coef = FALSE)$hat o bien
 ##    I <- diag(1/(n*pc$lambdas[l]), ncol = lenl) #1/n
 
-#    Z=cbind(rep(1,len=n),Z)
-#    S=solve(t(Z)%*%W%*%Z)
-#    H<-Z%*%S%*%t(Z)
+    Z=cbind(rep(1,len=n),Z)
+    S=solve(t(Z)%*%W%*%Z)
+    H<-Z%*%S%*%t(Z)
     e<-object.lm$residuals
-    H<-diag(hat(Z, intercept = TRUE),ncol=n)
+#    H<-diag(hat(Z, intercept = TRUE),ncol=n)
 #     H<-scores%*%solve(t(scores)%*%scores+mat)%*%t(scores)
 #     df<-traza(H)
      df<-n- object.lm$df
      sr2 <- sum(e^2)/(n - df)
+     Vp<-sr2*S 
      r2 <- 1 - sum(e^2)/sum(ycen^2)
      r2.adj<- 1 - (1 - r2) * ((n -    1)/(n-df))
      GCV <- sum(e^2)/(n - df)^2
-# out <- list(call = C, beta.est = beta.est, fitted.values =object.lm$fitted.values,
-# fdata.comp=pc,coefficients=object.lm$coefficients,residuals = object.lm$residuals,
-# df = df,r2=r2, sr2 = sr2,H=H,fdataobj = fdataobj,y = y, l = l,lm=object.lm,pc=pc
-# ,GCV=GCV,rn=rn)
   out <- list(call = C, beta.est = beta.est,coefficients=object.lm$coefficients,
   fitted.values =object.lm$fitted.values,residuals = e,H=H,df = df,r2=r2,GCV=GCV,
-  sr2 = sr2,l = l,rn=rn,fdata.comp=pc,lm=object.lm,weights=weights,
+  sr2 = sr2,Vp=Vp, l = l,rn=rn,fdata.comp=pc,lm=object.lm,weights=weights,XX=Z,
   fdataobj = fdataobj,y = y)
   }
  class(out) = "fregre.fd"
@@ -154,3 +136,4 @@ else {
 }
 ####################################################################
 ####################################################################
+

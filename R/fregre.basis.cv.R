@@ -1,5 +1,5 @@
 fregre.basis.cv=function(fdataobj,y,basis.x=NULL,basis.b=NULL,type.basis=NULL,lambda=0,
-Lfdobj=vec2Lfd(c(0,0),rtt),type.CV=GCV.S,par.CV=list(trim=0),weights= rep(1,n),...){
+Lfdobj=vec2Lfd(c(0,0),rtt),type.CV=GCV.S,par.CV=list(trim=0),weights= rep(1,n),verbose=FALSE,...){
 call<-match.call()
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
 #        omit <- omit.fdata(fdataobj, y)
@@ -15,6 +15,7 @@ if (n != (length(y))) stop("ERROR IN THE DATA DIMENSIONS")
 if (is.null(rownames(x)))        rownames(x) <- 1:n
 if (is.null(colnames(x)))        colnames(x) <- 1:np
 if (is.matrix(y)) y=as.vector(y)
+fou<-FALSE
 if (is.null(basis.x))  {
   nbasis1=seq(max(floor(np/10),11),max(floor(np/5),11),by=2)
   lenbasis.x=length(nbasis1)
@@ -27,33 +28,38 @@ if (is.null(basis.x))  {
     names(as)[[1]] <- "rangeval"
     as[[2]] <- nbasis1[nb.x]
     names(as)[[2]] <- "nbasis"
-    basis.x[[nb.x]]=do.call(aa1, as)
+    if (verbose) basis.x[[nb.x]]=do.call(aa1, as)
+    else  basis.x[[nb.x]]=suppressWarnings(do.call(aa1,as))
     }
   else      basis.x[[nb.x]]=create.bspline.basis(rangeval=rtt,nbasis=nbasis1[nb.x],...)
    }
 }
 else nbasis1<-basis.x
 if (is.null(basis.b))  {
-  nbasis2=seq(max(floor(np/10),5),max(floor(np/10),11),by=2)
-  lenbasis.b=length(nbasis2)
-  basis.b=list()
-  for (nb.x in 1:lenbasis.b) {
-	if (!is.null(type.basis))  {
-    if (length(type.basis)>1)    aa1 <- paste("create.",type.basis[2], ".basis", sep = "")
-    else     aa1 <- paste("create.",type.basis, ".basis", sep = "")
-    as <- list()
-    as[[1]] <- rtt
-    names(as)[[1]] <- "rangeval"
-    as[[2]] <- nbasis2[nb.x]
-    names(as)[[2]] <- "nbasis"
-    basis.b[[nb.x]]=do.call(aa1, as)
-    }
-  else   basis.b[[nb.x]]=create.bspline.basis(rangeval=rtt,nbasis=nbasis2[nb.x])
-}  }
+#  2=seq(max(floor(np/10),5),max(floor(np/10),11),by=2)
+#  lenbasis.b=length(nbasis2)
+#  basis.b=list()
+#  for (nb.x in 1:lenbasis.b) {
+#	if (!is.null(type.basis))  {
+#    if (length(type.basis)>1)    aa1 <- paste("create.",type.basis[2], ".basis", sep = "")
+#    else     aa1 <- paste("create.",type.basis, ".basis", sep = "")
+#    as <- list()
+#    as[[1]] <- rtt
+#    names(as)[[1]] <- "rangeval"
+#    as[[2]] <- nbasis2[nb.x]
+#    names(as)[[2]] <- "nbasis"
+#    basis.b[[nb.x]]=do.call(aa1, as)
+#    }
+#  else   basis.b[[nb.x]]=create.bspline.basis(rangeval=rtt,nbasis=nbasis2[nb.x])
+#} 
+basis.b<-basis.x
+nbasis2<-nbasis1
+fou<-TRUE
+#nb.y<-nb.x
+ }
 else nbasis2<-basis.b
 lenlambda=length(lambda)
 a1=list()  ;a2=list()
-fou<-FALSE
 if (!is.null(type.basis)){
    if (type.basis=="fourier") fou<-TRUE}
 if (!is.list(basis.x))  {
@@ -66,7 +72,8 @@ if (!is.list(basis.x))  {
      names(as)[[1]] <- "rangeval"
      as[[2]] <- basis.x[nb.x]
      names(as)[[2]] <- "nbasis"
-     a1[[nb.x]]=do.call(aa1, as)
+     if (verbose)   a1[[nb.x]]=do.call(aa1, as)
+     else a1[[nb.x]]=suppressWarnings(do.call(aa1, as))
   }
  else  a1[[nb.x]]=create.bspline.basis(rangeval=rtt,nbasis=basis.x[[nb.x]])
  }
@@ -85,13 +92,20 @@ if (!is.list(basis.b))  {
       names(as)[[1]] <- "rangeval"
       as[[2]] <- basis.b[nb.y]
       names(as)[[2]] <- "nbasis"
-      a2[[nb.y]]=do.call(aa1, as)
+      
+    if (verbose) a2[[nb.y]]=do.call(aa1, as)
+    else  a2[[nb.y]]=suppressWarnings(do.call(aa1, as))
+      
       }
   else  a2[[nb.y]]=create.bspline.basis(rangeval=rtt,nbasis=basis.b[[nb.y]])
  }
  basis.b=a2
 }
-else  lenbasis.y=length(nbasis2)
+else  {
+      lenbasis.y=length(nbasis2)
+      maxbasis.y<-which.max(nbasis2)
+#      nb.y<-
+      }
  pr=Inf
  i.lambda.opt=1;i.nb.y.opt=1;i.nb.x.opt=1
  xx<-fdata.cen(fdataobj)
@@ -101,22 +115,25 @@ else  lenbasis.y=length(nbasis2)
  ycen=y-ymean
  if (fou)   	 {
    basis.x<-basis.b
-   J0=inprod(basis.x[[maxbasis.y]],basis.b[[maxbasis.y]])
-   nb.x<-nb.y
    nbasis1<-nbasis2
-   warning("Same number of basis elements in the basis.x  and basis.b")
-   lenbasis.x<-lenbasis.y
-         x.fd=Data2fd(argvals=tt,y=t(xcen$data),basisobj=basis.x[[maxbasis.y]])
-         Cfou=t(x.fd$coefs)
-         Cmfou=t(mean.fd(x.fd)$coefs)
-         nbasis12<-basis.x[[maxbasis.y]]$type
+   if (verbose)   warning("Same number of basis elements in the basis.x and basis.b")
+         lenbasis.x<-lenbasis.y
+   nbasis12<-rep(NA,lenbasis.x)
+   nbasis22<-rep(NA,lenbasis.y)
+   x.fdfou<-Cfou<-Cmfou<- list()
+   for (nb.x in 1:lenbasis.x) {
+         x.fd=x.fdfou[[nb.x]] =Data2fd(argvals=tt,y=t(xcen$data),basisobj=basis.x[[nb.x]])         
+         Cfou[[nb.x]]=t(x.fdfou[[nb.x]]$coefs)
+         Cmfou[[nb.x]]=matrix(t(mean.fd(x.fdfou[[nb.x]])$coefs))
+         nbasis12[nb.x]<-basis.x[[nb.x]]$type
+         }
   }
   else {
    nbasis12<-rep(NA,lenbasis.x)
    nbasis22<-rep(NA,lenbasis.y)
    x.fdfou<-Cfou<-Cmfou<- list()
    for (nb.x in 1:lenbasis.x) {
-         x.fdfou[[nb.x]]=Data2fd(argvals=tt,y=t(xcen$data),basisobj=basis.x[[nb.x]])
+         x.fd=x.fdfou[[nb.x]] =Data2fd(argvals=tt,y=t(xcen$data),basisobj=basis.x[[nb.x]])         
          Cfou[[nb.x]]=t(x.fdfou[[nb.x]]$coefs)
          Cmfou[[nb.x]]=matrix(t(mean.fd(x.fdfou[[nb.x]])$coefs))
          nbasis12[nb.x]<-basis.x[[nb.x]]$type
@@ -127,18 +144,10 @@ else  lenbasis.y=length(nbasis2)
    if (fou) {ifou<-nb.x;iifou<-nb.x}
    else {ifou<-1;iifou<-lenbasis.y  }
    for (nb.y in ifou:iifou) {
-      if (fou)   	 {
-         nfou=basis.b[[nb.y]]$nbasis
-         J=J0[1:nfou,1:nfou]
-         C<-Cfou[,1:nfou]
-         Cm<-Cmfou[,1:nfou]
-         }
-     else {
-          nbasis22[nb.y]<-basis.b[[nb.y]]$type
-          C<-Cfou[[nb.x]]
-          Cm<-Cmfou[[nb.x]]
-          J<-inprod(basis.x[[nb.x]],basis.b[[nb.y]])
-          }
+     nbasis22[nb.y]<-basis.b[[nb.y]]$type
+     C<-Cfou[[nb.x]]
+     Cm<-Cmfou[[nb.x]]
+     J<-inprod(basis.x[[nb.x]],basis.b[[nb.y]])        
 	   Z=C%*%J
      Z=cbind(rep(1,len=n),Z)
 	   if (min(lambda)!=0) {
@@ -149,13 +158,12 @@ else  lenbasis.y=length(nbasis2)
      for (k in 1:lenlambda) {
        Sb=t(Z)%*%W%*%Z+lambda[k]*R
 #      eigchk(Sb)
-#
-      Cinv<-solve(Sb)
-      Sb2=Cinv%*%t(Z)%*%W
-      par.CV$S <-Z%*%Sb2
+       Cinv<-solve(Sb)
+       Sb2=Cinv%*%t(Z)%*%W
+       par.CV$S <-Z%*%Sb2
        par.CV$y<-y
        gcv[nb.x,nb.y,k]<- do.call(type.CV,par.CV)
-     if (gcv[nb.x,nb.y,k]<pr) {
+       if (gcv[nb.x,nb.y,k]<pr) {
           pr=gcv[nb.x,nb.y,k]
           lambda.opt=lambda[k]
           basis.b.opt=basis.b[[nb.y]]
@@ -165,10 +173,10 @@ else  lenbasis.y=length(nbasis2)
           Cm.opt=Cm
           J.opt=J
           Cinv.opt=Cinv
-     }    }
+    }  }
     }  }
     l = which.min(gcv)
-    gcv.opt=min(gcv)
+    gcv.opt=min(gcv,na.rm=TRUE)
     S=Z.opt%*%Sb.opt
     DD<-t(Z.opt)%*%y
     yp=S%*%y
@@ -183,12 +191,14 @@ else  lenbasis.y=length(nbasis2)
     names(e)<-rownames(x)
     df=basis.b.opt$nbasis+1
     sr2=sum(e^2)/(n-df)
+    Vp<-sr2*Cinv.opt    
     r2=1-sum(e^2)/sum(ycen^2)
     object.lm=list()
     object.lm$coefficients<-drop(b.est)
     object.lm$residuals<-drop(e)
     object.lm$fitted.values<-yp
     object.lm$y<-y
+     object.lm$x<-Z#############################################################ok
     object.lm$rank<-df
     object.lm$df.residual<-n-df
     vfunc=call[[2]]
@@ -218,15 +228,13 @@ nbasis12<-paste(nbasis12,nbasis1,sep="")
 nbasis22<-paste(nbasis22,nbasis2,sep="")
 dimnames(gcv)<-list(nbasis12,nbasis22,lambda2)
 }
-
+x.fd=Data2fd(argvals=tt,y=t(xcen$data),basisobj=basis.x.opt)          
 out<-list("call"=call,"b.est"=b.est,"a.est"=a.est,"fitted.values"=yp,"H"=S,
-"residuals"=e,"df"=df,"r2"=r2,"sr2"=sr2,"y"=y,"fdataobj"=fdataobj,"gcv"=gcv,
+"residuals"=e,"df"=df,"r2"=r2,"sr2"=sr2,"Vp"=Vp,"y"=y,"fdataobj"=fdataobj,x.fd=x.fd,"gcv"=gcv,
 "lambda.opt"=lambda.opt,"gcv.opt"=gcv.opt,"coefficients"=coefficients,
 "basis.x.opt"=basis.x.opt,"basis.b.opt"=basis.b.opt,"J"=J.opt,"beta.est"=beta.est,
 "lm"=object.lm,"mean"=xmean)
 class(out)="fregre.fd"
-return(out)
+return(invisible(out))
 }
-
-
 

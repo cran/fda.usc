@@ -13,7 +13,7 @@ fdata2ppls(fdataobj, y, ncomp = 2, lambda = 0, P = c(0, 0, 1),norm=TRUE,...)
   \item{fdataobj}{ \code{\link{fdata}} class object.}  
 	\item{y}{ Scalar response with length \code{n}.}
   \item{ncomp}{The number of components to include in the model.}
-   \item{norm}{=TRUE the \code{fdataobj}  are centered  and scaled.} 
+  \item{norm}{=TRUE the \code{fdataobj}  are centered  and scaled.} 
   \item{lambda}{ Amount of penalization. Default value is 0, i.e. no penalization is used.}
   \item{P}{ If P is a vector:  coefficients to define the penalty matrix object. By default P=c(0,0,1) penalize the second derivative (curvature) or acceleration.
   If P is a matrix:  the penalty matrix object.} 
@@ -21,7 +21,12 @@ fdata2ppls(fdataobj, y, ncomp = 2, lambda = 0, P = c(0, 0, 1),norm=TRUE,...)
 }
 \details{
  %SIMPLS algorithm (de Jong, 1993)
-The partial least squares are calculated by \code{NIPALS} algorithm.
+%The partial least squares are calculated by \code{NIPALS} algorithm.
+If \code{norm=TRUE}, computes the PLS by \code{NIPALS} algorithm and the Degrees of Freedom using the Krylov representation of PLS, see Kraemer and Sugiyama (2011).  
+
+If \code{norm=FALSE},  computes the PLS by Orthogonal Scores Algorithm and the Degrees of Freedom are the number of components \code{ncomp}, see Martens and Naes (1989).  
+
+
 }
 \value{
 \code{fdata2pls} function return:
@@ -40,6 +45,8 @@ Kraemer, N., Sugiyama M. (2011). \emph{The Degrees of Freedom of Partial Least S
 
 Febrero-Bande,  M., Oviedo de la Fuente, M. (2012).  \emph{Statistical Computing in Functional Data Analysis: The R Package fda.usc.}
 Journal of Statistical Software, 51(4), 1-28. \url{http://www.jstatsoft.org/v51/i04/}
+
+Martens, H., Naes, T. (1989) \emph{Multivariate calibration.} Chichester: Wiley.
 }
 \author{ Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es} }
 \seealso{

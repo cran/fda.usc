@@ -9,7 +9,8 @@
 \usage{
 fregre.basis.cv(fdataobj,y,basis.x=NULL,basis.b=NULL,
 type.basis=NULL,lambda=0,Lfdobj=vec2Lfd(c(0,0),rtt),
-type.CV=GCV.S,par.CV=list(trim=0),weights= rep(1,n),...)
+type.CV=GCV.S,par.CV=list(trim=0),weights= rep(1,n),
+verbose=FALSE,...)
 }
 \arguments{
   \item{fdataobj}{ \code{\link{fdata}} class object.} 
@@ -23,14 +24,18 @@ type.CV=GCV.S,par.CV=list(trim=0),weights= rep(1,n),...)
   \item{type.CV}{ Type of cross-validation. By default generalized cross-validation \code{\link{GCV.S}} method.}  
   \item{par.CV}{ List of parameters for \code{type.CV}: \code{trim}, the alpha of the trimming and \code{draw}.}	  
   \item{weights}{ weights}
+    \item{verbose}{ If \code{TRUE} information about the procedure is printed. Default is \code{FALSE}.}
   \item{\dots}{ Further arguments passed to or from other methods.}
 }
 \details{ 
 
 If \code{basis = NULL} creates  bspline basis.\cr 
-If the functional covariate \code{fdataobj} is in a format \code{raw data}, such as matrix or data.frame, creates an object of class \code{fdata} with default attributes, see \code{\link{fdata}}.
 
-If \code{basis.x$type=``fourier''} and \code{basis.b$type=``fourier''}, the basis are orthonormal and the function decreases the number of fourier basis elements on the \eqn{min(k_{n1},k_{n2})}{min(k.x,k_b)}, where \eqn{k_{n1}}{k.x} and \eqn{k_{n2}}{k.b} are the number of basis element of  \code{basis.x} and  \code{basis.b} respectively.
+If the functional covariate \code{fdataobj} is in a format \code{raw data}, such as matrix or data.frame, creates an object of class \code{fdata} with default attributes, see \code{\link{fdata}}.\cr 
+
+If \code{basis.x} is a vector of number of basis elements and \code{basis.b=NULL}, the function  force the same number of elements in the basis of \code{x} and \code{beta}.\cr 
+
+If \code{basis.x$type=``fourier''} and \code{basis.b$type=``fourier''}, the function decreases the number of fourier basis elements on the \eqn{min(k_{n1},k_{n2})}{min(k.x,k_b)}, where \eqn{k_{n1}}{k.x} and \eqn{k_{n2}}{k.b} are the number of basis element of  \code{basis.x} and  \code{basis.b} respectively.
 }
 \value{
 Return:\cr
@@ -45,6 +50,7 @@ Return:\cr
 \item{sr2}{ Residual variance.}
 \item{y}{ Scalar response.}
 \item{fdataobj}{ Functional explanatory data of class \code{fdata}.}
+\item{x.fd}{ Centered functional explanatory data of class \code{fd}.}
 \item{lambda.opt}{  \code{lambda} value that minimizes CV or GCV method.}
 \item{gcv.opt}{ Minimum value of CV or GCV method.}
 \item{basis.x.opt}{  Basis used for  functional explanatory data estimation  \code{fdata}.}
@@ -69,12 +75,17 @@ Alternative method: \code{\link{fregre.pc.cv}} and   \code{\link{fregre.np.cv}}.
 data(tecator)
 x<-tecator$absorp.fdata[1:129]
 y=tecator$y$Fat[1:129]
-tt=x[["argvals"]]
-b=seq(7,47,by=8)
-l=2^(-4:10)
-res=fregre.basis.cv(x,y,basis.b=b,type.basis="fourier",
-lambda=l,type.CV=GCV.S,par.CV=list(trim=0.15))
-summary(res)
+b1<-c(15,21,31)
+b2<-c(7,9)
+res1=fregre.basis.cv(x,y,basis.x=b1)
+res2=fregre.basis.cv(x,y,basis.x=b1,basis.b=b2)
+res1$gcv
+res2$gcv
+# l=2^(-4:10)
+# res3=fregre.basis.cv(x,y,basis.b=b1,type.basis="fourier",
+# lambda=l,type.CV=GCV.S,par.CV=list(trim=0.15))
+# res3$gcv
+# summary(res3)
 
 }
 \keyword{regression}

@@ -22,7 +22,6 @@ res=switch(type,
 return(residuals*res)
 }
 
-
 # Adot function to call Fortran code
 Adot=function(X,inpr){
 	
@@ -83,7 +82,7 @@ PCvM.statistic=function(X,residuals,p,Adot.vec){
 }
 
 # PCvM test for the composite hypothesis with bootstrap calibration
-flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type.basis="bspline",show.prog=TRUE,plot.it=TRUE,B.plot=100,G=200,...){
+flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type.basis="bspline",verbose=TRUE,plot.it=TRUE,B.plot=100,G=200,...){
 	
 	# Check B.plot
 	if(plot.it & B.plot>B) stop("B.plot must be less or equal than B")
@@ -91,7 +90,7 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 	# Number of functions
 	n=dim(X.fdata)[1]
 	
-	if(show.prog) cat("Computing estimation of beta... ")	
+	if(verbose) cat("Computing estimation of beta... ")	
 	
 	## COMPOSITE HYPOTHESIS ##
 	if(is.null(beta0.fdata)){
@@ -109,8 +108,8 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 				# Method
 				meth="PCvM test for the functional linear model using optimal PC basis representation"
 
-				# Choose the number of basis elements: SIC is probably the best criteria
-				mod.pc=fregre.pc.cv(fdataobj=X.fdata,y=Y,kmax=1:10,criteria="SIC")
+				# Choose the number of basis elements: SICc is probably the best criteria
+				mod.pc=fregre.pc.cv(fdataobj=X.fdata,y=Y,kmax=1:10,criteria="SICc")
 				p.opt=length(mod.pc$pc.opt)
 				ord.opt=mod.pc$pc.opt
 				
@@ -166,8 +165,8 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 				# Method
 				meth="PCvM test for the functional linear model using optimal PLS basis representation"
 			
-				# Choose the number of the basis: SIC criteria overfit the data, we choose CV althought is slower
-				mod.pls=fregre.plsr.cv(fdataobj=X.fdata,y=Y,kmax=10,criteria="CV") 
+				# Choose the number of the basis: SICc is probably the best criteria
+				mod.pls=fregre.pls.cv(fdataobj=X.fdata,y=Y,kmax=10,criteria="SICc") 
 				p.opt=length(mod.pls$pls.opt)
 				ord.opt=mod.pls$pls.opt
 				
@@ -224,7 +223,7 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 				meth=paste("PCvM test for the functional linear model using optimal",type.basis,"basis representation")
 			
 				# Choose the number of the bspline basis with GCV.S
-				mod.basis=fregre.basis.cv.mod(x=X.fdata,y=Y,p=seq(5,30,by=1),type.basis=type.basis,type.CV=GCV.S,...)
+				mod.basis=fregre.basis.cv(fdataobj=X.fdata,y=Y,basis.x=seq(5,30,by=1),basis.b=NULL,type.basis=type.basis,type.CV=GCV.S,verbose=FALSE,...)
 				p.opt=mod.basis$basis.x.opt$nbasis
 				ord.opt=1:p.opt
 				
@@ -278,13 +277,13 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 				# Method
 				meth=paste("PCvM test for the simple hypothesis in a functional linear model, using a representation in an optimal ",type.basis,"basis") 
 				
-				p.opt=min.basis.mod(X.fdata,type.basis=type.basis,numbasis=seq(31,71,by=2))$numbasis.opt
+				p.opt=min.basis(X.fdata,type.basis=type.basis,numbasis=seq(31,71,by=2),verbose=FALSE)$numbasis.opt
 				if(p.opt==31){
 					cat("Readapting interval...\n")
-					p.opt=min.basis.mod(X.fdata,type.basis=type.basis,numbasis=seq(5,31,by=2))$numbasis.opt
+					p.opt=min.basis(X.fdata,type.basis=type.basis,numbasis=seq(5,31,by=2),verbose=FALSE)$numbasis.opt
 				}else if(p.opt==71){
 					cat("Readapting interval...\n")
-					p.opt=min.basis.mod(X.fdata,type.basis=type.basis,numbasis=seq(71,101,by=2))$numbasis.opt
+					p.opt=min.basis(X.fdata,type.basis=type.basis,numbasis=seq(71,101,by=2),verbose=FALSE)$numbasis.opt
 				}
 				
 				ord.opt=1:p.opt
@@ -333,7 +332,7 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 			meth=paste("PCvM test for the simple hypothesis in a functional linear model, using a representation in a PLS basis of ",p,"elements") 
 			
 			# Express X.fdata in a PLS basis
-			fd2pls=fdata2plsr(X.fdata,Y,ncomp=p)
+			fd2pls=fdata2pls(X.fdata,Y,ncomp=p)
 			if(length(fd2pls$l)!=1){
 				X.est=fdata(mdata=fd2pls$x[,fd2pls$l]%*%fd2pls$rotation$data[fd2pls$l,],argvals=X.fdata$argvals,rangeval=X.fdata$rangeval)
 			}else{
@@ -362,13 +361,13 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 	
 	# Calculus of the Adot.vec
 	Adot.vec=Adot(X.est)
-		
+
 	# REAL WORLD
 	pcvm=PCvM.statistic(X=X.est,residuals=e,p=p.opt,Adot.vec=Adot.vec)
 	
 	# BOOTSTRAP WORLD 
-	if(show.prog) cat("Done.\nBootstrap calibration...\n ")
-	if(show.prog) pb=txtProgressBar(style=3)
+	if(verbose) cat("Done.\nBootstrap calibration...\n ")
+	if(verbose) pb=txtProgressBar(style=3)
 
 	## COMPOSITE HYPOTHESIS ##
 	if(is.null(beta0.fdata)){
@@ -420,7 +419,7 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 			# Calculate PCVM.star
 			pcvm.star[i]=PCvM.statistic(X=X.est,residuals=e.hat.star[i,],p=p.opt,Adot.vec=Adot.vec)
 			
-			if(show.prog) setTxtProgressBar(pb,i/B)
+			if(verbose) setTxtProgressBar(pb,i/B)
 		
 		}
 					
@@ -436,7 +435,7 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 			# Calculate PCVM.star
 			pcvm.star[i]=PCvM.statistic(X=X.est,residuals=e.hat.star[i,],p=p.opt,Adot.vec=Adot.vec)
 				
-			if(show.prog) setTxtProgressBar(pb,i/B)
+			if(verbose) setTxtProgressBar(pb,i/B)
 		
 		}
 					
@@ -449,7 +448,7 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 	
 	## 4. Graphical representation of the integrated process ##
 	
-	if(show.prog) cat("\nDone.\nComputing graphical representation... ")
+	if(verbose) cat("\nDone.\nComputing graphical representation... ")
 	if(is.null(beta0.fdata) & plot.it){
 	
 		gamma=rproc2fdata(n=G,t=X.fdata$argvals,sigma="OU",par.list=list(theta=2/diff(range(X.fdata$argvals))))
@@ -487,7 +486,7 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 		text(x=0.75*u[1],y=0.75*min(mean.proc,mean.boot.proc),labels=sprintf("p-value=%.3f",pvalue))
 		
 	}
-	if(show.prog) cat("Done.\n")
+	if(verbose) cat("Done.\n")
 
 	
 	# Result: class htest

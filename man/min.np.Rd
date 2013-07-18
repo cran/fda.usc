@@ -9,7 +9,7 @@ Smoothing of functional data using nonparametric kernel estimation with cross-va
 %min.np(fdataobj,h=NULL,W=diag(1,nrow=np,ncol=np),Ker=Ker.norm,
 %type.CV=GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),...)
 \method{min}{np}(fdataobj,h=NULL,W=NULL,Ker=Ker.norm,
-type.CV=GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),\dots)
+type.CV=GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),verbose=FALSE,\dots)
 }
 
 \arguments{
@@ -20,6 +20,7 @@ type.CV=GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),\dots)
   \item{type.CV}{ Type of cross-validation. By default generalized cross-validation (GCV) method. Possible values are \emph{GCV.S} and \emph{CV.S}}
   \item{type.S}{ Type of smothing matrix \code{S}. By default \code{S} is calculated by Nadaraya-Watson kernel estimator (\code{S.NW}). Possible values are \emph{S.NW} and \emph{S.KNN}}
   \item{par.CV}{ List of parameters for type.CV: \code{trim}, the alpha of the trimming and \code{draw=TRUE}.}	    
+  \item{verbose}{ If \code{TRUE} information about  GCV values and input parameters is printed. Default is \code{FALSE}.}
   \item{\dots}{ Further arguments passed to or from other methods. Arguments to be passed  for kernel method.}
 }
 

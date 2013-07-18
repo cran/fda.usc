@@ -72,6 +72,7 @@ rtt<-fdataobj[["rangeval"]]
   J=inprod(basis.x,basis.b)
   vfunc=call[[2]]
   Z<-C%*%J
+  XX<-Z
   Z=cbind(rep(1,len=n),Z)
   colnames(Z)<-1:ncol(Z)
   colnames(Z)[2:ncol(Z)]= paste(vfunc,".",basis.b$names, sep = "")
@@ -82,7 +83,8 @@ if (lambda==0) {
     S<-t(Z)%*%W%*%Z
     Lmat    <- chol(S)          
     Lmatinv <- solve(Lmat)
-    S<-Z%*%( Lmatinv %*% t(Lmatinv) )%*%t(Z)%*%W
+    SS<- Lmatinv %*% t(Lmatinv) 
+    S<-Z%*%SS%*%t(Z)%*%W
        yp2=S%*%y
        response="y"
        pf <- paste(response, "~", sep = "")
@@ -96,6 +98,7 @@ if (lambda==0) {
        df=basis.b$nbasis+1
        rdf<-n-df
        sr2 <- sum(e^2)/ rdf
+       Vp<-sr2*SS 
        r2 <- 1 - sum(e^2)/sum(ycen^2)
        r2.adj<- 1 - (1 - r2) * ((n -    1)/ rdf)
        GCV <- sum(e^2)/(n - df)^2
@@ -107,16 +110,16 @@ else {
        R[-1,-1]<-eval.penalty(basis.b,Lfdobj)
 
     Sb=t(Z)%*%W%*%Z+lambda*R
-    eigchk(Sb)    
+#    fda:::eigchk(Sb)    
     Lmat    <- chol(Sb)          
     Lmatinv <- solve(Lmat)
-    Cinv<- Lmatinv %*% t(Lmatinv)  
-
+    Cinv<- Lmatinv %*% t(Lmatinv)   
 #       Cinv<-solve(Sb)
        Sb2=Cinv%*%t(Z)
        DD<-t(Z)%*%W%*%y
        S=Z%*%Sb2%*%W
        yp=S%*%y
+       Vp<-sr2*Cinv
        b.est=Sb2%*%y
        bet<-Cinv%*%DD
        a.est=b.est[1,1]
@@ -143,17 +146,16 @@ else {
        p.value= 2 * pt(abs(t.value),n-df, lower.tail = FALSE)
        coefficients<-cbind(b.est,std.error,t.value,p.value)
        colnames(coefficients) <- c("Estimate", "Std. Error", "t value", "Pr(>|t|)")
-              rownames(coefficients)[1]="(Intercept)"
+       rownames(coefficients)[1]="(Intercept)"
        class(object.lm)<-"lm"
 b.est=b.est[-1]
 names(b.est)<-rownames(coefficients)[-1]
      }
-#hat<-diag(hat(Z, intercept = TRUE),ncol=n)
 out<-list("call"=call,"b.est"=b.est,"a.est"=a.est,"fitted.values"=yp,"H"=S,
-  "residuals"=e,"df"=df,"r2"=r2,"sr2"=sr2,"y"=y,"fdataobj"=fdataobj,
+  "residuals"=e,"df"=df,"r2"=r2,"sr2"=sr2,"Vp"=Vp,"y"=y,"fdataobj"=fdataobj,
   x.fd=x.fd,"beta.est"=beta.est,"basis.x.opt"=basis.x,"basis.b.opt"=basis.b,
   "J"=J,"lambda.opt"=lambda,lm=object.lm,coefficients=coefficients,"mean"=xmean,
-  Lfdobj=Lfdobj,weights= weights)
+  Lfdobj=Lfdobj,weights= weights,XX=XX)
  class(out)="fregre.fd"
 return(out)
 }

@@ -38,7 +38,7 @@ cutoff<-median(quantile.outliers.pond(x,dfunc=dfunc,nb=nb,smo=smo,...))
             if (modal) {
              mdist<-dd$dist[-elim,-elim]
             class(mdist)<-c("matrix","fdist")        
-            dd<-dfunc(curvasgood,metric=mdist,...)
+            dd<-dfunc(curvasgood,metric=mdist)
             }
           else dd<-dfunc(curvasgood,...)
           d<-dd$dep 
@@ -50,5 +50,3 @@ outliers<-rownames(fdataobj[["data"]])[outliers]
 names(dep.out)<-NULL      
 return(list("outliers"=outliers,"dep.out"=dep.out,"iteration"=ite,"quantile"=cutoff,"Dep"=dtotal))
 }
-
- 

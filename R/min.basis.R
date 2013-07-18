@@ -1,7 +1,6 @@
 min.basis<-function(fdataobj,type.CV=GCV.S,W=NULL,lambda=0,
 numbasis=floor(seq(ncol(fdataobj)/16,ncol(fdataobj)/2,len=10)),
-type.basis="bspline",par.CV=list(trim=0,draw=FALSE),...){
-
+type.basis="bspline",par.CV=list(trim=0,draw=FALSE), verbose = FALSE,...){
  if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
   nas1<-apply(fdataobj$data,1,count.na)
  if (any(nas1))  stop("fdataobj contain ",sum(nas1)," curves with some NA value \n")
@@ -21,9 +20,9 @@ nam<-fdataobj[["nam"]]
    names(as)[[1]]<-'rangeval'
    C <- match.call()
    mf <- match.call(expand.dots = FALSE)
-   m <- match(c("fdataobj","tt","type.CV","W","lambda","numbasis","type.basis"),
+   m <- match(c("fdataobj","tt","type.CV","W","lambda","numbasis","type.basis","verbose"),
    names(mf),0L)
-   imetric <- m[7]
+   imetric <- m[8]
    if (imetric == 0) {
         a1 <- create.bspline.basis
         len.metricc <- length(formals(a1))
@@ -65,12 +64,12 @@ as[[2]]=numbasis[i]
 names(as)[[2]]<-'nbasis'
 base.opt=do.call(a1,as)
 S.opt<-S.basis(tt,base.opt,lambda[k])
-fdata.est<-S.opt%*%t(x) ###
-cat("\n The minimum GCV (GCV.OPT=",round(gcv.opt,4),sep="",") is achieved with
- the number of basis (numbasis.opt="
-   ,numbasis.opt,")\n and lambda value    (lambda.opt=",lambda.opt,")\n\n")
+fdata.est<-S.opt%*%t(x) ### 
 if (length(numbasis)>1) dimnames(gcv)[[1]]<-numbasis
 if (length(lambda)>1) dimnames(gcv)[[2]]<-lambda
+if (verbose) {
+  cat("\n The minimum GCV (GCV.OPT=",round(gcv.opt,4),sep="",") is achieved with
+ the number of basis (numbasis.opt=",numbasis.opt,")\n and lambda value    (lambda.opt=",lambda.opt,")\n\n")
 if (lenbasis>1) {
   if (numbasis.opt==min(numbasis))  cat(" Warning: numbasis.opt is the minimum number of basis provided, range(numbasis)=",range(numbasis),"\n")
   else if (numbasis.opt==max(numbasis)) cat(" Warning: numbasis.opt is the maximum number of basis provided, range(numbasis)=",range(numbasis),"\n")
@@ -78,6 +77,7 @@ if (lenbasis>1) {
 if (lenlambda>1) {
   if (lambda.opt==min(lambda))  cat(" Warning: lambda.opt is the minimum lambda value provided, range(lambda)=",range(lambda),"\n")
   else   if (lambda.opt==max(lambda))  cat(" Warning: lambda.opt is the maximum lambda value provided, range(lambda)=",range(lambda),"\n")
+}
 }
 fdata.est=fdata(t(fdata.est),tt,rtt,nam)
 output<-list(gcv=gcv,numbasis=numbasis,lambda=lambda,fdataobj=fdataobj,fdata.est=fdata.est,gcv.opt=gcv.opt,numbasis.opt=numbasis.opt,lambda.opt=lambda.opt,S.opt=S.opt,base.opt=base.opt)

@@ -16,22 +16,28 @@ where \eqn{Z=\left[ Z^1,\cdots,Z^p  \right]}{Z=[Z^1,...,Z^p]} are the non functi
 %are the non functional covariates and the basis representation of functional covariates .
 }
 \usage{
-fregre.lm(formula,data,basis.x=NULL,basis.b=NULL,rn=0,weights=rep(1,n),...)
+fregre.lm(formula,data,basis.x=NULL,basis.b=NULL,rn,lambda,weights=rep(1,n),...)
 }
 \arguments{
  \item{formula}{ an object of class \code{formula} (or one that can be coerced to that class): a symbolic description of the model to be fitted. The details of model specification are given under \code{Details}.}
   \item{data}{ List that containing the variables in the model. }
 	\item{basis.x}{ List of basis for functional explanatory data estimation.}
 	\item{basis.b}{ List of basis for functional beta parameter estimation.}
-	\item{rn}{Ridge parameter.  Default value is rn=0, i.e. no penalization is used.} 
+	\item{rn}{List of Ridge parameter.} 
+  \item{lambda}{List of Roughness penalty parameter.} 
   \item{weights}{ weights}	
   \item{\dots}{ Further arguments passed to or from other methods.}
 }
 \details{ 
-The first item in the \code{data} list  is called \emph{"df"} and  is a data frame  with the response and non functional explanatory variables, as \code{\link{lm}}. Functional covariates of class  \code{fdata} or \code{fd} are introduced in the following items in the \code{data} list.\cr
+The first item in the \code{data} list is called \emph{"df"} and  is a data frame  with the response and non functional explanatory variables, as \code{\link{lm}}. Functional covariates of class  \code{fdata} or \code{fd} are introduced in the following items in the \code{data} list.\cr
 
 \code{basis.x} is a list of basis  for represent each functional covariate. The basis object can be created by the function: \code{\link{create.pc.basis}}, \code{\link{pca.fd}} \code{\link{create.pc.basis}}, \code{\link{create.fdata.basis}} or  \code{\link{create.basis}}.\cr
-\code{basis.b} is a list of basis  for represent each functional \eqn{\beta_k} parameter. If \code{basis.x} is a list of functional principal components basis (see \code{\link{create.pc.basis}} or \code{\link{pca.fd}}) the argument \code{basis.b} \emph{(is unnecessary and)} is ignored. 
+\code{basis.b} is a list of basis  for represent each functional \eqn{\beta_k} parameter. If \code{basis.x} is a list of functional principal components basis (see \code{\link{create.pc.basis}} or \code{\link{pca.fd}}) the argument \code{basis.b} \emph{(is unnecessary and)} is ignored.\cr
+
+The user can penalty the basis elements by:
+(i) \code{lambda} is a list of rough penalty values for the second derivative of each functional covariate, see \code{\link{fregre.basis}} for more details.\cr
+(ii) \code{rn} is a list of Ridge penalty value for each functional covariate, see \code{\link{fregre.pc}}, \code{\link{fregre.pls}} and \code{\link{P.penalty}} for more details.\cr
+Note: For the case of the Functional Principal Components basis two  penalties are allowed (but not the two together). \cr 
 }
 \value{
 Return \code{lm} object plus:\cr

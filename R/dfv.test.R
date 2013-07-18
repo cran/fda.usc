@@ -24,7 +24,7 @@ dfv.statistic=function(X.fdata,Y,h=quantile(x=metric.lp(X.fdata),probs=c(0.05,0.
 }
 
 # Delsol, Ferraty and Vieu test for the simple hypothesis of no interaction with bootstrap calibration
-dfv.test=function(X.fdata,Y,B=5000,h=quantile(x=metric.lp(X.fdata),probs=c(0.05,0.10,0.15,0.25,0.50)),K=function(x)2*dnorm(abs(x)),weights=rep(1,dim(X.fdata$data)[1]),d=metric.lp,show.prog=TRUE){
+dfv.test=function(X.fdata,Y,B=5000,h=quantile(x=metric.lp(X.fdata),probs=c(0.05,0.10,0.15,0.25,0.50)),K=function(x)2*dnorm(abs(x)),weights=rep(1,dim(X.fdata$data)[1]),d=metric.lp,verbose=TRUE){
 	
 	# REAL WORLD
 	dist=d(X.fdata,X.fdata)
@@ -34,14 +34,14 @@ dfv.test=function(X.fdata,Y,B=5000,h=quantile(x=metric.lp(X.fdata),probs=c(0.05,
 	Tn.star=matrix(nrow=B,ncol=length(h))
 	colnames(Tn.star)=paste("Tn.boot(",sprintf("h=%.3f",h),")",sep="")
 	
-	if(show.prog) pb=txtProgressBar(style=3)
+	if(verbose) pb=txtProgressBar(style=3)
 	for(i in 1:B){
 		
 		# Bootsrtap version of Tn: perturbation with a centred and unit variance noise
 		Tn.star[i,]=dfv.statistic(X.fdata=X.fdata,Y=rwild(Y,"golden"),h=h,K=K,weights=weights,dist=dist)
 		
 		# Progress bar
-		if(show.prog) setTxtProgressBar(pb,i/B)
+		if(verbose) setTxtProgressBar(pb,i/B)
 		
 	}
 	

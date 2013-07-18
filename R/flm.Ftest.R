@@ -20,21 +20,21 @@ Ftest.statistic=function(X.fdata,Y){
 }
 
 # FLM F-Test with bootstrap calibration
-flm.Ftest=function(X.fdata,Y,B=5000,show.prog=TRUE){
+flm.Ftest=function(X.fdata,Y,B=5000,verbose=TRUE){
 	
 	# REAL WORLD
 	Tn=Ftest.statistic(X.fdata=X.fdata,Y=Y)
 	
 	# BOOTSTRAP WORLD
 	Tn.star=numeric(B)
-	if(show.prog) pb=txtProgressBar(style=3)
+	if(verbose) pb=txtProgressBar(style=3)
 	for(i in 1:B){
 		
 		# Bootsrtap version of Tn: perturbation with a centred and unit variance noise
 		Tn.star[i]=Ftest.statistic(X.fdata=X.fdata,Y=rwild(Y,"golden"))
 		
 		# Progress bar
-		if(show.prog) setTxtProgressBar(pb,i/B)
+		if(verbose) setTxtProgressBar(pb,i/B)
 		
 	}
 	

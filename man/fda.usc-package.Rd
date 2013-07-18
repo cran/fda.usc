@@ -155,8 +155,8 @@ This section allows the estimation of the groups in a  functional data set \code
 \tabular{ll}{
 Package: \tab fda.usc\cr
 Type: \tab Package\cr
-Version: \tab 1.0.4\cr
-Date: \tab 2013-02-07\cr
+Version: \tab 1.0.5\cr
+Date: \tab 2013-07-24\cr
 License: \tab GPL-2 \cr
 LazyLoad: \tab yes\cr
 Url: \url{ http://eio.usc.es/pub/MAESFE/}, \url{http://eio.usc.es/pub/gi1914/}

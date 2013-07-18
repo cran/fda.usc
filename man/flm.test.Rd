@@ -11,7 +11,7 @@
 
 \usage{
 flm.test (X.fdata, Y, beta0.fdata = NULL, B = 5000, est.method = "pls",
-          p = NULL, type.basis = "bspline", show.prog = TRUE,
+          p = NULL, type.basis = "bspline", verbose = TRUE,
           plot.it = TRUE, B.plot = 100, G = 200, \dots)
 }
 
@@ -26,8 +26,8 @@ flm.test (X.fdata, Y, beta0.fdata = NULL, B = 5000, est.method = "pls",
   \item{B}{Number of bootstrap replicates to calibrate the distribution of the test statistic. \code{B=5000} replicates are the recommended for carry out the test, although for exploratory analysis (\bold{not inferential}), an acceptable less time-consuming option is \code{B=500}.}
   \item{est.method}{Estimation method for the unknown parameter \eqn{\beta}{\beta}, only used in the composite case. Mainly, there are two options: specify the number of basis elements for the estimated \eqn{\beta}{\beta} by \code{p} or optimally select \code{p} by a data-driven criteria (see Details section for discussion). Then, it must be one of the following methods:
 	\itemize{
-		\item \code{"pc"} If \code{p}, the number of basis elements, is given, then \eqn{\beta}{\beta} is estimated by \code{\link{fregre.pc}}. Otherwise, an optimum \code{p} is chosen using \code{\link{fregre.pc.cv}} and the \code{"SIC"} (BIC) criteria.
-		\item \code{"pls"} If \code{p} is given, \eqn{\beta}{\beta} is estimated by \code{\link{fregre.pls}}. Otherwise, an optimum \code{p} is chosen using \code{\link{fregre.pls.cv}} and the \code{"CV"} criteria. 
+		\item \code{"pc"} If \code{p}, the number of basis elements, is given, then \eqn{\beta}{\beta} is estimated by \code{\link{fregre.pc}}. Otherwise, an optimum \code{p} is chosen using \code{\link{fregre.pc.cv}} and the \code{"SICc"} criteria.
+		\item \code{"pls"} If \code{p} is given, \eqn{\beta}{\beta} is estimated by \code{\link{fregre.pls}}. Otherwise, an optimum \code{p} is chosen using \code{\link{fregre.pls.cv}} and the \code{"SICc"} criteria. 
 		This is the default argument as it has been checked empirically that provides a good balance between the performance of the test and the estimation of \eqn{\beta}{\beta}.
 		\item \code{"basis"} If \code{p} is given, \eqn{\beta}{\beta} is estimated by \code{\link{fregre.basis}}. Otherwise, an optimum \code{p} is chosen using \code{\link{fregre.basis.cv}} and the \code{"GCV.S"} criteria. In these functions, the same basis for the arguments \code{basis.x} and \code{basis.b} is considered.
 		The type of basis used will be the given by the argument \code{type.basis} and must be one of the class of \code{create.basis}. Further arguments passed to \code{\link{create.basis}} (not \code{rangeval} that is taken as the \code{rangeval} of \code{X.fdata}), can be passed throughout \code{\dots} .
@@ -49,7 +49,7 @@ flm.test (X.fdata, Y, beta0.fdata = NULL, B = 5000, est.method = "pls",
 
 	}
 	}
-  \item{show.prog}{Either to show or not information about computing progress.}
+  \item{verbose}{Either to show or not information about computing progress.}
   \item{plot.it}{Either to show or not a graph of the observed trajectory, and the bootstrap trajectories under the null composite hypothesis, of the process \eqn{R_n(\cdot)}{R_n(.)} (see Details). Note that if \code{plot.it=TRUE}, the function takes more time to run. }
   \item{B.plot}{Number of bootstrap trajectories to show in the resulting plot of the test. As the trajectories shown are the first \code{B.plot} of \code{B}, \code{B.plot} must be lower or equal to \code{B}.}
   \item{G}{Number of projections used to compute the trajectories of the process \eqn{R_n(\cdot)}{R_n(.)} by Monte Carlo.}
@@ -131,8 +131,8 @@ plot(density(Y),main="Density of Y",xlab="Y",ylab="Density")
 rug(Y)
 
 # Composite hypothesis: do not reject FLM
-pcvm.sim=flm.test(X,Y,B=50,B.plot=50,G=100,plot.it=TRUE)
-pcvm.sim
+#pcvm.sim=flm.test(X,Y,B=50,B.plot=50,G=100,plot.it=TRUE)
+#pcvm.sim
 # flm.test(X,Y,B=5000)
 
 # Estimated beta

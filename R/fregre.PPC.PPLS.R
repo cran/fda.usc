@@ -95,19 +95,11 @@ fdata2ppls<-function(fdataobj,y,ncomp = 2,lambda=0,P=c(0,0,1),norm=TRUE,...) {
     X<-center$Xcen$data
     
 if (norm)    {
-sd.X <- sqrt(apply(X, 2, var))
- X <- X/(rep(1, nrow(X)) %*% t(sd.X))
- }
-    else {
-#    X <-X/(rep(1, nrow(X)) %*%t(rep(mean(sd.X),J)))
-    sd.X<-rep(1,len=J)
-}
-
+    sd.X <- sqrt(apply(X, 2, var))
+     X <- X/(rep(1, nrow(X)) %*% t(sd.X))
     X2<-fdata(X,tt,rtt,nam)
     dcoefficients = NULL
-    tX<-t(X)
-    
-    
+    tX<-t(X)    
     A <- crossprod(X)
     b <- crossprod(X,y)
     if (lambda>0) {
@@ -170,22 +162,25 @@ sd.X <- sqrt(apply(X, 2, var))
 #                  , ] %*% t(dcoefficients[i, , ]) %*% DD
 #            }
     }
-    
-    if (norm) {
-      V2<- fdata(t(V)*(rep(1, nrow(t(V))) %*% t(sd.X)),tt,rtt,nam)
-      V2$data<-sweep(V2$data,1,norm.fdata(V2),"/")
-      }
-    else V2<-fdata(t(V),tt,rtt,nam)
-    
- #   V2<-fdata(t(V),tt,rtt,nam)
- #   V2$data<-sweep(V2$data,1,norm.fdata(V2),"/")
- 
+    V2<- fdata(t(V)*(rep(1, nrow(t(V))) %*% t(sd.X)),tt,rtt,nam)
+    V2$data<-sweep(V2$data,1,norm.fdata(V2),"/")
+#   V2<-fdata(t(V),tt,rtt,nam)
+#   V2$data<-sweep(V2$data,1,norm.fdata(V2),"/")
 #    W2<-fdata(t(W),tt,rtt,nam)
 #    X3<-fdata(X,tt,rtt,nam)
 #    beta.est<-fdata(t(Beta),tt,rtt,nam)
      DoF[DoF > Jmax] = Jmax
-#    intercept <- as.vector(intercept)
-    scores<-inprod.fdata(X2,V2,...)
+#    intercept <- as.vector(intercept)    
+      }
+    else {
+       plsr<-mplsr(X,y,ncomp=ncomp,lambda=lambda,P=P,...)   
+       V2<-fdata(t(plsr$loading.weights),tt,rtt,nam)
+       X2<-fdata(X,tt,rtt,nam)
+       DoF<-1:ncomp
+       Yhat<-plsr$fitted.values    
+       yhat<-sum(Yhat)^2          
+   }    
+   scores<-inprod.fdata(X2,V2,...)
  #   TT = X %*% V  ## son los scores
     l<-1:ncomp
     colnames(scores) <- paste("PLS", l, sep = "")

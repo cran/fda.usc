@@ -53,6 +53,7 @@ Return:\cr
 \item{sr2}{ Residual variance.}
 \item{y}{ Response.}
 \item{fdataobj}{ Functional explanatory data of class \code{fdata}.}
+\item{x.fd}{ Centered functional explanatory data of class \code{fd}.}
 \item{basis.b}{  Basis used for beta parameter estimation.}
 \item{lm}{  Return \code{lm} object }
 }
