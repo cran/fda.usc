@@ -15,7 +15,7 @@ summary.fregre.fd<-function(object,times.influ=3,times.sigma=3,draw=TRUE,...){
      if (length(i.atypical) == 0) i.atypical=NA
      }
      if (object$call[[1]]=="fregre.pc") {
-     if (object$rn==0)     {
+     if (object$lambda==0)     {
      cat(" *** Summary Functional Data Regression with Principal Components ***\n")
       object$lm$call<-object$call
       print(summary(object$lm))}
@@ -28,7 +28,7 @@ summary.fregre.fd<-function(object,times.influ=3,times.sigma=3,draw=TRUE,...){
 #            cat("\n-Residual variance: ",object$sr2,"\n")
      cat("\n-Residual variance: ",
             object$sr2,"on ",n-object$df," degrees of freedom\n")
-       cat("-Ridge parameter (rn): ",object$rn,"\n")
+       cat("-Penalization parameter (lambda): ",object$lambda,"\n")
             }
             
 #     object$lm$call<-object$call

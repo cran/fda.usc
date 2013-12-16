@@ -62,6 +62,7 @@ Alternative method: \code{\link{fregre.basis}},cand  \code{\link{fregre.pc}}.
 }
 \examples{
 
+\dontrun{
 data(tecator)
 absorp=tecator$absorp.fdata
 ind=1:129
@@ -84,5 +85,6 @@ summary.fregre.fd(res.deriv2)
 x.d3=fdata.deriv(x,nderiv=1,method="bspline",class.out='fdata')
 res.deriv3=fregre.np(x.d3,y)
 summary.fregre.fd(res.deriv3)
+}
 }
 \keyword{regression}

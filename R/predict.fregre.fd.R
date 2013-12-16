@@ -33,7 +33,7 @@ np <- ncol(new.fdataobj)
   colnames(Z)<-names(object$lm$coefficients[-1])
   XX<-data.frame(Z)   
   res.var<-object$sr2 
-   if (!object$rn) return(predict.lm(object=object$lm,newdata=XX,se.fit=se.fit,
+   if (object$lambda==0) return(predict.lm(object=object$lm,newdata=XX,se.fit=se.fit,
      interval=interval,level=level,scale=scale,df=df,weights =weights,pred.var=pred.var,...))
    else {  
     a1<-object$coefficients[1]*rep(1,len=nrow(newx))

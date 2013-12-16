@@ -18,10 +18,6 @@ outliers.lrt(fdataobj,nb=200,smo=0.05,trim=0.10,...)
 outliers.depth.trim(fdataobj,nb=200,smo=0.05,trim=0.01,
 dfunc=depth.mode,...)
 outliers.depth.pond(fdataobj,nb=200,smo=0.05,dfunc=depth.mode,...)
-%quantile.outliers.pond(fdataobj,dfunc=depth.mode,
-%nb=200,smo=0.05,ns=0.01,...)
-%quantile.outliers.trim(fdataobj,dfunc=depth.mode,trim=0.1,
-%nb=200,smo=0.05,ns=0.01,...)
 \method{quantile}{outliers.pond}(x,dfunc=depth.mode,
 nb=200,smo=0.05,ns=0.01,\dots)
 \method{quantile}{outliers.trim}(x,dfunc=depth.mode,trim=0.1,

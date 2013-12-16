@@ -67,51 +67,36 @@ See Also as:   \code{\link{fregre.basis}}, \code{\link{fregre.basis.cv}}, \code{
 }
 \examples{
 
+\dontrun{
 data(tecator)
 absorp=tecator$absorp.fdata
 ind=1:129
 x=absorp[ind,]
 y=tecator$y$Fat[ind]
-
 newx=absorp[-ind,]
 newy=matrix(tecator$y$Fat[-ind],ncol=1)
-
 ## Functional PC regression
 res.pc=fregre.pc(x,y,1:6)
-summary(res.pc)
 pred.pc=predict.fregre.fd(res.pc,newx)
-
-## Functional PLS regression
-# res.pls=fregre.pls(x,y,1:6)
-# summary(res.pls)
-# pred.pls=predict.fregre.fd(res.pls,newx)
-
-## Functional nonparametric regression
-# res.np=fregre.np(x,y,Ker=AKer.tri,metric=semimetric.deriv)
-# summary(res.np)
-# pred.np=predict.fregre.fd(res.np,newx)
-
-
-## Functional regression with basis representation
-
-# res.basis=fregre.basis.cv(x,y)
-# summary(res.basis)
-# pred.basis=predict.fregre.fd(res.basis,newx)
-
-# x.d=fdata.deriv(x,nbasis=19,nderiv=1)
-# res.basis2=fregre.basis.cv(x.d,y)
-# summary(res.basis2)
-# newx.d=fdata.deriv(newx,nbasis=19,nderiv=1)
-# pred.basis2=predict.fregre.fd(res.basis2,newx.d)
-
-# dev.new()
-# plot(pred.pc-newy)
-# points(pred.pls-newy,col=2,pch=2)
-# points(pred.np-newy,col=3,pch=3)
-# points(pred.basis-newy,col=4,pch=4)
-# sum((pred.pc-newy)^2,na.rm=TRUE)/sum((newy-mean(newy))^2,na.rm=TRUE)
-# sum((pred.pls-newy)^2,na.rm=TRUE)/sum((newy-mean(newy))^2,na.rm=TRUE)
-# sum((pred.np-newy)^2,na.rm=TRUE)/sum((newy-mean(newy))^2,na.rm=TRUE)
-# sum((pred.basis-newy)^2,na.rm=TRUE)/sum((newy-mean(newy))^2,na.rm=TRUE)
+# Functional PLS regression
+res.pls=fregre.pls(x,y,1:6)
+pred.pls=predict.fregre.fd(res.pls,newx)
+# Functional nonparametric regression
+res.np=fregre.np(x,y,Ker=AKer.tri,metric=semimetric.deriv)
+pred.np=predict.fregre.fd(res.np,newx)
+# Functional regression with basis representation
+res.basis=fregre.basis.cv(x,y)
+pred.basis=predict.fregre.fd(res.basis,newx)
+ 
+dev.new()
+plot(pred.pc-newy)
+points(pred.pls-newy,col=2,pch=2)
+points(pred.np-newy,col=3,pch=3)
+points(pred.basis-newy,col=4,pch=4)
+sum((pred.pc-newy)^2,na.rm=TRUE)/sum((newy-mean(newy))^2,na.rm=TRUE)
+sum((pred.pls-newy)^2,na.rm=TRUE)/sum((newy-mean(newy))^2,na.rm=TRUE)
+sum((pred.np-newy)^2,na.rm=TRUE)/sum((newy-mean(newy))^2,na.rm=TRUE)
+sum((pred.basis-newy)^2,na.rm=TRUE)/sum((newy-mean(newy))^2,na.rm=TRUE)
+}
 }
 \keyword{regression}

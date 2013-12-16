@@ -22,7 +22,7 @@ nam<-fdataobj[["nam"]]
    mf <- match.call(expand.dots = FALSE)
    m <- match(c("fdataobj","tt","type.CV","W","lambda","numbasis","type.basis","verbose"),
    names(mf),0L)
-   imetric <- m[8]
+   imetric <- m[7]
    if (imetric == 0) {
         a1 <- create.bspline.basis
         len.metricc <- length(formals(a1))

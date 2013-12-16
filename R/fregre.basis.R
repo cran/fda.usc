@@ -1,5 +1,7 @@
+
 fregre.basis=function(fdataobj,y,basis.x=NULL,basis.b=NULL,lambda=0,
 Lfdobj=vec2Lfd(c(0,0),rtt),weights= rep(1,n),...){
+R<-NULL
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
 nas<-apply(fdataobj$data,1,count.na)
 nas.g<-is.na(y)
@@ -79,7 +81,6 @@ rtt<-fdataobj[["rangeval"]]
   W<-diag(weights)
 if (lambda==0) {
 #       S=Z%*%solve(t(Z)%*%Z)%*%t(Z)
-
     S<-t(Z)%*%W%*%Z
     Lmat    <- chol(S)          
     Lmatinv <- solve(Lmat)
@@ -108,7 +109,8 @@ else {
        R=diag(0,ncol= basis.b$nbasis+1,nrow=basis.b$nbasis+1)
 #       R[-1,-1]<-getbasispenalty(basis.b,Lfdobj) ############
        R[-1,-1]<-eval.penalty(basis.b,Lfdobj)
-
+ ################################################################################
+################################################################################
     Sb=t(Z)%*%W%*%Z+lambda*R
 #    fda:::eigchk(Sb)    
     Lmat    <- chol(Sb)          
@@ -119,17 +121,36 @@ else {
        DD<-t(Z)%*%W%*%y
        S=Z%*%Sb2%*%W
        yp=S%*%y
-       Vp<-sr2*Cinv
+       e<-y-yp                   
        b.est=Sb2%*%y
-       bet<-Cinv%*%DD
-       a.est=b.est[1,1]
-       #beta.est2=fd(b.est2[-1,1]*diff(rtt),basis.b)
        beta.est=fd(b.est[-1,1],basis.b)
-       df=basis.b$nbasis+1
-       e<-y-yp
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+#    Sb=t(Z)%*%W%*%Z+lambda*R
+#    eigchk(Sb)    
+#    Lmat    <- chol(Sb)          
+#    Lmatinv <- solve(Lmat)
+#    Cinv<- Lmatinv %*% t(Lmatinv)   
+#       Sb2=Cinv%*%t(Z)
+#       DD<-t(Z)%*%W%*%y
+#       S=Z%*%Sb2%*%W
+#       yp=S%*%y
+#       e<-y-yp                   
+#       b.est=Sb2%*%y
+#       beta.est=fd(b.est[-1,1],basis.b)
+################################################################################
+################################################################################
+       df=basis.b$nbasis+1     
        rdf<-n-df
        sr2 <- sum(e^2)/ rdf
        r2 <- 1 - sum(e^2)/sum(ycen^2)
+       Vp<-sr2*Cinv       
+#       bet<-Cinv%*%DD
+       a.est=b.est[1,1]
+       #beta.est2=fd(b.est2[-1,1]*diff(rtt),basis.b)
+
        r2.adj<- 1 - (1 - r2) * ((n -    1)/ rdf)
        GCV <- sum(e^2)/(n - df)^2
        object.lm=list()
@@ -151,15 +172,13 @@ else {
 b.est=b.est[-1]
 names(b.est)<-rownames(coefficients)[-1]
      }
+#hat<-diag(hat(Z, intercept = TRUE),ncol=n)
 out<-list("call"=call,"b.est"=b.est,"a.est"=a.est,"fitted.values"=yp,"H"=S,
   "residuals"=e,"df"=df,"r2"=r2,"sr2"=sr2,"Vp"=Vp,"y"=y,"fdataobj"=fdataobj,
   x.fd=x.fd,"beta.est"=beta.est,"basis.x.opt"=basis.x,"basis.b.opt"=basis.b,
   "J"=J,"lambda.opt"=lambda,lm=object.lm,coefficients=coefficients,"mean"=xmean,
-  Lfdobj=Lfdobj,weights= weights,XX=XX)
+  Lfdobj=Lfdobj,weights= weights,XX=XX,R=R)
+  #ar1=aa,Winf=W,W=W0)
  class(out)="fregre.fd"
 return(out)
 }
-
-
-
-

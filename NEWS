@@ -1,3 +1,18 @@
+Release 1.1.0:
+New functions, 
+fregre.basis.fr fits functional response model.
+metric.kl computes Kullback--Leibler distance.
+anova.onefactor: tests one--way anova model for functional data.
+split.fdata, unlist.fdata: A wrapper functions of the split and unlist function for functional data.
+func.mean.formula computes the mean curve for the each level of grouping variable.
+
+New dataset, Mithochondiral calcium overload (MCO) data set.
+
+New utilities, 
+fdata converts arrays of 3 dimension in a functional data of 2 dimension plot.fdata allows functional data of 2 dimension.
+The functions fdata2ppc, fdata2ppls, fregre.ppc, fregre.ppls, fregre.ppc.cv, fregre.ppls.cv 
+are deprecated in favor of fdata2pc,fdata2pls, fregre.pc, fregre.pc.cv, fregre.pls, fregre.pls.cv. These latter functions include penalty arguments. 
+
 
 Release 1.0.5:
 "pls" package dependency has been removed.

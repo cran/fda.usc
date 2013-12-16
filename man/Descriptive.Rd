@@ -1,5 +1,6 @@
 \name{Descriptive}
 \Rdversion{1.1}
+\alias{func.mean.formula}
 \alias{Descriptive}
 \alias{func.mean}
 \alias{func.trim.FM}
@@ -31,6 +32,8 @@
 \title{ Descriptive measures for functional and multivariate data.}
 \description{ Central and dispersion measures for functional and multivariate data.}
 \usage{
+
+\method{func.mean}{formula}(formula, data = NULL,\dots,drop=FALSE)
 func.mean(fdataobj)
 func.var(fdataobj)
 func.trim.FM(fdataobj,...)
@@ -59,14 +62,20 @@ func.trimvar.RPD(fdataobj,...)
 
 }
 \arguments{
+\item{formula}{ a formula, such as y ~ group, where y is a fdata object to be split into groups according to the grouping variable group (usually a factor).}
+\item{data}{ List that containing the variables in the formula. The item called \emph{"df"}  is a data frame  with the grouping variable. The item called \emph{"y"}  is a fdata object.}
+\item{drop}{ logical indicating if levels that do not occur should be dropped (if f is a factor or a list).}
   \item{fdataobj}{ \code{\link{fdata}} class object.}   
-  \item{\dots}{ Further arguments passed to or from other methods.\cr
+  \item{\dots}{ Further arguments passed to or from other methods.
   			If the argument \code{p} is passed, it used \code{\link{metric.lp}} function, by default \code{p=2}.\cr
   			If the argument \code{trim} (alpha of the trimming) is passed, it used \code{\link{metric.lp}} function.\cr
   			If the argument \code{deriv} (number of derivatives to use) is passed. This parameter is used  in \code{\link{depth.RPD}} function, by default it uses \code{deriv =(0,1)}.}
  }   
 \value{
-\tabular{ll}{
+\code{\link{func.mean.formula}} The value returned from split is a list of fdata containing the mean curves\cr
+for the groups. The components of the list are named by the levels of f (after converting to a factor, or if already a factor and drop = TRUE, dropping unused levels).\cr
+
+\tabular{ll}{                                                   
 \tab \code{\link{func.mean}} gives mean curve. \cr
 \tab \code{\link{func.var}} gives variance curve. \cr
 \tab \code{\link{func.trim.FM}} Returns the average from the \code{(1-trim)}\% deepest curves following FM criteria. \cr
@@ -105,6 +114,14 @@ Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 
 # Example with Montreal Daily Temperature (fda-package)
 fdataobj<-fdata(MontrealTemp)
+
+# Measures of central tendency by group
+fac<-factor(c(rep(1,len=17),rep(2,len=17)))
+ldata=list("df"=data.frame(fac),"fdataobj"=fdataobj)
+a1<-func.mean.formula(fdataobj~fac,data=ldata)
+plot(a1)
+
+\dontrun{
 # Measures of central tendency
 a1<-func.mean(fdataobj)
 a2<-func.trim.FM(fdataobj)
@@ -122,22 +139,22 @@ par(mfrow=c(1,2))
 plot(c(a1,a2,a3,a4),ylim=c(-26,29),main="Central tendency: trimmed mean")
 plot(c(a1,a6,a7,a8),ylim=c(-26,29),main="Central tendency: median")
 
-## Not run
-## Measures of dispersion
-# b1<-func.var(fdataobj)
-# b2<-func.trimvar.FM(fdataobj)
-# b3<-func.trimvar.FM(fdataobj,trim=0.1)
-# b4<-func.trimvar.mode(fdataobj)
-# b5<-func.trimvar.mode(fdataobj,p=1)
-# b6<-func.trimvar.RP(fdataobj)
-# b7<-func.trimvar.RPD(fdataobj)
-# b8<-func.trimvar.RPD(fdataobj)
-# b9<-func.trimvar.RPD(fdataobj,deriv=c(0,1))
-# b10<-func.trimvar.RT(fdataobj)
-# dev.new()
-# par(mfrow=c(1,2))
-# plot(c(b1,b2,b3,b4,b5),ylim=c(0,79),main="Measures of dispersion I")
-# plot(c(b1,b6,b7,b8,b9,10),ylim=c(0,79),main="Measures of dispersion II")
 
+## Measures of dispersion
+b1<-func.var(fdataobj)
+b2<-func.trimvar.FM(fdataobj)
+b3<-func.trimvar.FM(fdataobj,trim=0.1)
+b4<-func.trimvar.mode(fdataobj)
+b5<-func.trimvar.mode(fdataobj,p=1)
+b6<-func.trimvar.RP(fdataobj)
+b7<-func.trimvar.RPD(fdataobj)
+b8<-func.trimvar.RPD(fdataobj)
+b9<-func.trimvar.RPD(fdataobj,deriv=c(0,1))
+b10<-func.trimvar.RT(fdataobj)
+dev.new()
+par(mfrow=c(1,2))
+plot(c(b1,b2,b3,b4,b5),ylim=c(0,79),main="Measures of dispersion I")
+plot(c(b1,b6,b7,b8,b9,10),ylim=c(0,79),main="Measures of dispersion II")
+}
 }
 \keyword{descriptive} 

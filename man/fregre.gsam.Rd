@@ -68,7 +68,6 @@ Alternative methods: \code{\link{fregre.glm}} and \code{\link{fregre.gkam}}.
 
 data(tecator)
 x=tecator$absorp.fdata
-#tecator$y$Fat=floor(tecator$y$Fat)
 x.d1<-fdata.deriv(x)
 tt<-x[["argvals"]]
 dataf=as.data.frame(tecator$y)
@@ -83,58 +82,44 @@ res=fregre.gsam(Fat~Water+s(Protein)+x+s(x.d1),ldata,family=gaussian(),
 basis.x=basis.x,basis.b=basis.b)
 res
 
-## Not run
-# res2=fregre.gsam(Fat~te(Protein,k=3)+x,data=ldata,family=gaussian())
-# summary(res2)
+\dontrun{
+res2=fregre.gsam(Fat~te(Protein,k=3)+x,data=ldata,family=gaussian())
+summary(res2)
 
 ##  dropind basis pc
-# basis.pc0=create.pc.basis(x,c(2,4,7))
-# basis.pc1=create.pc.basis(x.d1,c(1:3))
-# basis.x=list("x"=basis.pc0,"x.d1"=basis.pc1)
-# ldata=list("df"=dataf,"x"=x,"x.d1"=x.d1)
-# f.pc=Fat~s(x)+x.d1 #
-# res.pc=fregre.gsam(f.pc,data=ldata,family=gaussian(),
-# basis.x=basis.x,basis.b=basis.b)
-# summary(res.pc)
+basis.pc0=create.pc.basis(x,c(2,4,7))
+basis.pc1=create.pc.basis(x.d1,c(1:3))
+basis.x=list("x"=basis.pc0,"x.d1"=basis.pc1)
+ldata=list("df"=dataf,"x"=x,"x.d1"=x.d1)  
+res.pc=fregre.gsam(f,data=ldata,family=gaussian(),
+basis.x=basis.x,basis.b=basis.b)
+summary(res.pc)
 
 ## fd class object
-# ind<-1:129
-# x=tecator$absorp.fdata
-# y=tecator$y$Fat
-# tt=x[["argvals"]]
-# dataf=as.data.frame(tecator$y)
-# x.fd<-fdata2fd(x)
-# x.fd1<-fdata.deriv(x,class.out="fd")
-# x.fd2<-fdata.deriv(x,class.out="fd",nderiv=2)
-# basis.b=list("x.fd"=basis2,"x.fd1"=basis2)
-# ldata=list("df"=dataf,"x.fd"=x.fd,"x.fd1"=x.fd1,"x.fd2"=x.fd2)
-# f0=Fat~+x.fd+s(x.fd1)
-# res.pc=fregre.gsam(f0,data=ldata,family=gaussian())
-# res.pc2=fregre.gsam(f0,data=ldata,family=gaussian(),basis.b=basis.b)
+y=tecator$y$Fat
+dataf=as.data.frame(tecator$y)
+x.fd<-fdata2fd(x)
+x.fd1<-fdata.deriv(x,class.out="fd")
+x.fd2<-fdata.deriv(x,class.out="fd",nderiv=2)
+basis.b=list("x.fd"=basis2,"x.fd1"=basis2)
+ldata=list("df"=dataf,"x.fd"=x.fd,"x.fd1"=x.fd1,"x.fd2"=x.fd2)
+res.pc=fregre.gsam(f,data=ldata,family=gaussian(),basis.b=basis.b)
 
 ## pca.fd
-# basis.pc0=pca.fd(x.fd,3)
-# basis.pc1=pca.fd(x.fd1,3)
-# basis.pc2=pca.fd(x.fd2,3)
-# basis.x=list("x.fd"=basis.pc0,"x.fd1"=basis.pc1)
-# f0=Fat~+x.fd+s(x.fd1)+s(Protein)
-# res.fd=fregre.gsam(f0,data=ldata,basis.x=basis.x)
+basis.pc0=pca.fd(x.fd,3)
+basis.pc1=pca.fd(x.fd1,3)
+basis.pc2=pca.fd(x.fd2,3)
+basis.x=list("x.fd"=basis.pc0,"x.fd1"=basis.pc1)
+f0=Fat~+x.fd+s(x.fd1)+s(Protein)
+res.fd=fregre.gsam(f0,data=ldata,basis.x=basis.x)
 
 ##  Binomial family
-# x=tecator$absorp.fdata
-# # tecator$y$Fat<-ifelse(tecator$y$Fat>20,1,0)
-# x.d1<-fdata.deriv(x)
-# tt=x[["argvals"]]
-# dataf=as.data.frame(tecator$y)
-# nbasis.x=11;nbasis.b=7
-# # basis1=create.bspline.basis(rangeval=range(tt),nbasis=nbasis.x)
-# basis2=create.bspline.basis(rangeval=range(tt),nbasis=nbasis.b)
-# f=Fat~s(Protein)+s(x)
-# basis.x=list("x"=basis1,"x.d1"=basis1)
-# basis.b=list("x"=basis2,"x.d1"=basis2)
-# ldata=list("df"=dataf,"x"=x,"x.d1"=x.d1)
-# res=fregre.gsam(Fat~Protein+s(x),ldata,family=binomial(),
-# basis.x=basis.x,basis.b=basis.b)
-# res2=fregre.gsam(Fat~s(Protein)+x,data=ldata,family=binomial())
+x=tecator$absorp.fdata
+tecator$y$Fat<-ifelse(tecator$y$Fat>20,1,0)
+x.d1<-fdata.deriv(x)
+dataf=as.data.frame(tecator$y)
+ldata=list("df"=dataf,"x"=x,"x.d1"=x.d1)
+res.bin=fregre.gsam(Fat~Protein+s(x),ldata,family=binomial())
+}
 }
 \keyword{regression}

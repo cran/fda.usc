@@ -1,66 +1,58 @@
+################################################################################
 fdata=function(mdata,argvals=NULL,rangeval=NULL,names=NULL,fdata2d=FALSE){
 call<-match.call()
 if (length(call[[2]])>1) nam<-"fdataobj"
 else nam<-call[[2]]
-#if (is.array(mdata))  if (length(dim(mdata))==2) fdata2d=FALSE
+if (is.array(mdata))  {
+    dm<-dim(mdata)
+    len.dm<-length(dm)
+    if (len.dm<3) fdata2d=FALSE
+    else {
+      fdata2d=TRUE
+      if (len.dm>3) stop("Not implemented yet for dim(mdata)>",3)
+    }
+}
 if (is.list(argvals)) fdata2d=TRUE
 if (is.list(rangeval)) fdata2d=TRUE
-if (is.array(mdata))     {
-  dm<-dim(mdata)
-  if (length(dm)>2) {   fdata2d=TRUE}
-  }
+
 if (fdata2d){
 out=list("data"=NULL)
 if (length(class(mdata))>1) class(mdata)<-class(mdata)[1]
 out<-switch(class(mdata),
 matrix={
-#        dm<-dim(mdata)      
- #       out[["data"]]<-array(NA,dim=c(1,dm[1],dm[2]))
-        out[["data"]]<-mdata
+        out[["data"]]<-array(NA,dim=c(1,dm[1],dm[2]))
+        out[["data"]][1,,]<-mdata
                 out},
 data.frame={
-#        dm<-dim(mdata)      
-#        out[["data"]]<-array(NA,dim=c(1,dm[1],dm[2]))
-        out[["data"]]<-mdata
+        out[["data"]]<-array(NA,dim=c(1,dm[1],dm[2]))
+        out[["data"]][1,,]<-mdata
         out},
-fdata=stop("The data could not be converted into fdata class"),
-numeric={
-#        dm<-dim(matrix(mdata,nrow=1))      
-#        out[["data"]]<-array(NA,dim=c(1,dm[1],dm[2]))
-        out[["data"]]<-matrix(mdata,nrow=1)
-         out},
-integer={
-#        dm<-dim(matrix(mdata,nrow=1))      
-#        out[["data"]]<-array(NA,dim=c(1,dm[1],dm[2]))
-        out[["data"]]<-matrix(mdata,nrow=1)
-        out},
+fdata=stop("The data is a fdata class object"),
 array={
-#        dm<-dim(mdata)      
         out[["data"]]=mdata
-        out}            
-)  
+        out}
+)
 dm<-dim(out[["data"]] )
-
 len.dm<-length(dm)
 if (is.null(argvals)) {
  argvals<-list()
  if (len.dm>2){
   len.argvals<-len.dm-1
- for (i in 2:len.dm) {
-  if (is.null(dimnames(out[["data"]][i])))  argvals[[i-1]]<-1:dm[i]
+  for (i in 2:len.dm) {
+    if (is.null(dimnames(out[["data"]][i])))  argvals[[i-1]]<-1:dm[i]
+  }
  }
- }
- else {
+else {
   len.argvals<-len.dm
- for (i in 1:len.dm) {
-  if (is.null(dimnames(out[["data"]][i])))  argvals[[i]]<-1:dm[i]   
+  for (i in 1:len.dm) {
+  if (is.null(dimnames(out[["data"]][i])))  argvals[[i]]<-1:dm[i]
 # nam<-as.character(call[[2]])
 # print(length(call[[2]]))
  if (is.null(names(argvals[[i]]))) names(argvals[[i]])<-paste(nam,1:dm[i],sep="")
-  }}
+  }
+ }
  out[["argvals"]]<-argvals
-
-}                  
+}
 else {
   #verificar dimensiones
   if (is.list(argvals)) {
@@ -70,11 +62,11 @@ else {
        for (i in 1:len.argvals) {
          if (length(argvals[[i]])!=dm[i+1]) stop("Incorrect dimension in between mdata and argvals arguments")
     }   }
-    else { 
+    else {
        for (i in 1:len.argvals) {
         if (length(argvals[[i]])!=dm[i]) stop("Incorrect dimension in between mdata and argvals arguments")
     }  }
-  }  
+  }
 else stop("The argument argvals must be a list")
 #print("peta name")
   if (is.null(names(argvals))) names(argvals)<-paste(drop(nam),1:len.argvals,sep="")
@@ -86,38 +78,38 @@ if (is.null(rangeval))  {
  for (i in 1:len.argvals) {
     rangeval[[i]]<-range(argvals[i])
   }
- if (is.null(names(rangeval))) names(rangeval)<-names(argvals)  
+ if (is.null(names(rangeval))) names(rangeval)<-names(argvals)
  out[["rangeval"]]<-rangeval
  len.rangeval<-length(out[["rangeval"]])
-} 
+}
 else {
   if (is.list(rangeval)) {
      len.rangeval<-length(rangeval)
      if (len.rangeval!=len.argvals) stop("Incorrect dimension in rangeval argument")
-  }  
+  }
 else stop("The argument reangeval must be a list")
   if (is.null(names(rangeval))) names(rangeval)<-names(argvals)
   out[["rangeval"]]<-rangeval
-}    
+}
 if (is.null(names))  {
  names<-list()
  names[["xlab"]]<-paste("argvals ",1:len.argvals,sep="")
  names[["ylab"]]<-paste("values of ",nam,len.argvals,sep="")
  names[["main"]]<-paste(nam,len.argvals,sep="")
  out[["names"]]<-names
- }
+}
 else {
   if (is.list(names)) {
      len.names<-length(names[["xlab"]])
     if (len.rangeval!=len.names) stop("Incorrect dimension in names argument")
-  }  
+  }
 else stop("The argument names must be a list")
  out[["names"]]<-names
-}   
-class(out)=c("fdata","fdata2d")
-
-return(out)
 }
+if (is.null(dimnames(out$data))) dimnames(out$data)<-list("data"=1:dm[1],"argvals.x"=argvals[[1]],"argvals.y"=argvals[[2]])
+class(out)=c("fdata","fdata2d")
+return(out)
+}   #### fdata1d
 else{
 out=list("data"=NULL)
 if (length(class(mdata))>1) class(mdata)<-class(mdata)[1]
@@ -200,5 +192,4 @@ if (!is.null(names$ylab)) out$names$ylab<-names$ylab
 class(out)="fdata"
 return(out)
 }
-
 }

@@ -70,6 +70,7 @@ Alternative method: \code{\link{fregre.basis.cv}} and   \code{\link{fregre.np.cv
 }
 \examples{
 
+\dontrun{
 data(tecator)
 absorp=tecator$absorp.fdata
 ind=1:129
@@ -82,17 +83,17 @@ res.np2=fregre.np.cv(x,y,type.CV=GCV.S,criteria="Shibata")
 summary.fregre.fd(res.np2)
 
 ## Example with other semimetrics (not run)
-# res.pca1=fregre.np.cv(x,y,Ker=Ker,metric=semimetric.pca,q=1)
-# summary.fregre.fd(res.pca1)
-# res.deriv=fregre.np.cv(x,y,Ker=Ker,metric=semimetric.deriv)
-# summary.fregre.fd(res.deriv)
+res.pca1=fregre.np.cv(x,y,Ker=Ker,metric=semimetric.pca,q=1)
+summary.fregre.fd(res.pca1)
+res.deriv=fregre.np.cv(x,y,Ker=Ker,metric=semimetric.deriv)
+summary.fregre.fd(res.deriv)
 
-# x.d2=fdata.deriv(x,nderiv=1,method="fmm",class.out='fdata')
-# res.deriv2=fregre.np.cv(x.d2,y,Ker=Ker)
-# summary.fregre.fd(res.deriv2)
-# x.d3=fdata.deriv(x,nderiv=1,method="bspline",class.out='fdata')
-# res.deriv3=fregre.np.cv(x.d3,y,Ker=Ker)
-# summary.fregre.fd(res.deriv3)
-
+x.d2=fdata.deriv(x,nderiv=1,method="fmm",class.out='fdata')
+res.deriv2=fregre.np.cv(x.d2,y,Ker=Ker)
+summary.fregre.fd(res.deriv2)
+x.d3=fdata.deriv(x,nderiv=1,method="bspline",class.out='fdata')
+res.deriv3=fregre.np.cv(x.d3,y,Ker=Ker)
+summary.fregre.fd(res.deriv3)
+}
 }
 \keyword{regression}

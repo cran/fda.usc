@@ -15,30 +15,34 @@ import(mgcv)
 
 
 export(
-anova.hetero,anova.RPm,argvals,
+anova.hetero,anova.RPm,argvals,anova.onefactor,
 AKer.norm,AKer.cos,AKer.epa,AKer.tri,AKer.quar,AKer.unif,
 create.pc.basis,create.pls.basis,create.fdata.basis,classif.glm,classif.gsam,classif.gkam,classif.np,classif.knn,classif.kernel,
 cond.F,cond.mode,cond.quantile,create.fdata.basis,CV.S, 
 depth.HD,depth.SD,depth.PD,depth.MhD,depth.FM,depth.mode, depth.RP,depth.RPD,depth.RT,dev.S,dis.cos.cor,fdata,fdata.bootstrap,dim.fdata,
+fregre.basis.fr,
 fdata.cen,fdata.deriv,fdata2fd,fdata2pc,fdata2pls,FDR,fregre.basis,fregre.basis.cv,fregre.bootstrap,fregre.glm,FDR,
 fregre.gsam,fregre.gkam,fregre.lm,fregre.np,fregre.np.cv,fregre.pc,fregre.pc.cv,fregre.plm,fregre.pls,fregre.pls.cv,
-func.mean,func.var,func.trim.FM,func.trim.mode,func.trim.RP,func.trim.RPD,func.med.FM,func.med.mode,func.med.RP,func.med.RPD,func.trimvar.FM,func.trimvar.mode,func.trimvar.RP,func.trimvar.RPD,
+func.mean.formula,func.mean,func.var,func.trim.FM,func.trim.mode,func.trim.RP,func.trim.RPD,func.med.FM,func.med.mode,func.med.RP,func.med.RPD,func.trimvar.FM,func.trimvar.mode,func.trimvar.RP,func.trimvar.RPD,
 func.med.HD,func.med.PD,func.med.SD,func.med.MhD,func.trim.HD,func.trim.PD,func.trim.SD,func.trim.MhD,
 GCV.S,
 h.default,
 IKer.norm,IKer.cos,IKer.epa,IKer.tri,IKer.quar,IKer.unif,
 influence.fdata,influence.quan,inprod.fdata,int.simpson,is.fdata,
 Kernel,Ker.norm,Ker.cos,Ker.epa,Ker.tri,Ker.quar,Ker.unif,Kernel.asymmetric,Kernel.integrate,kmeans.fd,
-metric.dist,metric.lp,min.basis,min.np,missing.fdata,
+metric.kl,metric.dist,metric.lp,min.basis,min.np,missing.fdata,
 norm.fd,norm.fdata,ncol.fdata,nrow.fdata,
 outliers.thres.lrt,outliers.lrt,outliers.depth.trim,outliers.depth.pond,omit.fdata,
 plot.fdata,predict.classif,predict.fregre.fd,predict.fregre.glm,predict.fregre.gsam,
+predict.fregre.fr,
 predict.fregre.gkam,predict.fregre.lm,predict.fregre.plm,pvalue.FDR,
 quantile.outliers.pond, quantile.outliers.trim,
 rproc2fdata,rangeval,
 S.basis,semimetric.basis,summary.classif,S.LLR,S.NW,S.KNN,
 semimetric.hshift,semimetric.mplsr,semimetric.pca,semimetric.deriv,semimetric.fourier,
+split.fdata,
 summary.fdata.comp,summary.fregre.fd,summary.fregre.gkam,summary.anova,
+unlist.fdata,
 Var.y,Var.e,
 title.fdata,
 flm.Ftest,flm.test,PCvM.statistic,Adot,
@@ -51,6 +55,7 @@ P.penalty,rwild,classif.depth
 )
 
 #classif.boosting,classif.glm.cv,fregre.basis.func.cv,
+#plot.bifd
 
 
 #count.na,traza: fda.usc.internal.Rd
@@ -72,8 +77,9 @@ S3method(Ops, fdata)
 S3method(order,fdata)
 
 
-S3method(plot, fdata)
+S3method(plot,fdata)
 S3method(predict,classif)
+S3method(predict,fregre.fr)
 S3method(predict,fregre.fd)
 S3method(predict,fregre.glm)
 S3method(predict,fregre.gsam)

@@ -1,19 +1,54 @@
-plot.fdata<-function(x,type,main,xlab,ylab,...) {
+################################################################################
+plot.bifd<-function(bfd,argvals.s,argvals.t,...){
+      if (missing(argvals.s)){
+         nfine.s = max(c(201,10*bfd$sbasis$nbasis+1))
+         argvals.s = seq(bfd$sbasis$rangeval[1],bfd$sbasis$rangeval[2],len=nfine.s)
+         }
+      if (missing(argvals.t)){
+         nfine.t = max(c(201,10*bfd$tbasis$nbasis+1))
+         argvals.t = seq(bfd$tbasis$rangeval[1],bfd$tbasis$rangeval[2],len=nfine.t)
+         }
+      tt<-list(argvals.s,argvals.t)
+      rtt<-list(bfd$sbasis$rangeval,bfd$tbasis$rangeval)
+      plot(fdata(eval.bifd(argvals.s,argvals.t,bfd),tt,rtt,fdata2d=TRUE),... )
+      }
+################################################################################
+plot.fdata<-function(x,type,main,xlab,ylab,mfrow=c(1,1),time=1,...) {
 if (any(class(x)=="fdata2d"))  {
 #stop("Object is not fdata2d class")
-if (missing(type)) type="persp"
+if (missing(type)) type="image.contour"
 #if (missing(main)) main=x[["names"]][["main"]]
 #if (missing(xlab)) xlab=x[["names"]][["xlab"]]
 #if (missing(ylab)) ylab=x[["names"]][["ylab"]]
-
-len.dm<-length(dim(x$data))
-if (len.dm==2) { 
+dm<-dim(x$data)
+j<-1
+len.dm<-length(dm)
+rng<-range(x$data)
+#if (!ask) {
+#   if (dm[1]>9)  ask=TRUE
+#   else {
+#       ask=FALSE
+#       if (dm[1]==1) par(mfrow=c(1,1),ask=FALSE) 
+#       if (dm[1]==2) par(mfrow=c(1,2),ask=FALSE)        
+#       if (dm[1]==3) par(mfrow=c(1,3),ask=FALSE)        
+#       if (dm[1]==4) par(mfrow=c(2,2),ask=FALSE)        
+#       if (dm[1]>4) par(mfrow=c(2,3),ask=FALSE)                             
+#       if (dm[1]>6) par(mfrow=c(3,3),ask=FALSE)                                    
+#   }}
+par(mfrow=mfrow)
+#npar<-par()$mfrow[1]*par()$mfrow[2]
+npar<-mfrow[1]*mfrow[2]
+for (i in 1:dm[1]) {
+#if (ask) {   par(mfrow=c(1,1),ask=ask)     }
+z <- x[["data"]][i,,]
+if (len.dm==3) {
 switch (type,
 "persp"={                          
 par(bg = "white")
 xx <- x[["argvals"]][[1]]
 y <- x[["argvals"]][[2]]
-z <- x[["data"]]
+
+
 #nrz <- nrow(z);
 #ncz <- ncol(z)
 #jet.colors <- colorRampPalette( c("yellow", "red") ) 
@@ -21,36 +56,50 @@ z <- x[["data"]]
 #color <- jet.colors(nbcol)
 #zfacet <- z[-1, -1] + z[-1, -ncz] + z[-nrz, -1] + z[-nrz, -ncz]
 #facetcol <- cut(zfacet, nbcol)
- persp(x=xx,y=y,z=z,xlim=x[["rangeval"]][[1]],ylim=x[["rangeval"]][[2]],
- main =  x$names$main,xlab = x$names$xlab[1], ylab =  x$names$xlab[2],...)
+ persp(x=xx,y=y,z=z,xlim=x[["rangeval"]][[1]],ylim=x[["rangeval"]][[2]],zlim=rng,
+ main = paste(x$names$main," ",dimnames(x$data)[[1]][i],sep=""),xlab = x$names$xlab[1], ylab =  x$names$xlab[2],...) 
+# main =  x$names$main[i],xlab = x$names$xlab[1], ylab =  x$names$xlab[2],...)
 #, col=color[facetcol],...)
 # par(op)
 },
 "filled.contour"={
-filled.contour(x=x[["argvals"]][[1]],y=x[["argvals"]][[2]],z=x[["data"]],
+filled.contour(x=x[["argvals"]][[1]],y=x[["argvals"]][[2]],z=z,
 xlim=x[["rangeval"]][[1]],ylim=x[["rangeval"]][[2]],
-plot.title=title(main = x$names$main,
+plot.title=title(main = paste(x$names$main," ",dimnames(x$data)[[1]][i],sep=""),
 xlab =x$names$xlab[1], ylab =  x$names$xlab[2]),...)},
 
-"contour"={contour(x=x[["argvals"]][[1]],y=x[["argvals"]][[2]],z=x[["data"]],
+"contour"={contour(x=x[["argvals"]][[1]],y=x[["argvals"]][[2]],z=z,zlim=rng,
 xlim=x[["rangeval"]][[1]],ylim=x[["rangeval"]][[2]],
-plot.title=title(main =  x$names$main,
+plot.title=title(main =  paste(x$names$main," ",dimnames(x$data)[[1]][i],sep=""),
     xlab = x$names$xlab[1], ylab =  x$names$xlab[2]),...)},#labels repetidos
     
-"image"={image(x = x[["argvals"]][[1]],y = x[["argvals"]][[2]],z= x[["data"]],
-xlim = x[["rangeval"]][[1]],ylim = x[["rangeval"]][[2]],main =  x$names$main[1],
+"image"={image(x = x[["argvals"]][[1]],y = x[["argvals"]][[2]],z=z,
+xlim = x[["rangeval"]][[1]],ylim = x[["rangeval"]][[2]],zlim=rng,
+main = paste(x$names$main," ",dimnames(x$data)[[1]][i],sep=""),
     xlab = x$names$xlab[1], ylab =  x$names$xlab[2],...)},
-    
-"contourplot"={contourplot(data=x[["data"]],
-xlim = x[["rangeval"]][[1]],ylim = x[["rangeval"]][[2]],...)}    
+"image.contour"={image(x = x[["argvals"]][[1]],y = x[["argvals"]][[2]],z=z,
+xlim = x[["rangeval"]][[1]],ylim = x[["rangeval"]][[2]],zlim=rng,
+main = paste(x$names$main," ",dimnames(x$data)[[1]][i],sep=""),
+    xlab = x$names$xlab[1], ylab =  x$names$xlab[2],...)
+    contour(x=x[["argvals"]][[1]],y=x[["argvals"]][[2]],z=z,add = TRUE, drawlabels = FALSE,...)
+    }#lattice plot    
+#"contourplot"={contourplot(data=z,
+#xlim = x[["rangeval"]][[1]],ylim = x[["rangeval"]][[2]],...)}    
 )
 }
-else {
-  if (len.dm==3) { contourplot(data=x[["data"]],
-xlim = x[["rangeval"]][[1]],ylim = x[["rangeval"]][[2]],...)}
-    }
-if (len.dm>3) stop("Not implemented plot for arrays of more than 3 dimension yet")
 
+
+if (names(dev.cur())!="pdf" & j==npar) {
+   Sys.sleep(time)
+   j<-1
+   }
+else j<-j+1   
+}  
+#else {
+#  if (len.dm==3) { contourplot(data=z,
+#xlim = x[["rangeval"]][[1]],ylim = x[["rangeval"]][[2]],...)}
+#    }
+if (len.dm>3) stop("Not implemented plot for arrays of more than 3 dimension yet")
 }
 else {
 if (!is.fdata(x))  stop("Object is not fdata class")
@@ -73,4 +122,4 @@ if (!is.null(xlab)) x[["names"]][["xlab"]]<-xlab
 if (!is.null(ylab)) x[["names"]][["ylab"]]<-ylab
 x
 }
-
+################################################################################

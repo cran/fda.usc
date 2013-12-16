@@ -15,7 +15,7 @@ Sections of fda.usc-package: \cr
 \tabular{ll}{
 \tab A.- Functional Data Representation  \cr
 \tab B.- Functional Outlier Detection \cr
-\tab C.- Functional Regression with Scalar Response	\cr
+\tab C.- Functional Regression Model	\cr
 \tab D.- Functional Supervised Classification	\cr
 \tab E.- Functional Non-Supervised Classification	\cr
 \tab F.- Functional ANOVA	\cr
@@ -102,6 +102,12 @@ functional generalized spectral additive model \code{\link{fregre.gsam}}  are an
 }
 
 
+C.4. Functional explanatory covariate  and  response\cr
+The functions included in this section allow the estimation of  functional regression models with a functional response and a single functional explicative covariate.\cr
+\tabular{ll}{
+\tab \code{\link{fregre.basis.fr}}  \cr
+}
+
   D.- Functional Supervised Classification	\cr
 This section allows the estimation of the groups in a training set of functional data \code{fdata} class by different nonparametric methods of supervised classification. Once these classifiers have been trained, they can be used to predict on new functional data.\cr	
 \cr
@@ -125,6 +131,7 @@ This section allows the estimation of the groups in a  functional data set \code
 
 	F.- Functional ANOVA	\cr
 \tabular{ll}{
+\tab	\code{\link{anova.onefactor}} \cr
 \tab	\code{\link{anova.RPm}} \cr
 \tab	\code{\link{anova.hetero}} \cr
 }
@@ -155,8 +162,8 @@ This section allows the estimation of the groups in a  functional data set \code
 \tabular{ll}{
 Package: \tab fda.usc\cr
 Type: \tab Package\cr
-Version: \tab 1.0.5\cr
-Date: \tab 2013-07-24\cr
+Version: \tab 1.1.0\cr
+Date: \tab 2013-12-16\cr
 License: \tab GPL-2 \cr
 LazyLoad: \tab yes\cr
 Url: \url{ http://eio.usc.es/pub/MAESFE/}, \url{http://eio.usc.es/pub/gi1914/}

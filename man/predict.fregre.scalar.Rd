@@ -61,57 +61,45 @@ See Also as:  \code{\link{fregre.lm}},  \code{\link{fregre.plm}}, \code{\link{fr
 }
 \examples{
 
-# data(tecator)
-# ind<-1:129
-# data(tecator)
-# x=tecator$absorp.fdata
-# x.d1<-fdata.deriv(x)
-# tt<-x[["argvals"]]
-# dataf=as.data.frame(tecator$y)
-# nbasis.x=11;nbasis.b=7
-# basis1=create.bspline.basis(rangeval=range(tt),nbasis=nbasis.x)
-# basis2=create.bspline.basis(rangeval=range(tt),nbasis=nbasis.b)
-# f=Fat~s(Protein)+s(x)
-# basis.x=list("x"=basis1,"x.d1"=basis1)
-# basis.b=list("x"=basis2,"x.d1"=basis2)
-# ldata=list("df"=dataf[ind,],"x"=x[ind],"x.d1"=x.d1[ind])
+\dontrun{
+data(tecator)
+ind<-1:129
+x=tecator$absorp.fdata
+x.d2<-fdata.deriv(x,nderiv=2)
+tt<-x[["argvals"]]
+dataf=as.data.frame(tecator$y)
+nbasis.x=11;nbasis.b=7
+basis1=create.bspline.basis(rangeval=range(tt),nbasis=nbasis.x)
+basis2=create.bspline.basis(rangeval=range(tt),nbasis=nbasis.b)
+basis.x=list("x.d2"=basis1)
+basis.b=list("x.d2"=basis2)
+ldata=list("df"=dataf[ind,],"x.d2"=x.d2[ind])
 
-# res=fregre.gsam(Fat~Water+s(Protein)+x+s(x.d1),data=ldata,family=gaussian(),
-# basis.x=basis.x,basis.b=basis.b)
-# res2=fregre.gsam(Fat~te(Protein,k=3)+x,data=ldata,family=gaussian())
+res=fregre.gsam(Fat~s(Water,k=3)+s(x.d2,k=3),data=ldata,
+family=gaussian(),basis.x=basis.x,basis.b=basis.b)
+newldata=list("df"=dataf[-ind,],"x.d2"=x.d2[-ind])
+pred<-predict.fregre.gsam(res,newldata)
+plot(pred,tecator$y$Fat[-ind])
 
-# a<-predict.fregre.gsam(res)
-# plot(a,tecator$y$Fat[ind])
-# b<-predict.fregre.gsam(res2,ldata)
-# points(b,tecator$y$Fat[ind],col=2)
+res.glm=fregre.glm(Fat~Water+x.d2,data=ldata,family=gaussian(),
+basis.x=basis.x,basis.b=basis.b)
+pred.glm<-predict.fregre.glm(res.glm,newldata)
+newy<-tecator$y$Fat[-ind]
+points(pred.glm,tecator$y$Fat[-ind],col=2)
 
-# res=fregre.gsam(Fat~s(Water,k=3)+s(x.d1,k=3)+s(x,k=3),data=ldata,
-# family=gaussian(),basis.x=basis.x,basis.b=basis.b)
-# newldata=list("df"=dataf[-ind,],"x"=x[-ind],"x.d1"=x.d1[-ind])
-# pred<-predict.fregre.gsam(res,newldata)
-# plot(pred,tecator$y$Fat[-ind])
+res.plm=fregre.plm(Fat~Water+x.d2,data=ldata)
+pred.plm<-predict.fregre.plm(res.plm,newldata)
+points(pred.plm,tecator$y$Fat[-ind],col=3)
 
-# res.glm=fregre.glm(Fat~Water+x.d1+x,data=ldata,family=gaussian(),
-# basis.x=basis.x,basis.b=basis.b)
-# pred.glm<-predict.fregre.glm(res.glm,newldata)
-# newy<-tecator$y$Fat[-ind]
-# points(pred.glm,tecator$y$Fat[-ind],col=2)
+# Time-consuming 
+res.gkam=fregre.gkam(Fat~Water+x.d2,data=ldata)
+pred.gkam=predict(res.gkam,newldata)
+points(pred.gkam,tecator$y$Fat[-ind],col=4)
 
-# res.plm=fregre.plm(Fat~Water+x.d1,data=ldata)
-# pred.plm<-predict.fregre.plm(res.plm,newldata)
-# points(pred.plm,tecator$y$Fat[-ind],col=3)
-
-## Time-consuming 
-# res.gkam=fregre.gkam(Fat~Water+x.d1+x,data=ldata)
-# pred.gkam=predict(res.gkam,newldata)
-# points(pred.gkam,tecator$y$Fat[-ind],col=4)
-
-# ((1/length(newy))*sum((drop(newy)-pred)^2))/var(newy)
-# ((1/length(newy))*sum((newy-pred.plm)^2))/var(newy)    
-# ((1/length(newy))*sum((newy-pred.glm)^2))/var(newy)    
-# ((1/length(newy))*sum((newy-pred.gkam)^2))/var(newy)    
-
-
-                                                                                                              
+((1/length(newy))*sum((drop(newy)-pred)^2))/var(newy)
+((1/length(newy))*sum((newy-pred.plm)^2))/var(newy)    
+((1/length(newy))*sum((newy-pred.glm)^2))/var(newy)    
+((1/length(newy))*sum((newy-pred.gkam)^2))/var(newy)    
+}                                                                                                              
 }
 \keyword{regression}

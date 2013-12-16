@@ -58,7 +58,7 @@ Test 2010, DOI \bold{10.1007/s11749-010-0185-3}.
 Juan A. Cuesta-Albertos,  Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 }
 \seealso{
-See Also as: \code{\link{anova.hetero}} 
+See Also as: \code{\link{anova.onefactor}} 
 }
 \examples{
 

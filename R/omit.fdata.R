@@ -42,7 +42,7 @@ if (is.fdata(fdataobj)) {
    nas<-apply(fdataobj$data,1,count.na)
    ind.na<-which(!nas)
    fdataobj<-fdataobj[ind.na]
-   if (index) return(list("fdataobj"=fdataobj,"index.na"=ind.na))
+   if (index.na) return(list("fdataobj"=fdataobj,"index.na"=ind.na))
    else   return(fdataobj)
    }
 else {

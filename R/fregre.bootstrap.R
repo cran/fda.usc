@@ -58,9 +58,9 @@ for (i in 1:nb){
    fdata.mue <-b0+b1
    if (pc==1)   {
       y.mue<-predict.fregre.fd(model,fdata.mue)  + residuals.mue
-      if (kmax.fix)    funcregpc.mue <- fregre.pc(fdata.mue,y.mue,l=model$l,rn=model$rn,weights=model$weights,...)    
+      if (kmax.fix)    funcregpc.mue <- fregre.pc(fdata.mue,y.mue,l=model$l,lambda=model$lambda,weights=model$weights,...)    
        else     {
-               fpc <- fregre.pc.cv(fdata.mue,y.mue,max(model$l,8),rn=model$rn,criteria=criteria,weights=model$weights,...)
+               fpc <- fregre.pc.cv(fdata.mue,y.mue,max(model$l,8),lambda=model$lambda,criteria=criteria,weights=model$weights,...)
                knn.fix[[i]]<-fpc$pc.opt
                funcregpc.mue<-fpc$fregre.pc
                         }
@@ -121,9 +121,9 @@ for (i in 1:nb){
    fdata.mue <- fdataobj[muee] 
    if (pc==1)   {
       y.mue<-pred  + residuals.mue
-      if (kmax.fix)    funcregpc.mue <- fregre.pc(fdata.mue,y.mue,l=model$l,rn=model$rn,weights=model$weights,...)
+      if (kmax.fix)    funcregpc.mue <- fregre.pc(fdata.mue,y.mue,l=model$l,lambda=model$lambda,weights=model$weights,...)
        else     {
-               fpc <- fregre.pc.cv(fdata.mue,y.mue,max(model$l,8),rn=model$rn,criteria=criteria,weights=model$weights,...)
+               fpc <- fregre.pc.cv(fdata.mue,y.mue,max(model$l,8),lambda=model$lambda,P=model$P,criteria=criteria,weights=model$weights,...)
                knn.fix[[i]]<-fpc$pc.opt
                funcregpc.mue<-fpc$fregre.pc
                 }

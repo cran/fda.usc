@@ -4,10 +4,10 @@
 \alias{fdata2ppc}
 \title{ Principal components for functional data}
 \description{
-Compute (penalized) principal components for functional data.
+Compute (penalized) principal components for functional data. fdata2ppc is deprecated.
 }
 \usage{
-fdata2pc(fdataobj,  ncomp = 2,norm = TRUE,...)
+fdata2pc(fdataobj,  ncomp = 2,norm = TRUE,lambda=0,P=c(0,0,1),...)
 fdata2ppc(fdataobj,  ncomp = 2,norm = TRUE,lambda=0,P=c(0,0,1),...)
 }
 \arguments{
@@ -55,14 +55,12 @@ Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 See Also as  \link[base]{svd} and  \link[stats]{varimax}.
 }
 \examples{
-
-# n= 100;tt= seq(0,1,len=51)
-# x0<-rproc2fdata(n,tt,sigma="wiener")
-# x1<-rproc2fdata(n,tt,sigma=0.1)
-# x<-x0*3+x1
-# pc=fdata2pc(x)
-# ppc=fdata2ppc(x,lambda=1)
-# summary(ppc)
-# summary(ppc)
+ \dontrun{
+ n= 100;tt= seq(0,1,len=51)
+ x0<-rproc2fdata(n,tt,sigma="wiener")
+ x1<-rproc2fdata(n,tt,sigma=0.1)
+ x<-x0*3+x1
+ pc=fdata2ppc(x,lambda=1)
+ summary(pc)}
 }
 \keyword{multivariate} 

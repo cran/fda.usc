@@ -78,6 +78,7 @@ Alternative methods: \code{\link{fregre.lm}}, \code{\link{fregre.np}} and   \cod
 }
 \examples{
 
+\dontrun{
 data(tecator)
 x=tecator$absorp.fdata[1:129]
 dataf=tecator$y[1:129,]
@@ -93,6 +94,6 @@ f2=Fat~Water+x.fd
 ldata2=list("df"=dataf,"x.fd"=x.fd)
 res.plm2=fregre.plm(f2,ldata2)
 summary(res.plm2)
-
+}
 }
 \keyword{regression}
