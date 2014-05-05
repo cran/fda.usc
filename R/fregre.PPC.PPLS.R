@@ -1,4 +1,3 @@
-
 ################################################################
 ################################################################
 D.penalty<- function(tt) {
@@ -339,8 +338,8 @@ else {
     sr2 <- sum(e^2)/rdf
     Vp<-sr2*S 
     r2 <- 1 - sum(e^2)/sum(ycen^2)
-    r2.adj<- 1 - (1 - r2) * ((n -    1)/ rdf)
-    GCV <- sum(e^2)/rdf^2
+#    r2.adj<- 1 - (1 - r2) * ((n -    1)/ rdf)
+#    GCV <- sum(e^2)/rdf^2             #GCV=GCV,
 
     std.error = sqrt(diag(S) *sr2)
     t.value =object.lm$coefficients/std.error
@@ -348,9 +347,9 @@ else {
     coefficients <- cbind(object.lm$coefficients, std.error, t.value, p.value)
     colnames(coefficients) <- c("Estimate", "Std. Error","t value", "Pr(>|t|)")
     
- out <- list(call = C, beta.est = beta.est,coefficients=object.lm$coefficients,
- fitted.values =object.lm$fitted.values, residuals = object.lm$residuals,coefs=coefficients,
- H=H,df = df,r2=r2, GCV=GCV,sr2 = sr2, Vp=Vp,l = l,lambda=lambda,P=P, fdata.comp=pc,
+ out <- list(call = C,coefficients=object.lm$coefficients, residuals = object.lm$residuals,
+ fitted.values =object.lm$fitted.values, beta.est = beta.est,coefs=coefficients,
+ H=H,df = df,r2=r2, sr2 = sr2, Vp=Vp,l = l,lambda=lambda,P=P, fdata.comp=pc,
  lm=object.lm,fdataobj = fdataobj,y = y)
     class(out) = "fregre.fd"
     return(out)
@@ -460,7 +459,7 @@ else {
     }   }
     }   }
     colnames(cv.AIC) = paste("PLS",1:kmax , sep = "")
-    rownames(cv.AIC) = paste("lambda=",lambda , sep = "")
+    rownames(cv.AIC) = paste("lambda=",signif(lambda,4) , sep = "")
 #    pc2$basis<-pc$rotation[1:pc.opt]
     fregre=fregre.pls(fdataobj,y,l=1:pc.opt,lambda=rn.opt,P=P,...)
     MSC.min = cv.AIC[rn.opt,pc.opt]
@@ -473,7 +472,7 @@ else {
 
 #################################################################
 #################################################################
-fregre.pc.cv=function (fdataobj, y, kmax=8,lambda=0,P=c(1,0,0),criteria = "SIC",...) {
+fregre.pc.cv=function (fdataobj, y, kmax=8,lambda=0,P=c(1,0,0),criteria = "SIC",weights=rep(1,len=n),...) {
    sequen=FALSE
    if (length(kmax)>1) {
    sequen=TRUE
@@ -522,17 +521,17 @@ type.i = pmatch(criteria, tab)
 lenrn<-length(lambda)
 MSC3<-list()
 pc.opt2 <- matrix(NA,nrow=lenrn,ncol=kmax)
-rownames(pc.opt2)<-paste("lambda=",zapsmall(signif(lambda)),sep="")
+rownames(pc.opt2)<-paste("lambda=",signif(lambda,4),sep="")
 colnames(pc.opt2)<-paste("PC(",1:kmax,")",sep="")
 MSC2<-pc.opt2
 MSC.min<-Inf
-min.rn<-lambda[1]
+min.rn<-lambda[1]                                               
 if (is.na(type.i))     stop("Error: incorrect criteria")
 else {
    if (type.i < 6) {
    for (r in 1:lenrn) {
-#       pc<-fdata2pc(fdataobj,ncomp=kmax,lambda=lambda[r],P=P,...)
-       pc<-fdata2pc(fdataobj,ncomp=kmax,...)
+       pc<-fdata2pc(fdataobj,ncomp=kmax,lambda=lambda[r],P=P)
+#       pc<-fdata2pc(fdataobj,ncomp=kmax,...)
 #       if (!is.matrix(P)) if (is.vector(P)) P<-P.penalty(tt,P)
        cv.opt1 = Inf
        pc.opt1 = NA
@@ -552,7 +551,7 @@ else {
                 for (j in 1:max.c) {
                   pc2$rotation <- pc$rotation#[c1[, j]]
                   pc2$l <- pc$l[c1[, j]]              
-                  out = fregre.pc(pc2, y,l=c1[, j],lambda=lambda[r],P=P,...)
+                  out = fregre.pc(pc2, y,l=c1[, j],lambda=lambda[r],P=P,weights=weights,...)
                   ck<-out$df
                   s2 <- sum(out$residuals^2)/n
                   cv.AIC[j]<-switch(criteria,
@@ -608,7 +607,7 @@ else {
     for (r in 1:lenrn) {
      setTxtProgressBar(pb,r-0.5)
      for (i in 1:n) {
-      pcl[[i]]<-fdata2pc(fdataobj[-i,],ncomp=kmax,lambda=lambda[r],P=P,...)
+      pcl[[i]]<-fdata2pc(fdataobj[-i,],ncomp=kmax,lambda=lambda[r],P=P)
       }
      cv.opt1 = Inf
      pc.opt1 = NA
@@ -631,8 +630,7 @@ else {
             pc2<-pcl[[i]]
             pc2$rotation<-pcl[[i]]$rotation#[c1[,j]]
             pc2$l<-pcl[[i]]$l[c1[,j]]
-            out = fregre.pc(pc2,y[-i],l=c1[,j],...) #####
-#            out = fregre.pc(fdataobj[-i,],y[-i],l=c1[,j],rn=rn[r],...)
+            out = fregre.pc(pc2,y[-i],l=c1[,j],weights=weights[-i],...) #####
             ck<-out$df
             residuals2[i] <- ((y[i] - predict(out,fdataobj[i,]))/(n-ck))^2
             }
@@ -670,7 +668,7 @@ if (!sequen){
  MSC = as.numeric(l2)
  names(pc.opt3)<-paste("PC", pc.opt3, sep = "")
  rn.opt<-lambda[min.rn]
- fregre=fregre.pc(fdataobj,y,l=drop(pc.opt),lambda=rn.opt,P=P,...)
+ fregre=fregre.pc(fdataobj,y,l=drop(pc.opt),lambda=rn.opt,P=P,weights=weights,...)
  return(list("fregre.pc"=fregre,pc.opt = pc.opt3,lambda.opt=rn.opt,
  PC.order=pc.opt2,MSC.order=MSC2))
 }
@@ -700,7 +698,7 @@ else {
 #  y<-omit[[2]]
   tt<-fdataobj[["argvals"]]
   x<-fdataobj[["data"]]
-  pc<-fdata2pc(fdataobj,ncomp=max(l))
+  pc<-fdata2pc(fdataobj,ncomp=max(l),lambda=lambda,P=P)
 }  
     rtt <- fdataobj[["rangeval"]]
     names <- fdataobj[["names"]]
@@ -759,7 +757,7 @@ if (is.logical(lambda)) {
     sr2 <- sum(e^2)/ rdf
     r2 <- 1 - sum(e^2)/sum(ycen^2)
     r2.adj<- 1 - (1 - r2) * ((n -    1)/ rdf)
-    GCV <- sum(e^2)/(n - df)^2
+#    GCV <- sum(e^2)/(n - df)^2
         object.lm = list()
         object.lm$coefficients <- coefs
         object.lm$residuals <- drop(e)
@@ -778,7 +776,7 @@ if (is.logical(lambda)) {
             "t value", "Pr(>|t|)")
         class(object.lm) <- "lm"
     out <- list(call = C, beta.est = beta.est,coefficients=coefs,
-    fitted.values =yp,residuals = e,H=H,df = df,r2=r2,GCV=GCV,
+    fitted.values =yp,residuals = e,H=H,df = df,r2=r2,#GCV=GCV,
     sr2 = sr2,Vp=Vp,l = l,lambda=lambda,fdata.comp=pc,lm=object.lm,
     coefs=coefficients,fdataobj = fdataobj,y = y)
 ##################################
@@ -803,12 +801,12 @@ else {
      sr2 <- sum(e^2)/(n - df)
      Vp<-sr2*S 
      r2 <- 1 - sum(e^2)/sum(ycen^2)
-     r2.adj<- 1 - (1 - r2) * ((n -    1)/(n-df))
-     GCV <- sum(e^2)/(n - df)^2
-  out <- list(call = C, beta.est = beta.est,coefficients=object.lm$coefficients,
-  fitted.values =object.lm$fitted.values,residuals = e,H=H,df = df,r2=r2,GCV=GCV,
-  sr2 = sr2,Vp=Vp, l = l,lambda=lambda,fdata.comp=pc,lm=object.lm,weights=weights,XX=Z,
-  fdataobj = fdataobj,y = y)
+#     r2.adj<- 1 - (1 - r2) * ((n -    1)/(n-df))
+#     GCV <- sum(e^2)/(n - df)^2
+  out <- list(call = C, coefficients=object.lm$coefficients,residuals = e,
+  fitted.values =object.lm$fitted.values,weights=weights,beta.est = beta.est,
+  df = df,r2=r2,sr2 = sr2,Vp=Vp,H=H, l = l,lambda=lambda,P=P,fdata.comp=pc,
+  lm=object.lm,XX=Z, fdataobj = fdataobj,y = y)
   }
  class(out) = "fregre.fd"
  return(out)

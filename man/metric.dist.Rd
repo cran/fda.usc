@@ -8,13 +8,15 @@ Distance Matrix Computation
 This function computes the distances between the rows of a data matrix  by using the specified distance measure.
 }
 \usage{
-metric.dist(x, y = NULL, method = "euclidean", p = 2, ...) 
+metric.dist(x, y = NULL, method = "euclidean", p = 2, dscale=1, ...) 
 }
 \arguments{  
   \item{x}{Data frame 1. The dimension is (\code{n1} x \code{m}).}
   \item{y}{Data frame 2. The dimension is (\code{n2} x \code{m}).}
   \item{method}{ The distance measure to be used. This must be one of "euclidean", "maximum", "manhattan", "canberra", "binary" or "minkowski".}
   \item{p}{ The power of the Minkowski distance.}
+  \item{dscale}{ If scale is a numeric, the distance matrix is divided by the scale value. If scale is a function (as the mean for example) the distance matrix is divided by the corresponding value from the output of the function.}  
+  
   \item{\dots}{ Further arguments passed to \code{\link{dist}} function.}
 }
 \details{

@@ -10,8 +10,8 @@ classif.depth(group,fdataobj,newfdataobj,depth="RP",par.depth=list(),CV="none")
 }
 \arguments{
  \item{group}{ Factor of length \emph{n}}
- \item{fdataobj}{  \code{fdata}, \code{matrix} or \code{data.frame} class object of training set cases.}  
- \item{newfdataobj}{  \code{fdata}, \code{matrix} or \code{data.frame} class object of training set cases.}  
+ \item{fdataobj}{  \code{fdata}, \code{matrix} or \code{data.frame} class object of train data.}  
+ \item{newfdataobj}{  \code{fdata}, \code{matrix} or \code{data.frame} class object of test data.}  
  	\item{depth}{ Type of depth function from functional data: 
 		\itemize{
 		\item   \code{FM}: Fraiman and Muniz depth.

@@ -16,11 +16,11 @@ predict.fregre.lm<-function(object,newx=NULL,type="response",se.fit=FALSE,scale 
  nt <- length(terms)
  vtab<-rownames(attr(tf,"factors"))
  vnf=intersect(terms,names(data$df))
- vnf2=intersect(vtab[-1],names(data$df)[-1])
+# vnf2=intersect(vtab[-1],names(data$df)[-1])
  vfunc2=setdiff(terms,vnf)
  vint=setdiff(terms,vtab)
  vfunc=setdiff(vfunc2,vint)
- vnf=c(vnf2,vint)
+ #vnf=c(vnf2,vint)
  off<-attr(tf,"offset")
  beta.l=list()
  kterms=1
@@ -167,3 +167,6 @@ else return(predictor)
  }
 return(drop(yp))  
  }
+
+ 
+

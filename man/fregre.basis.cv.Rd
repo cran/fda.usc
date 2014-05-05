@@ -40,23 +40,26 @@ If \code{basis.x$type=``fourier''} and \code{basis.b$type=``fourier''}, the func
 \value{
 Return:\cr
 \item{call}{ The matched call.}
-\item{beta.est}{ beta coefficient estimated of class \code{fd}}
-\item{a.est}{ Intercept parameter estimated}
-\item{fitted.values}{  Estimated scalar response.}
-\item{H}{  Hat matrix.}
+\item{coefficients}{ A named vector of coefficients}  
 \item{residuals}{ \code{y} minus \code{fitted values}.}
+\item{fitted.values}{  Estimated scalar response.}
+\item{beta.est}{ beta parameter estimated of class \code{fd}}
+\item{weights}{(only for weighted fits) the specified weights.}
 \item{df}{ The residual degrees of freedom.}
 \item{r2}{ Coefficient of determination.}
 \item{sr2}{ Residual variance.}
+\item{H}{ Hat matrix.}
 \item{y}{ Scalar response.}
 \item{fdataobj}{ Functional explanatory data of class \code{fdata}.}
 \item{x.fd}{ Centered functional explanatory data of class \code{fd}.}
 \item{lambda.opt}{  \code{lambda} value that minimizes CV or GCV method.}
 \item{gcv.opt}{ Minimum value of CV or GCV method.}
-\item{basis.x.opt}{  Basis used for  functional explanatory data estimation  \code{fdata}.}
-\item{basis.b}{  Basis used for for functional \code{beta} parameter estimation.}
+\item{basis.x.opt}{  Basis used for functional explanatory data estimation  \code{fdata}.}
+\item{basis.b.opt}{  Basis used for for functional \code{beta} parameter estimation.}
+\item{a.est}{ Intercept parameter estimated}
 \item{lm}{  Return \code{lm} object.}
 }
+
 \references{
 Ramsay, James O. and Silverman, Bernard W. (2006), \emph{Functional Data Analysis}, 2nd ed., Springer, New York. 
 

@@ -3,7 +3,7 @@
 \alias{influence.fdata}
 \title{ Functional influence measures}
 \description{
-	  Once estimated the functional regression model with scalar response, influence.fd function is used to obtain the functional influence measures.
+	  Once estimated the functional regression model with scalar response, influence.fdata function is used to obtain the functional influence measures.
 	  }
 \usage{
 %influence.fdata(model,...)
@@ -21,7 +21,7 @@ Three statistics are introduced for measuring the influence:   Distance Cook Pre
 \value{
 Return:\cr 
 \item{DCP}{ Cook's Distance for Prediction.}
-\item{DCE}{ Cook's Distance for  Estimation.}
+\item{DCE}{ Cook's Distance for Estimation.}
 \item{DP}{  \eqn{\mbox{Pe}\tilde{\mbox{n}}\mbox{a's} }{} Distance.}
 %\deqn{\mbox{pe}\tilde{\mbox{n}}\mbox{a} }{}
 }
@@ -39,22 +39,23 @@ Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 See Also as:  \code{\link{fregre.pc}}, \code{\link{fregre.basis}},  \code{\link{influence.quan}}
 }
 \examples{
-
+\dontrun{
 data(tecator)
-x=tecator$absorp.fdata
-y=tecator$y$Fat
-#NO RUN
-#res1=fregre.pc(x,y,1:3)  
-#res.infl1=influence.fdata(res1)  
-#res2=fregre.basis(x,y)  
-#res.infl2=influence.fdata(res2)  
+x=tecator$absorp.fdata[1:129]
+y=tecator$y$Fat[1:129]
 
-#res<-res1
-#res.infl<-res.infl1
-#mat=cbind(y,res$fitted.values,res.infl$DCP,res.infl$DCE,res.infl$DP)
-#colnames(mat)=c("Resp.","Pred.","DCP","DCE","DP")
-#pairs(mat)
+res1=fregre.pc(x,y,1:5)  
+# time consuming
+res.infl1=influence.fdata(res1)  
+res2=fregre.basis(x,y)  
+res.infl2=influence.fdata(res2)  
 
+res<-res1
+res.infl<-res.infl1
+mat=cbind(y,res$fitted.values,res.infl$DCP,res.infl$DCE,res.infl$DP)
+colnames(mat)=c("Resp.","Pred.","DCP","DCE","DP")
+pairs(mat)
+}
 
 }
 \keyword{ outliers }

@@ -1,5 +1,8 @@
-fregre.glm=function(formula,family = gaussian(),data,basis.x=NULL,
-basis.b=NULL,CV=FALSE,...){
+classif.tree=function(formula,data,basis.x=NULL,basis.b=NULL,CV=FALSE,...){
+ C<-match.call()
+ a<-list()
+ mf <- match.call(expand.dots = FALSE)
+ m <- match(c("formula","data","basis.x","basis.b","CV"), names(mf), 0L)
  tf <- terms.formula(formula)
  terms <- attr(tf, "term.labels")
  nt <- length(terms)
@@ -15,11 +18,13 @@ basis.b=NULL,CV=FALSE,...){
  vfunc=setdiff(vfunc2,vint)
 # vnf=c(vnf2,vint)
  off<-attr(tf,"offset")
- name.coef=nam=par.fregre=beta.l=list()
+name.coef=nam=par.fregre=beta.l=list()
  kterms=1
-#print(response)
+newdata<-data
+group<-newy<-y<-data$df[[response]]    
+#data$df[[response]]<-as.numeric(y)
  if (length(vnf)>0) {
- XX=data[["df"]][,c(response,vnf)] #data.frame el 1er elemento de la lista
+ XX=data[[1]][,c(response,vnf)] #data.frame el 1er elemento de la lista
  for ( i in 1:length(vnf)){
 #     print(paste("Non functional covariate:",vnf[i]))
      if (kterms > 1)   pf <- paste(pf, "+", vnf[i], sep = "")
@@ -31,24 +36,27 @@ if   (attr(tf,"intercept")==0) {
      }
 }
 else {
- XX=data$df[response]
+ XX=data.frame(y)
  names(XX)=response
 }
-#print(paste("Non functional covariate:",vnf))
-#print(paste("Functional covariate:",vfunc))
+if (!is.factor(y)) y<-as.factor(y)
+prob2<-prob<-ngroup<-nlevels(y)
+ny<-levels(y)
+n<-length(y)
+ mean.list=vs.list=JJ=list()
+ #print(paste("Functional covariate:",vfunc))
+if (length(vfunc)>0) {  
  bsp1<-bsp2<-TRUE
- lenfunc<-length(vfunc)>0
- if (lenfunc) {
-  mean.list=vs.list=JJ=list()
-  for (i in 1:length(vfunc)) {
-    if (class(data[[vfunc[i]]])[1]=="fdata"){
+ for (i in 1:length(vfunc)) {
+if (class(data[[vfunc[i]]])[1]=="fdata"){
       tt<-data[[vfunc[i]]][["argvals"]]
       rtt<-data[[vfunc[i]]][["rangeval"]]
       fdat<-data[[vfunc[i]]];      dat<-data[[vfunc[i]]]$data
       if (is.null(basis.x[[vfunc[i]]]))  basis.x[[vfunc[i]]]<-create.fdata.basis(fdat,l=1:7)
-      else   if (basis.x[[vfunc[i]]]$type=="pc" | basis.x[[vfunc[i]]]$type=="pls") bsp1=FALSE
+    else   if (basis.x[[vfunc[i]]]$type=="pc" | basis.x[[vfunc[i]]]$type=="pls") bsp1=FALSE
       if (is.null(basis.b[[vfunc[i]]])& bsp1)  basis.b[[vfunc[i]]]<-create.fdata.basis(fdat)
-      else           if (class(basis.x[[vfunc[i]]])=="fdata.comp" | basis.x[[vfunc[i]]]$type=="pls") bsp2=FALSE
+        else           if (class(basis.x[[vfunc[i]]])=="fdata.comp" | basis.x[[vfunc[i]]]$type=="pls") bsp2=FALSE
+      
       if (bsp1 & bsp2) {
           if (is.null(rownames(dat)))    rownames(fdat$data)<-1:nrow(dat)
           fdnames=list("time"=tt,"reps"=rownames(fdat[["data"]]),"values"="values")
@@ -66,8 +74,8 @@ else {
               basis.b[[vfunc[i]]]$dropind<-NULL
               basis.b[[vfunc[i]]]$names<-basis.b[[vfunc[i]]]$names[int]
               }
-        x.fd = Data2fd(argvals = tt, y = t(xcc[[1]]$data),basisobj = basis.x[[vfunc[i]]],fdnames=fdnames)
-          r=x.fd[[2]][[3]]
+         x.fd = Data2fd(argvals = tt, y = t(xcc[[1]]$data),basisobj = basis.x[[vfunc[i]]],fdnames=fdnames)
+           r=x.fd[[2]][[3]]
           J=inprod(basis.x[[vfunc[i]]],basis.b[[vfunc[i]]])
           Z =t(x.fd$coefs) %*% J
           colnames(J)=colnames(Z) = name.coef[[vfunc[i]]]=paste(vfunc[i],".",basis.b[[vfunc[i]]]$names,sep="")
@@ -78,16 +86,17 @@ else {
            kterms <- kterms + 1
            }
         JJ[[vfunc[i]]]<-J
-    }
-      else {   
-        l<-basis.x[[vfunc[i]]]$l
-        lenl<-length(l)
+}
+      else {
+         l<-basis.x[[vfunc[i]]]$l
         vs <- t(basis.x[[vfunc[i]]]$basis$data)
-        Z<-basis.x[[vfunc[i]]]$x[,l,drop=FALSE]     
+#        Z<-basis.x[[vfunc[i]]]$x
+        Z<-basis.x[[vfunc[i]]]$x[,l,drop=FALSE]  
         response = "y"
+#        colnames(Z) = name.coef[[vfunc[i]]]=paste(vfunc[i], ".",rownames(basis.x[[vfunc[i]]]$basis$data),sep ="")       
         colnames(Z) = name.coef[[vfunc[i]]]=paste(vfunc[i], ".",colnames(Z),sep ="")      
 #       colnames(Z) = name.coef[[vfunc[i]]]=paste(vfunc[i],".",rownames(basis.x[[vfunc[i]]]$basis$data),sep ="")
-        name.coef[[vfunc[i]]]<-colnames(Z)
+        name.coef[[vfunc[i]]]<-colnames(Z)        
         XX = cbind(XX,Z)
         vs.list[[vfunc[i]]]=basis.x[[vfunc[i]]]$basis
         mean.list[[vfunc[i]]]=basis.x[[vfunc[i]]]$mean
@@ -95,7 +104,7 @@ else {
             if (kterms >= 1)  pf <- paste(pf, "+", name.coef[[vfunc[i]]][j], sep = "")
            else pf <- paste(pf, name.coef[[vfunc[i]]][j], sep = "")
            kterms <- kterms + 1
-           }       
+           }
           }
     }
  else {
@@ -151,10 +160,10 @@ else {
            }
          }
     }
-   else stop("Please, enter functional covariate")
+#   else stop("Please, enter functional covariate")
    }
   }  }
-####################################
+  
     if (!is.data.frame(XX)) XX=data.frame(XX)
     par.fregre$formula=pf
     par.fregre$data=XX
@@ -162,79 +171,29 @@ else {
     yp<-rep(NA,ndatos)
     if (CV) {
      for (k in 1:ndatos) {
-      z=glm(formula=pf,data=XX[-k,],family=family,x=TRUE,y=TRUE,...)
-      for (i in 1:length(vfunc)) {
-
-      if (bsp1) beta.est=fdata(fd(z[[1]][name.coef[[vfunc[i]]]],basis.b[[vfunc[i]]]),tt)
-      else{
-       if (class(data[[vfunc[i]]])[1]=="fdata"){
-            beta.est<-z$coefficients[name.coef[[vfunc[i]]]]*vs.list[[vfunc[i]]]
-#            beta.est$data<-apply(beta.est$data,2,sum)
-            beta.est$data<-colSums(beta.est$data)
-            beta.est$names$main<-"beta.est"
-            beta.est$data <- matrix(as.numeric(beta.est$data),nrow=1)
-            }
-       else {
-            beta.est<-z$coefficients[name.coef[[vfunc[i]]]]*t(vs.list[[vfunc[i]]])
-#            beta.est<-apply(beta.est,2,sum)
-            beta.est<-colSums(beta.est)
-            beta.est<-fdata(fd(beta.est,basis.x[[vfunc[i]]]$harmonics$basis),tt)
-       }
-      }
-      if (k==1) beta.l[[vfunc[i]]]<-beta.est
-      else beta.l[[vfunc[i]]]<-c(beta.l[[vfunc[i]]],beta.est)
-      }
-      yp[k]=predict.glm(object=z,newdata =XX[k,],type="response",x=TRUE,y=TRUE,...)
+      z<-rpart(formula=pf,data=XX[-k,],...)
+      yp[k]<-predict(object=z, newdata = XX[k,], type = "class")
      }
-        z=glm(formula=pf,data=XX,family=family,x=TRUE,y=TRUE,...)
-        dev.resids<-family$dev.resids(XX[[response]],yp,1) #sum(dev.resids=z$deviance)
-        z$CV<-list("y.pred"=yp,"beta.l"=beta.l,"dev.resids"=dev.resids)
+      z<-rpart(formula=pf,data=XX,...)
+      yp<-predict(object=z, newdata = XX, type = "class")
+      z$CV<-list("y.pred"=yp)
     }
     else {
-     z=glm(formula=pf,data=XX,family=family,x=TRUE,y=TRUE,...)
+      z<-rpart(formula=pf,data=XX,...)
+      yp<-predict(object=z, type = "class")
      }
-
-    z$call<-z$call[1:2]
-if (lenfunc) {    
-    for (i in 1:length(vfunc)) {
-      if (bsp1) beta.l[[vfunc[i]]]=fd(z[[1]][name.coef[[vfunc[i]]]],basis.b[[vfunc[i]]])
-       else{
-       if (class(data[[vfunc[i]]])[1]=="fdata"){
-            beta.est<-z$coefficients[name.coef[[vfunc[i]]]]*vs.list[[vfunc[i]]]
-#            beta.est$data<-apply(beta.est$data,2,sum)
-            beta.est$data<-colSums(beta.est$data)
-            beta.est$names$main<-"beta.est"
-            beta.est$data <- matrix(as.numeric(beta.est$data),nrow=1)
-            if  (basis.x[[vfunc[i]]]$type=="pls") {
-             if (basis.x[[vfunc[i]]]$norm)  {
-              sd.X <- sqrt(apply(data[[vfunc[i]]]$data, 2, var))
-              beta.est$data<-  beta.est$data/sd.X
-             }      
-            }  
-            beta.l[[vfunc[i]]]<-beta.est
-            }
-       else {
-            beta.est<-z$coefficients[name.coef[[vfunc[i]]]]*t(vs.list[[vfunc[i]]])
-#            beta.est<-apply(beta.est,2,sum)
-            beta.est<-colSums(beta.est)
-            beta.l[[vfunc[i]]]<-fd(beta.est,basis.x[[vfunc[i]]]$harmonics$basis)
-      }
-      }
-    }
-# z$sr2<-sum(z$residuals^2)/z$df.residual
- z$beta.l=beta.l
- z$basis.x=basis.x
- z$basis.b=basis.b
- z$mean=mean.list
- z$formula=pf
- z$JJ<-JJ
- z$vs.list=vs.list
- }
- z$formula.ini=formula
- z$data=z$data
- z$XX=XX
- class(z)<-c(class(z),"fregre.glm")
- z
+z$call<-z$call[1:2]
+prob.group<-NULL
+#y<-XX[,names(XX)[1]]
+yp<-factor(yp,levels=ny)
+tab<-table(yp,group)
+prob2<-prob<-ngroup<-nlevels(y)
+for (i in 1:ngroup) {     prob[i]=tab[i,i]/sum(tab[,i])     }
+max.prob=sum(yp==y)/n
+names(prob)<-ny
+output<-list(formula=formula,fit=z,C=C,prob.group=prob.group,prob.classification=prob,
+max.prob=max.prob,group.est=yp,group=y,formula.ini=formula,formula=pf,m=m,mean=mean.list,
+basis.x=basis.x,basis.b=basis.b,JJ=JJ,data=z$data,XX=XX,vs.list=vs.list)
+ class(output)="classif"
+output
 }
-
-  

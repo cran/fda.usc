@@ -1,18 +1,29 @@
-depth.RP<-function(fdataobj,fdataori=fdataobj,trim=0.25,nproj=50,proj=1,xeps=0.0000001,draw=FALSE,...){
+depth.RP<-function(fdataobj,fdataori=fdataobj,trim=0.25,nproj=50,proj=1,scale=FALSE,xeps=1e-8,draw=FALSE,...){
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
-if (!is.fdata(fdataori)) fdataobj=fdata(fdataori) 
-nas<-apply(fdataobj$data,1,count.na)
-if (any(nas))  {
-   fdataobj$data<-fdataobj$data[!nas,]
-   cat("Warning: ",sum(nas)," curves with NA are not used in the calculations \n")
-   }
+if (!is.fdata(fdataori)) fdataori=fdata(fdataori) 
+
+# nas<-apply(fdataobj$data,1,count.na)
+# if (any(nas))  {
+#    fdataobj$data<-fdataobj$data[!nas,]
+#    cat("Warning: ",sum(nas)," curves with NA are not used in the calculations \n")
+#    }
+
+ if (is.null(rownames(fdataobj$data)))  rownames(fdataobj$data)<-1:nrow(fdataobj$data)
+ nms<-rownames(fdataobj$data)
+ m0<-nrow(fdataobj)
+ fdataobj<-na.omit.fdata(fdataobj)
+ fdataori<-na.omit.fdata(fdataori) 
+ nas<-na.action(fdataobj)
+ nullans<-!is.null(nas) 
+
+
 data<-fdataobj[["data"]]
 data2<-fdataori[["data"]]
 n<-nrow(data)
 m<-ncol(data)
 m2<-ncol(data2)
 n2<-nrow(data2)
-if (is.null(n) && is.null(m)) stop("ERROR IN THE DATA DIMENSIONS")
+if (is.null(n) && is.null(m))  stop("ERROR IN THE DATA DIMENSIONS")
 if (is.null(m) && is.null(m2)) stop("ERROR IN THE DATA DIMENSIONS")
 t=fdataobj[["argvals"]]
 rtt<-fdataobj[["rangeval"]]
@@ -32,21 +43,35 @@ z<-rproc2fdata(nproj,t,sigma=proj,norm=TRUE,...)
 }
 ##
 # z<-matrix(NA,nproj,m)
-Fn<-list()   
+Fn<-list()  
+# integrated<-FALSE
+# if (integrated){
+#   dtt <- diff(tt)
+#   eps <- as.double(.Machine[[1]] * 100)
+#   inf <- dtt - eps
+#   sup <- dtt + eps
+#   if (all(dtt > inf) & all(dtt < sup)) {
+#   equi = TRUE
+#   }
+#   else equi = FALSE
+#     valor-inprod.fdata(fdataobj,z)
+#     valor2<-inprod.fdata(fdataori,z)    
+# }  
  for (j in 1:nproj){
     #    z[j,]=rnorm(m)
      #   modulo=sum(z[j]^2)
      #   z[j,]=z[j,]/sqrt(modulo)
-        valor=data%*%z$data[j,]   
+        valor=data%*%z$data[j,]    #HACER INPROD
         valor2=data2%*%z$data[j,]   
         Fn[[j]]=ecdf(valor2)
+#if integrated        Fn[[j]]=ecdf(valor2[,j])        
         dep=dep+(Fn[[j]](valor)*(1-Fn[[j]](valor-xeps)))
-        dep2=dep2+(Fn[[j]](valor2)*(1-Fn[[j]](valor2-xeps)))        
  }
-   dep=dep/nproj
-   dep2=dep2/nproj   
-   k=which.max(dep2)
-   med=data2[k,]
+  dep=dep/nproj
+  if (scale){    dep<-dep*4    }
+
+   k=which.max(dep)
+   med=data[k,,drop=FALSE]
    nl=length(trim)
 #   mtrim=matrix(NA,nrow=nl,ncol=m)
 #   for (j in 1:length(trim)) {
@@ -56,23 +81,33 @@ Fn<-list()
 #                      if (draw) {draw=FALSE;warning("The plot is not shown")}
 #                    }
 #                    else mtrim[j,]=apply(data2[lista,],2,mean,na.rm=TRUE)
- #                       }
-  lista=which(dep2>=quantile(dep2,probs=trim,na.rm=TRUE))
-   mtrim=apply(data2[lista,],2,mean,na.rm=TRUE)
+#                       }
+   lista=which(dep>=quantile(dep,probs=trim,na.rm=TRUE))
+   mtrim=apply(data[lista,,drop=FALSE],2,mean,na.rm=TRUE)
+
+if (nullans) {
+        ans1<-rep(NA,len=m0)
+        ans1[-nas] <-dep
+        dep<-ans1      
+        }
+ names(dep)<-nms  
+
+#else mtrim=data[lista,,drop=FALSE]     
    tr<-paste("RP.tr",trim*100,"\u0025",sep="")
    med<-fdata(med,t,rtt,names1)
    mtrim<-fdata(mtrim,t,rtt,names2)
    rownames(med$data)<-"RP.med"
    rownames(mtrim$data)<-tr
 if (draw){
-   ans<-dep2
+   ans<-dep
    ind1<-!is.na(ans)
    cgray=1-(ans-min(ans,na.rm=TRUE))/(max(ans,na.rm=TRUE)-min(ans,na.rm=TRUE))
-   plot(fdataori[ind1,],col=gray(cgray[ind1]),main="RP Depth")
+   plot(fdataori, col = gray(.9),lty=1, main = "RP Depth")
+   lines(fdataobj[ind1, ], col = gray(cgray[ind1]))
    lines(mtrim,lwd=2,col="yellow")
    lines(med,col="red",lwd=2)
    legend("topleft",legend=c(tr,"Median"),lwd=2,col=c("yellow","red"),box.col=0)
  }
 return(invisible(list("median"=med,"lmed"=k,"mtrim"=mtrim,"ltrim"=lista,
-"dep"=dep,"dep.ori"=dep2,"proj"=z,"Fn"=Fn)))
+"dep"=dep,"proj"=z,"Fn"=Fn)))
 }

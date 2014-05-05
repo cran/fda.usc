@@ -156,34 +156,36 @@ fdataobj
 dim.fdata<-function(x) {dim(x[["data"]])}
 ncol.fdata<-function(fdataobj){ncol(fdataobj[["data"]])}
 nrow.fdata<-function(fdataobj){nrow(fdataobj[["data"]])}
-#"length.fdata"<-function(fdataobj){
-#length(fdataobj[["argvals"]])}
 
-#getS3method("[","fd")
-#getS3method("==","basisfd")
 
-#getS3method("[","fdata")
-#a<-tecator[[1]][1,]
 
 c.fdata<-function(...) {
-    C=match.call()
-    fdatalist <- list(...)
+    C=match.call()    
+    fdatalist <- list(...)    
     n <- length(fdatalist)
+    ii<-2
+    if (!is.null(fdatalist[[1]])) fdata1 <- fdatalist[[1]]
+    else  {
+     fdata1 <- fdatalist[[2]]
+     ii<-min(3,n)
+     n<-n-1
+           }
     v<-rep(FALSE,len=n)
-    fdata1 <- fdatalist[[1]]
+
     if (n == 1)  return(fdata1)
     if (is.vector(fdata1$data))  {
          fdata1$data=matrix(fdata1$data,nrow=1)
          v[1]<-TRUE
          }
-    data<- fdata1$data
+    if (is.null(fdata1)) data<-fdata1
+    else data<- fdata1$data
     dimdata <- dim(data)
     ndim <- length(dimdata)
     argvals <- fdata1$argvals
     rangeval <- fdata1$rangeval
     names <- fdata1$names
-    if (!inherits(fdata1, "fdata")) stop("Objects must be of class fdata")
-    for (j in (2:n)) {
+   if (!inherits(fdata1, "fdata"))  stop("Objects must be of class fdata")
+    for (j in (ii:n)) {
         fdataj <- fdatalist[[j]]
         if (is.vector(fdataj$data))  {
            fdataj$data=matrix(fdataj$data,nrow=1)
@@ -191,7 +193,7 @@ c.fdata<-function(...) {
            fdatalist[[j]]<-fdataj
            }
         if (!inherits(fdataj, "fdata"))
-            stop("Objects must be of class fdata")
+            stop("Objects must be of class fdata")                
         if (any(unlist(fdataj$argvals) != unlist(argvals)))
             stop("Objects must all have the same argvals")
         if (any(unlist(fdataj$rangeval) != unlist(rangeval)))
@@ -204,7 +206,7 @@ c.fdata<-function(...) {
             stop("Objects must all have the same number of multiple functions")
     }
     if (ndim == 2) {
-        for (j in 2:n) {
+        for (j in ii:n) {
            fdataj <- fdatalist[[j]]
            dataj <- fdataj$data
            dd<-C[[j+1]]
@@ -217,6 +219,7 @@ c.fdata<-function(...) {
     concatfdata <- fdata(data, argvals,rangeval, names)
     return(concatfdata)
 }
+
 
 ################################################################################
 count.na<-function(A){any(is.na(A))}
@@ -250,5 +253,4 @@ attr(fdataobj,"par.metric")<-a3
 #class(fdataobj)<-"matrix"
 invisible(fdataobj)
 }
-
 

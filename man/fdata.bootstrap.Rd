@@ -58,15 +58,17 @@ See Also as \code{\link{Descriptive}}
 
 \examples{
 
+\dontrun{
 data(tecator)
 absorp<-tecator$absorp.fdata
-#No run
+# Time consuming
 #Bootstrap for Trimmed Mean with depth mode
-#out.boot=fdata.bootstrap(absorp,statistic=func.trim.FM,nb=200,draw=TRUE)
-#names(out.boot)
+out.boot=fdata.bootstrap(absorp,statistic=func.trim.FM,nb=200,draw=TRUE)
+names(out.boot)
 #Bootstrap for Median with with depth mode
-#control=list("col"=c("grey","blue","cyan"),"lty"=c(2,1,1),"lwd"=c(1,3,1))
-#out.boot=fdata.bootstrap(absorp,statistic=func.med.mode,
-#draw=TRUE,draw.control=control)
+control=list("col"=c("grey","blue","cyan"),"lty"=c(2,1,1),"lwd"=c(1,3,1))
+out.boot=fdata.bootstrap(absorp,statistic=func.med.mode,
+draw=TRUE,draw.control=control)
+}
 }
 \keyword{datagen}

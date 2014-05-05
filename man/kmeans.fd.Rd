@@ -19,7 +19,7 @@ draw=TRUE,method="sample",iter=100,par.metric=NULL,...)
   \item{fdataobj}{ \code{\link{fdata}} class object.}     
  	\item{ncl}{ See details section.}
   \item{metric}{ Metric function, by default \code{\link{metric.lp}}.}
-	\item{dfunc}{ Type of depth measure, by default \code{depth.mode}}  
+	\item{dfunc}{ Type of depth measure, by default FM depth.}  
    \item{max.iter}{ Maximum number of iterations for the detection of centers. }  	
   \item{draw}{ =TRUE, draw the curves in the color of the centers.}		
   \item{par.dfunc}{ List of arguments to pass to the \code{dfunc} function .}			
@@ -42,7 +42,7 @@ If \code{ncl} is a \code{fdata} class objecct, \code{ncl} are the initial center
 Return:\cr
 \item{cluster}{  Indexes of groups assigned.}
 \item{centers}{ Curves centers.}
-\item{lcenters}{  Indexes of initial curves centers.}
+%\item{lcenters}{  Indexes of initial curves centers.}
 }
 \references{
 Hartigan, J. A. and Wong, M. A. (1979). \emph{A K{-}means clustering algorithm}. Applied Statistics 28, 100 \-108.}

@@ -1,9 +1,12 @@
 fregre.np.cv=function(fdataobj,y,h=NULL,Ker=AKer.norm,metric=metric.lp,
 type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0),par.S=list(w=1),...){
+#print("np.CV")
 if (is.function(type.CV)) tcv<-deparse(substitute(type.CV))
 else tcv<-type.CV
 if (is.function(type.S)) ty<-deparse(substitute(type.S))
 else ty<-type.S
+#print(tcv)
+#print(ty)
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
 isfdata<-is.fdata(y)
 nas<-apply(fdataobj$data,1,count.na)
@@ -77,6 +80,8 @@ y.est.cv<-y.est<-matrix(NA,nrow=nrow(y.mat),ncol=ncol(y.mat))
 par.S$tt<-mdist
 par.CV$metric<-metric
   for (i in 1:lenh) {
+print(i)
+print("h")  
 #     H2=type.S(mdist,h[i],Ker,cv=FALSE)
     par.S$h<-h[i]
     par.S$cv=TRUE
@@ -87,13 +92,16 @@ par.CV$metric<-metric
     H=do.call(ty,par.S)
 
 #     gcv[i] <- type.CV(y, H,trim=par.CV$trim,draw=par.CV$draw,...)
-    par.CV$S<-switch(tcv,CV.S=H.cv,GCV.S=H,dev.S=H)
+    par.CV$S<-switch(tcv,CV.S=H.cv,GCV.S=H,dev.S=H,GCV.GLSS=H)
 #    if (tcv=="CV.S")  par.CV$S<-H.cv
 #    if (tcv=="GCV.S") par.CV$S<-H
 #    if (tcv=="dev.S") par.CV$S<-H
     for (j in 1:npy) {
         par.CV$y<-y.mat[,j]
 #        if (!isfdata) gcv[i]<- do.call(type.CV,par.CV)    #si es fdata no hace falta!!!
+print(j)
+print(tcv)
+print(names(par.CV))
         if (!isfdata) gcv[i]<- do.call(tcv,par.CV)    #si es fdata no hace falta!!!
         y.est[,j]=H%*%y.mat[,j]
         y.est.cv[,j]=H.cv%*%y.mat[,j]
@@ -172,4 +180,3 @@ else {
 class(out)="fregre.fd"
 return(out)
 }
-

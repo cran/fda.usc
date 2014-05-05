@@ -8,7 +8,7 @@ Functional Regression with scalar response using selection of number of  (penali
 	}
 \usage{
 fregre.pc.cv(fdataobj, y, kmax=8,  lambda = 0, P = c(1, 0, 0), 
-    criteria = "SIC", ...) 
+    criteria = "SIC",weights=rep(1,len=n),...) 
 }
 \arguments{
   \item{fdataobj}{ \code{\link{fdata}} class object.}  
@@ -18,6 +18,7 @@ fregre.pc.cv(fdataobj, y, kmax=8,  lambda = 0, P = c(1, 0, 0),
   If \code{lambda=TRUE} the algorithm computes a sequence of lambda values.}
  \item{P}{ The vector of coefficients to define the penalty matrix object. For example,  if \code{P=c(1,0,0)}, ridge regresion is computed and if \code{P=c(0,0,1)}, penalized regression is computed penalizing the second derivative (curvature). }
  \item{criteria}{ Type of cross-validation (CV) or  Model Selection Criteria (MSC) applied. Possible values are \emph{"CV"}, \emph{"AIC"}, \emph{"AICc"}, \emph{"SIC"},\emph{"SICc"}.} 	
+   \item{weights}{ weights}
  \item{\dots}{ Further arguments passed to \code{\link{fregre.ppc}} or \code{\link{fregre.ppls}}}  
 }
 \details{ 

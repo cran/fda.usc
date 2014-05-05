@@ -46,6 +46,8 @@ metric.kl=function(fdata1, fdata2 = NULL,symm=TRUE, base=exp(1),eps=1e-10,...)
     np <- ncol(DATA1)   
 #eps2<-eps
 testfordim <- sum(dim(DATA1) == dim(DATA2)) == 2
+	etiq1=rownames(DATA1)
+	etiq2=rownames(DATA2)
 twodatasets <- TRUE
 if (testfordim)   twodatasets <- (all(DATA1== DATA2)) 
 
@@ -186,9 +188,10 @@ else  {
     else {
    stop("No fdata class object")
      }
+	rownames(mdist)<-etiq1
+	colnames(mdist)<-etiq2     
     attr(mdist, "call") <- "metric.kl"
     attr(mdist, "par.metric") <- list( base=base,symm=symm)
     return(mdist)
 }
-
 

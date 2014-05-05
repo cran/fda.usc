@@ -172,13 +172,14 @@ else {
 b.est=b.est[-1]
 names(b.est)<-rownames(coefficients)[-1]
      }
+    #  GCV <- sum(e^2)/(n - df)^2      #GCV"=GCV,
+
 #hat<-diag(hat(Z, intercept = TRUE),ncol=n)
-out<-list("call"=call,"b.est"=b.est,"a.est"=a.est,"fitted.values"=yp,"H"=S,
-  "residuals"=e,"df"=df,"r2"=r2,"sr2"=sr2,"Vp"=Vp,"y"=y,"fdataobj"=fdataobj,
-  x.fd=x.fd,"beta.est"=beta.est,"basis.x.opt"=basis.x,"basis.b.opt"=basis.b,
-  "J"=J,"lambda.opt"=lambda,lm=object.lm,coefficients=coefficients,"mean"=xmean,
-  Lfdobj=Lfdobj,weights= weights,XX=XX,R=R)
-  #ar1=aa,Winf=W,W=W0)
+out<-list("call"=call,coefficients=coefficients,"residuals"=e,"fitted.values"=yp
+,"beta.est"=beta.est,weights= weights,"df"=df,"r2"=r2,"sr2"=sr2,"Vp"=Vp,"H"=S,"y"=y,"fdataobj"=fdataobj,
+  x.fd=x.fd,"basis.x.opt"=basis.x,"basis.b.opt"=basis.b,"J"=J,"lambda.opt"=lambda,P=R, Lfdobj=Lfdobj,
+  lm=object.lm,"mean"=xmean, "b.est"=b.est,"a.est"=a.est,XX=XX)
+
  class(out)="fregre.fd"
 return(out)
 }

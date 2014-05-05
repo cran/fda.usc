@@ -4,13 +4,21 @@
 {
     if (!is.fdata(fdataobj))         fdataobj = fdata(fdataobj)
     if (!is.fdata(fdataori)) fdataobj=fdata(fdataori)    
-    nas <- apply(fdataobj$data, 1, count.na)
-    if (any(nas)) {
-        fdataobj$data <- fdataobj$data[!nas, ]
-        cat("Warning: ", sum(nas), " curves with NA are not used in the calculations \n")
-    }
-    data <- fdataobj[["data"]]
-    data2 <- fdataori[["data"]]    
+#     nas <- apply(fdataobj$data, 1, count.na)
+#     if (any(nas)) {
+#         fdataobj$data <- fdataobj$data[!nas, ]
+#         cat("Warning: ", sum(nas), " curves with NA are not used in the calculations \n")
+#     }
+#     data <- fdataobj[["data"]]
+ if (is.null(rownames(fdataobj$data)))  rownames(fdataobj$data)<-1:nrow(fdataobj$data)
+ nms<-rownames(fdataobj$data)
+ m0<-nrow(fdataobj)
+  fdataobj2<- fdataobj
+ fdataobj<-na.omit.fdata(fdataobj)
+ fdataori<-na.omit.fdata(fdataori) 
+ nas<-na.action(fdataobj)
+ nullans<-!is.null(nas) 
+      data2 <- fdataori[["data"]]    
     names1 <- names2 <- names <- fdataobj[["names"]]
     names1$main <- "depth.RPD median"
     names2$main <- paste("RPD trim ", trim * 100, "%", sep = "")
@@ -66,33 +74,37 @@
         par.dfunc$scale<-TRUE
         resul = do.call(dfunc2, par.dfunc)
         dep = dep + resul$dep
-        dep2 = dep2 + resul$dep.ori        
         setTxtProgressBar(pb, j)
-    } 
+    }                                                               
     close(pb)
+if (nullans) {
+        ans1<-rep(NA,len=m0)
+        ans1[-nas] <-dep
+        dep<-ans1      
+        }
+    names(dep)<-nms       
     dep = dep/nproj
-    dep2 = dep2/nproj    
-    k = which.max(dep2)
-    med = data2[k, ]
-    lista = which(dep2 >= quantile(dep2, probs = trim))
-    mtrim = apply(data2[lista, ], 2, mean, na.rm = TRUE)
+    k = which.max(dep)    
+    med = data[k, ]
+    lista = which(dep >= quantile(dep, probs = trim,na.rm=TRUE))
+    mtrim = apply(fdataobj2$data[lista, ], 2, mean, na.rm = TRUE)
     tr <- paste("RPD.tr", trim * 100, "%", sep = "")
     med <- fdata(med, tt, rtt, names1)
     mtrim <- fdata(mtrim, tt, rtt, names2)
     rownames(med$data) <- "RPD.med"
     rownames(mtrim$data) <- tr
     if (draw) {
-        ans <- dep2
+        ans <- dep
         ind1 <- !is.nan(ans)
         ans[is.nan(ans)] = NA
         cgray = 1 - (ans - min(ans, na.rm = TRUE))/(max(ans,
             na.rm = TRUE) - min(ans, na.rm = TRUE))
-        plot(fdataori[ind1, ], col = gray(cgray[ind1]), main = "RPD Depth")
+        plot(fdataobj[ind1, ], col = gray(cgray[ind1]), main = "RPD Depth")
         lines(mtrim, lwd = 2, col = "yellow")
         lines(med, col = "red", lwd = 2)
         legend("topleft", legend = c(tr, "Median"), lwd = 2,box.col=0,
             col = c("yellow", "red"))
     }
     return(invisible(list(median = med, lmed = k, mtrim = mtrim,
-        ltrim = lista, dep = dep, dep.ori = dep2, proj = z)))
+        ltrim = lista, dep = dep,proj = z)))
 }  

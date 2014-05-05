@@ -43,20 +43,29 @@ If \code{basis.x$type=``fourier''} and \code{basis.b$type=``fourier''}, the basi
 \value{
 Return:\cr
 \item{call}{ The matched call.}
-\item{beta.est}{ beta coefficient estimated of class \code{fd}}
-\item{a.est}{ Intercept parameter estimated}
-\item{fitted.values}{  Estimated scalar response.}
-\item{H}{  Hat matrix.}
+\item{coefficients}{ A named vector of coefficients}  
 \item{residuals}{ \code{y} minus \code{fitted values}.}
+\item{fitted.values}{ Estimated scalar response.}
+\item{beta.est}{ beta parameter estimated of class \code{fd}}
+\item{weights}{(only for weighted fits) the specified weights.}
 \item{df}{ The residual degrees of freedom.}
 \item{r2}{ Coefficient of determination.}
 \item{sr2}{ Residual variance.}
+\item{Vp}{ Estimated covariance matrix for the parameters.}
+%\item{GCV}{ GCV criterion.}
+\item{H}{ Hat matrix.}
 \item{y}{ Response.}
 \item{fdataobj}{ Functional explanatory data of class \code{fdata}.}
+\item{a.est}{ Intercept parameter estimated}
 \item{x.fd}{ Centered functional explanatory data of class \code{fd}.}
-\item{basis.b}{  Basis used for beta parameter estimation.}
+\item{basis.b}{ Basis used for beta parameter estimation.}
+\item{lambda.opt}{ A roughness penalty.}	
+\item{Lfdobj}{ Order of a derivative or a linear differential operator.}  
+\item{P}{ Penalty matrix.}  
 \item{lm}{  Return \code{lm} object }
-}
+}    
+
+
 \references{
 Ramsay, James O., and Silverman, Bernard W. (2006), \emph{ Functional Data Analysis}, 2nd ed., Springer, New York. 
 

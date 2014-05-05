@@ -17,7 +17,7 @@ type.S=S.NW,par.S=list(w=1),...)
 \arguments{
   \item{fdataobj}{ \code{\link{fdata}} class object.}  
 	\item{y}{ Scalar response with length \code{n}.}
-	\item{h}{ Smoothing parameter or bandwidth.}	
+	  \item{h}{ Bandwidth, \code{h>0}. Default argument values are provided as the 5\%--quantile of the distance between \code{fdataobj} curves, see \code{\link{h.default}}.}
 	\item{Ker}{ Type of asymmetric kernel used, by default asymmetric normal kernel.}	
   \item{metric}{ Metric function, by default \code{\link{metric.lp}}.}
   \item{type.S}{ Type of smothing matrix \code{S}. By default \code{S} is calculated by Nadaraya-Watson kernel estimator (\code{S.NW}).}

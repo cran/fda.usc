@@ -8,19 +8,11 @@
 \alias{func.trim.RP}
 \alias{func.trim.RT}
 \alias{func.trim.RPD}   
-\alias{func.trim.HD}    
-\alias{func.trim.PD}    
-\alias{func.trim.SD}    
-\alias{func.trim.MhD}   
 \alias{func.med.FM}
 \alias{func.med.mode}
 \alias{func.med.RP}
 \alias{func.med.RT}
 \alias{func.med.RPD}
-\alias{func.med.HD}
-\alias{func.med.PD}
-\alias{func.med.SD}
-\alias{func.med.MhD}
 \alias{func.var}
 \alias{func.trimvar.FM}
 \alias{func.trimvar.mode}
@@ -28,9 +20,8 @@
 \alias{func.trimvar.RT}
 \alias{func.trimvar.RPD}
 
-
-\title{ Descriptive measures for functional and multivariate data.}
-\description{ Central and dispersion measures for functional and multivariate data.}
+\title{ Descriptive measures for functional data.}
+\description{ Central and dispersion measures for functional data.}
 \usage{
 
 \method{func.mean}{formula}(formula, data = NULL,\dots,drop=FALSE)
@@ -41,19 +32,11 @@ func.trim.mode(fdataobj,...)
 func.trim.RP(fdataobj,...)
 func.trim.RT(fdataobj,...)
 func.trim.RPD(fdataobj,...)
-func.trim.HD(fdataobj,...) 
-func.trim.PD(fdataobj,...) 
-func.trim.SD(fdataobj,...) 
-func.trim.MhD(fdataobj,...) 
 func.med.FM(fdataobj,...)
 func.med.mode(fdataobj,...)
 func.med.RP(fdataobj,...)
 func.med.RT(fdataobj,...)
 func.med.RPD(fdataobj,...)
-func.med.HD(fdataobj,...)
-func.med.PD(fdataobj,...)
-func.med.SD(fdataobj,...)
-func.med.MhD(fdataobj,...)
 func.trimvar.FM(fdataobj,...)
 func.trimvar.mode(fdataobj,...)
 func.trimvar.RP(fdataobj,...)
@@ -83,23 +66,14 @@ for the groups. The components of the list are named by the levels of f (after c
 \tab \code{\link{func.trim.RP}} Returns the average from the \code{(1-trim)}\% deepest curves following RP criteria. \cr
 \tab \code{\link{func.trim.RT}} Returns the average from the \code{(1-trim)}\% deepest curves following RT criteria. \cr
 \tab \code{\link{func.trim.RPD}} Returns the average from the \code{(1-trim)}\% deepest curves following RPD criteria. \cr
-\tab \code{\link{func.trim.HD}} Returns the average from the \code{(1-trim)}\% deepest curves following HD criteria. \cr         
-\tab \code{\link{func.trim.PD}} Returns the average from the \code{(1-trim)}\% deepest curves following PD criteria. \cr         
-\tab \code{\link{func.trim.SD}} Returns the average from the \code{(1-trim)}\% deepest curves following SD criteria. \cr        
-\tab \code{\link{func.trim.MhD}} Returns the average from the \code{(1-trim)}\% deepest curves following MhD criteria. \cr       
 \tab \code{\link{func.med.FM}} Returns the deepest curve following FM criteria. \cr
 \tab \code{\link{func.med.mode}} Returns the deepest curve following mode criteria. \cr
-\tab \code{\link{func.med.mode}} Returns the deepest curve following RP criteria. \cr
 \tab \code{\link{func.med.RP}} Returns the deepest curve following RP criteria. \cr
 \tab \code{\link{func.med.RPD}} Returns the deepest curve following RPD criteria. \cr
-\tab \code{\link{func.med.HD}} Returns the deepest curve following HD criteria. \cr        
-\tab \code{\link{func.med.PD}} Returns the deepest curve following PD criteria. \cr   
-\tab \code{\link{func.med.SD}} Returns the deepest curve following SD criteria. \cr      
-\tab \code{\link{func.med.MhD}} Returns the deepest curve following MhD criteria. \cr        
 \tab \code{\link{func.trimvar.FM}}  Returns the marginal variance from the deepest curves followinng FM criteria. \cr
 \tab \code{\link{func.trimvar.mode}}  Returns the marginal variance from the deepest curves followinng mode criteria. \cr
 \tab \code{\link{func.trimvar.RP}}  Returns the marginal variance from the deepest curves followinng RP criteria. \cr
-\tab \code{\link{func.trimvar.RP}}  Returns the marginal variance from the deepest curves followinng RT criteria. \cr
+\tab \code{\link{func.trimvar.RT}}  Returns the marginal variance from the deepest curves followinng RT criteria. \cr
 \tab \code{\link{func.trimvar.RPD}}  Returns the marginal variance from the deepest curves followinng RPD criteria. \cr
 }
 }

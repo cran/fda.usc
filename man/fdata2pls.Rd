@@ -29,6 +29,7 @@ If \code{norm=FALSE},  computes the PLS by Orthogonal Scores Algorithm and the D
 }
 \value{
 \code{fdata2pls} function return:
+    \item{df}{degree of freedom}
     \item{rotation}{ \code{\link{fdata}} class object.} 
     \item{x}{ Is true the value of the rotated data (the centred data multiplied by the rotation matrix) is returned.}      
 %	  \item{res.pls}{ Fitted regression object. See \code{\link{plsr}} for details.}     

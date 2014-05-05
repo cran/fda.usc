@@ -18,13 +18,12 @@ dist.pena <- array(NA,dim=c(n,1))
 S <- array(NA,dim=c(n,n))
 if (model$call[[1]]=="fregre.pc") {
    betas<-beta.est<-model$beta.est #/(ncol(fdata)-1)
-   kn=model$kn
    l=model$l
-   lambdas=model$svd.fdata$lambdas
+   lambdas=model$fdata.comp$d^2
    for (i in 1:n){
-     oo <- fregre.pc(fdataobj[-i,],y[-i],l)
-     G <- oo$svd.fdata$x[,l]
-     I <- diag(1/((n-1)*oo$svd.fdata$lambdas[l]),ncol=kn)
+     oo <- fregre.pc(fdataobj[-i,],y[-i],l,lambda=model$lambda,P=model$P,weights=model$weights[-i])
+#     G <- oo$svd.fdata$x[,l]
+#     I <- diag(1/((n-1)*oo$svd.fdata$lambdas[l]),ncol=kn)
      best <- oo$beta.est #/(ncol(fdata)-1)
      aest <- oo$a.est
 #    ypi <-   aest * rep(1,n) + fdata %*% best
@@ -47,7 +46,7 @@ betas<-b2<-eval.fd(tt,beta.est)#*diff(range(tt))
 for (i in 1:n){
     fdata_i<-fdataobj[-i,]
     oo <- fregre.basis(fdata_i,y[-i],basis.x=model$basis.x.opt,basis.b=model$basis.b.opt,
-    lambda=model$lambda.opt)
+    lambda=model$lambda.opt, Lfdobj=model$Lfdobj,weights=model$weights[-i])
     best <- oo$beta.est
     aest <- oo$a.est
     ypi<-predict(oo,fdataobj)

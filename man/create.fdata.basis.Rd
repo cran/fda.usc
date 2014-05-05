@@ -34,6 +34,7 @@ create.raw.fdata(fdataobj, l = 1:ncol(fdataobj))
     \item{basis}{ basis}
     \item{x}{ Is true the value of the rotated data (the centred data multiplied by the rotation matrix) is returned}     
     \item{mean}{ functional mean of \code{fdataobj}}
+    \item{df}{degree of freedom}    
     \item{type}{ type of basis}  
 }
 \references{

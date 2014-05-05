@@ -229,11 +229,11 @@ nbasis22<-paste(nbasis22,nbasis2,sep="")
 dimnames(gcv)<-list(nbasis12,nbasis22,lambda2)
 }
 x.fd=Data2fd(argvals=tt,y=t(xcen$data),basisobj=basis.x.opt)          
-out<-list("call"=call,"b.est"=b.est,"a.est"=a.est,"fitted.values"=yp,"H"=S,
-"residuals"=e,"df"=df,"r2"=r2,"sr2"=sr2,"Vp"=Vp,"y"=y,"fdataobj"=fdataobj,x.fd=x.fd,"gcv"=gcv,
-"lambda.opt"=lambda.opt,"gcv.opt"=gcv.opt,"coefficients"=coefficients,
-"basis.x.opt"=basis.x.opt,"basis.b.opt"=basis.b.opt,"J"=J.opt,"beta.est"=beta.est,
-"lm"=object.lm,"mean"=xmean)
+out<-list("call"=call,"coefficients"=coefficients,"residuals"=e,"fitted.values"=yp,
+"beta.est"=beta.est,weights= weights,"df"=df,"r2"=r2,"sr2"=sr2,"Vp"=Vp,"H"=S,
+"y"=y,"fdataobj"=fdataobj,x.fd=x.fd,"gcv"=gcv,"lambda.opt"=lambda.opt,
+"gcv.opt"=gcv.opt,"b.est"=b.est,"a.est"=a.est,"basis.x.opt"=basis.x.opt,
+"basis.b.opt"=basis.b.opt,"J"=J.opt,"lm"=object.lm,"mean"=xmean)
 class(out)="fregre.fd"
 return(invisible(out))
 }

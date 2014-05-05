@@ -1,4 +1,138 @@
-#incorporar  Ker en la llamada
+################################################################################
+depth.modep=function(lfdata,lfdataref=lfdata,h=NULL,metric,par.metric=list(),
+method="euclidean",scale=FALSE,trim=0.25,draw=FALSE,ask=FALSE) {
+if (class(lfdata)=="list"){
+ lenl<-length(lfdata)
+ lenl2<-length(lfdataref)
+  m0<-nrow(lfdata[[1]])
+  if (is.null(rownames(lfdata[[1]]$data)))  rownames(lfdata[[1]]$data)<-1:m0
+ nms<-rownames(lfdata[[1]]$data)
+ nas<-NULL
+for (i in 1:lenl) {
+  nas<-c(nas,na.action(na.omit(lfdata[[i]])))
+} 
+nas<-unique(nas)
+nullans<-!is.null(nas) 
+for (i in 1:lenl) {
+  if (nullans) lfdata[[i]]<-lfdata[[i]][-nas]
+#  lfdataref[[i]]<-lfdataref[[i]][-nas]  
+}
+ n<-nrow(lfdata[[1]])
+ m<-nrow(lfdataref[[1]]) 
+ mdist2<-matrix(0,n,n)
+ amdist<-array(NA,dim=c(n,m,lenl))
+ mdist<-list()
+ nam1<-names(lfdata)
+ nam2<-names(lfdataref) 
+ if (is.null(nam1)) {names(lfdata)<-nam1<-paste("var",1:lenl,sep="")}
+ if (is.null(nam2)) {names(lfdataref)<-nam2<-paste("var",1:lenl2,sep="")} 
+ if (missing(metric)){
+   if (is.fdata(lfdata[[nam1[1]]])) metric<-rep("metric.lp",len=lenl)
+   else    metric<-rep("metric.dist",len=lenl)   
+ }   
+if (is.matrix(metric)) {
+     mdist=metric   
+     atr<-attributes(mdist)          
+     metric<-atr   #call(attributes(mdist)$call)[[1]]     
+      }
+else{ 
+ for (i in 1:lenl){
+ if (is.null(par.metric[[nam1[i]]])) par.metric[[nam1[i]]]<-list()
+  if (is.fdata(lfdata[[nam1[i]]])) { 
+   par.metric[[nam1[i]]][["fdata1"]]<-lfdata[[nam1[i]]]
+   par.metric[[nam1[i]]][["fdata2"]]<-lfdataref[[nam1[i]]]       
+   mdist<-do.call(metric[i],par.metric[[nam1[i]]])
+   }
+  else {
+   par.metric[[nam1[i]]][["x"]]<-lfdata[[nam1[i]]]
+   par.metric[[nam1[i]]][["y"]]<-lfdataref[[nam1[i]]]   
+   mdist<-do.call(metric[i],par.metric[[nam1[i]]])
+
+   }
+  amdist[,,i]<- mdist    
+ }
+ atr<-attributes(mdist)     
+ mdist<-apply(amdist,1:2,method)
+}
+}
+else stop("Error in lfdata argument")
+attributes(mdist)<-atr
+attr(mdist, "method") <-method                                    
+# m2<-ncol(data2)
+# n2<-nrow(data2)
+if (is.null(n) && is.null(m)) stop("ERROR IN THE DATA DIMENSIONS")
+#if (is.null(m) && is.null(m2)) stop("ERROR IN THE DATA DIMENSIONS")
+#if (is.matrix(metric)) mdist=metric                    
+#else  mdist=metric(fdataobj,fdataori,...)
+#class(mdist)<-"matrix"
+if (is.null(h))   {
+  h<-0.15
+  hq2=quantile(mdist,probs=h)
+  }
+else hq2<-h  
+class(mdist)<-c("matrix","fdist")
+ans<-Ker.norm(mdist/hq2)    ####
+ans<-apply(ans,1,sum,na.rm=TRUE)                                    
+if (scale)   {
+   mn<-min(ans,na.rm=TRUE)
+   mx<-max(ans,na.rm=TRUE)
+#   scl<-mx-mn
+#   ans=as.vector(scale(ans,center=mn,scale=scl))
+#   ans2=as.vector(scale(ans2,center=mn,scale=scl))
+   ans=as.vector(ans/mx)   
+}
+ k=which.max(ans)
+ lista=which(ans>=quantile(ans,probs=trim,na.rm=TRUE))
+if (nullans) {
+  ans1<-rep(NA,len=m0)
+ ans1[-nas] <-ans 
+ ans<-ans1    
+ }       
+names(ans)<-nms    
+if (draw){
+  mf=5
+  if (lenl>4) ask=TRUE
+  if (ask) {par(mfrow = c(1, 1))
+            dev.interactive()
+            oask <- devAskNewPage(TRUE)
+            on.exit(devAskNewPage(oask))}
+   else{    mf<-switch(lenl,
+   "1"={c(1,1)},
+   "2"={c(1,2)},
+   "3"={c(1,3)},
+   "4"={c(2,2)})            
+            par(mfrow =mf)                    }
+ names1<-names2<-names<-lfdata[[1]][["names"]]
+ names1$main<-"depth.modep median"
+  tr<-paste("mode.tr",trim*100,"\u0025",sep="")                     
+ for (idat in 1:lenl) {
+   data<-lfdata[[idat]]$data
+   tt<-lfdata[[idat]]$argvals
+   rtt<-lfdata[[idat]]$rangeval
+   med<-data[k,]          
+   if (n>1) mtrim=apply(data[lista,],2,mean,na.rm=TRUE)
+   else mtrim=data[lista,]        
+   med<-fdata(med,tt,rtt,names1)
+   mtrim<-fdata(mtrim,tt,rtt,names2)
+   rownames(med$data)<-"modep.med"
+   rownames(mtrim$data)<-tr
+   ind1<-!is.nan(ans)
+   ans[is.nan(ans)]=NA
+   cgray=1-(ans-min(ans,na.rm=TRUE))/(max(ans,na.rm=TRUE)-min(ans,na.rm=TRUE))
+   plot(lfdata[[idat]][ind1, ], col =  gray(cgray[ind1]),lty=1, main = paste(nam1[idat]," modep Depth",sep=""))
+   lines(mtrim,lwd=2,col="yellow")
+   lines(med,col="red",lwd=2)
+   legend("topleft",legend=c(tr,"Median"),lwd=2,col=c("yellow","red"),box.col=0)
+ }
+}
+#print("sale modep")
+return(invisible(list("lmed"=k,"ltrim"=lista,"dep"=ans,"metric"=metric,
+"par.metric"=par.metric,"mdist"=mdist,"hq"=hq2)))
+} 
+
+
+
+##################################################################################
 depth.mode=function(fdataobj,fdataori=fdataobj,trim=0.25,metric=metric.lp,h=NULL,scale=FALSE,
 draw=FALSE,...){    
 if (is.fdata(fdataobj)) {
@@ -8,6 +142,13 @@ if (is.fdata(fdataobj)) {
 #   fdataobj$data<-fdataobj$data[!nas,]
 #   cat("Warning: ",sum(nas)," curves with NA are not used in the calculations \n")
 #   }
+ if (is.null(rownames(fdataobj$data)))  rownames(fdataobj$data)<-1:nrow(fdataobj$data)
+ nms<-rownames(fdataobj$data)
+ m0<-nrow(fdataobj)
+ fdataobj<-na.omit.fdata(fdataobj)
+ fdataori<-na.omit.fdata(fdataori) 
+ nas<-na.action(fdataobj)
+ nullans<-!is.null(nas) 
  data<-fdataobj[["data"]]
  data2<-fdataori[["data"]]
  names1<-names2<-names<-fdataobj[["names"]]
@@ -15,52 +156,55 @@ if (is.fdata(fdataobj)) {
  names2$main<-paste("depth.mode trim ",trim*100,"\u0025",sep="")
  tt=fdataobj[["argvals"]]
  rtt<-fdataobj[["rangeval"]]
+#print("is fdata") 
 }
-else { data<-fdataobj;     fdat<-FALSE     }
+else { stop("no fdata class object")
+        data<-fdataobj
+        data2<-fdataori
+        fdat<-FALSE   
+  }
 n<-nrow(data)
 m<-ncol(data)
 m2<-ncol(data2)
 n2<-nrow(data2)
 if (is.null(n) && is.null(m)) stop("ERROR IN THE DATA DIMENSIONS")
 if (is.null(m) && is.null(m2)) stop("ERROR IN THE DATA DIMENSIONS")
-if (is.matrix(metric)) {mdist=mdist2=metric}
-else {
-  mdist=metric(fdataori,fdataori,...)
-  mdist2=metric(fdataobj,fdataori,...)
-}
-aaa<-fdataobj==fdataori
-#print(dim(mdist));print(dim(mdist2))
-#   h<-max(mdist)*h   
-#hq=quantile(mdist+diag(Inf,nrow(mdist)),probs=h,na.rm=TRUE)
-class(mdist2)<-class(mdist)<-"matrix"
-#hq=quantile(mdist+diag(Inf,nrow(mdist)),probs=h)
-if (is.null(h)) {
+if (is.matrix(metric)) mdist=metric                    
+else  mdist=metric(fdataobj,fdataori,...)
+class(mdist)<-"matrix"
+if (is.null(h))   {
   h<-0.15
-  hq2=quantile(mdist,probs=h)
+  hq2=quantile(mdist,probs=h,na.rm=TRUE)
   }
-else   hq2<-h
-class(mdist2)<-class(mdist)<-c("matrix","fdist")
-##    ans<-apply(mdist/h,1,skernel.norm) #see Kernel      
+else hq2<-h  
+class(mdist)<-c("matrix","fdist")
 ans<-Ker.norm(mdist/hq2)    ####
 ans<-apply(ans,1,sum,na.rm=TRUE)                                    
-ans2<-Ker.norm(mdist2/hq2)    ####
-ans2<-apply(ans2,1,sum,na.rm=TRUE)                                                                           
-if (scale) 
-  {
-   mn<-min(ans,na.rm=TRUE)
-   mx<-max(ans,na.rm=TRUE)
-   scl<-mx-mn
-   ans=as.vector(scale(ans,center=mn,scale=scl))
-   ans2=as.vector(scale(ans2,center=mn,scale=scl))
-   }
+if (scale)   {
+   mdist2<-metric(fdataori,fdataori,...)
+   ans2<-Ker.norm(mdist2/hq2)    ####
+   ans2<-apply(ans2,1,sum,na.rm=TRUE)                                       
+   mn<-min(ans2,na.rm=TRUE)
+   mx<-max(ans2,na.rm=TRUE)
+#   scl<-mx-mn
+#   ans=as.vector(scale(ans,center=mn,scale=scl))
+#   ans2=as.vector(scale(ans2,center=mn,scale=scl))
+   ans=as.vector(ans/mx)   
+}    
 k=which.max(ans)
-med=data2[k,]
-lista=which(ans>=quantile(ans,probs=trim,na.rm=TRUE))
+med=data[k,]
+lista=which(ans>=quantile(ans,probs=trim,na.rm=T))
+if (nullans) {
+        ans1<-rep(NA,len=m0)
+        ans1[-nas] <-ans 
+        ans<-ans1      
+        }
+ names(ans)<-nms   
 if (length(lista)==1) {
-  mtrim<-data2[lista,]
+  mtrim<-data[lista,]
   if (draw) {draw=FALSE;warning("The plot is not shown")}
   }
-else mtrim=apply(data2[lista,],2,mean,na.rm=TRUE)
+else mtrim=apply(fdataobj[lista]$data,2,mean,na.rm=TRUE)
 tr<-paste("mode.tr",trim*100,"\u0025",sep="")
 if (fdat) {
 med<-fdata(med,tt,rtt,names1)
@@ -71,17 +215,68 @@ if (draw){
     if (!scale){
      mn<-min(ans,na.rm=TRUE)
      mx<-max(ans,na.rm=TRUE)
-    scl<-mx-mn
+     scl<-mx-mn
     }     
    ind1<-!is.nan(ans)
    ans[is.nan(ans)]=NA
    cgray=1-(ans-mn)/(scl)
-   plot(fdataori[ind1,],col=gray(cgray[ind1]),main="mode Depth")
+   plot(fdataori, col = gray(.9),lty=1, main = "mode Depth")
+   lines(fdataobj[ind1, ], col = gray(cgray[ind1]))
    lines(mtrim,lwd=2,col="yellow")
    lines(med,col="red",lwd=2)
    legend("topleft",legend=c(tr,"Median"),lwd=2,col=c("yellow","red"),box.col=0)
  }
- }
-return(invisible(list("median"=med,"lmed"=k,"mtrim"=mtrim,"ltrim"=lista,
-"dep"=ans2,"dep.ori"=ans,"dist"=mdist2,"hq"=hq2)))
+ }         
+out<-list("median"=med,"lmed"=k,"mtrim"=mtrim,"ltrim"=lista,
+"dep"=ans,"hq"=hq2) 
+if (scale) out$dscale=mx
+return(invisible(out))
+}
+################################################################################
+mdepth.LD=function(x,xx=x,metric=metric.dist,h=NULL,scale=FALSE,...){    
+ if (is.null(x))  rownames(x)<-1:nrow(x)
+ nms<-rownames(x)
+ m0<-nrow(x)
+ x<-na.omit(x)  
+ xx<-na.omit(xx)
+ nas<-na.action(x)
+ nullans<-!is.null(nas) 
+        fdataobj<-data<-x
+        fdataori<-data2<-xx                                                 
+        d <- ncol(x)
+n<-nrow(data)
+m<-ncol(data)
+m2<-ncol(data2)
+n2<-nrow(data2)
+if (is.null(n) && is.null(m)) stop("ERROR IN THE DATA DIMENSIONS")
+if (is.null(m) && is.null(m2)) stop("ERROR IN THE DATA DIMENSIONS")
+if (is.matrix(metric)) {mdist=metric}
+else {  mdist=metric(fdataobj,fdataori,...)  }
+class(mdist)<-"matrix"
+#hq=quantile(mdist+diag(Inf,nrow(mdist)),probs=h)
+if (is.null(h))   {
+  h<-0.15
+  hq2=quantile(mdist,probs=h)
+  }
+else hq2<-h
+class(mdist)<-c("matrix")
+ans<-Ker.norm(mdist/hq2)    ####
+ans<-apply(ans,1,sum,na.rm=TRUE)                                    
+if  (nullans){
+        ans1<-rep(NA,len=m0)
+        ans1[-nas] <-ans 
+        ans<-ans1      
+        }
+names(ans)<-nms   
+out<-list("dep" = ans,"hq"=hq2)
+if (scale)   {
+   mdist2<-metric(fdataori,fdataori,...)
+   ans2<-Ker.norm(mdist2/hq2)    ####
+   ans2<-apply(ans2,1,sum,na.rm=TRUE)                                       
+   mn<-min(ans2,na.rm=TRUE)
+   mx<-max(ans2,na.rm=TRUE)
+   ans=as.vector(ans/mx)   
+   out$dscale<-mx
+}                                                                    
+return(invisible(out))
 }

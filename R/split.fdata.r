@@ -1,3 +1,17 @@
+#################################################
+c.ldata<-function (x, f, drop = FALSE, ...) 
+{
+    if (!is.list(x)) stop("x is not a list") 
+    lenl<-length(x)
+    out<-x
+     lenf<-length(f)
+    for (i in 1:lenl) {
+        if (lenf>nrow(x[[i]])) stop("Incorrect length of f")
+       out[[i]] <- x[[i]][f,]
+    }
+    out
+}
+#################################################
 split.fdata<-function(x,f,drop=FALSE,...){
 if (!is.factor(f)) f<-factor(f)
 nlev<-nlevels(f)
@@ -10,7 +24,7 @@ for (i in 1:nlev) out[[lev[i]]]<-fdata(out[[lev[i]]],x$argvals,x$rangeval,x$name
 out
 }
 
-
+#################################################
 unlist.fdata<-function(x, recursive = TRUE, use.names = TRUE){
 nlev<-length(x)
 lev<-names(x)

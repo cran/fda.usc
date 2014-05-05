@@ -43,18 +43,20 @@ The response can be fitted by:
 \value{
 Return:\cr
 \item{call}{ The matched call of \code{\link{fregre.pc}} function.}
+\item{coefficients}{ A named vector of coefficients.}
+\item{residuals}{ \code{y}-\code{fitted values}.}
+\item{fitted.values}{  Estimated scalar response.}
 \item{beta.est}{ beta coefficient estimated of class \code{fdata}}
 %\item{a.est}{ Intercept parameter estimated}
-\item{coefficients}{ A named vector of coefficients.}
-\item{fitted.values}{  Estimated scalar response.}
-\item{residuals}{ \code{y}-\code{fitted values}.}
-\item{H}{ Hat matrix.}
 \item{df}{ The residual degrees of freedom. In ridge regression, \code{df(rn)} is the effective degrees of freedom.}
 \item{r2}{ Coefficient of determination.}
-\item{GCV}{ GCV criterion.}
+%\item{GCV}{ GCV criterion.}
 \item{sr2}{ Residual variance.}
+\item{Vp}{ Estimated covariance matrix for the parameters.}
+\item{H}{ Hat matrix.}
 \item{l}{ Index of principal components selected.}
 \item{lambda}{ Amount of shrinkage.}
+\item{P}{ Penalty matrix.}
 \item{fdata.comp}{ Fitted object in \code{\link{fdata2pc}} function.}
 \item{lm}{ \code{lm} object.}
 \item{fdataobj}{ Functional explanatory data.}

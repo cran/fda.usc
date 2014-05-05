@@ -8,7 +8,7 @@ rowname.ori<-row.names(fdataobj[["data"]])
 rowname.num<-1:n
 row.names(fdataobj[["data"]])<-rowname.num    
     m<-ncol(fdataobj)
-    if (is.null(n) && is.null(m)) stop("Error in in the data dimensions")
+    if (is.null(n) && is.null(m)) stop("Error in the data dimensions")
     out.thres.lrt<-outliers.thres.lrt(fdataobj,nb=nb,smo=smo,trim=trim,...)
     hay<-1
     outliers<-c()
@@ -42,7 +42,7 @@ row.names(fdataobj[["data"]])<-rowname.num
           if (maximo<out.thres.lrt){hay<-0}
           
     }
-if (i==maxiter) print("convergencia no lograda")
+if (i==maxiter) warning("No convergence achieved ")
 return(list("outliers"=outliers,"stat.value"=valor.estadistico,
 "percentile"=out.thres.lrt))
 c(outliers,valor.estadistico,out.thres.lrt)

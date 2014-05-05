@@ -1,18 +1,27 @@
-classif.knn=function(group,fdataobj,knn=NULL,metric=metric.lp,
+classif.knn=function(group,fdataobj,knn=NULL,metric,
 type.CV = GCV.S,par.CV=list(trim=0),par.S=list(),...){
+if (missing(metric))  {
+  if (is.fdata(fdataobj)) metric=metric.lp
+  else metric=metric.dist}
 classif.np(group,fdataobj,h=knn,Ker=Ker.unif,metric=metric,
 type.CV=type.CV,type.S=S.KNN,par.CV=par.CV,par.S=par.S,...)
 }
 
-classif.kernel=function(group,fdataobj,h=NULL,Ker=AKer.norm,metric=metric.lp,
+classif.kernel=function(group,fdataobj,h=NULL,Ker=AKer.norm,metric,
 type.CV = GCV.S,par.CV=list(trim=0),par.S=list(),...){
-classif.np(group,fdataobj,h,Ker,metric,type.CV,type.S=S.NW,par.CV=par.CV,par.S=par.S,...)
+if (missing(metric))  {
+  if (is.fdata(fdataobj)) metric=metric.lp
+  else metric=metric.dist}
+classif.np(group,fdataobj,h,Ker,metric=metric,type.CV,type.S=S.NW,par.CV=par.CV,par.S=par.S,...)
 }
 
 
-classif.np=function(group,fdataobj,h=NULL,Ker=AKer.norm,metric=metric.lp,
+classif.np=function(group,fdataobj,h=NULL,Ker=AKer.norm,metric,
 type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0),par.S=list(),...){
 y<-group
+if (missing(metric))  {
+  if (is.fdata(fdataobj)) metric=metric.lp
+  else metric=metric.dist}
 if (is.fdata(fdataobj)) {
 nas<-apply(fdataobj$data,1,count.na)
 nas.g<-is.na(y)
@@ -45,7 +54,7 @@ rtt<-fdataobj[["rangeval"]]
 }
 else {
   x<-fdataobj
-  metric=mdist=metric.dist(x,...)
+  mdist=metric.dist(x,...)
   }
    C<-match.call()
    mf <- match.call(expand.dots = FALSE)
@@ -55,7 +64,11 @@ else {
    if (is.null(rownames(x)))         rownames(x) <- 1:n
    if (is.null(colnames(x)))         colnames(x) <- 1:np
 types=FALSE
-if (is.matrix(metric)) mdist<-metric
+if (is.matrix(metric)) {
+                   mdist<-metric
+                   metric<-attributes(mdist)    #call(attributes(mdist)$call)[[1]]
+
+                   }
 else mdist=metric(fdataobj,fdataobj,...)
 #ke<-deparse(substitute(Ker))
 ty<-deparse(substitute(type.S))
@@ -85,19 +98,21 @@ if (is.null(par.S$Ker)& ty!="S.KNN")  par.S$Ker<-Ker
     H=do.call(ty,par.S)
     for (j in 1:numg) {
        Y[j,]=as.integer(y==ny[j])
+#  print(Y[j,])
        pgrup[j,,i]<-(H%*%matrix(Y[j,],ncol=1))
+       
 #       print(H[44:46,])
 #       print(matrix(Y[j,],ncol=1))
-
+#       print( pgrup[j,,i])
 # pgrup2[pgrup[j,,i]>0&Y[j,]>0,i]<-apply(mdist[pgrup[j,,i]>0&Y[j,]>0,pgrup[j,,i]>0&Y[j,]>0],1,mean)
 #        pgrup2[j,,i]<-pgrup[j,,i]/sum(pgrup[j,,i])
        #si empate, promedio de la distancias
       }
    if (ty=="S.KNN") {
     for (ii in 1:n) {
-        l=seq_along(pgrup[,ii,i])[pgrup[,ii,i] == max(pgrup[,ii,i])]
-        if (length(l)>1) {
-              l<-y[seq_along(mdist[ii,])[mdist[ii,] == min(mdist[ii,])]]
+        l=seq_along(pgrup[,ii,i])[pgrup[,ii,i] == max(pgrup[,ii,i],na.rm=T)]
+       if (length(l)>1) {
+              l<-y[seq_along(mdist[ii,])[mdist[ii,] == min(mdist[ii,],na.rm=T)]]
         }
        group.est[i,ii]=ny[l[1]]
 # ny[l] el [1] pq las 2 primeras diastancias tb pueden coincidir
@@ -105,14 +120,21 @@ if (is.null(par.S$Ker)& ty!="S.KNN")  par.S$Ker<-Ker
        }
   }
   else   {
-         group.est[i,]<-ny[apply(pgrup[,,i],2,which.max)]
+
+#         print("pgrup")
+#         print(ny)
+#                  print(h[i])
+#         print(H)
+#                  print(h.opt)
+#         print(as.vector(apply(pgrup[,,i],2,which.max)))
+         group.est[i,]<-ny[as.vector(apply(pgrup[,,i],2,which.max))]
          }
 #        dd<-1/mdist
 #  group.est2[i,]<-ny[apply(pgrup[,,i],2,which.ismax,dd)]
 #  group.est2[i,]<-ny[apply(pgrup[,,i],2,which.max)]
 
    gcv[i]=sum(group.est[i,]!=y)/n
-   if (pr>= gcv[i]) {
+   if (pr> gcv[i]) {
     pr=gcv[i]
     iknn=i
     prob=1-pr
@@ -120,7 +142,8 @@ if (is.null(par.S$Ker)& ty!="S.KNN")  par.S$Ker<-Ker
     group.pred=group.est[i,]
     }
    }
-   l = which.min(gcv)
+
+   l =which.min(gcv)
    h.opt <- h[l]
    par.S$h<-h.opt
    if (h.opt==min(h)) cat(" Warning: h.opt is the minimum value of bandwidths
@@ -142,5 +165,3 @@ prob.classification=prob.classification,"max.prob"=1-misclass)
 class(out)="classif"
 return(out)
 }
-
-

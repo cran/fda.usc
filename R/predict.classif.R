@@ -247,7 +247,7 @@ predict.classif<-function(object,new.fdataobj=NULL,type="class",...)
         newdata <- object$data
       if ( isfdata)         newfdata<-list("X"= new.fdataobj)
       else      newfdata<-new.fdataobj
-               prob <- ngroup <- length(table(object$group))
+      prob <- ngroup <- length(table(object$group))
         if (ngroup == 2) {
             prob.group <- predict.fregre.gsam(object$fit[[1]],
                 newx = newfdata, ...)
@@ -260,8 +260,8 @@ predict.classif<-function(object,new.fdataobj=NULL,type="class",...)
             newx = newfdata, ...)
             }
           yest <- apply(prob.group, 1, which.min)
-        }
-         group.pred<-(factor(yest,levels=lev))
+        }            
+         group.pred<-(factor(yest,levels=lev))       
          pgrup<-prob.group #######
     }
 if (object$C[[1]] == "classif.np") {
@@ -285,8 +285,7 @@ if (is.null(rownames(newx)))         rownames(newx) <- 1:nn
 # if (is.vector(newx))  newx <- t(as.matrix(newx))
  x=object$fdataobj
  y=object$y
-  h=object$h.opt
-# h<-0.5
+ h=object$h.opt
  n = nrow(x)
  nn = nrow(newx)
  np <- ncol(x)
@@ -304,38 +303,51 @@ if (is.null(rownames(newx)))         rownames(newx) <- 1:nn
    a1<-attr(object$mdist,"call")
 if (isfdata) {  
    if (a1=="semimetric.mplsr") {
-         par.metric[["fdata1"]]<-x
-   par.metric[["fdata2"]]<-new.fdataobj
-   nmdist <- t(do.call(a1,par.metric))
+      par.metric[["fdata1"]]<-x
+      par.metric[["fdata2"]]<-new.fdataobj
+      nmdist <- t(do.call(a1,par.metric))
       }
-      else{
-         par.metric[["fdata2"]]<-x
-   par.metric[["fdata1"]]<-new.fdataobj
-   nmdist <- do.call(a1,par.metric)
+    else{
+       par.metric[["fdata2"]]<-x
+       par.metric[["fdata1"]]<-new.fdataobj
+       nmdist <- do.call(a1,par.metric)
       }
    }
    else {
    par.metric[["x"]]<-new.fdataobj
    par.metric[["y"]]<-x
    nmdist <- (do.call(a1,par.metric))
+  
   }
-#  print(nmdist)
    object$par.S$cv=FALSE
    object$par.S$tt<-nmdist
-   kmdist=object$type.S(nmdist,h=h,Ker=object$Ker, cv = FALSE)
-         pgrup = array(0, dim = c(numg, nn))
+   kmdist=object$type.S(nmdist,h=h,Ker=object$Ker, cv =FALSE)#object$par.S$cv)
+        pgrup = array(0, dim = c(numg, nn))
         l = array(0, dim = c(nn))
         group.pred = array(0, dim = nn)
         for (j in 1:numg) {
             grup = as.integer(y == lev[j])
             pgrup[j, ] <- kmdist%*%matrix(grup,ncol=1)
         }
-    group.pred<-factor(ny[apply(pgrup,2,which.max)],levels=ny)
-#    group.pred<-factor(ifelse(apply(pgrup,2,which.max)==1,lev[1],lev[2])   )
-#return(group.pred)
-}
-#    group.pred=factor(group.pred,levels=lev)
 
+#    group.pred<-factor(apply(pgrup,2,which.max))])  
+#    group.pred<-factor(ifelse(apply(pgrup,2,which.max)==1,lev[1],lev[2])   )
+#    group.pred=factor(group.pred,levels=lev)
+ group.pred<-factor(numeric(nn),levels=ny)
+   if (object$ty=="S.KNN") {
+    for (ii in 1:nn) {
+        l=seq_along(pgrup[,ii])[pgrup[,ii] == max(pgrup[,ii],na.rm=T)]
+       if (length(l)>1) {
+              l<-y[seq_along(nmdist[ii,])[nmdist[ii,] == min(nmdist[ii,],na.rm=T)]]
+        }
+       group.pred[ii]=factor(ny[l[1]],levels=ny)
+   }}
+  else {
+    pp<-apply(pgrup,2,which.max)
+    if (length(table(pp))!=numg)    group.pred<-factor(ny[unlist(pp)],levels=ny)
+    else     group.pred<-factor(ny[unlist(pp)],labels=ny)
+  }
+}  
 if (type=="class")   return(group.pred)
 else {
     if (isfdata)          colnames(pgrup) <- rownames(new.fdataobj$data)
@@ -343,5 +355,5 @@ else {
         rownames(pgrup) <- levels(object$group)
         return(list(group.pred = group.pred, prob.group = pgrup))
     }
-}
+}          
 

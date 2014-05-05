@@ -125,7 +125,7 @@ cat("\n-Residual variance: ",
 #      print(object$Lfdobj)
     }
     if (object$call[[1]]=="fregre.np") {
-     cat(" *** Summary non-parametric Regression for Functional data *** \n\n")
+     cat(" *** Summary Functional Non-linear Model *** \n\n")
      cat("-Call: ");    print(object$call)
      cat("\n-Bandwidth (h): ",object$h.opt)
     cat("\n-R squared: ",object$r2)
@@ -135,7 +135,7 @@ cat("\n-Residual variance: ",
     }
   if (object$call[[1]]=="fregre.np.cv") {
 
-     cat(" *** Summary non-parametric Regression for Functional data *** \n\n")
+     cat(" *** Summary Functional Non-linear Model *** \n\n")
      cat("-Call: ");    print(object$call)
      cat("\n-Bandwidth (h): ",object$h.opt)
     cat("\n-R squared: ",object$r2)
@@ -144,7 +144,7 @@ cat("\n-Residual variance: ",
             object$sr2,"on ",n-object$df," degrees of freedom\n")
     }
      if (object$call[[1]]=="fregre.plm") {
-     cat(" *** Summary semi-functional partial linear regression *** \n\n")
+     cat(" *** Summary Functional Semi-linear Model *** \n\n")
      cat("-Call: ");    print(object$call)
      cat("\n-Coefficients:  non functional covariates\n")
      print(object$coefficients)

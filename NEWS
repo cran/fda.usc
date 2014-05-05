@@ -1,3 +1,12 @@
+Release 1.2.0:
+New functions, 
+classif.DDh, fits Nonparametric Classification Procedure Based on DD–plot (depth-versus-depth plot) for G groups.
+depth.FMp, depth.modep and depth.RPp functions provide the depth measure for a list of p--functional data objects.
+metric.ldata, computes distance for a list of p--functional data objects.
+metric.hausdorff, computes hausdorff distance.
+Multivariate depth functions have been renamed: "depth." to "mdepth.".
+
+
 Release 1.1.0:
 New functions, 
 fregre.basis.fr fits functional response model.
@@ -43,7 +52,7 @@ New functions:
 New depth functions and its corresponding shortcut functions (see help(Descriptive) form more details):
  depth.SD() provides the simplicial depth measure for bivariate data.
  depth.PD() provides the depth measure using random projections for multivariate data.
- depth.MhD) provides the Mahalanobis depth measure for multivariate data.
+ depth.MhD() provides the Mahalanobis depth measure for multivariate data.
  depth.HD() provides the half-space depth measure for multivariate data.
 It introduces a new functions for functional PC and PLS regression:
 fregre.ppc,fregre.ppls, fregre.ppc.cv,fregre.ppls.cv,

@@ -2,11 +2,22 @@ int.simpson=function(fdataobj,equi=TRUE,method="TRAPZ"){
  if (!inherits(fdataobj, "fdata"))  fdataobj<-fdata(fdataobj)
  n<-nrow(fdataobj)
  out<-rep(NA,n)
+ tt<-fdataobj$argvals
+ if (equi & method=="TRAPZ"){   
+  p<-length(tt)
+#  w<-(c(0,tt[2:(p)-tt[1:(p-1)]])+c(tt[2:(p)-tt[1:(p-1)]],0))/(p-1)
+  w<-(c(0,tt[2:(p)]-tt[1:(p-1)])+c(tt[2:(p)]-tt[1:(p-1)],0))/2
+  out<-drop(fdataobj$data%*%w )
+ }
+ else{
  for (i in 1:n) {
-   out[i]<-int.simpson2(fdataobj$argvals,fdataobj$data[i,],equi,method)
+   out[i]<-int.simpson2(tt,fdataobj$data[i,],equi=equi,method=method)
+   }
    }
 	return(out)
 }
+
+
 int.simpson2=function(x,y,equi=TRUE,method="TRAPZ"){
   n=length(x);ny=length(y)
 	if (n!=ny) stop("Different length in the input data")

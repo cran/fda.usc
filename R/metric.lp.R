@@ -1,4 +1,4 @@
-metric.lp=function (fdata1, fdata2 = NULL, lp = 2, w = 1, ...) 
+metric.lp=function (fdata1, fdata2 = NULL, lp = 2, w = 1, dscale=1,...) 
 {
     p <- lp
     C1 <- match.call()
@@ -47,6 +47,8 @@ metric.lp=function (fdata1, fdata2 = NULL, lp = 2, w = 1, ...)
     }
     testfordim <- sum(dim(DATA1) == dim(DATA2)) == 2
     twodatasets <- TRUE
+	etiq1=rownames(DATA1)
+	etiq2=rownames(DATA2)    
     if (testfordim) 
         twodatasets <- sum(DATA1 - DATA2, na.rm = TRUE) == 0
  
@@ -98,8 +100,15 @@ metric.lp=function (fdata1, fdata2 = NULL, lp = 2, w = 1, ...)
             }
         }
     }       }
+    mdist2<-mdist
+    diag(mdist2)<-NA
+    if (is.function(dscale)) dscale<-dscale(mdist2,na.rm=T)
+    mdist<-mdist/dscale                           
+   	rownames(mdist)<-etiq1
+   	colnames(mdist)<-etiq2    
     attr(mdist, "call") <- "metric.lp"
-    attr(mdist, "par.metric") <- list(lp = p, w = w)
+    attr(mdist, "par.metric") <- list(lp = p, w = w,dscale=dscale)
+    
     return(mdist)
 }
-
+          

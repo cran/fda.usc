@@ -65,7 +65,7 @@ if (lambda>0) pls<-fdata2ppls(fdataobj,y,norm=norm,ncomp=max(l),lambda=lambda,P=
  else  pls<-fdata2pls(fdataobj,y,norm=norm,ncomp=max(l),...)
      basis=pls$rotation[l,,drop=FALSE]
      rownames(basis$data)<-paste("PLS",l,sep="")
-out<-list("basis"=basis,"x"=pls$x,"mean"=pls$mean,
+out<-list("basis"=basis,"x"=pls$x,"mean"=pls$mean,"df"=pls$df,
 "fdataobj.cen"=pls$fdataobj.cen,"fdataobj"=fdataobj,norm=norm,
 "l"=l,"type"="pls","y"=y)
 class(out)<-"fdata.comp"

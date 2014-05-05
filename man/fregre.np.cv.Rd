@@ -20,7 +20,7 @@ type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0),par.S=list(w=1),...)
 \arguments{
   \item{fdataobj}{ \code{\link{fdata}} class object.}  
   \item{y}{ Scalar response with length \code{n}.}
-  \item{h}{ Smoothing parameter or bandwidth.}
+\item{h}{ Bandwidth, \code{h>0}. Default argument values are provided as the sequence of length 25 from 2.5\%--quantile  to 25\%--quantile  of the distance between \code{fdataobj} curves, see \code{\link{h.default}}.}
   \item{Ker}{ Type of asymmetric kernel used, by default asymmetric normal kernel.}	  	
   \item{metric}{ Metric function, by default \code{\link{metric.lp}}.}
   \item{type.CV}{ Type of cross-validation. By default generalized cross-validation \code{\link{GCV.S}} method.} 
@@ -36,12 +36,12 @@ Different asymmetric kernels can be used, see   \code{\link{Kernel.asymmetric}}.
 \value{
 Return:\cr
 \item{call}{ The matched call.}
-\item{fitted.values}{  Estimated scalar response.}
-\item{H}{  Hat matrix.}
 \item{residuals}{ \code{y} minus \code{fitted values}.}
+\item{fitted.values}{  Estimated scalar response.}
 \item{df}{ The residual degrees of freedom.}
 \item{r2}{ Coefficient of determination.}
 \item{sr2}{ Residual variance.}
+\item{H}{  Hat matrix.}
 \item{y}{ Response.}
 \item{fdataobj}{ Functional explanatory data.}
 \item{mdist}{ Distance matrix between \code{x} and \code{newx}.}

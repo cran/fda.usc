@@ -12,11 +12,11 @@ type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),par.S=list(w=1),...){
     } else pf <- rf <- "~"
  vtab<-rownames(attr(tf,"factors"))
  vnf=intersect(terms,names(data$df))
- vnf2=intersect(vtab[-1],names(data$df)[-1])
+# vnf2=intersect(vtab[-1],names(data$df)[-1])
  vfunc2=setdiff(terms,vnf)
  vint=setdiff(terms,vtab)
  vfunc=setdiff(vfunc2,vint)
- vnf=c(vnf2,vint)
+# vnf=c(vnf2,vint)
  off<-attr(tf,"offset")
  kterms=1
  z=list()
@@ -51,8 +51,8 @@ type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),par.S=list(w=1),...){
    H <- array(NA, dim = c(nrow(yph),nrow(y),lenh))
    I=diag(1,ncol=nrow(x.fd),nrow=nrow(x.fd))
    pb=txtProgressBar(min=0,max=lenh,style=3)
-   XX=as.matrix(data[[1]][,vnf2])
-   colnames(XX)=vnf2
+   XX=as.matrix(data[[1]][,vnf])
+   colnames(XX)=vnf
    for (i in 1:lenh) {
         setTxtProgressBar(pb,i-0.5)
 ####  antes:
@@ -110,7 +110,7 @@ formula=formula,h.opt=h.opt,h=h,fdataobj=fdataobj,XX=XX,xh=xh,yh=yh,wh=wh,mdist=
 class(z)="fregre.fd"
 }
 else {
-  XX=data[[1]][,c(response,vnf2)]
+  XX=data[[1]][,c(response,vnf)]
   print("Warning: lm regession done, non functional data in the formula")
   if (!is.data.frame(XX)) XX=data.frame(XX)
       z=lm(formula=formula,data=XX,x=TRUE,y=TRUE,...)
@@ -121,8 +121,9 @@ else {
  print("Warning: fregre.np.cv done, only functional data in the formula")
  if (m[5]==0) {
   if (is.null(h)) h<-h.default(data[[vfunc[1]]],type.S=ty,Ker=ke)
-  z=fregre.np.cv(data[[vfunc[1]]],data[[1]][,response],h=h,
-  Ker=Ker,metric=metric,type.CV=type.CV,type.S=type.S,par.CV=par.CV,...)
+  
+  z=fregre.np.cv(data[[vfunc[1]]],data[[1]][,response],h=h, 
+  Ker=Ker,metric=metric,type.CV=deparse(substitute(type.CV)),type.S=deparse(substitute(type.S)),par.CV=par.CV,...)
  }
  else {
   a1<-match.fun(C[[m[5]]])

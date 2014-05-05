@@ -9,13 +9,14 @@ Measures the  proximity between the functional data and curves approximating Lp-
 If \code{w = 1} approximates the Lp-metric by Simpson's rule.	By default it uses \code{lp = 2} and weights \code{w = 1}.
 }
 \usage{
-metric.lp(fdata1,fdata2=NULL,lp=2,w=1,...)
+metric.lp(fdata1,fdata2=NULL,lp=2,w=1, dscale=1,...)
 }
 \arguments{  
   \item{fdata1}{Functional data 1 or curve 1. If \code{fdata} class, the dimension of \code{fdata1$data} object is (\code{n1} x \code{m}), where \code{n1} is the number of curves and \code{m} are the points observed in each curve.}
   \item{fdata2}{Functional data 2 or curve 2. If \code{fdata} class, the dimension of \code{fdata2$data} object is (\code{n2} x \code{m}), where \code{n2} is the number of curves and \code{m} are the points observed in each curve.}
   \item{lp}{ Lp norm, by default it uses \code{lp = 2}}
   \item{w}{ Vector of weights with length \code{m}, If \code{w = 1} approximates the metric Lp by Simpson's rule. By default it uses \code{w = 1} }
+  \item{dscale}{ If scale is a numeric, the distance matrix is divided by the scale value. If scale is a function (as the mean for example) the distance matrix is divided by the corresponding value from the output of the function.}  
   \item{\dots}{ Further arguments passed to or from other methods.}
 }
 \details{

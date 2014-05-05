@@ -7,11 +7,11 @@
 \description{
 Fits Nonparametric Supervised Classification for Functional Data.  }
 \usage{
-classif.np(group,fdataobj,h=NULL,Ker=AKer.norm,metric=metric.lp,
+classif.np(group,fdataobj,h=NULL,Ker=AKer.norm,metric,
 type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0),par.S=list(),...)
-classif.knn(group,fdataobj,knn=NULL,metric=metric.lp,
+classif.knn(group,fdataobj,knn=NULL,metric,
 type.CV = GCV.S,par.CV=list(trim=0),par.S=list(),...)
-classif.kernel(group,fdataobj,h=NULL,Ker=AKer.norm,metric=metric.lp,
+classif.kernel(group,fdataobj,h=NULL,Ker=AKer.norm,metric,
 type.CV = GCV.S,par.CV=list(trim=0),par.S=list(),...)
 }
 \arguments{

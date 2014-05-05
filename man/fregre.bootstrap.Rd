@@ -9,34 +9,37 @@ fregre.bootstrap(model, nb = 500, wild = TRUE,type.wild="golden",newX = NULL,
 }
 \arguments{
   \item{model}{ \code{fregre.pc}, \code{fregre.pls} or  \code{fregre.basis} object.}	
- \item{nb}{ Number of bootstrap samples }	
- \item{wild}{=TRUE, wild bootstrap. =FALSE, smoothed bootstrap.}
+ \item{nb}{ Number of bootstrap samples.}	
+ \item{wild}{Naive or smoothed bootstrap depending of the \code{smo} and \code{smoX} parameters.}
+ %=TRUE, wild bootstrap. =FALSE, smoothed bootstrap.}
   \item{type.wild}{Type of distribution of V in wild bootstrap procedure, see \code{\link{rwild}}.}
- \item{smo}{ (only for smoothed bootstrap)  Smoothing parameter as a proportion of response variance.}	
- \item{smoX}{ (only for smoothed bootstrap)  Smoothing parameter for \code{fdata} object as a proportion of variance-covariance matrix of the explanatory functional variable.}	
- \item{newX}{ (optional, only for smoothed bootstrap), new functional explanatory data of \code{fdata} class .} 
- \item{alpha}{ Significance level.}	
-% \item{kmax.fix}{ The maximum number of principal comoponents,  partial least squares components  or number of basis is fixed by \code{model} object.}	 
- \item{kmax.fix}{=TRUE, the bootstrap procedure considers the same number of components used in the previous fitted model.
+ \item{smo}{ If \eqn{>0}, smoothed bootstrap on the residuals (proportion of response variance).}	
+ \item{smoX}{ If \eqn{>0}, smoothed bootstrap on the explanatory functional variable \code{fdata} (proportion of variance-covariance matrix of \code{fdata} object.}	
+ \item{newX}{ A \code{fdata} class containing the values of the model covariates at which predictions are required (only for smoothed bootstrap).}
+  \item{kmax.fix}{ The number of maximum components to consider in each bootstrap iteration.  =TRUE, the bootstrap procedure considers the same number of components used in the previous fitted model.
    =FALSE, the bootstrap procedure estimates the best components in each iteration.}
-   \item{draw}{=TRUE, plot the bootstrap estimated beta, and (optional) the CI for the predicted response values.}
+ \item{alpha}{ Significance level used for graphical option, \code{draw=TRUE}.}  
+ \item{draw}{=TRUE, plot the bootstrap estimated beta, and (optional) the CI for the predicted response values.}
  \item{\dots}{ Further arguments passed to or from other methods.}	    
 }
 \details{
-Compute the beta estimated in \code{\link{influence.fdata}} for functional regression using principal components representation \code{\link{fregre.pc}}, Partial least squares components (PLS) representation  \code{\link{fregre.pls}} or basis representation \code{\link{fregre.basis}}.\cr
-If a new curves are  in newX argument the bootstrap method estimates the response using the bootstrap resamples.   
+Estimate the  beta parameter by wild or smoothed bootstrap procedure  using principal components representation \code{\link{fregre.pc}}, Partial least squares components (PLS) representation  \code{\link{fregre.pls}} or basis representation \code{\link{fregre.basis}}.\cr
+If a new curves are in \code{newX} argument the bootstrap method estimates the response using the bootstrap resamples.   
 
 If the model exhibits heteroskedasticity, the use of wild bootstrap procedure is recommended (by default).
 
 }
 \value{
 Return:\cr
-\item{beta.boot}{ Functional beta estimated by bootstrap method.}
-\item{norm.boot}{  norm of diferences beetween the nboot betas estimated by bootstrap and beta estimated by regression model.}
-\item{coefs.boot}{ nboot X nbasis of bootstrap estimated coefficients of basis}
-\item{knn.fix}{nb basis, CP or PLS factors selected in each regression.}
-\item{y.pred}{ nboot X n matrix of predicted response values.}
-\item{y.boot}{ nboot X n matrix of bootstrap predicted response values.}
+ \item{model}{ \code{fregre.pc}, \code{fregre.pls} or  \code{fregre.basis} object.}  
+\item{beta.boot}{functional beta estimated by the \code{nb} bootstrap regressions.}
+\item{norm.boot}{norm of diferences beetween the nboot betas estimated by bootstrap and beta estimated by regression model.}
+\item{coefs.boot}{matrix with the bootstrap estimated  basis coefficients.}
+%\item{kn.boot}{If \code{kmax.fix=TRUE} is the index of the factors used in the \code{nb} models. Otherwise, list of length \code{nb} with index of the basis, PC or PLS factors selected in each bootstrap regression.}
+\item{kn.boot}{vector or list of length \code{nb} with index of the basis, PC or PLS factors selected in each bootstrap regression.}
+\item{y.pred}{predicted response values using \code{newX} covariates.}
+\item{y.boot}{matrix of bootstrap predicted response values using \code{newX} covariates.}
+\item{newX}{ a \code{fdata} class containing the values of the model covariates at which predictions are required (only for smoothed bootstrap).}
 }
 \references{
 Febrero-Bande, M., Galeano, P. and Gonzalez-Manteiga, W. (2010). \emph{Measures of influence for the functional linear model with scalar response}. Journal of Multivariate Analysis 101, 327-339.
@@ -53,20 +56,22 @@ See Also as: \code{\link{fregre.pc}}, \code{\link{fregre.pls}}, \code{\link{freg
 }
 \examples{
 
+\dontrun{ 
 data(tecator)
-x=tecator$absorp.fdata[1:129]
-y=tecator$y$Fat[1:129]
-nb<-100
+iest<-1:129
+x=tecator$absorp.fdata[iest]
+y=tecator$y$Fat[iest]
+nb<-5
 ## Time-consuming
-# res.pc=fregre.pc(x,y,1:6)
-# res.boot1=fregre.bootstrap(res.pc,nb=nb,wild=FALSE,kmax.fix=TRUE)
-
-## predicted responses by bootstrap  with FPC and FPLS basis
-# newx=tecator$absorp.fdata[-c(1:129)]
-# newy=tecator$y$Fat[-c(1:129)]
-# res.pls=fregre.pls(x,y)
-# res.boot2=fregre.bootstrap(res.pls,nb=nb,wild=FALSE,newX=newx,kmax.fix=TRUE)
-# res.boot3=fregre.bootstrap(res.pc,nb=nb,wild=FALSE,newX=newx,kmax.fix=TRUE)
-
+res.pc=fregre.pc(x,y,1:6)
+# Fix the compontents used in the each regression
+res.boot1=fregre.bootstrap(res.pc,nb=nb,wild=FALSE,kmax.fix=TRUE)
+# Select the "best" compontents used in the each regression
+res.boot2=fregre.bootstrap(res.pc,nb=nb,wild=FALSE,kmax.fix=FALSE) 
+res.boot3=fregre.bootstrap(res.pc,nb=nb,wild=FALSE,kmax.fix=10) 
+## predicted responses and bootstrap confidence interval
+newx=tecator$absorp.fdata[-iest]
+res.boot4=fregre.bootstrap(res.pc,nb=nb,wild=FALSE,newX=newx,draw=TRUE)
+}
 }
 \keyword{ regression }

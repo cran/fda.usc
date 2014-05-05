@@ -23,7 +23,9 @@ par.S=list(w=1),...)}
  \item{formula}{ an object of class \code{formula} (or one that can be coerced to that class): a symbolic description of the model to be fitted. The details of model specification are given under \code{Details}.}
   \item{data}{ List that containing the variables in the model. }
 	\item{Ker}{ Type of asymmetric kernel used, by default asymmetric normal kernel.}	
-	\item{h}{ Smoothing parameter or bandwidth.}
+\item{h}{ Bandwidth, \code{h>0}. Default argument values are provided as the sequence of length 51 from 2.5\%--quantile  to 25\%--quantile  of the distance between the functional data, see \code{\link{h.default}}.}
+
+
   \item{metric}{ Metric function, by default \code{\link{metric.lp}}.}
   \item{type.CV}{ Type of cross-validation. By default generalized cross-validation \code{\link{GCV.S}} method.} 
   \item{type.S}{ Type of smothing matrix \code{S}. By default \code{S} is calculated by Nadaraya-Watson kernel estimator (\code{S.NW}).}   

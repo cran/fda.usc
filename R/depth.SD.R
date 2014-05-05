@@ -46,7 +46,7 @@ ttriang=n*(n-1)*(n-2)/6 #n sobre 3
 return(list("triang"=sume-sumf,"ttriang"=ttriang))
 }
 
-depth.SD=function(x,xx=NULL,trim=0.25,draw=FALSE){
+mdepth.SD=function(x,xx=NULL,scale=FALSE){
    if (dim(x)[2]!=2) stop("The dimension of the data points is not a 2-column matrix")
    if (dim(x)[1]<3) stop("The dimension of the data points must be at least 3 rows.")
    if (is.data.frame(x)) {
@@ -61,6 +61,15 @@ depth.SD=function(x,xx=NULL,trim=0.25,draw=FALSE){
     xx<-as.matrix(xx)
     }
    nam<-colnames(xx)
+
+       if ( is.null(rownames(x)))  rownames(x)<-1:nrow(x)
+       nms<-rownames(x)
+       m0<-nrow(x)
+       xx<-na.omit(xx)
+       x<-na.omit(x)
+       nas<-na.action(x)
+       nullans<-!is.null(nas) 
+          
    n=nrow(x)
    nn=nrow(xx)
    rownames(xx)<-NULL#1:nn
@@ -73,7 +82,7 @@ depth.SD=function(x,xx=NULL,trim=0.25,draw=FALSE){
     fac<-(nn-1)*(nn-2)/2
     for (i in 1:n){
 #        dep[i]=(ntriang(x[i,],x[-i,],TRUE)$triang+(n-1)*(n-2)/2)/ttriang
-        dep[i]<-ntriang(x[i,],xx[-i,])$triang
+        dep[i]<-ntriang(x[i,],xx[-i,])$triang      
 #        cat("i ",i);        print(dep[i])
    }
    dep<-(dep+fac)/ttriang
@@ -83,27 +92,19 @@ depth.SD=function(x,xx=NULL,trim=0.25,draw=FALSE){
     fac<-(nn)*(nn-1)/2
     for (i in 1:n){
           dep[i]=ntriang(x[i,],xx)$triang
-        }
-   dep<-(dep+fac)/ttriang
+        }      
+   dep<-(dep+fac)/ttriang 
    }
-   k = which.max(dep)
-   med = x[k, ]
-   nl = length(trim)
-   lista = which(dep >= quantile(dep, probs = trim, na.rm = TRUE))
-   mtrim= apply(x[lista, ], 2, mean)
-   if (draw) {
-         tr <- paste("SD.trim", trim * 100, "%", sep = "")
-         ind1 <- !is.na(dep)
-         cgray = 1 - (dep- min(dep, na.rm = TRUE))/(max(dep,
-             na.rm = TRUE) - min(dep, na.rm = TRUE))
-         plot(x[ind1, 1],x[ind1, 2], col = gray(cgray[ind1]),
-         main = "Simplicial Depth",xlab=nam[1],ylab=nam[2])
-         points(mtrim[1],mtrim[2], lwd = 2, col = "yellow",pch=16)
-         points(med[1],med[2], col = "red", lwd = 2,pch=17)
-         legend("topleft", legend = c(tr, "Median"), pch=16:17,box.col=0,
-            col = c("yellow", "red"))
-  }
-  return(invisible(list(median = med, lmed = k, mtrim = mtrim,
-        ltrim = lista, dep = dep)))
+   if (scale){ 
+    dep<-dep/max(dep)
+    } 
+ if  (nullans){
+        ans1<-rep(NA,len=m0)
+        ans1[-nas] <-dep
+        dep<-ans1      
+        }
+   names(dep)<-nms         
+
+ return(invisible(list(dep = dep)))
 }
 

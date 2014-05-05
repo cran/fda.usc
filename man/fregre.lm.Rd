@@ -41,12 +41,17 @@ Note: For the case of the Functional Principal Components basis two  penalties a
 }
 \value{
 Return \code{lm} object plus:\cr
+\item{sr2}{ Residual variance.}
+\item{Vp}{ Estimated covariance matrix for the parameters.}
+\item{lambda}{ A roughness penalty.}	
 \item{basis.x}{ Basis used for \code{fdata} or \code{fd} covariates.}
 \item{basis.b}{ Basis used for beta parameter estimation.}
 \item{beta.l}{ List of estimated beta parameter of functional covariates.}
 \item{data}{ List that containing the variables in the model.}
 \item{formula}{ formula.}
 }
+   
+
 \references{
 Ramsay, James O., and Silverman, Bernard W. (2006), \emph{ Functional Data Analysis}, 2nd ed., Springer, New York.
 

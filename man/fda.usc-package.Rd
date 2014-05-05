@@ -6,7 +6,6 @@
 \docType{package}
 \title{Functional Data Analysis and Utilities for Statistical Computing (fda.usc)}
 \description{
- %\emph{texto en cursiva}. ...
 This package carries out exploratory and descriptive analysis of functional data exploring its most important features: such as depth measurements or functional outliers detection, among others. \cr
 It also helps to explain and model the relationship between a dependent variable and independent (regression models) and make predictions. Methods for supervised or unsupervised classification of a set of functional data regarding a feature of the data are also included. Finally,  it can perform analysis of variance model (ANOVA) for functional data.
  
@@ -68,12 +67,8 @@ The functions included in this section allow the estimation of different functio
 \tabular{ll}{
 \tab \code{\link{fregre.pc}}  \cr
 \tab \code{\link{fregre.pc.cv}}  \cr
-\tab \code{\link{fregre.ppc}}  \cr
-\tab \code{\link{fregre.ppc.cv}}  \cr
 \tab \code{\link{fregre.pls}}  \cr
 \tab \code{\link{fregre.pls.cv}}  \cr
-\tab \code{\link{fregre.ppls}}  \cr
-\tab \code{\link{fregre.ppls.cv}}  \cr
 \tab \code{\link{fregre.basis}}  \cr
 \tab \code{\link{fregre.basis.cv}}  \cr
 \tab \code{\link{fregre.np}}  \cr
@@ -102,7 +97,7 @@ functional generalized spectral additive model \code{\link{fregre.gsam}}  are an
 }
 
 
-C.4. Functional explanatory covariate  and  response\cr
+C.4. Functional explanatory covariate and  response\cr
 The functions included in this section allow the estimation of  functional regression models with a functional response and a single functional explicative covariate.\cr
 \tabular{ll}{
 \tab \code{\link{fregre.basis.fr}}  \cr
@@ -120,6 +115,7 @@ Package allows the estimation of the groups in a training set of functional data
 \tab \code{\link{classif.glm}} \cr
 \tab \code{\link{classif.gsam}} \cr
 \tab \code{\link{classif.gkam}} \cr
+\tab \code{\link{classif.DD}} \cr
 \tab \code{\link{classif.depth}} \cr
 }
 
@@ -142,8 +138,6 @@ This section allows the estimation of the groups in a  functional data set \code
 \tab \code{\link{fdata2fd}}  \cr
 \tab \code{\link{fdata2pc}} \cr
 \tab \code{\link{fdata2pls}} \cr
-\tab \code{\link{fdata2ppc}} \cr
-\tab \code{\link{fdata2ppls}} \cr
 \tab \code{\link{summary.fdata.comp}} \cr
 \tab \code{\link{cond.F}} \cr
 \tab \code{\link{cond.quantile}} \cr
@@ -153,6 +147,8 @@ This section allows the estimation of the groups in a  functional data set \code
 \tab \code{\link{Kernel.asymmetric}} \cr
 \tab \code{\link{Kernel.integrate}} \cr
 \tab \code{\link{metric.lp}} \cr 
+\tab \code{\link{metric.kl}} \cr 
+\tab \code{\link{metric.hausdorff}} \cr 
 \tab \code{\link{metric.dist}} \cr 
 \tab \code{\link{semimetric.NPFDA}} \cr 
 \tab \code{\link{semimetric.basis}} \cr 
@@ -162,8 +158,8 @@ This section allows the estimation of the groups in a  functional data set \code
 \tabular{ll}{
 Package: \tab fda.usc\cr
 Type: \tab Package\cr
-Version: \tab 1.1.0\cr
-Date: \tab 2013-12-16\cr
+Version: \tab 1.2.0\cr
+Date: \tab 2014-05-05\cr
 License: \tab GPL-2 \cr
 LazyLoad: \tab yes\cr
 Url: \url{ http://eio.usc.es/pub/MAESFE/}, \url{http://eio.usc.es/pub/gi1914/}

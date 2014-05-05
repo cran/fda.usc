@@ -9,22 +9,25 @@ rn,lambda,weights=rep(1,n),...){
     } else pf <- rf <- "~"
  vtab<-rownames(attr(tf,"factors"))                                                    
  vnf=intersect(terms,names(data$df))
- vnf2=intersect(vtab[-1],names(data$df)[-1])
+# vnf2=intersect(vtab[-1],names(data$df)[-1])
  vfunc2=setdiff(terms,vnf)
  vint=setdiff(terms,vtab)
  vfunc=setdiff(vfunc2,vint)
- vnf=c(vnf2,vint)
+# vnf=c(vnf2,vint)
  off<-attr(tf,"offset")
  name.coef=nam=par.fregre=beta.l=list()
  kterms=1
  n<-length(data[["df"]][,response])
  XX=data.frame(data[["df"]][,c(response)],weights)
  namxx=names(XX)=c(response,"weights")
- if (length(vnf)>0) {          
+ lenvnf<-length(vnf)
+ df<-0
+ if (lenvnf>0) { 
+   df<-lenvnf +df         
 #print(paste("Functional covariate:",vnf))
 # XX=data.frame(XX,data[["df"]][,c(vnf)])    # si es facotr poner k-1 variables dummies
 # names(XX)=c(namxx,vnf)
- for ( i in 1:length(vnf)){
+  for ( i in 1:lenvnf){
 #     print(paste("Non functional covariate:",vnf[i]))
      if (kterms > 1)   pf <- paste(pf, "+", vnf[i], sep = "")
 #     else pf <- paste(pf, terms[i], sep = "")
@@ -34,17 +37,20 @@ rn,lambda,weights=rep(1,n),...){
 if   (attr(tf,"intercept")==0) {
 #     print("No intecept")
      pf<- paste(pf,-1,sep="")
+     df<-0
      }
+else df<-1     
 #  contrasts = NULL
     mf<-as.data.frame(model.matrix(formula(pf),data$df))
-    vnf2<-names(mf)[-1]
+#    vnf2<-names(mf)[-respo]
     pf <- rf <- paste(response, "~", sep = "")
-    for ( i in 1:length(vnf2))  pf<-paste(pf, "+", vnf2[i], sep = "")
+    for ( i in 1:length(vnf))  pf<-paste(pf, "+", vnf[i], sep = "")
     XX <- data.frame(XX,mf)
 }
 else {
     XX <- data.frame(XX,model.matrix(formula(paste(pf, "1")),data$df))
     names(XX)[3]<-"(Intercept)"
+    df<-1
 }
 #print(paste("Functional covariate:",vfunc))
 if (missing(rn))    {    rn0=FALSE;                    rn=list()}
@@ -54,10 +60,14 @@ else lambda0<-TRUE
 mat<-rep(0,len=ncol(XX)-2)
 imat2<-ncol(XX)-2
 mat2<-diag(0,nrow=imat2)
-if (length(vfunc)>0) {
+lenvfunc<-length(vfunc)
+hay.pls<-FALSE
+
+
+if (lenvfunc>0) {
  mean.list=vs.list=JJ=list()
  bsp1<-bsp2<-TRUE
- for (i in 1:length(vfunc)) {
+ for (i in 1:lenvfunc) {
 	if(class(data[[vfunc[i]]])[1]=="fdata"){
       tt<-data[[vfunc[i]]][["argvals"]]
       rtt<-data[[vfunc[i]]][["rangeval"]]
@@ -196,8 +206,16 @@ if (length(vfunc)>0) {
     }
    else stop("Please, enter functional covariate")
    }
-  }  }
- if (!is.data.frame(XX)) XX=data.frame(XX)
+  }  
+if    (basis.x[[vfunc[i]]]$type=="pls") {
+   hay.pls<-TRUE
+   rn0<-TRUE # SI ES Pls ASÍ TIENE EN CUENTA LOS DOF QUE EN EL LM() NO LO TENDRIA
+   lenl<-ncol(basis.x[[vfunc[i]]]$x)
+   df<-df+basis.x[[vfunc[i]]]$df[lenl]
+   }
+}       
+  
+if (!is.data.frame(XX)) XX=data.frame(XX)
     par.fregre$formula=pf
     par.fregre$data=XX
     y<-XX[,1]    
@@ -230,7 +248,7 @@ if (length(vfunc)>0) {
 ################################################################################
 ################################################################################           
       H<-scores%*%Cinv
-      df<-traza(H)
+      if  (!hay.pls) df<-traza(H)  
       coefs<-drop(coefs)
 #      cnames<-names(XX[,-(1:2)])
 #      names(coefs)<-c("Intercept",cnames)  
@@ -322,13 +340,6 @@ for (i in 1:length(vfunc)) {
 
 
 
-
-
- 
- 
- 
- 
- 
  
  
  
