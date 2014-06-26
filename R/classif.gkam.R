@@ -23,6 +23,7 @@ newdata<-data
 ny<-levels(y)
 prob<-ngroup<-nlevels(y)
 prob.group<-array(NA,dim=c(n,ngroup))
+colnames(prob.group)<-ny
 if (ngroup==2) {
       newy<-ifelse(y==ny[1],0,1)
       newdata$df[[response]]<-newy
@@ -36,22 +37,21 @@ if (ngroup==2) {
            names(prob)<-ny
          }
       else prob[2]<-0
-      prob.group<-a$fitted.values
-      #devolver a mayores y estimada!
+      prob.group[,1]<-1-a[[1]]$fitted.values
+      prob.group[,2]<-a[[1]]$fitted.values   
    }
 else {
-      prob.group<-array(NA,dim=c(n,ngroup))
-   colnames(prob.group)<-ny
    for (i in 1:ngroup) {
                newy<-ifelse(y==ny[i],0,1)
               newdata$df[[response]]<-newy
               a[[i]]<-fregre.gkam(formula,family=family,data=newdata,weigths=weights,
               par.metric=par.metric,par.np=par.np,offset=offset,control=control,...)
-              prob.group[,i]<-a[[i]]$fitted.values
+              prob.group[,i]<-1-a[[i]]$fitted.values
             }
-   yest<-ny[apply(prob.group,1,which.min)]#no será which.max
+   yest<-ny[apply(prob.group,1,which.max)]#no será which.max
    yest<-factor(yest,levels=ny)
    tab<-table(yest,y)
+   prob.group<-prob.group/apply(prob.group,1,sum)   
     for (i in 1:ngroup) {     prob[i]=tab[i,i]/sum(tab[,i])     }
                names(prob)<-ny
 }
@@ -61,4 +61,3 @@ prob.classification=prob,prob.group=prob.group,C=C,m=m,max.prob=max.prob,fit=a)
 class(output)="classif"
 return(output)
 }
-

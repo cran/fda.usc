@@ -26,7 +26,7 @@ flm.Ftest (X.fdata, Y, B=5000, verbose=TRUE)
  The \emph{functional F-test} is defined as \deqn{T_n=\bigg\|\frac{1}{n}\sum_{i=1}^n (X_i-\bar X)(Y_i-\bar Y)\bigg\|,}{||\frac{1}{n} \sum_{i=1}^n (X_i-\bar X)(Y_i-\bar Y)||,} where \eqn{\bar X}{\bar X} is the functional mean of \eqn{X}{X}, \eqn{\bar Y}{\bar Y} is the ordinary mean of \eqn{Y}{Y} and \eqn{\|\cdot\|}{||.||} is the \eqn{L^2}{L^2} functional norm.
  The statistic is computed with the function \code{Ftest.statistic}. The distribution of the test statistic is approximated by a wild bootstrap on the residuals, using the \emph{golden section bootstrap}.
 
- For further details of the test and its implementation see Gonzalez-Manteiga \emph{et al.} (2012) and Garcia-Portugues \emph{et al.} (2012), respectively.
+ For further details of the test and its implementation see Gonzalez-Manteiga \emph{et al.} (2012) and Garcia-Portugues \emph{et al.} (2014), respectively.
 
 }
 
@@ -42,8 +42,7 @@ flm.Ftest (X.fdata, Y, B=5000, verbose=TRUE)
 
 \references{
 
-Garcia-Portugues, E., Gonzalez-Manteiga, W. and Febrero-Bande, M. (2012). A goodness--of--fit test for the functional linear model with scalar
-response. \url{http://arxiv.org/abs/1205.6167}
+Garcia-Portugues, E., Gonzalez-Manteiga, W. and Febrero-Bande, M. (2014). A goodness--of--fit test for the functional linear model with scalar response. Journal of Computational and Graphical Statistics, 23(3), 761-778. \url{http://dx.doi.org/10.1080/10618600.2013.812519}
 
 Gonzalez-Manteiga, W., Gonzalez-Rodriguez, G., Martinez-Calvo, A. and Garcia-Portugues, E. Bootstrap independence test for functional linear models. 
 
@@ -72,14 +71,15 @@ Y0=drop(inprod.fdata(X,beta0)+rnorm(50,sd=0.1))
 # Null hypothesis does not hold
 Y1=drop(inprod.fdata(X,beta1)+rnorm(50,sd=0.1))
 
+\dontrun{
 # Do not reject H0
-#flm.Ftest(X,Y0,B=100)
-# flm.Ftest(X,Y0,B=5000)
+flm.Ftest(X,Y0,B=100)
+flm.Ftest(X,Y0,B=5000)
 
 # Reject H0
-#flm.Ftest(X,Y1,B=100)
-# flm.Ftest(X,Y1,B=5000)
-
+flm.Ftest(X,Y1,B=100)
+flm.Ftest(X,Y1,B=5000)
+}
 }
 
 \keyword{htest}

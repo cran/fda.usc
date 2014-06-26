@@ -345,8 +345,8 @@ text(influence[i.influence],i.influence,rowname[i.influence],cex=0.7)
     if (!is.null(selec)) {
                 par(mfrow=c(1,1))
                 plot(X[, selec], eta, col = col1, ylab = "Linear predictors",
-              xlab = paste("f(", namesres[selec], ")", sep = ""),col=col1,
-                main = paste(namesres[selec], "edf:", round(object$eqrank[selec],1)))
+              xlab = paste("f(", namesres[selec], ")", sep = ""),
+              main = paste(namesres[selec], "edf:", round(object$eqrank[selec],1)))
                if (length(table(y)) == 2) {
                 abline(h = 0); abline(v = 0)
                     }
@@ -366,8 +366,6 @@ text(influence[i.influence],i.influence,rowname[i.influence],cex=0.7)
     cat("\n")
 return(invisible(list("Influence"=influence,"object"=object)))
 }
-
-
 
 ##############################################################################
 ##############################################################################

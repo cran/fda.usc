@@ -19,7 +19,7 @@ fregre.pc.cv(fdataobj, y, kmax=8,  lambda = 0, P = c(1, 0, 0),
  \item{P}{ The vector of coefficients to define the penalty matrix object. For example,  if \code{P=c(1,0,0)}, ridge regresion is computed and if \code{P=c(0,0,1)}, penalized regression is computed penalizing the second derivative (curvature). }
  \item{criteria}{ Type of cross-validation (CV) or  Model Selection Criteria (MSC) applied. Possible values are \emph{"CV"}, \emph{"AIC"}, \emph{"AICc"}, \emph{"SIC"},\emph{"SICc"}.} 	
    \item{weights}{ weights}
- \item{\dots}{ Further arguments passed to \code{\link{fregre.ppc}} or \code{\link{fregre.ppls}}}  
+ \item{\dots}{ Further arguments passed to \code{\link{fregre.pc}} or \code{\link{fregre.pls}}}  
 }
 \details{ 
 %%%%%%%%%%%
@@ -75,7 +75,7 @@ Return:\cr
 
 \author{ Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es} }
 \seealso{
-See also as:\code{\link{fregre.ppc}} .
+See also as:\code{\link{fregre.pc}} .
 }
 \references{
 Febrero-Bande,  M., Oviedo de la Fuente, M. (2012).  \emph{Statistical Computing in Functional Data Analysis: The R Package fda.usc.}

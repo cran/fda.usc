@@ -70,13 +70,11 @@ mlearn<-phoneme$learn
 tt<-1:ncol(mlearn)
 S1 <- S.NW(tt,2.5)
 S2 <- S.LLR(tt,2.5)
-S3 <- S.KNN(tt,2.5)
 gcv1 <- GCV.S(mlearn, S1)
 gcv2 <- GCV.S(mlearn, S2)
-gcv3 <- GCV.S(mlearn, S3)
-gcv4 <- GCV.S(mlearn, S1,criteria="AIC")
-gcv5 <- GCV.S(mlearn, S1,trim=0.01,draw=TRUE)
-gcv1; gcv2; gcv3; gcv4; gcv5
+gcv3 <- GCV.S(mlearn, S1,criteria="AIC")
+gcv4 <- GCV.S(mlearn, S2,criteria="AIC")
+gcv1; gcv2; gcv3; gcv4
  }
 
 \keyword{utilities} 

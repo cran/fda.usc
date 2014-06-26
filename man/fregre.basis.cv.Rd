@@ -84,11 +84,11 @@ res1=fregre.basis.cv(x,y,basis.x=b1)
 res2=fregre.basis.cv(x,y,basis.x=b1,basis.b=b2)
 res1$gcv
 res2$gcv
-# l=2^(-4:10)
-# res3=fregre.basis.cv(x,y,basis.b=b1,type.basis="fourier",
-# lambda=l,type.CV=GCV.S,par.CV=list(trim=0.15))
-# res3$gcv
-# summary(res3)
-
+\dontrun{
+l=2^(-4:10)
+res3=fregre.basis.cv(x,y,basis.b=b1,type.basis="fourier",
+lambda=l,type.CV=GCV.S,par.CV=list(trim=0.15))
+res3$gcv
+}
 }
 \keyword{regression}

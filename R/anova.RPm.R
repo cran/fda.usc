@@ -77,7 +77,7 @@ if (pr) {
        if (pr) {print(result);print(result3)}
        if (!is.null(contrast)) {
           out4=summary(result3)
-          if (pr) {print(out4);print("summary lm contrastes")}
+          if (pr) {print(out4);print("summary lm contrast")}
           if (length(out)==1) {
             mat[j,1:(nterms-1)]=out[[1]][1:(nterms-1),5]
             ind=nterms;ind2=2

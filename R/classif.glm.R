@@ -19,6 +19,7 @@ n<-length(y)
 ny<-levels(y)
 newdata<-data
 prob2<-prob<-ngroup<-nlevels(y)
+prob.group<-array(NA,dim=c(n,ngroup))
 if (ngroup==2) {
       newy<-ifelse(y==ny[1],0,1)
       newdata$df$y<-newy
@@ -32,7 +33,8 @@ if (ngroup==2) {
            names(prob)<-ny
          }
       else prob[2]<-0
-      prob.group<-a$fitted.values
+      prob.group[,1]<-1-a[[1]]$fitted.values
+      prob.group[,2]<-a[[1]]$fitted.values      
       yest<-factor(yest,levels=ny)
    }
 else {
@@ -43,21 +45,21 @@ else {
               newdata$df[response]<-newy
               a[[i]]<-fregre.glm(formula,data=newdata,family=family,basis.x=basis.x,
               basis.b=basis.b,CV=CV,...)
-              prob.group[,i]<-a[[i]]$fitted.values
+              prob.group[,i]<-1-a[[i]]$fitted.values
             }
-   yest<-ny[apply(prob.group,1,which.min)]#no será which.max
+         
+   yest<-ny[apply(prob.group,1,which.max)]#no será which.max
    yest<-factor(yest,levels=ny)
    tab<-table(yest,y)
+   prob.group<-prob.group/apply(prob.group,1,sum)
    for (i in 1:ngroup) {
             prob[i]=tab[i,i]/sum(tab[,i])
-             }
-             names(prob)<-ny
+             }                                      
 }
+colnames(prob.group)<-ny
 max.prob=sum(diag(tab))/sum(tab)
 output<-list(formula=formula,data=data,group=y,group.est=yest,
 prob.classification=prob,prob.group=prob.group,C=C,fit=a,m=m,max.prob=max.prob)
 class(output)="classif"
 return(output)
 }
-
- 

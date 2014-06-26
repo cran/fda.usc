@@ -1,17 +1,4 @@
-################################################################################
-plot.bifd<-function(bfd,argvals.s,argvals.t,...){
-      if (missing(argvals.s)){
-         nfine.s = max(c(201,10*bfd$sbasis$nbasis+1))
-         argvals.s = seq(bfd$sbasis$rangeval[1],bfd$sbasis$rangeval[2],len=nfine.s)
-         }
-      if (missing(argvals.t)){
-         nfine.t = max(c(201,10*bfd$tbasis$nbasis+1))
-         argvals.t = seq(bfd$tbasis$rangeval[1],bfd$tbasis$rangeval[2],len=nfine.t)
-         }
-      tt<-list(argvals.s,argvals.t)
-      rtt<-list(bfd$sbasis$rangeval,bfd$tbasis$rangeval)
-      plot(fdata(eval.bifd(argvals.s,argvals.t,bfd),tt,rtt,fdata2d=TRUE),... )
-      }
+
 ################################################################################
 plot.fdata<-function(x,type,main,xlab,ylab,mfrow=c(1,1),time=1,...) {
 if (any(class(x)=="fdata2d"))  {

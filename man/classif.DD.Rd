@@ -91,6 +91,8 @@ The user can be specify the parameters for classifier function in \code{par.clas
 \references{
 Li, J., P.C., Cuesta-Albertos, J.A. and Liu, R. \emph{DD--Classifier: Nonparametric Classification Procedure Based on DD-plot}. 
 Journal of the American Statistical Association (2012), Vol. 107, 737--753. 
+
+Cuesta-Albertos, J.A., Febrero-Bande, M. and Oviedo de la Fuente, M. \emph{The DDG-classifier in the functional setting}. Submitted. 
 }
 
 \author{

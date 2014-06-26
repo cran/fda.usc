@@ -1,4 +1,3 @@
-################################################################################
 fdata=function(mdata,argvals=NULL,rangeval=NULL,names=NULL,fdata2d=FALSE){
 call<-match.call()
 if (length(call[[2]])>1) nam<-"fdataobj"
@@ -145,23 +144,44 @@ fd={
    out
    },
 fds={
- out[["data"]] = mdata$y
- if (is.null(mdata$time))       out[["argvals"]] =1:ncol(out[["data"]])
- else out[["argvals"]]= seq(mdata$time[1], mdata$time[length(mdata$time)],
-  len = length(mdata$time))
-  out},
+ out[["data"]] =t(mdata$y)
+ if (is.null(mdata$x))       out[["argvals"]] =1:ncol(out[["data"]])
+ else { 
+   if (is.numeric(mdata$x)) out[["argvals"]]=mdata$x 
+   else out[["argvals"]]=seq(mdata$x[1], mdata$x[length(mdata$x)],
+  len = length(mdata$x))
+  }
+  out[["rangeval"]]<-range(out[["argvals"]])  
+  out[["names"]]<-list("main"=deparse(nam),"xlab"=mdata$xname,"ylab"=mdata$yname)
+  class(out)<-"fdata"
+  return(out)
+  },
 fts={
- out[["data"]] = mdata$y
- if (is.null(mdata$time))       out[["argvals"]]<-1:ncol(out[["data"]])
- else out[["argvals"]]<- seq(mdata$time[1], mdata$time[length(mdata$time)],
-  len = length(mdata$time))
-  out},
+ out[["data"]] =t(mdata$y)
+ if (is.null(mdata$x))       out[["argvals"]] =1:ncol(out[["data"]])
+ else { 
+   if (is.numeric(mdata$x)) out[["argvals"]]=mdata$x 
+   else out[["argvals"]]=seq(mdata$x[1], mdata$x[length(mdata$x)],
+  len = length(mdata$x))
+  }
+  out[["rangeval"]]<-range(out[["argvals"]])  
+  out[["names"]]<-list("main"=deparse(nam),"xlab"=mdata$xname,"ylab"=mdata$yname)
+  class(out)<-"fdata"
+  return(out)
+  },
 sfts={
- out[["data"]] = mdata$y
- if (is.null(mdata$time))       out[["argvals"]]=1:ncol(out[["data"]])
- else out[["argvals"]]= seq(mdata$time[1], mdata$time[length(mdata$time)],
-  len = length(mdata$time))
-  out}
+ out[["data"]] =t(mdata$y)
+ if (is.null(mdata$x))       out[["argvals"]] =1:ncol(out[["data"]])
+ else { 
+   if (is.numeric(mdata$x)) out[["argvals"]]=mdata$x 
+   else out[["argvals"]]=seq(mdata$x[1], mdata$x[length(mdata$x)],
+  len = length(mdata$x))
+  }
+  out[["rangeval"]]<-range(out[["argvals"]])  
+  out[["names"]]<-list("main"=deparse(nam),"xlab"=mdata$xname,"ylab"=mdata$yname)
+  class(out)<-"fdata"
+  return(out)
+  }
 )
 nc<-nrow(out[["data"]])
 np<-ncol(out[["data"]])

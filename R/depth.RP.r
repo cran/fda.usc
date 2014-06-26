@@ -1,6 +1,7 @@
-depth.RP<-function(fdataobj,fdataori=fdataobj,trim=0.25,nproj=50,proj=1,scale=FALSE,xeps=1e-8,draw=FALSE,...){
+depth.RP<-function(fdataobj,fdataori=fdataobj,trim=0.25,nproj=50,proj="vexponential",
+dfunc="TD1",par.dfunc=list(),scale=FALSE,draw=FALSE,...){
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
-if (!is.fdata(fdataori)) fdataori=fdata(fdataori) 
+if (!is.fdata(fdataori)) fdataori=fdata(fdataori)
 
 # nas<-apply(fdataobj$data,1,count.na)
 # if (any(nas))  {
@@ -12,9 +13,9 @@ if (!is.fdata(fdataori)) fdataori=fdata(fdataori)
  nms<-rownames(fdataobj$data)
  m0<-nrow(fdataobj)
  fdataobj<-na.omit.fdata(fdataobj)
- fdataori<-na.omit.fdata(fdataori) 
+ fdataori<-na.omit.fdata(fdataori)
  nas<-na.action(fdataobj)
- nullans<-!is.null(nas) 
+ nullans<-!is.null(nas)
 
 
 data<-fdataobj[["data"]]
@@ -35,7 +36,7 @@ names2$main<-paste("RP trim",trim*100,"\u0025",sep="")
  #### new
  if (is.fdata(proj)) {
   nproj<-nrow(proj)
-  if (fdataobj$argvals!=proj$argvals || ncol(fdataobj)!=ncol(proj)) stop("Error en proj dimension")
+  if (fdataobj$argvals!=proj$argvals || ncol(fdataobj)!=ncol(proj)) stop("Error in proj dimension")
   z<-proj
   }
 else {
@@ -43,7 +44,7 @@ z<-rproc2fdata(nproj,t,sigma=proj,norm=TRUE,...)
 }
 ##
 # z<-matrix(NA,nproj,m)
-Fn<-list()  
+
 # integrated<-FALSE
 # if (integrated){
 #   dtt <- diff(tt)
@@ -55,21 +56,33 @@ Fn<-list()
 #   }
 #   else equi = FALSE
 #     valor-inprod.fdata(fdataobj,z)
-#     valor2<-inprod.fdata(fdataori,z)    
-# }  
+#     valor2<-inprod.fdata(fdataori,z)
+# }
+if (dfunc %in% c("Liu1","TD1","FM1")) {
+Fn<-list()
  for (j in 1:nproj){
-    #    z[j,]=rnorm(m)
-     #   modulo=sum(z[j]^2)
-     #   z[j,]=z[j,]/sqrt(modulo)
-        valor=data%*%z$data[j,]    #HACER INPROD
-        valor2=data2%*%z$data[j,]   
+        valor=data%*%z$data[j,]
+        valor2=data2%*%z$data[j,]
         Fn[[j]]=ecdf(valor2)
-#if integrated        Fn[[j]]=ecdf(valor2[,j])        
-        dep=dep+(Fn[[j]](valor)*(1-Fn[[j]](valor-xeps)))
+         par.dfunc$x<-valor
+         par.dfunc$Fn<-Fn[[j]]
+         dp<-do.call(dfunc,par.dfunc)
+         dep<-dep+dp
  }
   dep=dep/nproj
-  if (scale){    dep<-dep*4    }
-
+  }
+else if (dfunc %in% c("MhD1","LD1")) {
+ for (j in 1:nproj){
+        valor=data%*%z$data[j,]    #HACER INPROD
+        valor2=data2%*%z$data[j,]
+         par.dfunc$x<-drop(valor)
+         par.dfunc$xx<-drop(valor2)
+         dp<-do.call(dfunc,par.dfunc)
+         dep<-dep+dp
+ }
+  dep=dep/nproj
+  }
+  if (scale){    dep<-dep/max(dep)    }
    k=which.max(dep)
    med=data[k,,drop=FALSE]
    nl=length(trim)
@@ -88,11 +101,11 @@ Fn<-list()
 if (nullans) {
         ans1<-rep(NA,len=m0)
         ans1[-nas] <-dep
-        dep<-ans1      
+        dep<-ans1
         }
- names(dep)<-nms  
+ names(dep)<-nms
 
-#else mtrim=data[lista,,drop=FALSE]     
+#else mtrim=data[lista,,drop=FALSE]
    tr<-paste("RP.tr",trim*100,"\u0025",sep="")
    med<-fdata(med,t,rtt,names1)
    mtrim<-fdata(mtrim,t,rtt,names2)
@@ -109,5 +122,6 @@ if (draw){
    legend("topleft",legend=c(tr,"Median"),lwd=2,col=c("yellow","red"),box.col=0)
  }
 return(invisible(list("median"=med,"lmed"=k,"mtrim"=mtrim,"ltrim"=lista,
-"dep"=dep,"proj"=z,"Fn"=Fn)))
+"dep"=dep,"proj"=z,dfunc=dfunc,par.dfunc=par.dfunc)))
 }
+

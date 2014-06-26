@@ -17,9 +17,13 @@ basis.b=NULL,CV=FALSE,...){
 gp <- interpret.gam(formula)
 #print(gp$smooth.spec)
 len.smo<-length(gp$smooth.spec)
-if (len.smo==0) stop("No smoothing variables")
-specials1<-specials2<-fnf1<-fnf2<-fnf<-bs.dim1<-bs.dim2<-vfunc2<-vfunc<-vnf<-NULL
+#if (len.smo==0) { specials<-rep(NA,len=nterms)#stop("No smoothing variables")} ##############################
+#}
 nterms<-length(terms)
+speci<-NULL
+  
+specials1<-specials2<-fnf1<-fnf2<-fnf<-bs.dim1<-bs.dim2<-vfunc2<-vfunc<-vnf<-NULL
+
 func<-nf<-sm<-rep(0,nterms)
 names(func)<-names(nf)<-names(sm)<-terms
 ndata<-length(data)-1
@@ -29,11 +33,20 @@ for (i in 1:ndata) names.vfunc[i]<-names(data)[i+1]
 }
 else names.vfunc<-NULL
 
-speci<-NULL
+if (len.smo==0) {
+ specials<-rep(NA,nterms)
+ speci<-rep("0",nterms)
+ gp$smooth.spec[1:nterms]<-NULL 
+ gp$smooth.spec[1:nterms]$term<-NULL 
+ vnf<-terms 
+ fnf1<-fnf<-nterms
+  }
+  else{
 for (i in 1:nterms) if (!is.na(specials[i]))     speci<-c(speci,specials[i])
 for (i in 1:nterms) {
+
          if (any(terms[i]==names(data$df))){
-                     vnf<-c(vnf,terms[i] )
+                     vnf<-c(vnf,terms[i] )                
                      sm[i]<-nf[i]<-1
                      fnf1<-c(fnf1,0)
                      bs.dim1<-c(bs.dim1,0)
@@ -75,6 +88,7 @@ else{ if (any(gp$smooth.spec[[i]]$term==names(data$df))){
                      specials2<-c(specials2,speci[i])
    }  } }
 }
+}
 #print("specials1");print(specials1)
 #print("specials2");print(specials2)
 #print("bs dim 1");print(bs.dim1)
@@ -85,8 +99,7 @@ else{ if (any(gp$smooth.spec[[i]]$term==names(data$df))){
 nfunc<-sum(func)
 nnf<-length(vnf)
 name.coef=nam=par.fregre=beta.l=list()
-kterms=1
-
+kterms=1   
  if (nnf>0) {
  XX=data[["df"]]
 if   (attr(tf,"intercept")==0) {
@@ -94,7 +107,7 @@ if   (attr(tf,"intercept")==0) {
      }
  for ( i in 1:nnf) {
 #     print(paste("Non functional covariate:",vnf[i]))
-        if (fnf1[i]==1) sm1<-TRUE
+        if (fnf1[i]==1 & len.smo!=0) sm1<-TRUE
         else sm1<-FALSE
         if (sm1) {
 #             print( bs.dim1[i])
@@ -112,6 +125,7 @@ else {
  bsp1<-bsp2<-TRUE
  lenfunc<-length(vfunc)>0
 if (lenfunc) {
+
 k=1
  mean.list=vs.list=JJ=list()
  bsp1<-bsp2<-TRUE
@@ -245,10 +259,23 @@ k=1
    }
    }   }
  if (!is.data.frame(XX)) XX=data.frame(XX)
-    par.fregre$formula=as.formula(pf)
+
     par.fregre$data=XX
     ndatos<-nrow(XX)
-    yp<-rep(NA,ndatos)
+    yp<-rep(NA,ndatos)  
+   if (length(vfunc)==0 & length(vnf)==0)      {
+       pf<- as.formula(paste(pf,1,sep=""))
+       z=gam(formula=pf,data=XX,family=family,weights=weights,...)
+       z$XX=XX
+       z$data<-data
+       z$formula.ini<-pf
+       z$formula<-pf           
+       class(z)<-c(class(z),"fregre.gsam") 
+#       print("ffffffffffffffffffff")
+        return(z )
+       }
+      else 
+    par.fregre$formula=as.formula(pf)     
     z=gam(formula=par.fregre$formula,data=XX,family=family,weights=weights,...)
 #################### reconstruccion nombre variables sm
 # names2<-NULL
@@ -280,5 +307,3 @@ k=1
  class(z)<-c(class(z),"fregre.gsam")
 z
 }
-  
- 

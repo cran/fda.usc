@@ -1,15 +1,14 @@
 Package: fda.usc
 Type: Package
 Title: Functional Data Analysis and Utilities for Statistical Computing
-        (fda.usc)
-Version: 1.2.0
-Date: 2014-05-05
+Version: 1.2.1
+Date: 2014-06-26
 Authors@R: c(person("Manuel Febrero Bande",role="aut", email = "manuel.febrero@usc.es"), person("Manuel Oviedo de la Fuente",role=c("aut","cre"), email="manuel.oviedo@usc.es"),
              person("Pedro Galeano",role="ctb"),
              person("Alicia Nieto",role="ctb"),
              person("Eduardo Garcia-Portugues",role="ctb"))
 Depends: R (>= 2.10), fda, splines, MASS, mgcv, rpart
-Description: The R package fda.usc carries out exploratory and descriptive analysis of functional data such as depth measurements or functional atypical curves detection, functions to compute functional regression models with a scalar response, supervised and unsupervised classification methods and functional analysis of variance.
+Description: Routines for exploratory and descriptive analysis of functional data such as depth measurements, atypical curves detection, regression models, supervised classification, unsupervised classification and functional analysis of variance.
 License: GPL-2
 URL: http://www.jstatsoft.org/v51/i04/
 LazyLoad: yes
@@ -21,5 +20,5 @@ Author: Manuel Febrero Bande [aut],
 Maintainer: Manuel Oviedo de la Fuente <manuel.oviedo@usc.es>
 NeedsCompilation: yes
 Repository: CRAN
-Packaged: 2014-05-28 18:09:32 UTC; moviedo
-Date/Publication: 2014-05-29 15:15:51
+Packaged: 2014-12-01 12:22:14 UTC; moviedo
+Date/Publication: 2014-12-01 14:12:44

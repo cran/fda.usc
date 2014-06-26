@@ -18,12 +18,14 @@ fdataobj
 
 func.trim.FM=function(fdataobj,...){depth.FM(fdataobj,...)$mtrim}
 func.trim.mode=function(fdataobj,...){depth.mode(fdataobj,...)$mtrim}
-func.trim.RP=function(fdataobj,...){depth.RP(fdataobj,...)$mtrim} #
+func.trim.RP=function(fdataobj,...){depth.RP(fdataobj,...)$mtrim} 
+func.trim.RT=function(fdataobj,...){depth.RT(fdataobj,...)$mtrim} 
 func.trim.RPD=function(fdataobj,...){depth.RPD(fdataobj,...)$mtrim}
 
-func.med.FM=function(fdataobj,...){depth.FM(fdataobj,...)$median} #
+func.med.FM=function(fdataobj,...){depth.FM(fdataobj,...)$median} 
 func.med.mode=function(fdataobj,...){depth.mode(fdataobj,...)$median}
 func.med.RP=function(fdataobj,...){ depth.RP(fdataobj,...)$median}
+func.med.RT=function(fdataobj,...){ depth.RT(fdataobj,...)$median}
 func.med.RPD=function(fdataobj,...){ depth.RPD(fdataobj,...)$median}
 
 func.trimvar.FM=function(fdataobj,...){

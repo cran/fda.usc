@@ -3,6 +3,7 @@
 \alias{plot.fdata}
 \alias{lines.fdata}
 \alias{title.fdata}
+\alias{plot.bifd}
 \title{ Plot functional data: fdata.
 }
 \description{
@@ -13,6 +14,7 @@ Plot object of class \code{fdata}.
 mfrow = c(1, 1), time = 1,\dots)
 \method{lines}{fdata}(x,\dots)
 \method{title}{fdata}(x,main=NULL,xlab=NULL,ylab=NULL,rownames=NULL) 
+\method{plot}{bifd}(x,argvals.s,argvals.t,\dots)
 }
 \arguments{
   \item{x}{ \code{fdata} class object with: 
@@ -23,7 +25,9 @@ mfrow = c(1, 1), time = 1,\dots)
     \item \code{"argvals"}: vector or list of vectors with the discretizations points values.
     \item \code{"rangeval"}: vector or list of vectors with the range of the discretizations points values,  by default range(\code{argvals}). 
     \item \code{"names"}: (optional) list with  \code{main} an overall title,	\code{xlab} title for \code{x} axis and \code{ylab} title for \code{y} axis.
-    }  }
+    }               
+       
+    or  a two-argument functional data object, see \code{\link{bifd}}.} 
 %   i.- \code{"data"}: matrix  of  set cases with dimension (\code{n} x \code{m}), where \code{n} is the number of curves and \code{m} are the discretization points observed in each curve, ii.- \code{"argvals"}: the discretizations points values, iii.- \code{"rangeval"}: range of the discretizations points values, iv.- \code{"names"} (optional) list with  \code{main} an overall title, \code{xlab} title for \code{x} axis and \code{ylab} title for \code{y} axis.}   
   \item{type}{1-character string giving the type of plot desired.\cr
 The following values are possible for \code{fdata} class object: "l" for lines (by default),"p" for points, , "o" for overplotted points and lines, "b", "c" for (empty if "c") points joined by lines, "s" and "S" for stair steps and "h" for histogram-like vertical lines. Finally, "n" does not produce any points or lines.\cr
@@ -33,7 +37,9 @@ The following values are possible for \code{fdata2d} class object: "image.contou
   \item{ylab}{ylab title for y axis, as in plot.}	
    \item{mfrow}{A vector of the form c(nr, nc). Subsequent figures will be drawn in an nr-by-nc array on the device by rows (mfrow).}
    \item{time}{The time interval to suspend plot execution for, in seconds, see \link[base]{Sys.sleep}.}
- \item{rownames}{Row names.}
+ \item{rownames}{Row names.} 
+ \item{argvals.s}{ a vector of argument values for the first argument s of the functional data object to be evaluated.}
+ \item{argvals.t}{a vector of argument values for the second argument t of the functional data object to be evaluated.}
   \item{\dots}{ Further arguments passed to \link[graphics]{matplot} function (for fdata class) or \link[graphics]{image}, \link[graphics]{contour}, \link[graphics]{persp} or \link[graphics]{filled.contour} (for fdata2d class).}
   }
 %\details{  Plot \code{fdata} object.}

@@ -5,7 +5,7 @@
 \title{aemet data}
 \description{
 Series of daily summaries of 73 spanish weather stations selected for the period 1980-2009. 
-The dataset contains geographic information of each station and the average for the period 1980-2009 of dayly temperature, daily precipitation and daily wind speed.\cr
+The dataset contains geographic information of each station and the average for the period 1980-2009 of daily temperature, daily precipitation and daily wind speed.\cr
 Meteorological State Agency of Spain (AEMET), \url{http://www.aemet.es/}.\cr
 Government of Spain.\cr
 }
@@ -28,20 +28,15 @@ Elements of aemet:\cr
  \code{...$logprec}: mean curve of the log precipitation for the period 1980-2009 (in log mm).\cr
 }
 \details{
-It uses the file "maestro.csv"' at the following address:\cr
-\url{ftp://ftpdatos.aemet.es/series_climatologicas/Maestro.csv}.
-
 It marks 36 UTF-8 string of names of stations and 3 UTF-8 string names of provinces through the function \code{\link{iconv}}.\cr
 
 In leap years temperatures for February 28 and 29 were averaged.\cr
 Negligible precipitation (less than 1 tenth of mm) is replaced  by \code{0.05} and 
 no precipitation (0.0 mm) is replaced  by \code{0.01}.  Then the logarithm is applied.
 }
-\source{
-\url{ftp://ftpdatos.aemet.es/series_climatologicas/valores_diarios/estacion/}
+\source{ The data were obtained from the FTP of AEMET in 2009.  
 }
-\note{
-\url{ftp://ftpdatos.aemet.es/series_climatologicas/valores_diarios/NOTA_LEGAL.txt}}
+
 \author{Manuel Febrero Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}}
 \examples{
 data(aemet)

@@ -67,35 +67,36 @@ Febrero-Bande, M. and Oviedo de la Fuente, M.
 See Also as:   \code{\link{fregre.gsam}}, \code{\link{fregre.glm}} and  \code{\link{fregre.np.cv}}\cr
 }
 \examples{
- data(tecator)
- ab=tecator$absorp.fdata[1:100]
- ab2=fdata.deriv(ab,2)
- yfat=tecator$y[1:100,"Fat"]
+\dontrun{
+data(tecator)
+ab=tecator$absorp.fdata[1:100]
+ab2=fdata.deriv(ab,2)
+yfat=tecator$y[1:100,"Fat"]
 
-## Example 1: # Changing the argument par.np and family
- yfat.cat=ifelse(yfat<15,0,1)
- xlist=list("df"=data.frame(yfat.cat),"ab"=ab,"ab2"=ab2)
- f2<-yfat.cat~ab+ab2
+# Example 1: # Changing the argument par.np and family
+yfat.cat=ifelse(yfat<15,0,1)
+xlist=list("df"=data.frame(yfat.cat),"ab"=ab,"ab2"=ab2)
+f2<-yfat.cat~ab+ab2
 
- par.NP<-list("ab"=list(Ker=AKer.norm,type.S="S.NW"),
- "ab2"=list(Ker=AKer.norm,type.S="S.NW"))
-# res2=fregre.gkam(f2,family=binomial(),data=xlist,
-# par.np=par.NP)
-# res2
+par.NP<-list("ab"=list(Ker=AKer.norm,type.S="S.NW"),
+"ab2"=list(Ker=AKer.norm,type.S="S.NW"))
+res2=fregre.gkam(f2,family=binomial(),data=xlist,
+par.np=par.NP)
+res2
 
-## Example 2: Changing the argument par.metric and family link
- par.metric=list("ab"=list(metric=semimetric.deriv,nderiv=2,nbasis=15),
- "ab2"=list("metric"=semimetric.basis))
-# res3=fregre.gkam(f2,family=binomial("probit"),data=xlist,
-# par.metric=par.metric,control=list(maxit=2,trace=FALSE))
-# summary(res3)
+# Example 2: Changing the argument par.metric and family link
+par.metric=list("ab"=list(metric=semimetric.deriv,nderiv=2,nbasis=15),
+"ab2"=list("metric"=semimetric.basis))
+res3=fregre.gkam(f2,family=binomial("probit"),data=xlist,
+par.metric=par.metric,control=list(maxit=2,trace=FALSE))
+summary(res3)
 
-## Example 3: Gaussian family (by default)
-## Only 1 iteration (by default maxit=100)
-# xlist=list("df"=data.frame(yfat),"ab"=ab,"ab2"=ab2)
-# f<-yfat~ab+ab2
-# res=fregre.gkam(f,data=xlist,control=list(maxit=1,trace=FALSE))
-# res
-
+# Example 3: Gaussian family (by default)
+# Only 1 iteration (by default maxit=100)
+xlist=list("df"=data.frame(yfat),"ab"=ab,"ab2"=ab2)
+f<-yfat~ab+ab2
+res=fregre.gkam(f,data=xlist,control=list(maxit=1,trace=FALSE))
+res
+}
 }
 \keyword{regression}

@@ -112,7 +112,8 @@ if (length(vfunc)>0)  {
 
         
         }
-if (!is.data.frame(XX)) XX=data.frame(XX)
+if (first) return(rep(object$coefficient,length=nrow(newx[[1]])) )        
+if (!is.data.frame(XX)) XX=data.frame(XX)         
  yp=predict.glm(object=object,newdata=XX,type=type,x=TRUE,y=TRUE,...)
 return(yp)
 }

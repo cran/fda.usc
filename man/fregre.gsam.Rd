@@ -7,7 +7,7 @@ Computes functional GAM model between functional covariate \eqn{(X^1(t_1),\cdots
 	
 This function is an extension of the functional generalized linear regression models: \code{\link{fregre.glm}} where the \eqn{E[Y|X,Z]} is related to the linear prediction \eqn{\eta} via a link function \eqn{g(\cdot)}{g(.)} with integrated smoothness estimation by the smooth functions \eqn{f(\cdot)}{f(.)}. 
 
-\deqn{g(E[Y|X,Z])=\eta=\alpha+\sum_{i=1}^{p}f_{i}(Z^{i})+\sum_{k=1}^{q}\sum_{j=1}^{k_q}{f_{j}^{k}(\xi_j^k)}}{g(E[Y|X,Z])=\eta=\alpha+\sum_i  f_i(Z_{i})+\sum_k^q\sum_{j=1}^{k_q}{f_j^k(\xi_j^k)}}
+\deqn{E[Y|X,Z])=\eta=g^{-1}(\alpha+\sum_{i=1}^{p}f_{i}(Z^{i})+\sum_{k=1}^{q}\sum_{j=1}^{k_q}{f_{j}^{k}(\xi_j^k)})}{E[Y|X,Z]=\eta=g^{-1}(\alpha+\sum_i  f_i(Z_{i})+\sum_k^q\sum_{j=1}^{k_q}{f_j^k(\xi_j^k)})}
 where \eqn{\xi_j^k}{\xi_j^k} is the coefficient of the basis  function expansion of \eqn{X^k}, (in PCA analysis \eqn{\xi_j^k}{\xi_j^k} is the score of the \eqn{j}-functional PC of \eqn{X^k}.
 
 The smooth functions \eqn{f(\cdot)}{f(.)} can be added to the right hand side of the formula to specify that the linear predictor depends on smooth functions of predictors using smooth terms \code{\link{s}} and \code{\link{te}} as in  \code{\link{gam}} (or linear functionals of these as \eqn{Z\beta} and \eqn{\big<X(t),\beta\big>}{< X(t),\beta(t) >} in \code{\link{fregre.glm}}). 
@@ -38,7 +38,7 @@ Functional covariates of class  \code{fdata} or \code{fd} are introduced in the 
 Return \code{gam} object plus:\cr
 \item{basis.x}{ Basis used for \code{fdata} or \code{fd} covariates.}
 \item{basis.b}{ Basis used for beta parameter estimation.}
-\item{beta.l}{ List of estimated beta parameter of functional covariates.}
+%\item{beta.l}{ List of estimated beta parameter of functional covariates.}
 \item{data}{ List that containing the variables in the model.}
 \item{formula}{ formula.}
 \item{CV}{ \$y.pred predicted response by cross-validation.}	
@@ -49,10 +49,6 @@ Muller HG and Stadtmuller U. (2005). \emph{Generalized functional linear models.
 Wood (2001) \emph{mgcv:GAMs and Generalized Ridge Regression for R}. R News 1(2):20-25.
 
 Ramsay, James O., and Silverman, Bernard W. (2006), \emph{ Functional Data Analysis}, 2nd ed., Springer, New York. 
-
-Ramsay, James O., and Silverman, Bernard W. (2006), \emph{ Functional Data Analysis}, 2nd ed., Springer, New York. 
-
-McCullagh and Nelder (1989), \emph{Generalized Linear Models} 2nd ed. Chapman and Hall. 
 
 Venables, W. N. and Ripley, B. D. (2002) \emph{Modern Applied Statistics with S}, New York: Springer.
 }
@@ -95,23 +91,6 @@ res.pc=fregre.gsam(f,data=ldata,family=gaussian(),
 basis.x=basis.x,basis.b=basis.b)
 summary(res.pc)
 
-## fd class object
-y=tecator$y$Fat
-dataf=as.data.frame(tecator$y)
-x.fd<-fdata2fd(x)
-x.fd1<-fdata.deriv(x,class.out="fd")
-x.fd2<-fdata.deriv(x,class.out="fd",nderiv=2)
-basis.b=list("x.fd"=basis2,"x.fd1"=basis2)
-ldata=list("df"=dataf,"x.fd"=x.fd,"x.fd1"=x.fd1,"x.fd2"=x.fd2)
-res.pc=fregre.gsam(f,data=ldata,family=gaussian(),basis.b=basis.b)
-
-## pca.fd
-basis.pc0=pca.fd(x.fd,3)
-basis.pc1=pca.fd(x.fd1,3)
-basis.pc2=pca.fd(x.fd2,3)
-basis.x=list("x.fd"=basis.pc0,"x.fd1"=basis.pc1)
-f0=Fat~+x.fd+s(x.fd1)+s(Protein)
-res.fd=fregre.gsam(f0,data=ldata,basis.x=basis.x)
 
 ##  Binomial family
 x=tecator$absorp.fdata

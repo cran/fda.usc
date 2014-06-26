@@ -18,7 +18,8 @@
  fdataori<-na.omit.fdata(fdataori) 
  nas<-na.action(fdataobj)
  nullans<-!is.null(nas) 
-      data2 <- fdataori[["data"]]    
+    data2 <- fdataori[["data"]]    
+    data <- fdataobj[["data"]]        
     names1 <- names2 <- names <- fdataobj[["names"]]
     names1$main <- "depth.RPD median"
     names2$main <- paste("RPD trim ", trim * 100, "%", sep = "")
@@ -53,7 +54,7 @@
     modu = apply(z, 1, modulo)
     z = z/modu
     if (is.fdata(proj)) {
-     if (fdataobj$argvals!=proj$argvals || ncol(fdataobj)!=ncol(proj)) stop("Error en proj dimension")
+     if (fdataobj$argvals!=proj$argvals || m!=ncol(proj)) stop("Error en proj dimension")
      z<-proj
      nproj<-nrow(z)
     }

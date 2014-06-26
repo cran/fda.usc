@@ -19,8 +19,8 @@
  }
 }
 \usage{
-depth.FM(fdataobj,fdataori=fdataobj,trim=0.25,dfunc="FM1",scale=FALSE,
-xeps=1e-8,draw=FALSE,...)
+depth.FM(fdataobj,fdataori=fdataobj,trim=0.25,scale=FALSE,dfunc="FM1",
+par.dfunc = list(scale = TRUE), draw = FALSE)
 
 depth.mode(fdataobj,fdataori=fdataobj,trim=0.25,
 metric=metric.lp,h=NULL,scale=FALSE,draw=FALSE,...)
@@ -28,8 +28,8 @@ metric=metric.lp,h=NULL,scale=FALSE,draw=FALSE,...)
 depth.RT(fdataobj,fdataori=fdataobj, trim = 0.25, nproj = 10, 
 proj = 1, xeps = 1e-07, draw = FALSE, ...)
 
-depth.RP(fdataobj,fdataori=fdataobj,trim=0.25,nproj=50,proj=1,scale=FALSE,
-xeps=1e-8,draw=FALSE,...)
+depth.RP(fdataobj,fdataori=fdataobj,trim=0.25,nproj=50,proj="vexponential",
+dfunc="TD1",par.dfunc=list(),scale=FALSE,draw=FALSE,...)
 
 depth.RPD(fdataobj,fdataori=fdataobj,nproj=50,proj=1,deriv=c(0,1),trim=0.25,
 dfunc2=depth.mode,method="fmm",draw=FALSE,...)  
@@ -42,12 +42,13 @@ dfunc2=depth.mode,method="fmm",draw=FALSE,...)
   \item{nproj}{ The number of projections.}
     %\item{proj}{ Random projections.  If is a character: create the random projection using a covariance matrix by process indicated in the argument (by default, proj=1, sigma=diag(ncol(fdataobj))), else if is a  matrix or fdata, it is a random projection provided by the user.} 
     
-        \item{proj}{   matrix or fdata class object with a random projection provided by the user. Otherwise, it is a \code{sigma} parameter of \code{\link{rproc2fdata}} function.} 
+        \item{proj}{   matrix or fdata class object with a random projection provided by the user. If is a character: create the random projection using a covariance matrix by process indicated in the argument. Otherwise, it is a \code{sigma} parameter of \code{\link{rproc2fdata}} function.} 
         
         
         
-  \item{dfunc}{type of univariate depth function used in Framiman and Muniz depth, \code{depth.FM}. "TD1" for Tukey (Halfspace) depth, "SD" for simplical (Liu) depth and "FM1" by default for Fraiman and Muniz depth.}
-  \item{dfunc2}{second depth function in  RPD depth, by default \code{\link{depth.mode}}.}
+  \item{dfunc}{type of univariate depth function used inside depth function,"FM1" original Fraiman and Muniz depth  is used in \code{depth.FM} and "TD1" Tukey (Halfspace) depth is used in \code{depth.RP}. Other univariate depth function: "Liu1" for simplical depth, "LD1" for Likelihood depth and "MhD1" for Mahalanobis 1-D depth. Also, any user function that fulfill the following pattern \emph{USER(x,xx,...)} and returns a depth can be included.}
+  \item{par.dfunc}{List of parameters for \emph{dfunc}.}
+  \item{dfunc2}{Second depth function in  RPD depth, by default \code{\link{depth.mode}}.}
   \item{deriv}{  Number of derivatives described in integer vector \code{deriv}. \code{=0} means no derivative.}
   \item{method}{  Type of derivative method. See   \code{\link{fdata.deriv}} for more details.}
   \item{h}{ Bandwidth, \code{h>0}. Default argument values are provided as the 15\%--quantile of the distance between \code{fdataobj} and \code{fdataori}.}
@@ -112,7 +113,7 @@ out.RT=depth.RT(fdataobj,trim=0.1,draw=TRUE)
 ## Double Random Projections
 out.RPD=depth.RPD(fdataobj,deriv=c(0,1),dfunc2=depth.FM,trim=0.1,draw=TRUE)
 out<-c(out.FM$mtrim,out.mode$mtrim,out.RP$mtrim,out.RPD$mtrim)
- plot(out)
+plot(out)
 }
 }
 \keyword{descriptive} 

@@ -15,9 +15,9 @@ Procedure for detecting funcitonal outliers.
 \usage{
 outliers.thres.lrt(fdataobj,nb=200,smo=0.05,trim=0.10,...)
 outliers.lrt(fdataobj,nb=200,smo=0.05,trim=0.10,...)
-outliers.depth.trim(fdataobj,nb=200,smo=0.05,trim=0.01,
+outliers.depth.trim(fdataobj,nb=200,smo=0.05,trim=0.01,quan=0.5,
 dfunc=depth.mode,...)
-outliers.depth.pond(fdataobj,nb=200,smo=0.05,dfunc=depth.mode,...)
+outliers.depth.pond(fdataobj,nb=200,smo=0.05,quan=0.5,dfunc=depth.mode,...)
 \method{quantile}{outliers.pond}(x,dfunc=depth.mode,
 nb=200,smo=0.05,ns=0.01,\dots)
 \method{quantile}{outliers.trim}(x,dfunc=depth.mode,trim=0.1,
@@ -27,7 +27,8 @@ nb=200,smo=0.05,ns=0.01,\dots)
   \item{fdataobj,x}{ \code{\link{fdata}} class object.}  
   \item{nb}{ The number of bootstrap samples.}
   \item{smo}{ The smoothing parameter for the bootstrap samples.}
-	\item{trim}{ The alpha of the trimming.}  
+	\item{trim}{ The alpha of the trimming.}
+	\item{quan}{Quantile to determine the cutoff from the Bootstrap procedure (by default=0.5)}  
 	\item{dfunc}{ Type of depth measure, by default \code{depth.mode}.}  
 	\item{ns}{ Significance level, by defaul 1\%. }
   \item{\dots}{ Further arguments passed to or from other methods.}
@@ -42,7 +43,7 @@ Outlier detection in functional data by depth measures: \cr
 i.-\code{outliers.depth.pond} function weights the data according to depth.\cr
 ii.-\code{outliers.depth.trim} function uses trimmed data.\cr
 
-quantile.outliers.pond and quantile.outliers.trim functions provides the quantiles of the bootstrap samples for functional outlier detection by data ponderation amd trimmed data respectively. Bootstrap smoothing function (\code{\link{fdata.bootstrap}} with \code{nb} resamples) is applied to these weighted or trimmed data. If \code{smo=0} smoothed bootstrap is not performed.  The function returns a vector of size \code{1}x\code{nb} with quantiles of the bootstrap samples.
+quantile.outliers.pond and quantile.outliers.trim functions provides the quantiles of the bootstrap samples for functional outlier detection by, respectively, weigthed and trimmed procedures. Bootstrap smoothing function (\code{\link{fdata.bootstrap}} with \code{nb} resamples) is applied to these weighted or trimmed data. If \code{smo=0} smoothed bootstrap is not performed.  The function returns a vector of size \code{1}x\code{nb} with bootstrap replicas of the quantile.
   }
 \value{
   \item{outliers}{ Indexes of functional outlier.}
@@ -70,11 +71,12 @@ See Also: \code{\link{fdata.bootstrap}}, \code{\link{Depth}}.
 }
 
 \examples{
+\dontrun{
 data(aemet)
-nb=200
-# NOT RUN
-#out.trim<-outliers.depth.trim(aemet$temp,dfunc=depth.FM,nb=nb)
-#plot(aemet$temp,col=1,lty=1)
-#lines(aemet$temp[out.trim[[1]]],col=2)
+nb=20 # Time consuming
+out.trim<-outliers.depth.trim(aemet$temp,dfunc=depth.FM,nb=nb)
+plot(aemet$temp,col=1,lty=1)
+lines(aemet$temp[out.trim[[1]]],col=2)
+}
 }
 \keyword{ outliers }

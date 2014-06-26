@@ -5,6 +5,7 @@
 \alias{mdepth.MhD}
 \alias{mdepth.SD}
 \alias{mdepth.LD}
+\alias{mdepth.TD}
 \alias{mdepth.RP}
 %\alias{mdepth.MB} 
 \title{ Provides the depth measure for multivariate data}
@@ -15,6 +16,7 @@
    \item The \code{\link{mdepth.MhD}}function implements a Mahalanobis depth measure.
    \item The \code{\link{mdepth.RP}} function provides the depth measure using random projections for multivariate data.
    \item  The \code{\link{mdepth.LD}} function provides the Likelihood depth measure for multivariate data.  
+   \item  The \code{\link{mdepth.TD}} function provides the Tukey depth measure for multivariate data.     
 %   \item  The \code{\link{mdepth.MB}} function provides the Modified Band depth.  
       }
 }
@@ -24,6 +26,7 @@ mdepth.SD(x,  xx = NULL, scale=FALSE)
 mdepth.HS(x, xx=x,proj=50,scale=FALSE,xeps=1e-15,random=FALSE)
 mdepth.MhD(x,xx=x,scale=FALSE)
 mdepth.RP(x,  xx = x, proj = 50, scale=FALSE) 
+mdepth.TD(x,xx=x,xeps=1e-15,scale=FALSE)
 mdepth.LD(x,xx=x,metric=metric.dist,h=NULL,scale=FALSE,...)  
 }
 \arguments{

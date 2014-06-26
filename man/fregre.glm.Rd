@@ -7,7 +7,7 @@ Computes functional generalized linear model between functional covariate \eqn{X
 	
 This function is an extension of the linear regression models: \code{\link{fregre.lm}} where the \eqn{E[Y|X,Z]} is related to the linear prediction \eqn{\eta} via a link function \eqn{g(.)}. 
 
-\deqn{g(E[Y|X,Z])=\eta=\alpha+\sum_{j=1}^{p}\beta_{j}Z^{j}+\sum_{k=1}^{q}\frac{1}{\sqrt{T_k}}\int_{T_k}{X^{k}(t)\beta_{k}(t)dt}}{g(E[Y|X,Z])= \eta = \alpha + \sum \beta_j Z_j+\sum < X_k(t) , \beta_k(t) >}
+\deqn{E[Y|X,Z]=\eta=g^{-1}(\alpha+\sum_{j=1}^{p}\beta_{j}Z^{j}+\sum_{k=1}^{q}\frac{1}{\sqrt{T_k}}\int_{T_k}{X^{k}(t)\beta_{k}(t)dt})}{E[Y|X,Z]= \eta = g^{-1}(\alpha + \sum \beta_j Z_j+\sum < X_k(t) , \beta_k(t) >)}
 
 where \eqn{Z=\left[ Z^1,\cdots,Z^p  \right]}{ Z = [Z_1 ,..., Z_p]} are the non functional covariates and \eqn{X(t)=\left[ X^{1}(t_1),\cdots,X^{q}(t_q)  \right]}{X(t) = [ X_1(t_1) ,..., X_q(t_q)]} are the functional ones. 
 }

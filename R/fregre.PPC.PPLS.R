@@ -468,8 +468,6 @@ else {
 }
 #################################################################
 #################################################################
-
-
 #################################################################
 #################################################################
 fregre.pc.cv=function (fdataobj, y, kmax=8,lambda=0,P=c(1,0,0),criteria = "SIC",weights=rep(1,len=n),...) {
@@ -525,7 +523,7 @@ rownames(pc.opt2)<-paste("lambda=",signif(lambda,4),sep="")
 colnames(pc.opt2)<-paste("PC(",1:kmax,")",sep="")
 MSC2<-pc.opt2
 MSC.min<-Inf
-min.rn<-lambda[1]                                               
+min.rn<-lambda[1]
 if (is.na(type.i))     stop("Error: incorrect criteria")
 else {
    if (type.i < 6) {
@@ -544,13 +542,13 @@ else {
        pc2<-pc
        for (k in 1:kmax) {
                 cv.AIC <- rep(NA, max.c)
-                if (sequen) {   
+                if (sequen) {
                    max.c=1
                   c1<-matrix(pc$l[1:k],ncol=1)
                 }
                 for (j in 1:max.c) {
                   pc2$rotation <- pc$rotation#[c1[, j]]
-                  pc2$l <- pc$l[c1[, j]]              
+                  pc2$l <- pc$l[c1[, j]]
                   out = fregre.pc(pc2, y,l=c1[, j],lambda=lambda[r],P=P,weights=weights,...)
                   ck<-out$df
                   s2 <- sum(out$residuals^2)/n
@@ -668,7 +666,7 @@ if (!sequen){
  MSC = as.numeric(l2)
  names(pc.opt3)<-paste("PC", pc.opt3, sep = "")
  rn.opt<-lambda[min.rn]
- fregre=fregre.pc(fdataobj,y,l=drop(pc.opt),lambda=rn.opt,P=P,weights=weights,...)
+ fregre=fregre.pc(fdataobj,y,l=drop(pc.opt3),lambda=rn.opt,P=P,weights=weights,...)
  return(list("fregre.pc"=fregre,pc.opt = pc.opt3,lambda.opt=rn.opt,
  PC.order=pc.opt2,MSC.order=MSC2))
 }
@@ -677,7 +675,7 @@ if (!sequen){
 ####################################################################
 ####################################################################
 
-#################################################################
+#############################################################
 #################################################################
 fregre.pc=function (fdataobj, y, l =NULL,lambda=0,P=c(1,0,0),weights=rep(1,len=n),...){
 if (class(fdataobj)=="fdata.comp") {
@@ -762,6 +760,7 @@ if (is.logical(lambda)) {
         object.lm$coefficients <- coefs
         object.lm$residuals <- drop(e)
         object.lm$fitted.values <- yp
+        object.lm$x<-scores 
         object.lm$y <- y
         object.lm$rank <- df
         object.lm$df.residual <-  rdf
@@ -788,7 +787,7 @@ else {
     colnames(dataf)<-c("y",cnames,"weights")
     pf <- paste(response, "~", sep = "")
     for (i in 1:length(cnames)) pf <- paste(pf,"+",cnames[i],sep="")
-    object.lm = lm(formula = pf,data=data.frame(dataf),weights=weights,...)
+    object.lm = lm(formula = pf,data=data.frame(dataf),weights=weights,x=TRUE, y=TRUE)
     beta.est<-object.lm$coefficients[2:(lenl+1)]*pc$rotation[l]
     beta.est$data<-colSums(beta.est$data)
     beta.est$names$main<-"beta.est"
@@ -811,4 +810,3 @@ else {
  class(out) = "fregre.fd"
  return(out)
 }
-

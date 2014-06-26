@@ -39,6 +39,7 @@ mplsr <- function(X, Y, ncomp = 2,lambda=0,P=c(0,0,1),...)
 #	sumofsquaresY <- apply(Y0^2, 2, sum)
 	sumofsquaresY <-colSums(Y0^2)
 	u <- Y0[, order(sumofsquaresY)[nbclass]]
+
 	tee <- 0
 	cee<-numeric(K)
   M<-NULL
@@ -57,7 +58,6 @@ mplsr <- function(X, Y, ncomp = 2,lambda=0,P=c(0,0,1),...)
 			test <- sum((tee- teenew)^2)       #norm.fdata(tee,teenew)
 			tee<- teenew			
 			cee[i] <- crossprod(tee)[1]
-#			print(crossprod(tee)[1])
 			p <- crossprod(X0, (tee/cee[i]))
 			PP[, i] <- p
 			q <- crossprod(Y0, tee)[, 1]/cee[i]
@@ -426,12 +426,19 @@ else {
 	qmax <- ncol(DATA1)
 	if(q > qmax) stop(paste("give a integer q smaller than ", qmax))
 	n1 <- nrow(DATA1)
-	if (is.factor(class1)) class1=as.numeric(class1)
-	nbclass <- max(class1)
+	if (is.factor(class1)) {
+  class1=as.numeric(class1)      
+	nbclass <- length(table(class1))#max(class1)
 	BINARY1 <- matrix(0, nrow = n1, ncol = nbclass)
 	for(g in 1:nbclass) {
 		BINARY1[, g] <- as.numeric(class1 == g)
 	}
+	}
+	else { 
+    BINARY1<- class1
+    if (!is.matrix(class1)) class1<-as.matrix(class1,ncol=1)
+    nbclass<-ncol(class1)
+    }
 	mplsr.res <- mplsr(DATA1, BINARY1, q)
 	COMPONENT1 <- DATA1 %*% mplsr.res$COEF
 	COMPONENT1 <- outer(rep(1, n1), as.vector(mplsr.res$b0)) + COMPONENT1
@@ -452,7 +459,7 @@ else {
   attr(mdist,"call")<-"semimetric.mplsr"
   attr(mdist,"par.metric")<-list("q"=q,"class1"=class1)
 	return(mdist)
-}
+}         
 #####################################################################
 #####################################################################
 #####################################################################
@@ -503,7 +510,6 @@ else {
 	SEMIMETRIC <- 0
 	for(qq in 1:q)
 		SEMIMETRIC <- SEMIMETRIC + outer(COMPONENT1[, qq], COMPONENT2[,qq], "-")^2
-#			print(dim(SEMIMETRIC))
   mdist<-sqrt(SEMIMETRIC)
 #  attr(mdist,"call")<-C1
   attr(mdist,"call")<-"semimetric.pca"
@@ -513,9 +519,3 @@ else {
 #####################################################################
 #####################################################################
 #####################################################################
-
-
-X=rproc2fdata(n=10,t=1:101,sigma="OU")
-a<-semimetric.fourier(X,nderiv=1,nbasis=27)
-b<-metric.dist(fdata.deriv(X,method="fourier",nbasis=27)$data)
-a/b

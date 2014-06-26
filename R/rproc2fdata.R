@@ -1,5 +1,5 @@
 rproc2fdata=function(n,t=NULL,mu=rep(0,length(t)),sigma=1,
-par.list=list("scale"=1,"theta"=1/(3*diff(rtt))),norm=FALSE,verbose=FALSE,...) {
+par.list=list("scale"=1,"theta"=.2*diff(rtt)),norm=FALSE,verbose=FALSE,...) {
 sigma2<-sigma
 if (is.fdata(mu)){   
   if (!is.null(t) & verbose) warnings("The argvals of argument t are ignored, the function uses the argvals(mu)")
@@ -31,7 +31,8 @@ if (is.character(sigma)) {
 "OrnsteinUhlenbeck"={m<-100;#t2<-t+m
             par.list$scale/(2*par.list$theta)*outer(t,t,function(u,v){
             exp(-par.list$theta*(u+v))*(exp(2*par.list$theta*pmin(u,v))-1)})},
-             "vexponential"=par.list$theta*outer(t,t,function(u,v){(1-exp(-(1/par.list$theta)*abs(u-v)/par.list$scale))})
+             "vexponential"=par.list$scale*outer(t,t,function(u,v){
+             exp(-abs(u-v)/par.list$theta)})
              )
   sigma<-t(sigma)
 
@@ -59,3 +60,5 @@ else{
 }
 return(X)
 }
+
+

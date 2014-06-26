@@ -13,8 +13,9 @@
 depth.FMp(lfdata, lfdataref = lfdata, trim = 0.25, dfunc = "mdepth.MhD",
 par.dfunc = list(scale = FALSE), draw = FALSE, ask = FALSE, ...) 
 
-depth.RPp(lfdata, lfdataref = lfdata, nproj = 50, proj = 1, trim = 0.25, 
-dfunc = "mdepth.MhD", par.dfunc = list(scale = TRUE), draw = FALSE,ask = FALSE)  
+depth.RPp(lfdata, lfdataref = lfdata, nproj = 50, proj = "vexponential",
+trim = 0.25, dfunc = "mdepth.TD", par.dfunc = list(scale = TRUE),
+draw = FALSE,ask = FALSE)  
    
 depth.modep(lfdata, lfdataref = lfdata, h = NULL, metric, par.metric = list(), 
 method = "euclidean", scale = FALSE, trim = 0.25, draw = FALSE,ask = FALSE)
@@ -29,6 +30,7 @@ method = "euclidean", scale = FALSE, trim = 0.25, draw = FALSE,ask = FALSE)
  \item  The \code{\link{mdepth.SD}} function provides the simplicial depth measure for bivariate data.  
   \item  The \code{\link{mdepth.LD}} function provides the Likelihood depth measure based on Nadaraya--Watson estimator of empirical density function.  
    \item The \code{\link{mdepth.HS}} function implements a half-space depth measure based on random projections.
+   \item The \code{\link{mdepth.TD}} function implements a Tukey depth measure.   
    \item The \code{\link{mdepth.MhD}}function implements a Mahalanobis depth measure.
    \item The \code{\link{mdepth.RP}} function provides the depth measure using random projections for multivariate data.
       }
@@ -43,6 +45,7 @@ method = "euclidean", scale = FALSE, trim = 0.25, draw = FALSE,ask = FALSE)
   \item{scale}{ =TRUE, scale the depth.}     
   \item{draw}{ =TRUE, draw the curves, the sample median and trimmed mean.}
   \item{ask}{logical. If \code{TRUE} (and the R session is interactive) the user is asked for input, before a new figure is drawn.} 
+%    \item{dscale}{Before calculating the integrated depth, each functional object distances are scaled by the maximum (by default).} 
   \item{\dots}{ Further arguments passed to or from other methods.}
 }
 
@@ -98,33 +101,31 @@ Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 data(tecator)
 xx<-tecator$absorp
 xx1<-fdata.deriv(xx,1)
-xx1<-fdata.deriv(xx,2)
-proj<-rproc2fdata(111,c(1,2))$data
 
- # Fraiman-Muniz Depth
-out.FM=depth.FM(xx,trim=0.1,dfunc="FM1",draw=TRUE)
-out.FM1p=depth.FMp(list(xx),trim=0.1,dfunc="FM1",draw=TRUE)
-out.FM$dep-out.FM1p$dep
-out.FM2p=depth.FMp(list(xx,xx1),trim=0.1,dfunc="SD",
-draw=TRUE,par.dfunc=list(random=FALSE))
+# Fraiman-Muniz Depth
+par.df<-list(scale =TRUE)
+out.FM1p=depth.FMp(list(xx,xx1),trim=0.1,draw=TRUE, par.dfunc = par.df)
+out.FM2p=depth.FMp(list(xx,xx1),trim=0.1,dfunc="mdepth.LD",par.dfunc = par.df,
+draw=TRUE)
 
+# Random Project Depth
+out.RP1p=depth.RPp(list(xx,xx1),trim=0.1,dfunc="mdepth.TD",
+draw=TRUE,par.dfunc = par.df)
+out.RP2p=depth.RPp(list(xx,xx1),trim=0.1,dfunc="mdepth.LD",
+draw=TRUE,par.dfunc = par.df)
 
 #Modal Depth
-out.mode=depth.mode(xx,trim=0.1,draw=TRUEmetric=metric.lp)
-out.mode1p=depth.modep(list(xx),trim=0.1,metric=metric.lp)
-out.mode$dep-out.mode1p$dep
-out.mode2p=depth.modep(list(xx),trim=0.1,metric=metric.lp,
-method="manhattan'')
+out.mode1p=depth.modep(list(xx,xx1),trim=0.1,draw=T,scale=T)
+out.mode2p=depth.modep(list(xx,xx1),trim=0.1,method="manhattan",
+draw=T,scale=T)
 
- # Fraiman-Muniz Depth
-out.RP=depth.RP(xx,trim=0.1,dfunc="FM1",draw=TRUE)
-out.RP1p=depth.RPp(list(xx),trim=0.1,dfunc="FM1",draw=TRUE)
-out.RP$dep-out.RP1p$dep
-## Double Random Projections
-out.RPD=depth.RPD(xx,deriv=c(0,1),dfunc2=depth.FM,trim=0.1,draw=TRUE)
-out.RP2p=depth.RPp(list(xx,xx1),trim=0.1,dfunc="FM",draw=TRUE,
-par.dfunc=list(random=FALSE),proj=out.RPD$proj)
-out.RPD$dep-out.RP2p$dep
+par(mfrow=c(2,3))
+plot(out.FM1p$dep,out.FM2p$dep)
+plot(out.RP1p$dep,out.RP2p$dep)
+plot(out.mode1p$dep,out.mode2p$dep)
+plot(out.FM1p$dep,out.RP1p$dep)
+plot(out.RP1p$dep,out.mode1p$dep)
+plot(out.FM1p$dep,out.mode1p$dep)
 }
 }
 \keyword{descriptive} 

@@ -62,7 +62,7 @@ flm.test (X.fdata, Y, beta0.fdata = NULL, B = 5000, est.method = "pls",
  Then, the test assumes that \code{Y} and \code{X.fdata} are \bold{centred} and will automatically center them. So, bear in mind that when you apply the test for \code{Y} and \code{X.fdata}, actually,
  you are applying it to \code{Y-mean(Y)} and \code{fdata.cen(X.fdata)$Xcen}.
 
- The test statistic corresponds to the Cramer-von Mises norm of the \emph{Residual Marked empirical Process based on Projections} \eqn{R_n(u,\gamma)}{R_n(u,\gamma)} defined in Garcia-Portugues \emph{et al.} (2012). 
+ The test statistic corresponds to the Cramer-von Mises norm of the \emph{Residual Marked empirical Process based on Projections} \eqn{R_n(u,\gamma)}{R_n(u,\gamma)} defined in Garcia-Portugues \emph{et al.} (2014). 
  The expression of this process in a \eqn{p}{p}-truncated basis of the space \eqn{L^2[0,T]}{L^2[0,T]} leads to the \eqn{p}{p}-multivariate process \eqn{R_{n,p}\big(u,\gamma^{(p)}\big)}{R_{n,p}(u,\gamma^{(p)})}, whose Cramer-von Mises norm 
  is easily computed.
  
@@ -74,7 +74,7 @@ Finally, the graph shown if \code{plot.it=TRUE} represents the observed trajecto
  \deqn{R_n(u)\approx\frac{1}{G}\sum_{g=1}^G R_n(u,\gamma_g),}{R_n(u) \approx \frac{1}{G} \sum_{g=1}^G R_n(u,\gamma_g),}
  where \eqn{\gamma_g}{\gamma_g} are simulated as Gaussians processes. This gives a graphical idea of how \emph{distant} is the observed trajectory from the null hypothesis.
  
-For further details see Garcia-Portugues \emph{et al.} (2012).
+For further details see Garcia-Portugues \emph{et al.} (2014).
 
 }
 
@@ -94,14 +94,10 @@ For further details see Garcia-Portugues \emph{et al.} (2012).
 
 \references{
 
-Escanciano, J. C. (2006). A consistent diagnostic test for regression models using projections. Econometric
-Theory, 22, 1030-1051. \url{http://dx.doi.org/10.1017/S0266466606060506}
+Escanciano, J. C. (2006). A consistent diagnostic test for regression models using projections. Econometric Theory, 22, 1030-1051. \url{http://dx.doi.org/10.1017/S0266466606060506}
 
-Garcia-Portugues, E., Gonzalez-Manteiga, W. and Febrero-Bande, M. (2012). A goodness--of--fit test for the functional linear model with scalar
-response. \url{http://arxiv.org/abs/1205.6167}
-
+Garcia-Portugues, E., Gonzalez-Manteiga, W. and Febrero-Bande, M. (2014). A goodness--of--fit test for the functional linear model with scalar response. Journal of Computational and Graphical Statistics, 23(3), 761-778. \url{http://dx.doi.org/10.1080/10618600.2013.812519}
 }
-
 \note{No NA's are allowed neither in the functional covariate nor in the scalar response.}
 
 
@@ -116,7 +112,7 @@ response. \url{http://arxiv.org/abs/1205.6167}
 
 \examples{
 
-## Simulated example ##
+# Simulated example #
 
 X=rproc2fdata(n=100,t=seq(0,1,l=101),sigma="OU")
 beta0=fdata(mdata=cos(2*pi*seq(0,1,l=101))-(seq(0,1,l=101)-0.5)^2+
@@ -130,96 +126,91 @@ plot(beta0,main="beta0")
 plot(density(Y),main="Density of Y",xlab="Y",ylab="Density")
 rug(Y)
 
+\dontrun{
 # Composite hypothesis: do not reject FLM
-#pcvm.sim=flm.test(X,Y,B=50,B.plot=50,G=100,plot.it=TRUE)
-#pcvm.sim
-# flm.test(X,Y,B=5000)
+pcvm.sim=flm.test(X,Y,B=50,B.plot=50,G=100,plot.it=TRUE)
+pcvm.sim
+flm.test(X,Y,B=5000)
 
 # Estimated beta
-# dev.new()
-# plot(pcvm.sim$beta.est)
+dev.new()
+plot(pcvm.sim$beta.est)
 
 # Simple hypothesis: do not reject beta=beta0
-# fflm.test(X,Y,beta0.fdata=beta0,B=50,B.plot=50,G=100)
-# flm.test(X,Y,beta0.fdata=beta0,B=5000) 
+flm.test(X,Y,beta0.fdata=beta0,B=50,B.plot=50,G=100)
+flm.test(X,Y,beta0.fdata=beta0,B=5000) 
 
 
-## AEMET dataset ##
+# AEMET dataset #
 
-# data(aemet)
+data(aemet)
 
-## Remove the 5% of the curves with less depth (i.e. 4 curves)
-# dev.new()
-# res.FM=depth.FM(aemet$temp,draw=TRUE)
-# qu=quantile(res.FM$dep,prob=0.05)
-# l=which(res.FM$dep<=qu)
-# lines(aemet$temp[l],col=3)
-# aemet$df$name[l]
+# Remove the 5% of the curves with less depth (i.e. 4 curves)
+dev.new()
+res.FM=depth.FM(aemet$temp,draw=TRUE)
+qu=quantile(res.FM$dep,prob=0.05)
+l=which(res.FM$dep<=qu)
+lines(aemet$temp[l],col=3)
+aemet$df$name[l]
 
-## Data without outliers 
-# wind.speed=apply(aemet$wind.speed$data,1,mean)[-l]
-# temp=aemet$temp[-l]
+# Data without outliers 
+wind.speed=apply(aemet$wind.speed$data,1,mean)[-l]
+temp=aemet$temp[-l]
 
-## Exploratory analysis: accept the FLM
-# pcvm.aemet=flm.test(temp,wind.speed,est.method="pls",B=100,B.plot=50,G=100)
-# pcvm.aemet
+# Exploratory analysis: accept the FLM
+pcvm.aemet=flm.test(temp,wind.speed,est.method="pls",B=100,B.plot=50,G=100)
+pcvm.aemet
 
-## Estimated beta
-# dev.new()
-# plot(pcvm.aemet$beta.est,lwd=2,col=2)
+# Estimated beta
+dev.new()
+plot(pcvm.aemet$beta.est,lwd=2,col=2)
 
-## B=5000 for more precision on calibration of the test: also accept the FLM
-# flm.test(temp,wind.speed,est.method="pls",B=5000) 
+# B=5000 for more precision on calibration of the test: also accept the FLM
+flm.test(temp,wind.speed,est.method="pls",B=5000) 
 
-## Simple hypothesis: rejection of beta0=0? Limiting p-value...
-# dat=rep(0,length(temp$argvals))
-# flm.test(temp,wind.speed, beta0.fdata=fdata(mdata=dat,argvals=temp$argvals,
-# rangeval=temp$rangeval),B=100)
-# flm.test(temp,wind.speed, beta0.fdata=fdata(mdata=dat,argvals=temp$argvals,
-# rangeval=temp$rangeval),B=5000) 
+# Simple hypothesis: rejection of beta0=0? Limiting p-value...
+dat=rep(0,length(temp$argvals))
+flm.test(temp,wind.speed, beta0.fdata=fdata(mdata=dat,argvals=temp$argvals,
+rangeval=temp$rangeval),B=100)
+flm.test(temp,wind.speed, beta0.fdata=fdata(mdata=dat,argvals=temp$argvals,
+rangeval=temp$rangeval),B=5000) 
 
 
-## Tecator dataset ##
+# Tecator dataset #
 
-# data(tecator)
-# names(tecator)
-# absorp=tecator$absorp.fdata
-# ind=1:129 # or ind=1:215
-# x=absorp[ind,]
-# y=tecator$y$Fat[ind]
-# tt=absorp[["argvals"]]
+data(tecator)
+names(tecator)
+absorp=tecator$absorp.fdata
+ind=1:129 # or ind=1:215
+x=absorp[ind,]
+y=tecator$y$Fat[ind]
+tt=absorp[["argvals"]]
 
-## Exploratory analysis for composite hypothesis with automatic choose of p
-# pcvm.tecat=flm.test(x,y,B=100,B.plot=50,G=100)
-# pcvm.tecat
+# Exploratory analysis for composite hypothesis with automatic choose of p
+pcvm.tecat=flm.test(x,y,B=100,B.plot=50,G=100)
+pcvm.tecat
 
-## B=5000 for more precision on calibration of the test: also reject the FLM
-# flm.test(x,y,B=5000) 
+# B=5000 for more precision on calibration of the test: also reject the FLM
+flm.test(x,y,B=5000) 
 
-## Plot of the estimated functional parameters
-# plot(pcvm.tecat$beta.est,lwd=2,col=2)
-# for(i in 1:100) lines(pcvm.tecat$boot.beta.est[[i]])
-# lines(pcvm.tecat$beta.est,lwd=2,col=2)
-# legend("topright",legend=c("Estimated","Bootstrap"),col=1:2,lwd=2)
+# Distribution of the PCvM statistic
+plot(density(pcvm.tecat$boot.statistics),lwd=2,xlim=c(0,10),
+main="PCvM distribution", xlab="PCvM*",ylab="Density")
+rug(pcvm.tecat$boot.statistics)
+abline(v=pcvm.tecat$statistic,col=2,lwd=2)
+legend("top",legend=c("PCvM observed"),lwd=2,col=2)
 
-## Distribution of the PCvM statistic
-# plot(density(pcvm.tecat$boot.statistics),lwd=2,xlim=c(0,10),
-# main="PCvM distribution", xlab="PCvM*",ylab="Density")
-# rug(pcvm.tecat$boot.statistics)
-# abline(v=pcvm.tecat$statistic,col=2,lwd=2)
-# legend("top",legend=c("PCvM observed"),lwd=2,col=2)
+# Simple hypothesis: fixed p
+dat=rep(0,length(x$argvals))
+flm.test(x,y,beta0.fdata=fdata(mdata=dat,argvals=x$argvals,
+rangeval=x$rangeval),B=100,p=11)
 
-## Simple hypothesis: fixed p
-# dat=rep(0,length(x$argvals))
-# flm.test(x,y,beta0.fdata=fdata(mdata=dat,argvals=x$argvals,
-# rangeval=x$rangeval),B=100,p=11)
-
-## Simple hypothesis, automatic choose of p
-# flm.test(x,y,beta0.fdata=fdata(mdata=dat,argvals=x$argvals,
-# rangeval=x$rangeval),B=100)
-# flm.test(x,y,beta0.fdata=fdata(mdata=dat,argvals=x$argvals,
-# rangeval=x$rangeval),B=5000) 
-
+# Simple hypothesis, automatic choose of p
+flm.test(x,y,beta0.fdata=fdata(mdata=dat,argvals=x$argvals,
+rangeval=x$rangeval),B=100)
+flm.test(x,y,beta0.fdata=fdata(mdata=dat,argvals=x$argvals,
+rangeval=x$rangeval),B=5000) 
+}
 }
 
 \keyword{htest}

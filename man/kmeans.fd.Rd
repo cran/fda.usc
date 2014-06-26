@@ -54,22 +54,23 @@ See Also generic \link[stats]{kmeans} function.
 }
 \examples{
 
+\dontrun{
 data(phoneme)
 mlearn<-phoneme$learn[c(1:50,101:150,201:250),]
 
 #Unsupervised classification
 out.fd1=kmeans.fd(mlearn,ncl=3,draw=TRUE)
-# NO RUN
-#out.fd2=kmeans.fd(mlearn,ncl=3,draw=TRUE,par.ini=list(method="exact"))
+out.fd2=kmeans.fd(mlearn,ncl=3,draw=TRUE,par.ini=list(method="exact"))
 # Different Depth function
-#ind=c(17,77,126)
-#out.fd3=kmeans.fd(mlearn,ncl=mlearn[ind,],draw=FALSE,
-#dfunc=func.trim.FM,par.dfunc=list(trim=0.1))
-#out.fd4=kmeans.fd(mlearn,ncl=mlearn[ind,],draw=FALSE,
-#dfunc=func.med.FM)
-#out.fd5=kmeans.fd(mlearn,ncl=3,dfunc=func.trim.RPD,
-#max.iter=10,par.dfunc=list(dfunc="depth.FM",deriv=c(0,1,1)))
-#group=c(rep(1,50),rep(2,50),rep(3,50))
-#table(out.fd5$cluster,group)
+ind=c(17,77,126)
+out.fd3=kmeans.fd(mlearn,ncl=mlearn[ind,],draw=FALSE,
+dfunc=func.trim.FM,par.dfunc=list(trim=0.1))
+out.fd4=kmeans.fd(mlearn,ncl=mlearn[ind,],draw=FALSE,
+dfunc=func.med.FM)
+out.fd5=kmeans.fd(mlearn,ncl=3,dfunc=func.trim.RPD,
+max.iter=10,par.dfunc=list(dfunc="depth.FM",deriv=c(0,1,1)))
+group=c(rep(1,50),rep(2,50),rep(3,50))
+table(out.fd5$cluster,group)
+}
 }
 \keyword{ cluster }

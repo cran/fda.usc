@@ -1,9 +1,8 @@
 ################################################################################
 # classif.DD: Fits Nonparametric Classification Procedure Based on DD–plot
 # File created by Manuel Oviedo de la Fuente  using code from paper:
-# Li, J., P.C., Cuesta-Albertos, J.A. and Liu, R.
-# DD--Classifier: Nonparametric Classification Procedure Based on DD-plot.
-# Journal of the American Statistical Association (2012), Vol. 107, 737--753.
+# Cuesta-Albertos, J.A., Febrero-Bande, M. and Oviedo de la Fuente, M.
+# The DDG-classifier in the functional setting. 
 ################################################################################
 classif.DD <- function(group,fdataobj,depth="FM",classif="glm",w,
 par.classif=list(),par.depth=list(),
@@ -78,16 +77,32 @@ control=list(verbose=FALSE,draw=TRUE,col=NULL,alpha=.25)){
     if (depth[1]=="modep"){
      hq<-numeric(ng)
      ismdist<-is.matrix(par.depth$metric)
-     if (is.null(par.depth$par.metric$dscale)) par.depth$par.metric$dscale=mean
+#     if (is.null(par.depth$par.metric$dscale)) par.depth$par.metric$dscale=
      if (ismdist)    mdist<-par.depth$metric
+     else {#calculo  distancas para pasar el mismo h en todos
+           par.depth$lfdata<-par.depth$lfdataref<-ldata
+           oo<-do.call("depth.modep",par.depth)
+#           mdist<-oo$mdist
+           par.depth$h<-oo$hq 
+#           ismdist<-TRUE
+           hq<-rep(oo$hq,len=ng)
+           }
+#     metric,par.metric=list(),   
+#llamamos a depth.modep,cogemos el h y lasdistancias y le rellamamaos 
+#metric.ldata(lfdata,lfdataref=lfdata,metric,par.metric=list(),method="euclidean") 
+#depth.modep=function(lfdata,lfdataref=lfdata,h=NULL,metric,par.metric=list(),
+#method="euclidean",scale=FALSE,trim=0.25,draw=FALSE,ask=FALSE)   
+    
+     
      fdataobj<-ldata[[1]]
      par.depth$lfdata<-ldata
      for (i in 1:ng) {
       ind[,i]<-group==lev[i]
       nam<-c(nam,paste("depth ",lev[i],sep=""))
       par.depth$lfdataref<-c.ldata(ldata,ind[,i]) #seleccionamos los de el grupo i
-      if (ismdist)  par.depth$metric<-mdist[,ind[,i]]    
+      if (ismdist)  par.depth$metric<-mdist[,ind[,i],]
       oo<-do.call("depth.modep",par.depth)        #call a la funcion depth
+      par.depth$par.metric<-oo$par.metric
       Df[,i]<-oo$dep
       hq[i]<-oo$hq      
      }     
@@ -97,8 +112,7 @@ control=list(verbose=FALSE,draw=TRUE,col=NULL,alpha=.25)){
    if (depth[1] %in% c("FMp","RPp")){ 
     par.depth$lfdata<-ldata
     fdataori<-ldata
-    nam.depth<-paste("depth.",depth[1],sep="")
-
+    nam.depth<-paste("depth.",depth[1],sep="")  
     for (i in 1:ng) {
       ind[,i]<-group==lev[i]
       fdataori<-c.ldata(ldata,ind[,i]) 
@@ -114,7 +128,7 @@ control=list(verbose=FALSE,draw=TRUE,col=NULL,alpha=.25)){
    gest<-factor(lev[apply(Df,1,which.max)],levels=lev) # Maximum depth  
    depthl<-depth
    colnames(Df)<-nam2 
-    par.ldata<-par.depth      
+   par.ldata<-par.depth      
  }
    else{
       lenl<-lenlista
@@ -132,62 +146,72 @@ if (!integrated){
  if (lendepth==1) depthl<-rep(depth,len=lenlista)
  else depthl<-depth
  depth0<-depth    
-for (idat in 1:lenlista) {
- fdataobj<-ldata[[idat]]
- depth<-depthl[idat]
- par.depth<-par.ldata[[idat]]
- nc<-ncol(fdataobj)
- x<-array(NA,dim=c(n,nc,ng))
- Df<-matrix(NA,ncol=ng,nrow=n)
- ind<-matrix(NA,nrow=n,ncol=ng)
- isfdata<-is.fdata(fdataobj)
- mnames<-ls(pattern="^mdepth.*",envir=as.environment("package:fda.usc"),all.names=TRUE)
- fnames<-ls(pattern="^depth.*",envir=as.environment("package:fda.usc"),all.names=TRUE) 
- mnames2<-ls(pattern="^mdepth.*",envir=.GlobalEnv,all.names=TRUE) 
- fnames2<-ls(pattern="^depth.*",envir=.GlobalEnv,all.names=TRUE)  
- mnames<-c(mnames,mnames2)
- fnames<-c(fnames,fnames2) 
- depth.long<-paste("mdepth.",depth,sep="")  
- if (depth.long %in% mnames & !isfdata) {
-  multi<-TRUE
-  par.depth$x<-fdataobj
-  }
- else    {
-  depth.long<-paste("depth.",depth,sep="")
-  if (depth.long %in% fnames & isfdata) { 
+ for (idat in 1:lenlista) {
+   fdataobj<-ldata[[idat]]
+   depth<-depthl[idat]
+   par.depth<-par.ldata[[idat]]
+   nc<-ncol(fdataobj)
+   x<-array(NA,dim=c(n,nc,ng))
+   Df<-matrix(NA,ncol=ng,nrow=n)
+   ind<-matrix(NA,nrow=n,ncol=ng)
+   isfdata<-is.fdata(fdataobj)
+   mnames<-ls(pattern="^mdepth.*",envir=as.environment("package:fda.usc"),all.names=TRUE)
+   fnames<-ls(pattern="^depth.*",envir=as.environment("package:fda.usc"),all.names=TRUE) 
+   mnames2<-ls(pattern="^mdepth.*",envir=.GlobalEnv,all.names=TRUE) 
+   fnames2<-ls(pattern="^depth.*",envir=.GlobalEnv,all.names=TRUE)  
+   mnames<-c(mnames,mnames2)
+   fnames<-c(fnames,fnames2) 
+   depth.long<-paste("mdepth.",depth,sep="")  
+   if (depth.long %in% mnames & !isfdata) {
+      multi<-TRUE
+     par.depth$x<-fdataobj
+   }
+   else    {
+    depth.long<-paste("depth.",depth,sep="")
+    if (depth.long %in% fnames & isfdata) { 
        par.depth[["fdataobj"]]<-fdataobj
        multi=FALSE         }
-  else stop("Incorrect depth function or data class object")
- }     
-     
- if (depth %in% c("RHS","RP","RPD","RT")){
- if (is.null(par.depth$proj)) {
-  d <- nc#-1
-  u <- matrix(runif(d*25,-1,1),25,d)
-  norm <- sqrt(rowSums(u*u))
-  arg <- u/norm
-  if (!multi & isfdata)  par.depth$proj<-fdata(arg,fdataobj$argvals,fdataobj$rangeval)
-  else   par.depth$proj<-arg
- }
- }
- ismdist<-is.matrix(par.depth$metric)
- if (ismdist) {
-   mdist<-par.depth$metric
- }  
- dmode<-c(depth.long=="depth.mode" | depth.long=="mdepth.mode")
-  if (dmode) hq<-numeric(ng) 
- for (i in 1:ng) {
-   ind[,i]<-group==lev[i]
-   nam<-c(nam,paste("depth ",lev[i],sep=""))#,paste("depth ",paste(lev[-i],collapse=",")))
-   if (multi)  par.depth$xx<-fdataobj[ind[,i],]
-   else   par.depth$fdataori<-fdataobj[ind[,i],]
-   if (ismdist) {
-     par.depth$metric<-mdist[,ind[,i]]   
-     par.depth$metric2<-mdist[ind[,i],ind[,i]]
+   else stop("Incorrect depth function or data class object")
+   }        
+   if (depth %in% c("RHS","RP","RPD","RT")){
+    if (is.null(par.depth$proj)) {
+      d <- nc#-1
+      u <- matrix(runif(d*25,-1,1),25,d)
+      norm <- sqrt(rowSums(u*u))
+      arg <- u/norm
+       par.depth$proj<-arg                         #####################################hacer rproc2fdata y guardarlas para la prediccion!!!!!
+     if (!multi & isfdata)  par.depth$proj<-rproc2fdata(50,fdataobj$argvals,sigma="vexponential")
+      else   par.depth$proj<-arg
     }
+  }
+  ismdist<-is.matrix(par.depth$metric)
+  if (ismdist) {   mdist<-par.depth$metric  }  
+  dmode<-c(depth.long=="depth.mode" | depth.long=="mdepth.mode")
+  if (dmode) {#calculo  distancas para pasar el mismo h en todos
+            par.depth$fdataori<-par.depth$fdataobj
+            oo<-do.call(depth.long,par.depth)
+            mdist<-oo$mdist
+            par.depth$h<-oo$hq 
+            ismdist<-TRUE
+            hq<-rep(oo$hq,len=ng)
+           }
+#hq<-numeric(ng) 
+#  if (dmode) hq[i]<-oo$hq      
+   for (i in 1:ng) {
+     ind[,i]<-group==lev[i]
+     nam<-c(nam,paste("depth ",lev[i],sep=""))#,paste("depth ",paste(lev[-i],collapse=",")))
+     if (ismdist) {
+       par.depth$metric<-mdist[,ind[,i]]   
+       par.depth$metric2<-mdist[ind[,i],ind[,i]]
+       }   
+     if (multi)  par.depth$xx<-fdataobj[ind[,i],]
+     else   par.depth$fdataori<-fdataobj[ind[,i],]
      oo<-do.call(depth.long,par.depth)
+     if (depth %in% c("RHS","RP","RPD","RT")) par.depth$proj<-oo$proj
+#print(i)
      Df[,i]<-oo$dep
-     if (dmode) hq[i]<-oo$hq    
+#print(oo$dep[1:4])     
+#     if (dmode) hq[i]<-oo$hq    
   }
  if (dmode) par.depth$h<-hq
  for (i in 1:length(var.name)) var.name[i]<-unlist(strsplit(var.name[i], "[$]"))[[1]]
@@ -269,7 +293,7 @@ switch(classif,
 DD2={
  if (ng2>2) {stop("DD-plot for more than 2 levels not available")}
  if (is.null(par.classif$pol)) {
- if (is.null(par.classif$nmax))   nmax=5000   #0
+ if (is.null(par.classif$nmax))   nmax=50000   #0
    else   nmax<-par.classif$nmax
   nsample<-choose(n,2)
   combs1<-NULL
@@ -317,8 +341,8 @@ else a2<-par.classif$pol
  DD3={
  if (ng2>2) {stop("DD-plot for more than 2 levels not available")}
  if (is.null(par.classif$pol)) {
-   if (is.null(par.classif$nmax))   nmax=500
-   else   nmax<-par.classif$nmax
+   if (is.null(par.classif$nmax))   nmax=50000
+   else     nmax<-par.classif$nmax
   nsample<-choose(n,3)
   combs1<-NULL
   if (nsample<nmax |  nmax==0)  combs1 <- t(combn(n,3))
@@ -477,7 +501,7 @@ glm={
 #          col3<-col2 
 #          fill1<-col1
 #      } 
-     image(sq,sq,matrix(bb2,control$fine),xlab=nam[1],ylab=nam[2],main=tit,col=fill1,ylim=c(minsq,maxsq))    
+     image(sq,sq,matrix(bb2,control$fine),xlab=nam[1],ylab=nam[2],main=tit,col=fill1,ylim=c(minsq,maxsq),useRaster=TRUE)
  #    palette("default")
      points(Df,col=col2,lwd=1,bg=col2,pch=pch1)
  #    palette(mycols) 
@@ -584,13 +608,13 @@ integrated<-FALSE
     integrated<-TRUE
     n<-nrow(ldata[[1]])
     Df<-matrix(NA,ncol=ng,nrow=n)
-    if (is.null(par.depth$par.metric$dscale)) par.depth$par.metric$dscale=mean
+#    print("modep prediction")
     hq<-par.depth$h
     par.depth$lfdata<-new.fdataobj
-    for (i in 1:ng) {
+   for (i in 1:ng) {
       ind[,i]<-group==lev[i]
       par.depth$lfdataref<-c.ldata(object$par.depth$lfdata,ind[,i])
-      par.depth$h<-hq[i]
+      par.depth$h<-hq[i] #misma ventana para toodos los datos
       aa<-do.call("depth.modep",par.depth)$dep        #call a la funcion depth
       Df[,i]<-aa
      }    
@@ -629,6 +653,7 @@ for (idat in 1:lenlista) {
          }    
  n<-nrow(new.fdataobj)
  nc<-ncol(new.fdataobj)
+
  nvec<-table(group)
  p<-nvec[1]/n    
  Df<-matrix(NA,ncol=ng,nrow=n) 
@@ -672,8 +697,8 @@ group.est<-switch(object$classif,
   group.est<- factor(ifelse(sapply(Df[,1],RR,a=object$par.classif$pol)>Df[,2],lev[1],lev[2]),levels=lev)
   },
   
- lda={predict(object$fit,Df)$class},
- qda={predict(object$fit,Df)$class},
+ lda={group.es<-predict(object$fit,Df)$class},
+ qda={group.es<-predict(object$fit,Df)$class},
  glm={
    dat<-data.frame(Df)
     group.est<-predict.classif(object$fit,list("df"=dat),type = "class")
@@ -703,3 +728,4 @@ group.est<-switch(object$classif,
  if (type=="dep") return(list("group.pred"=group.est,"dep"=Df))
  else   return(group.est)
 }
+################################################################################

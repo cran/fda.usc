@@ -55,8 +55,9 @@ fregre.ppc.cv,fregre.ppls.cv,
 P.penalty,rwild,classif.depth,
 classif.DD,predict.classif.DD,classif.tree,
 depth.FMp,depth.modep, depth.RPp,
-mdepth.LD,mdepth.HS,mdepth.SD,mdepth.RP,mdepth.MhD,
-metric.hausdorff,na.omit.fdata,na.fail.fdata
+mdepth.LD,mdepth.HS,mdepth.SD,mdepth.RP,mdepth.MhD,mdepth.TD,
+metric.hausdorff,na.omit.fdata,na.fail.fdata,
+dcor.xy,dcor.dist,bcdcor.dist,dcor.test,plot.bifd
 )
 
 #func.med.HD,func.med.PD,func.med.SD,func.med.MhD,func.trim.HD,func.trim.PD,func.trim.SD,func.trim.MhD,

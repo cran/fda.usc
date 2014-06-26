@@ -1,5 +1,5 @@
 
-outliers.depth.trim<-function(fdataobj,nb=200,smo=0.05,trim=0.01,
+outliers.depth.trim<-function(fdataobj,nb=200,smo=0.05,trim=0.01,quan=0.5,
 dfunc=depth.mode,...){
  if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
  nas1<-apply(fdataobj$data,1,count.na)
@@ -11,8 +11,9 @@ dfunc=depth.mode,...){
  m<-ncol(fdataobj)
 # print(dfunc=depth.mode)
  if (is.null(n) && is.null(m)) stop("ERROR IN THE DATA DIMENSIONS")
-    cutoff<-median(quantile.outliers.trim(fdataobj,dfunc=dfunc,nb=nb,smo=smo,
-    trim=trim,scale=FALSE,...))
+ if (is.null(row.names(fdataobj[["data"]]))) row.names(fdataobj[["data"]])=1:n
+    cutoff<-quantile(quantile.outliers.trim(fdataobj,dfunc=dfunc,nb=nb,smo=smo,
+    trim=trim,...),probs=quan)
     hay<-1
     outliers<-dep.out<-ite<-c()
     ii<-1

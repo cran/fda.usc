@@ -12,6 +12,7 @@ predict.fregre.gsam<-function(object,newx=NULL,type="response",...){
  formula=object$formula.ini
  tf <- terms.formula(formula, specials = c("s", "te", "t2"))
  terms <- attr(tf, "term.labels")
+ if (length(terms)==0) return(rep(object$coefficient,length=nrow(newx[[1]])) ) 
  special <- attr(tf, "specials")
  nt <- length(terms)
  specials<-rep(NULL,nt)
@@ -174,8 +175,15 @@ k=1
          else {
         l<-nrow(basis.x[[vfunc[i]]]$basis)
         vs <- t(basis.x[[vfunc[i]]]$basis$data)
-#        Z<-basis.x[[vfunc[i]]]$x
-        Z<- inprod.fdata(fdata.cen(fdat,object$mean[[vfunc[i]]])[[1]],object$vs.list[[vfunc[i]]])
+        xcen<-fdata.cen(fdat,object$mean[[vfunc[i]]])[[1]]
+        if ( basis.x[[vfunc[i]]]$type=="pls"){
+            if (basis.x[[vfunc[i]]]$norm)  {  
+              nn<-nrow(fdat)  
+              sd.X <- sqrt(apply(basis.x[[vfunc[i]]]$fdataobj$data, 2, var))             
+              xcen$data<- xcen$data/(rep(1, nn) %*% t(sd.X))
+            } 
+}
+        Z<- inprod.fdata(xcen,object$vs.list[[vfunc[i]]])
         response = "y"
         colnames(Z) = name.coef[[vfunc[i]]]=paste(vfunc[i], ".",rownames(basis.x[[vfunc[i]]]$basis$data),sep ="")
 #        XX = cbind(XX,Z)
@@ -265,10 +273,9 @@ k=1
    }
    }
         }
- if (!is.data.frame(XX)) XX=data.frame(XX)
+if (!is.data.frame(XX)) XX=data.frame(XX)
  yp=predict.gam(object=object,newdata=XX,type=type,...)
 return(yp)
 }
 }
-
-
+ 

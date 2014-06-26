@@ -1,6 +1,20 @@
+Release 1.2.1:
+The functions dcor.xy, dcor.test(), bcdcor.dist() and dcor.dist() 
+(wrapper function of energy package) are added.
+fregre.gsam() function can be used without smoothed vairables.
+A bug in "selec" argument of summary.fregre.gkam() has been fixed.
+A bug in "h" argument of fregre.plm() has been fixed.
+A bug in sigma="vexponential" of rproc2fdata() has been fixed. 
+The default values depth.RPp, depth.RP and rproc2fdata() have been modified.
+A classif.DD function uses
+ the same bandwidth "h" for k groups in modal depth.
+ the same projections "proj" for k groups in RP depth.
+A bug in predict.fregre.gsam() when PLS are previously estimated using norm=TRUE has been fixed.
+
+
 Release 1.2.0:
 New functions, 
-classif.DDh, fits Nonparametric Classification Procedure Based on DD–plot (depth-versus-depth plot) for G groups.
+classif.DD, fits Nonparametric Classification Procedure Based on DD–plot (depth-versus-depth plot) for G groups.
 depth.FMp, depth.modep and depth.RPp functions provide the depth measure for a list of p--functional data objects.
 metric.ldata, computes distance for a list of p--functional data objects.
 metric.hausdorff, computes hausdorff distance.

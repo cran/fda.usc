@@ -11,6 +11,7 @@ if (class(lfdata)=="list"){
 for (i in 1:lenl) {
   nas<-c(nas,na.action(na.omit(lfdata[[i]])))
 } 
+
 nas<-unique(nas)
 nullans<-!is.null(nas) 
 for (i in 1:lenl) {
@@ -29,34 +30,50 @@ for (i in 1:lenl) {
  if (missing(metric)){
    if (is.fdata(lfdata[[nam1[1]]])) metric<-rep("metric.lp",len=lenl)
    else    metric<-rep("metric.dist",len=lenl)   
- }   
-if (is.matrix(metric)) {
+ }  
+if (is.array(metric)) {
      mdist=metric   
      atr<-attributes(mdist)          
      metric<-atr   #call(attributes(mdist)$call)[[1]]     
       }
 else{ 
+ dscale0<-rep(1,len=lenl)
  for (i in 1:lenl){
  if (is.null(par.metric[[nam1[i]]])) par.metric[[nam1[i]]]<-list()
-  if (is.fdata(lfdata[[nam1[i]]])) { 
+ if (is.null(par.metric[[nam1[i]]]$dscale)) par.metric[[nam1[i]]]$dscale<-max    
+ if (is.fdata(lfdata[[nam1[i]]])) { 
    par.metric[[nam1[i]]][["fdata1"]]<-lfdata[[nam1[i]]]
-   par.metric[[nam1[i]]][["fdata2"]]<-lfdataref[[nam1[i]]]       
-   mdist<-do.call(metric[i],par.metric[[nam1[i]]])
+   par.metric[[nam1[i]]][["fdata2"]]<-lfdataref[[nam1[i]]] 
+  mdist<-do.call(metric[i],par.metric[[nam1[i]]])
    }
   else {
    par.metric[[nam1[i]]][["x"]]<-lfdata[[nam1[i]]]
    par.metric[[nam1[i]]][["y"]]<-lfdataref[[nam1[i]]]   
    mdist<-do.call(metric[i],par.metric[[nam1[i]]])
-
    }
-  amdist[,,i]<- mdist    
+#  if (is.function(par.metric[[nam1[i]]]$dscale)) dscale0[i]<-par.metric[[nam1[i]]]$dscale(mdist)
+#  if (is.numeric(par.metric[[nam1[i]]]$dscale))  dscale0[i]<-par.metric[[nam1[i]]]$dscale
+#  else stop("Incorrect dscale argument for distance matrix")#dscale0[i]<-par.metric$dscale
+#  mdist<-mdist#/dscale0[i]
+#print(max(mdist))
+#print(dscale0)  
+  amdist[,,i]<- mdist         #si se devuelve ocupa mucho
+  #par.metric[[nam1[i]]]$dscale<-dscale0
  }
- atr<-attributes(mdist)     
+
+# for (i in 1:lenl) { par.metric[[nam1[i]]]$dscale <- dscale0[i]}
+# print( amdist[1:4,1:4,i]  )
+ atr<-attributes(mdist)        
+# print(amdist[,1,])
  mdist<-apply(amdist,1:2,method)
+# print((mdist))
+# print("fin1")
 }
 }
 else stop("Error in lfdata argument")
-attributes(mdist)<-atr
+#attributes(mdist)<-atr
+attr(mdist, "par.metric") <-attr(atr, "par.metric")                                  
+attr(mdist, "call") <-attr(atr, "call")                                  
 attr(mdist, "method") <-method                                    
 # m2<-ncol(data2)
 # n2<-nrow(data2)
@@ -65,14 +82,19 @@ if (is.null(n) && is.null(m)) stop("ERROR IN THE DATA DIMENSIONS")
 #if (is.matrix(metric)) mdist=metric                    
 #else  mdist=metric(fdataobj,fdataori,...)
 #class(mdist)<-"matrix"
+#print(h)
 if (is.null(h))   {
   h<-0.15
   hq2=quantile(mdist,probs=h)
-  }
-else hq2<-h  
+  }                                   
+else hq2<-h 
 class(mdist)<-c("matrix","fdist")
 ans<-Ker.norm(mdist/hq2)    ####
+#print(ans)
 ans<-apply(ans,1,sum,na.rm=TRUE)                                    
+#print(ans)
+#print(ans[1:3])
+
 if (scale)   {
    mn<-min(ans,na.rm=TRUE)
    mx<-max(ans,na.rm=TRUE)
@@ -88,7 +110,7 @@ if (nullans) {
  ans1[-nas] <-ans 
  ans<-ans1    
  }       
-names(ans)<-nms    
+names(ans)<-nms  
 if (draw){
   mf=5
   if (lenl>4) ask=TRUE
@@ -125,11 +147,9 @@ if (draw){
    legend("topleft",legend=c(tr,"Median"),lwd=2,col=c("yellow","red"),box.col=0)
  }
 }
-#print("sale modep")
 return(invisible(list("lmed"=k,"ltrim"=lista,"dep"=ans,"metric"=metric,
 "par.metric"=par.metric,"mdist"=mdist,"hq"=hq2)))
 } 
-
 
 
 ##################################################################################
@@ -226,7 +246,7 @@ if (draw){
    lines(med,col="red",lwd=2)
    legend("topleft",legend=c(tr,"Median"),lwd=2,col=c("yellow","red"),box.col=0)
  }
- }         
+ }
 out<-list("median"=med,"lmed"=k,"mtrim"=mtrim,"ltrim"=lista,
 "dep"=ans,"hq"=hq2) 
 if (scale) out$dscale=mx
@@ -234,24 +254,25 @@ return(invisible(out))
 }
 ################################################################################
 mdepth.LD=function(x,xx=x,metric=metric.dist,h=NULL,scale=FALSE,...){    
- if (is.null(x))  rownames(x)<-1:nrow(x)
+ if (is.vector(xx)) stop("One of x or xx must be a matrix")
+		m2=ncol(xx)
+		n2=nrow(xx)
+if (is.vector(x)){
+	if (length(x)!=m2) stop("Length of x does not match with dimension of xx")
+	x=matrix(x,ncol=m2)}
+		n<-nrow(x)
+		m<-ncol(x)
+if (is.null(rownames(x)))  rownames(x)<-1:nrow(x)
  nms<-rownames(x)
- m0<-nrow(x)
  x<-na.omit(x)  
  xx<-na.omit(xx)
  nas<-na.action(x)
  nullans<-!is.null(nas) 
-        fdataobj<-data<-x
-        fdataori<-data2<-xx                                                 
         d <- ncol(x)
-n<-nrow(data)
-m<-ncol(data)
-m2<-ncol(data2)
-n2<-nrow(data2)
 if (is.null(n) && is.null(m)) stop("ERROR IN THE DATA DIMENSIONS")
 if (is.null(m) && is.null(m2)) stop("ERROR IN THE DATA DIMENSIONS")
 if (is.matrix(metric)) {mdist=metric}
-else {  mdist=metric(fdataobj,fdataori,...)  }
+else {  mdist=metric(x,xx,...)  }
 class(mdist)<-"matrix"
 #hq=quantile(mdist+diag(Inf,nrow(mdist)),probs=h)
 if (is.null(h))   {
@@ -261,22 +282,21 @@ if (is.null(h))   {
 else hq2<-h
 class(mdist)<-c("matrix")
 ans<-Ker.norm(mdist/hq2)    ####
-ans<-apply(ans,1,sum,na.rm=TRUE)                                    
+ans<-apply(ans,1,sum,na.rm=TRUE)
+mx=scale
+if (scale) { #en predcicion hay que usar los valores de scala usados previamente
+mx=max(ans,na.rm=TRUE)
+ans=as.vector(ans/mx)
+}                                    
 if  (nullans){
-        ans1<-rep(NA,len=m0)
+        ans1<-rep(NA,len=n)
         ans1[-nas] <-ans 
         ans<-ans1      
         }
 names(ans)<-nms   
-out<-list("dep" = ans,"hq"=hq2)
-if (scale)   {
-   mdist2<-metric(fdataori,fdataori,...)
-   ans2<-Ker.norm(mdist2/hq2)    ####
-   ans2<-apply(ans2,1,sum,na.rm=TRUE)                                       
-   mn<-min(ans2,na.rm=TRUE)
-   mx<-max(ans2,na.rm=TRUE)
-   ans=as.vector(ans/mx)   
-   out$dscale<-mx
-}                                                                    
+out<-list("dep" = ans,"hq"=hq2,dscale=mx)                                                                  
 return(invisible(out))
 }
+
+
+  

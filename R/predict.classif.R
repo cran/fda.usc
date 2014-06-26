@@ -91,7 +91,7 @@ predict.classif<-function(object,new.fdataobj=NULL,type="class",...)
                     colnames(Z)<-name.coef
                     XX<-data.frame(Z)  
                     yp = predict(object = object$fit, newdata = XX, type="class")
-                    group.pred<-(factor(yp,levels=lev))
+                group.pred<-(factor(yp,levels=lev))
                     return(group.pred)
                     }
                     if (first) {
@@ -136,21 +136,23 @@ predict.classif<-function(object,new.fdataobj=NULL,type="class",...)
             }
             if (!is.data.frame(XX))                  XX = data.frame(XX)
            yp = predict(object = object$fit, newdata = XX, type="class")
-                    group.pred<-(factor(yp,levels=lev))
+                group.pred<-(factor(yp,levels=lev))
           return(group.pred)                    
 ###                   pgrup<-prob.group #######
         }
     }
       if (object$C[[1]] == "classif.glm") {
         prob <- ngroup <- length(table(object$group))
+        prob.group <- array(NA, dim = c(nrow(new.fdataobj[[1]]),ngroup))
         if (ngroup == 2) {
-            prob.group <- predict.fregre.glm(object$fit[[1]],
+            probs <- predict.fregre.glm(object$fit[[1]],
                 newx = new.fdataobj, ...)
-            yest <- ifelse(prob.group < 0.5,lev[1],lev[2])
+            yest <- ifelse(probs < 0.5,lev[1],lev[2])
+            prob.group[, 1]<-1-probs
+            prob.group[, 2]<-probs            
         }
         else {
-            prob.group <- array(NA, dim = c(nrow(new.fdataobj[[1]]),
-                ngroup))
+
             for (i in 1:ngroup) {
                 prob.group[, i] <- predict.fregre.glm(object$fit[[i]],
                   newx = new.fdataobj, ...)
@@ -162,10 +164,13 @@ predict.classif<-function(object,new.fdataobj=NULL,type="class",...)
     }
   if (object$C[[1]] == "classif.gsam") {
         prob <- ngroup <- length(table(object$group))
+        prob.group <- array(NA, dim = c(nrow(new.fdataobj[[1]]),ngroup))
         if (ngroup == 2) {
-            prob.group <- predict.fregre.gsam(object$fit[[1]],
+            probs <- predict.fregre.gsam(object$fit[[1]],
                 newx = new.fdataobj, ...)
-            yest <- ifelse(prob.group < 0.5,lev[1],lev[2])
+            yest <- ifelse(probs < 0.5,lev[1],lev[2])
+                        prob.group[, 1]<-1-probs
+                       prob.group[, 2]<-probs  
         }
         else {
             prob.group <- array(NA, dim = c(nrow(new.fdataobj[[1]]),
@@ -177,15 +182,18 @@ predict.classif<-function(object,new.fdataobj=NULL,type="class",...)
             yest <- apply(prob.group, 1, which.min)
         }
                  group.pred<-(factor(yest,levels=lev))
-                  pgrup<-prob.group #######
+                 pgrup<-prob.group #######
     }
     if (object$C[[1]] == "classif.gkam") {
         prob <- ngroup <- length(table(object$group))
+        prob.group <- array(NA, dim = c(nrow(new.fdataobj[[1]]),ngroup))
         if (ngroup == 2) {
 
-            prob.group <- predict.fregre.gkam(object$fit[[1]],
+            probs <- predict.fregre.gkam(object$fit[[1]],
                newx = new.fdataobj,...)
-            yest <- ifelse(prob.group < 0.5,lev[1],lev[2])
+            yest <- ifelse(probs < 0.5,lev[1],lev[2])
+            prob.group[, 1]<-1-probs
+            prob.group[, 2]<-probs              
         }
         else {
             prob.group <- array(NA, dim = c(nrow(new.fdataobj[[1]]),
@@ -196,7 +204,7 @@ predict.classif<-function(object,new.fdataobj=NULL,type="class",...)
             }
             yest <- apply(prob.group, 1, which.min)
         }
-                 group.pred<-(factor(yest,levels=lev))
+                  group.pred<-(factor(yest,levels=lev))
                   pgrup<-prob.group #######
     }
    if (object$C[[1]] == "classif.glm2boost") {
@@ -204,10 +212,13 @@ predict.classif<-function(object,new.fdataobj=NULL,type="class",...)
          if ( isfdata)         newfdata<-list("X"= new.fdataobj)
          else      newfdata<-new.fdataobj
         prob <- ngroup <- length(table(object$group))
+        prob.group <- array(NA, dim = c(nrow(new.fdataobj[[1]]),ngroup))
         if (ngroup == 2) {
-            prob.group <- predict.fregre.glm(object$fit[[1]],      ######################
+            probs <- predict.fregre.glm(object$fit[[1]],      ######################
                 newx = newfdata, ...)
-            yest <- ifelse(prob.group < 0.5, lev[1],lev[2])
+            yest <- ifelse(probs < 0.5, lev[1],lev[2])
+            prob.group[, 1]<-1-probs
+            prob.group[, 2]<-probs              
         }
         else {
             ny <- as.numeric(names(table(object$group))) 
@@ -219,17 +230,20 @@ predict.classif<-function(object,new.fdataobj=NULL,type="class",...)
             }
             yest <- apply(prob.group, 1, which.min)
         }
-        group.pred<-(factor(yest,levels=lev))
-         pgrup<-prob.group #######
+         group.pred<-(factor(yest,levels=lev))
+         pgrup<-prob.group ##############################################################################################
     }
     if (object$C[[1]] == "classif.gkam2boost") {
         newdata <- object$data
 #        newdata[[2]] <- new.fdataobj
         prob <- ngroup <- length(table(object$group))
+        prob.group <- array(NA, dim = c(nrow(new.fdataobj[[1]]),ngroup))
         if (ngroup == 2) {
-            prob.group <- predict.fregre.gkam(object$fit[[1]],
+            probs <- predict.fregre.gkam(object$fit[[1]],
                 newx = new.fdataobj, ...)
-            yest <- ifelse(prob.group < 0.5,lev[1],lev[2])
+            yest <- ifelse(probs < 0.5,lev[1],lev[2])
+            prob.group[, 1]<-1-probs
+            prob.group[, 2]<-probs              
         }
         else {
             prob.group <- array(NA, dim = c(nrow(new.fdataobj[[1]]),
@@ -247,11 +261,14 @@ predict.classif<-function(object,new.fdataobj=NULL,type="class",...)
         newdata <- object$data
       if ( isfdata)         newfdata<-list("X"= new.fdataobj)
       else      newfdata<-new.fdataobj
-      prob <- ngroup <- length(table(object$group))
+               prob <- ngroup <- length(table(object$group))
+               prob.group <- array(NA, dim = c(nrow(new.fdataobj[[1]]),ngroup))
         if (ngroup == 2) {
-            prob.group <- predict.fregre.gsam(object$fit[[1]],
+            probs <- predict.fregre.gsam(object$fit[[1]],
                 newx = newfdata, ...)
-            yest <- ifelse(prob.group < 0.5, lev[1],lev[2])
+            yest <- ifelse(probs < 0.5, lev[1],lev[2])
+            prob.group[, 1]<-1-probs
+            prob.group[, 2]<-probs              
         }
         else {
           prob.group <- array(NA, dim = c(nrow(new.fdataobj[[1]]),ngroup))
@@ -260,8 +277,9 @@ predict.classif<-function(object,new.fdataobj=NULL,type="class",...)
             newx = newfdata, ...)
             }
           yest <- apply(prob.group, 1, which.min)
-        }            
-         group.pred<-(factor(yest,levels=lev))       
+        }
+        # group.pred<-factor(lev[yest])
+         group.pred<-(factor(yest,levels=lev))
          pgrup<-prob.group #######
     }
 if (object$C[[1]] == "classif.np") {
@@ -281,11 +299,12 @@ if (any(nas)) {
 }
 else newx<-as.matrix(new.fdataobj)
 nn <- nrow(new.fdataobj)
-if (is.null(rownames(newx)))         rownames(newx) <- 1:nn
+#if (is.null(rownames(newx)))         rownames(newx) <- 1:nn
 # if (is.vector(newx))  newx <- t(as.matrix(newx))
  x=object$fdataobj
  y=object$y
  h=object$h.opt
+# h<-0.5
  n = nrow(x)
  nn = nrow(newx)
  np <- ncol(x)
@@ -301,27 +320,26 @@ if (is.null(rownames(newx)))         rownames(newx) <- 1:nn
    par.metric<-attr(object$mdist,"par.metric")
    parm<-attr(object$mdist,"par.metric")
    a1<-attr(object$mdist,"call")
-if (isfdata) {  
+   if (isfdata) {  
    if (a1=="semimetric.mplsr") {
-      par.metric[["fdata1"]]<-x
-      par.metric[["fdata2"]]<-new.fdataobj
-      nmdist <- t(do.call(a1,par.metric))
+         par.metric[["fdata1"]]<-x
+   par.metric[["fdata2"]]<-new.fdataobj
+   nmdist <- t(do.call(a1,par.metric))
       }
-    else{
-       par.metric[["fdata2"]]<-x
-       par.metric[["fdata1"]]<-new.fdataobj
-       nmdist <- do.call(a1,par.metric)
+      else{
+         par.metric[["fdata2"]]<-x
+   par.metric[["fdata1"]]<-new.fdataobj
+   nmdist <- do.call(a1,par.metric)
       }
    }
    else {
    par.metric[["x"]]<-new.fdataobj
    par.metric[["y"]]<-x
-   nmdist <- (do.call(a1,par.metric))
-  
+   nmdist <- do.call(a1,par.metric)
   }
    object$par.S$cv=FALSE
    object$par.S$tt<-nmdist
-   kmdist=object$type.S(nmdist,h=h,Ker=object$Ker, cv =FALSE)#object$par.S$cv)
+   kmdist=object$type.S(nmdist,h=h,Ker=object$Ker, cv = TRUE)
         pgrup = array(0, dim = c(numg, nn))
         l = array(0, dim = c(nn))
         group.pred = array(0, dim = nn)
@@ -329,31 +347,38 @@ if (isfdata) {
             grup = as.integer(y == lev[j])
             pgrup[j, ] <- kmdist%*%matrix(grup,ncol=1)
         }
-
-#    group.pred<-factor(apply(pgrup,2,which.max))])  
+    group.pred<-factor(ny[apply(pgrup,2,which.max)],levels=ny)
+#print(cbind(apply(pgrup,2,which.max)[1:6],object$group.est[1:6],group.pred[1:6]))    
+      pgrup<-t(pgrup)
 #    group.pred<-factor(ifelse(apply(pgrup,2,which.max)==1,lev[1],lev[2])   )
-#    group.pred=factor(group.pred,levels=lev)
- group.pred<-factor(numeric(nn),levels=ny)
-   if (object$ty=="S.KNN") {
+#return(group.pred)
+###########parte nuevaaaaaaaaaaaaa
+group.est<-numeric(nn)
+ty<-"S.KNN"
+   if (ty=="S.KNN") {
     for (ii in 1:nn) {
-        l=seq_along(pgrup[,ii])[pgrup[,ii] == max(pgrup[,ii],na.rm=T)]
+        l=seq_along(pgrup[ii,])[pgrup[ii,] == max(pgrup[ii,],na.rm=T)]
        if (length(l)>1) {
-              l<-y[seq_along(nmdist[ii,])[nmdist[ii,] == min(nmdist[ii,],na.rm=T)]]
-        }
-       group.pred[ii]=factor(ny[l[1]],levels=ny)
-   }}
-  else {
-    pp<-apply(pgrup,2,which.max)
-    if (length(table(pp))!=numg)    group.pred<-factor(ny[unlist(pp)],levels=ny)
-    else     group.pred<-factor(ny[unlist(pp)],labels=ny)
+           abc<-seq_along(nmdist[ii,])[nmdist[ii,] == min(nmdist[ii,],na.rm=T)]
+           l<-ny[abc]
+        }                                   
+        
+       group.est[ii]=ny[l[1]]
+# ny[l] el [1] pq las 2 primeras diastancias tb pueden coincidir
+# (ejemplo curva con todo ceros)
+       }
+       group.pred<-group.est
   }
-}  
+                      
+}
+#    group.pred=factor(group.pred,levels=lev)
 if (type=="class")   return(group.pred)
-else {
-    if (isfdata)          colnames(pgrup) <- rownames(new.fdataobj$data)
-    else           colnames(pgrup) <- rownames(new.fdataobj)
-        rownames(pgrup) <- levels(object$group)
+if (type=="probs")  {
+    if (isfdata)          rownames(pgrup) <- rownames(new.fdataobj$data)
+   else          rownames(pgrup) <- rownames(new.fdataobj)
+        colnames(pgrup) <- levels(object$group)
         return(list(group.pred = group.pred, prob.group = pgrup))
     }
-}          
-
+else    stop("type argument should be one of class or probs")
+ 
+}

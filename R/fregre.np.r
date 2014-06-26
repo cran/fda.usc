@@ -98,13 +98,15 @@ if (is.null(h)) h=h.default(fdataobj,probs=c(0.05,0.05),len=1,metric = mdist,Ker
 "metric"=metric,"type.S"=type.S,"par.S"=par.S,"h.opt"=h,"m"=m)
       }
 else {
-    e<-y-drop(yp)
+    yp<-drop(yp)
+    y<-drop(y)
+    e<-y-yp
     names(e)<-rownames(x)
     sr2=sum(e^2)/(n-df)
     ycen=y-mean(y)
 	  r2=1-sum(e^2)/sum(ycen^2)
 	  out<-list("call"=C,"fitted.values"=yp,"H"=H,"residuals"=e,"df"=df,"r2"=r2,
-"sr2"=sr2,"y"=y,"fdataobj"=fdataobj,"mdist"=mdist,"Ker"=Ker,
+"sr2"=sr2,"y"=drop(y),"fdataobj"=fdataobj,"mdist"=mdist,"Ker"=Ker,
 "metric"=metric,"type.S"=type.S,"par.S"=par.S,"h.opt"=h,"m"=m,var.y=yp2)
   }
 class(out)="fregre.fd"

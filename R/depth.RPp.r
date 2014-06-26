@@ -1,6 +1,6 @@
  #hacer un dfunc,par.dfunc
-depth.RPp<-function (lfdata,lfdataref=lfdata, nproj = 50, proj=1,trim = 0.25,
-dfunc="mdepth.MhD",par.dfunc=list(scale=TRUE),draw = FALSE,ask=FALSE){  
+depth.RPp<-function (lfdata,lfdataref=lfdata, nproj = 50, proj="vexponential",trim = 0.25,
+dfunc="mdepth.TD",par.dfunc=list(scale=TRUE),draw = FALSE,ask=FALSE){  
 verbose<-TRUE
 if (class(lfdata)!="list") stop("lfdata input must be a list of fdata objects")
 if (class(lfdataref)!="list") stop("lfdataref input must be a list of fdata objects")
@@ -125,10 +125,6 @@ if (draw){
    legend("topleft",legend=c(tr,"Median"),lwd=2,col=c("yellow","red"),box.col=0)
  }
 }
-    return(invisible(list(median = med, lmed = k, mtrim = mtrim,
+return(invisible(list(median = med, lmed = k, mtrim = mtrim,
         ltrim = lista, dep = dep,proj = z,dfunc=dfunc,par.dfunc=par.dfunc)))
 }  
-
-
-
-

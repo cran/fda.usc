@@ -128,7 +128,7 @@ b10<-func.trimvar.RT(fdataobj)
 dev.new()
 par(mfrow=c(1,2))
 plot(c(b1,b2,b3,b4,b5),ylim=c(0,79),main="Measures of dispersion I")
-plot(c(b1,b6,b7,b8,b9,10),ylim=c(0,79),main="Measures of dispersion II")
+plot(c(b1,b6,b7,b8,b9,b10),ylim=c(0,79),main="Measures of dispersion II")
 }
 }
 \keyword{descriptive} 

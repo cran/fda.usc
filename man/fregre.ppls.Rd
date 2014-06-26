@@ -65,14 +65,5 @@ Journal of Statistical Software, 51(4), 1-28. \url{http://www.jstatsoft.org/v51/
 See Also as:   \code{\link{P.penalty}}, \code{\link{fregre.ppc.cv}} and \code{\link{fregre.ppls.cv}}.\cr
 Alternative method: \code{\link{fregre.pc}}, and   \code{\link{fregre.pls}}.
 }
-\examples{
 
-# data(tecator)
-# x<-tecator$absorp.fdata
-# y<-tecator$y$Fat
-# res=fregre.ppc(x,y,c(1:8))
-# summary(res)
-# res2=fregre.ppls(x,y,c(1:8))
-# summary(res2)
-}
 \keyword{regression}

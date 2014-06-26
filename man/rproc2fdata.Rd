@@ -7,7 +7,7 @@ Generate Functional data from: Ornstein Uhlenbeck process, Brownian process, Gau
 }
 \usage{
 rproc2fdata(n,t=NULL,mu=rep(0,length(t)),sigma=1,
-par.list=list("scale"=1,"theta"=1/(3*diff(rtt))),norm=FALSE,verbose=FALSE,...)
+par.list=list("scale"=1,"theta"=.2*diff(rtt)),norm=FALSE,verbose=FALSE,...)
 }
 \arguments{
 	\item{n}{ Number of functional data to generate.}       
@@ -25,10 +25,10 @@ If \code{sigma} is a character: create a random process using the covariance mat
    by default \eqn{\theta=1/(3range(t))}{\theta=1/(3range(t))}, \eqn{\sigma^2={1}}{\sigma^2=1}.
  \item \code{"wiener"}, creates an random Wiener process with \eqn{\Sigma_{s,t}=\sigma^2 min(s,t)}{\Sigma=\sigma^2 min(s,t)}, by default \eqn{\sigma^2=1}{\sigma^2=1}.
  \item \code{"vexponential"}, creates an random Exponential variogram process with
-  \eqn{\Sigma_{s,t}=\theta \left(1-e^{\left(-\frac{\theta}{\sigma^2}\left|s-t\right|\right)}\right)}{\Sigma=\theta (1-exp((-\theta/\sigma^2 |s-t|)))}, 
-  by default \eqn{\theta=\frac{1}{3range(t)}}{\theta=1/(3range(t))}, \eqn{\sigma^2={1}}{\sigma^2=1}.
+  \eqn{\Sigma_{s,t}=\sigma^2 e^{\left(-\frac{\left|s-t\right|}{\theta}\right)}}{\Sigma=\sigma^2 exp(-|s-t|/\theta )}, 
+  by default \eqn{\theta={0.2 range(t)}}{\theta=.2*range(t)}, \eqn{\sigma^2={1}}{\sigma^2=1}.
 }}
- \item{par.list}{ List of parameter to process, by default \code{"scale"} \eqn{\sigma^2=1}{\sigma^2=1} and \code{"theta"} \eqn{\theta=1/(3range(t))}{\theta=1/(3range(t))}.}  
+ \item{par.list}{ List of parameter to process, by default \code{"scale"} \eqn{\sigma^2=1}{\sigma^2=1} and \code{"theta"} \eqn{\theta=0.2 range(t)}{\theta=0.2 range(t)}.}  
  \item{norm}{ If \code{TRUE} the norm of random projection is 1. Default is \code{FALSE}}  
  \item{verbose}{ If \code{TRUE}, information about procedure is printed. Default is \code{FALSE}.} 
  \item{\dots}{ Further arguments passed to or from other methods.}	    

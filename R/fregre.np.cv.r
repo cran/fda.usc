@@ -14,13 +14,13 @@ nas.g<-is.na(y)
 if (is.null(names(y))) names(y)<-1:length(y)
 if (any(nas) & !any(nas.g)) {
    bb<-!nas
-   cat("Warning: ",sum(nas)," curves with NA are omited\n")
+   if (par.fda.usc$warning) warning(sum(nas)," curves with NA are omited\n")
    fdataobj$data<-fdataobj$data[bb,]
   y<-y[bb]
    }
 else {
 if (!any(nas) & any(nas.g)) {
-   cat("Warning: ",sum(nas.g)," values of group with NA are omited \n")
+   if (par.fda.usc$warning)    warning(sum(nas.g)," values of group with NA are omited \n")
    bb<-!nas.g
    fdataobj$data<-fdataobj$data[bb,]
    y<-y[bb]
@@ -28,7 +28,7 @@ if (!any(nas) & any(nas.g)) {
 else {
 if (any(nas) & any(nas.g))  {
    bb<-!nas & !nas.g
-   cat("Warning: ",sum(!bb)," curves  and values of group with NA are omited \n")
+      if (par.fda.usc$warning) warning(sum(!bb)," curves  and values of group with NA are omited \n")
    fdataobj$data<-fdataobj$data[bb,]
    y<-y[bb]
    }
@@ -80,8 +80,8 @@ y.est.cv<-y.est<-matrix(NA,nrow=nrow(y.mat),ncol=ncol(y.mat))
 par.S$tt<-mdist
 par.CV$metric<-metric
   for (i in 1:lenh) {
-print(i)
-print("h")  
+#print(i)
+#print("h")  
 #     H2=type.S(mdist,h[i],Ker,cv=FALSE)
     par.S$h<-h[i]
     par.S$cv=TRUE
@@ -92,16 +92,16 @@ print("h")
     H=do.call(ty,par.S)
 
 #     gcv[i] <- type.CV(y, H,trim=par.CV$trim,draw=par.CV$draw,...)
-    par.CV$S<-switch(tcv,CV.S=H.cv,GCV.S=H,dev.S=H,GCV.GLSS=H)
+    par.CV$S<-switch(tcv,CV.S=H.cv,GCV.S=H,dev.S=H,GCCV.S=H)
 #    if (tcv=="CV.S")  par.CV$S<-H.cv
 #    if (tcv=="GCV.S") par.CV$S<-H
 #    if (tcv=="dev.S") par.CV$S<-H
     for (j in 1:npy) {
         par.CV$y<-y.mat[,j]
 #        if (!isfdata) gcv[i]<- do.call(type.CV,par.CV)    #si es fdata no hace falta!!!
-print(j)
-print(tcv)
-print(names(par.CV))
+#print(j)
+#print(tcv)
+#print(names(par.CV))
         if (!isfdata) gcv[i]<- do.call(tcv,par.CV)    #si es fdata no hace falta!!!
         y.est[,j]=H%*%y.mat[,j]
         y.est.cv[,j]=H.cv%*%y.mat[,j]
@@ -125,12 +125,12 @@ print(names(par.CV))
 #     e2=y-H%*%y
 #     cv.error[i]=sum(e2^2)/(n-traza(H))
    }
-if (all(is.infinite(gcv))) print(" Warning: Invalid range for h")
+if (all(is.infinite(gcv)) &   par.fda.usc$warning) warning(" Warning: Invalid range for h")
    l = which.min(gcv)
    h.opt <- h[l] ######################################################### arreglar
-   if (h.opt==min(h)) cat(" Warning: h.opt is the minimum value of bandwidths
+   if (h.opt==min(h)&   par.fda.usc$warning) warning(" Warning: h.opt is the minimum value of bandwidths
    provided, range(h)=",range(h),"\n")
-   else if (h.opt==max(h)) cat(" Warning: h.opt is the maximum value of bandwidths
+   else if (h.opt==max(h)&   par.fda.usc$warning) warning(" Warning: h.opt is the maximum value of bandwidths
    provided, range(h)=",range(h),"\n")
    #H =type.S(mdist,h.opt,Ker,cv=FALSE)
   par.S$tt<-mdist
@@ -180,3 +180,4 @@ else {
 class(out)="fregre.fd"
 return(out)
 }
+

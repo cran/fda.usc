@@ -43,6 +43,7 @@ Febrero-Bande, M. and Oviedo de la Fuente, M.
 %\seealso{See Also as \code{\link{classif.DD}}}
 \examples{
  
+\dontrun{
 data(phoneme)
 mlearn<-phoneme[["learn"]]
 mtest<-phoneme[["test"]]
@@ -51,17 +52,13 @@ gtest<-phoneme[["classtest"]]
 
 a1<-classif.depth(glearn,mlearn,depth="RP")
 table(a1$group.est,glearn)
-table(a1$group.pred,gtest)
-
-# a2<-classif.depth(glearn,mlearn,depth="RP",CV=TRUE)
-# a3<-classif.depth(glearn,mlearn,depth="RP",CV=FALSE)
-# a4<-classif.depth(glearn,mlearn,mtest,"RP")
-# a5<-classif.depth(glearn,mlearn,mtest,"RP",CV=TRUE)     
-# table(a5$group.est,glearn)
-# table(a5$group.pred,gtest)
-# a6<-classif.depth(glearn,mlearn,mtest,"RP",CV=FALSE)
-# table(a6$group.est,glearn)
-# table(a6$group.pred,gtest)
-
+a2<-classif.depth(glearn,mlearn,depth="RP",CV=TRUE)
+a3<-classif.depth(glearn,mlearn,depth="RP",CV=FALSE)
+a4<-classif.depth(glearn,mlearn,mtest,"RP")
+a5<-classif.depth(glearn,mlearn,mtest,"RP",CV=TRUE)     
+table(a5$group.est,glearn)
+a6<-classif.depth(glearn,mlearn,mtest,"RP",CV=FALSE)
+table(a6$group.est,glearn)
+}
 }
 \keyword{classif}

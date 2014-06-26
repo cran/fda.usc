@@ -53,6 +53,7 @@ return(mdist)
 
 ################################################################################
 metric.dist<-function(x,y=NULL,method="euclidean",p=2,dscale=1,...){
+#print("*******************************************************entra meeeeetric.dist")
 if (is.vector(x)) x<-matrix(x,nrow=1)
 else x<-as.matrix(x)
 ynull<-is.null(y)

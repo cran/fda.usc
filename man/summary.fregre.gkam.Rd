@@ -14,7 +14,7 @@
 \arguments{
   \item{object,x}{ Estimated by functional regression, \code{fregre.fd} object.}
 	\item{draw}{ =TRUE draw   estimation and residuals graphics.}
-       \item{selec}{ Allows the plot for a single model term to be selected for printing. e.g. if you just want the plot for the second smooth term set select=2. 
+       \item{selec}{ Allows the plot for a single model term to be selected for printing. e.g. if you just want the plot for the second smooth term set selec=2. 
 .}
 	\item{times.influ}{ Limit for detect possible infuence curves.}
 

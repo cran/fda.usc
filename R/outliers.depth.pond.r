@@ -1,4 +1,4 @@
-outliers.depth.pond<-function(fdataobj,nb=200,smo=0.05,dfunc=depth.mode,...){
+outliers.depth.pond<-function(fdataobj,nb=200,smo=0.05,quan=0.5,dfunc=depth.mode,...){
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
  nas1<-apply(fdataobj$data,1,count.na)
  if (any(nas1))  stop("fdataobj contain ",sum(nas1)," curves with some NA value \n")
@@ -8,8 +8,8 @@ rtt<-fdataobj[["rangeval"]]
 n<-nrow(fdataobj)
 m<-ncol(fdataobj)
 if (is.null(n) && is.null(m)) stop("ERROR IN THE DATA DIMENSIONS")
-scale=FALSE
-cutoff<-median(quantile.outliers.pond(x,dfunc=dfunc,nb=nb,smo=smo,...))
+if (is.null(row.names(fdataobj[["data"]]))) row.names(fdataobj[["data"]])=1:n
+cutoff<-quantile(quantile.outliers.pond(x,dfunc=dfunc,nb=nb,smo=smo,...),probs=quan)
     hay<-1
     outliers<-dep.out<-ite<-c()
     curvasgood<-fdataobj
@@ -18,7 +18,7 @@ cutoff<-median(quantile.outliers.pond(x,dfunc=dfunc,nb=nb,smo=smo,...))
     modal<-FALSE
         ii<-1
     if (!is.null(dd$dist)) {
-      modal=TRUE   
+      modal=TRUE 
       dd<-dfunc(curvasgood,...)
           }
     d<-dd$dep             

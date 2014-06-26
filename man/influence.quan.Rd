@@ -43,26 +43,25 @@ Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 See Also as:  \code{\link{influence.fdata}}, \code{\link{fregre.basis}}, \code{\link{fregre.pc}}. 
 }
 \examples{
-
-
+\dontrun{
 data(tecator)
 x=tecator$absorp.fdata
 y=tecator$y$Fat
 res=fregre.pc(x,y,1:6)
-#NO RUN
-#res.infl=influence.fdata(res)
-#resquan=influence.quan(res,res.infl,4,0.01,0.05,0.95)
-#plot(res.infl$betas,type="l",col=2)
-#lines(res$beta.est,type="l",col=3)
-#lines(resquan$betas.boot,type="l",col="gray")
 
-#res=fregre.basis(x,y)
-#res.infl=influence.fdata(res)
-#resquan=influence.quan(res,res.infl,4,0.01,0.05,0.95)
-#plot(resquan$betas.boot,type="l",col=4)
-#lines(res.infl$betas,type="l",col=2)
-#lines(resquan$betas.boot,type="l",col="gray")
+#time consuming
+res.infl=influence.fdata(res)
+resquan=influence.quan(res,res.infl,4,0.01,0.05,0.95)
+plot(res.infl$betas,type="l",col=2)
+lines(res$beta.est,type="l",col=3)
+lines(resquan$betas.boot,type="l",col="gray")
 
-
+res=fregre.basis(x,y)
+res.infl=influence.fdata(res)
+resquan=influence.quan(res,res.infl,mue.boot=4,kmax.fix=T)
+plot(resquan$betas.boot,type="l",col=4)
+lines(res.infl$betas,type="l",col=2)
+lines(resquan$betas.boot,type="l",col="gray")
+}
 }
 \keyword{ outliers }

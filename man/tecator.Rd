@@ -33,7 +33,7 @@ for more details see tecator package}
 data(tecator)
 names(tecator)
 names(tecator$absorp.fdata)
-names(tecator$absorp.y)
+names(tecator$y)
 names(tecator$y)
 class(tecator$absorp.fdata)
 class(tecator$y)

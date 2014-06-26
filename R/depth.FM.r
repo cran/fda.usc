@@ -111,10 +111,8 @@ TD1<-function(x,Fn,xeps=1e-15,scale=FALSE) {
  if (scale){ d<-d*2      }
  d
 }
-LD1<-function(x,Fn,scale=FALSE) {
- d=Fn(x)
- if (scale){ d<-d/max(d)      }
- d
+LD1<-function(x,xx=x,scale=TRUE) {
+ mdepth.LD(matrix(x,ncol=1),matrix(xx,ncol=1),scale=scale)$dep
 }      
 MhD1 <- function(x,xx=x,scale=FALSE){
  if (is.vector(x)) {
@@ -127,8 +125,7 @@ ans
 
  
 ################################################################################
-depth.FM=function(fdataobj,fdataori=fdataobj,trim=0.25,dfunc="FM1",scale=FALSE,
-xeps=1e-8,draw=FALSE,...){
+depth.FM=function(fdataobj,fdataori=fdataobj,trim=0.25,scale=FALSE,dfunc="FM1",par.dfunc=list(scale=TRUE),draw=FALSE){
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
 if (!is.fdata(fdataori)) fdataori=fdata(fdataori)
 if (is.null(fdataobj))  rownames(fdataobj$data)<-1:nrow(fdataobj$data)
@@ -146,7 +143,6 @@ m<-ncol(data)
 m2<-ncol(data2)
 n2<-nrow(data2)
 d<-matrix(NA,nrow=n,ncol=m)
-trim=0
 if (is.null(n) && is.null(m)) stop("ERROR IN THE DATA DIMENSIONS")
 if (is.null(m) && is.null(m2)) stop("ERROR IN THE DATA DIMENSIONS")
 if (is.list(dfunc)) dfunc<-dfunc$dfunc
@@ -165,18 +161,25 @@ tr<-paste("FM.tr",trim*100,"\u0025",sep="")
 for (i in 1:m)   {
 if (dfunc %in% c("TD1","Liu1","FM1")){
          Fn[[i]]=ecdf(data2[,i])
-         d[,i]=do.call(dfunc,list("x"=data[,i],Fn=Fn[[i]],scale=scale))
+		 par.dfunc$x=data[,i]
+		 par.dfunc$Fn=Fn[[i]]
+         d[,i]=do.call(dfunc,par.dfunc)
          }
-else        d[,i]=do.call(dfunc,list("x"=data[,i],"xx"=data2[,i],scale=scale))      
+else     {
+		par.dfunc$x=data[,i]
+		par.dfunc$xx=data2[,i]
+			d[,i]=do.call(dfunc,par.dfunc)
+		 }
     }
 #d<-int.simpson(fdata(d,t,rtt),equi=equi)
 d<-apply(d,1,mean)[1:n]
 ans<-d
+if (scale) { ans=d/max(d)}
 names(ans)<-nms
 k=which.max(ans)    
 med=data[k,]                                                      
 lista=which(ans>=quantile(ans,probs=trim,na.rm=TRUE))
-if (n>1)  mtrim=apply(data[lista,],2,mean,na.rm=TRUE)
+if (n>1)  mtrim=apply(data[lista,,drop=FALSE],2,mean,na.rm=TRUE)
 else mtrim<-data                                     
 med<-fdata(med,t,rtt,names1)
 mtrim<-fdata(mtrim,t,rtt,names2)
@@ -196,6 +199,7 @@ return(invisible(list("median"=med,"lmed"=k,"mtrim"=mtrim,"ltrim"=lista,
 "dep"=ans,"Fn"=Fn)))
 } 
 
+  
 #####################################################
 ################################################################################
 depth.FMp=function(lfdata,lfdataref=lfdata,trim=0.25,dfunc="mdepth.MhD",
@@ -291,8 +295,9 @@ if (draw){
             par(mfrow =mf)                    }          
  for (idat in 1:len1) {
    data<-lfdata[[idat]]$data
-   med<-data[k,]      
-   mtrim=apply(data[lista,],2,mean,na.rm=TRUE)
+   med<-data[k,]    
+  
+   mtrim=apply(data[lista,,drop=FALSE],2,mean,na.rm=TRUE)
    med<-fdata(med,tt,rtt,names1)
    mtrim<-fdata(mtrim,tt,rtt,names2)
    rownames(med$data)<-"FMp.med"
@@ -307,4 +312,4 @@ if (draw){
  }
 }
 return(invisible(list("lmed"=k,"ltrim"=lista,"dep"=ans,"par.dfunc"=par.dfunc)))
-} 
+}

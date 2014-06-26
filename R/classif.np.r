@@ -98,10 +98,7 @@ if (is.null(par.S$Ker)& ty!="S.KNN")  par.S$Ker<-Ker
     H=do.call(ty,par.S)
     for (j in 1:numg) {
        Y[j,]=as.integer(y==ny[j])
-#  print(Y[j,])
        pgrup[j,,i]<-(H%*%matrix(Y[j,],ncol=1))
-       
-#       print(H[44:46,])
 #       print(matrix(Y[j,],ncol=1))
 #       print( pgrup[j,,i])
 # pgrup2[pgrup[j,,i]>0&Y[j,]>0,i]<-apply(mdist[pgrup[j,,i]>0&Y[j,]>0,pgrup[j,,i]>0&Y[j,]>0],1,mean)
@@ -120,7 +117,6 @@ if (is.null(par.S$Ker)& ty!="S.KNN")  par.S$Ker<-Ker
        }
   }
   else   {
-
 #         print("pgrup")
 #         print(ny)
 #                  print(h[i])
@@ -142,13 +138,14 @@ if (is.null(par.S$Ker)& ty!="S.KNN")  par.S$Ker<-Ker
     group.pred=group.est[i,]
     }
    }
-
+   colnames(prob.group2)<-ny
+   rownames(prob.group2)<-rownames(x)#rownames(fdataobj$data)
    l =which.min(gcv)
    h.opt <- h[l]
    par.S$h<-h.opt
-   if (h.opt==min(h)) cat(" Warning: h.opt is the minimum value of bandwidths
+   if (h.opt==min(h) & par.fda.usc$warning) cat(" Warning: h.opt is the minimum value of bandwidths
    provided, range(h)=",range(h),"\n")
-   else if (h.opt==max(h)) cat(" Warning: h.opt is the maximum value of bandwidths
+   else if (h.opt==max(h) & par.fda.usc$warning) cat(" Warning: h.opt is the maximum value of bandwidths
    provided, range(h)=",range(h),"\n")
 # 	yp=H%*%y
 #  names(e)<-rownames(x)
@@ -159,9 +156,10 @@ if (is.null(par.S$Ker)& ty!="S.KNN")  par.S$Ker<-Ker
   prob.classification<-diag(table(y,group.pred))/table(y)
 out<-list("C"=C,"group.est"=group.pred,"group"=y,"H"=H,"df"=df,
 "y"=y,"fdataobj"=fdataobj,"mdist"=mdist,"Ker"=Ker,"metric"=metric,"type.S"=type.S,
-"par.S"=par.S,"gcv"=gcv,"h.opt"=h.opt,"h"=h,prob.group=t(prob.group2),"m"=m,
+"par.S"=par.S,"gcv"=gcv,"h.opt"=h.opt,"h"=h,prob.group=prob.group2,"m"=m,
 "pgrup"=pgrup,"pgrup2"=pgrup2,"ty"=ty,
 prob.classification=prob.classification,"max.prob"=1-misclass)
 class(out)="classif"
 return(out)
 }
+

@@ -37,6 +37,7 @@ GCV.S=function(y,S,criteria="GCV",W=NULL,trim=0,draw=FALSE,metric=metric.lp,...)
      else    res=traza(t(e)%*%W%*%e)
     }
     d<-diag(S)[l] 
+    df<-sum(d)
     if (is.na(type.i))   {
                    if (mean(d,na.rm=TRUE)>0.5) vv=Inf
                    else   vv= 1/(1-2*mean(d,na.rm=TRUE))        }
@@ -51,5 +52,7 @@ GCV.S=function(y,S,criteria="GCV",W=NULL,trim=0,draw=FALSE,metric=metric.lp,...)
                            else   vv= 1/(1-2*mean(d,na.rm=TRUE))   }
                   )
          }
-return(res*vv/n) }
+out<-res*vv/n
+ attr(out, "df") <- df           
+return(out) }
   
