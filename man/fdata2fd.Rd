@@ -7,7 +7,8 @@
  Converts \code{fdata} class object into \code{fd} class object using \code{Data2fd} function.
 }
 \usage{
-fdata2fd(fdataobj,type.basis=NULL,nbasis=NULL,nderiv=0,lambda=NULL,...)
+fdata2fd(fdataobj,type.basis=NULL,nbasis=NULL,nderiv=0,
+lambda=NULL,...)
 }
 
 \arguments{

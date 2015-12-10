@@ -24,7 +24,8 @@ fregre.gkam=function (formula,family = gaussian(),data, weights= rep(1,nobs),
  if (length(vnf)>0) {
  XX=data[[1]][,c(response,vnf2)] #data.frame el 1er elemento de la lista
  for ( i in 1:length(vnf)){
-#     print(paste("Non functional covariate:",vnf[i]))
+   print(paste("Non functional covariate:",vnf[i]))
+   print(paste("The procedure considers only functional covariates and therefore the variable",vnf[i]," is not used."))
      if (kterms > 1)   pf <- paste(pf, "+", vnf[i], sep = "")
      else pf <- paste(pf, vnf[i], sep = "")
      kterms <- kterms + 1

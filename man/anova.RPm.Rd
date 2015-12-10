@@ -16,7 +16,6 @@
 \method{anova}{RPm}(object,formula,data.fac,RP=min(30,ncol(object)),
 alpha=0.95,hetero=TRUE,pr=FALSE,w=rep(1,ncol(object)),
 nboot=0,contrast=NULL,\dots)
-
 }
 \arguments{
   \item{object}{ Functional response data.  Object with class fdata with \code{n} curves discretizated in \code{m} points.}
@@ -55,7 +54,8 @@ Cuesta-Albertos, J.A., Febrero-Bande, M. \emph{A simple multiway ANOVA for funct
 Test 2010, DOI \bold{10.1007/s11749-010-0185-3}.
 }
 \author{
-Juan A. Cuesta-Albertos,  Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
+Juan A. Cuesta-Albertos,  Manuel Febrero-Bande, Manuel Oviedo de la Fuente\cr
+ \email{manuel.oviedo@usc.es}
 }
 \seealso{
 See Also as: \code{\link{anova.onefactor}} 

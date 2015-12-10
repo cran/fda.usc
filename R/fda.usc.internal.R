@@ -220,7 +220,6 @@ c.fdata<-function(...) {
     return(concatfdata)
 }
 
-
 ################################################################################
 count.na<-function(A){any(is.na(A))}
 

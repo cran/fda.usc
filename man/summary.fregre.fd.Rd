@@ -5,7 +5,8 @@
 
 \title{ Summarizes information from fregre.fd objects. }
 \description{
-	Summary function for \code{\link{fregre.pc}}, \code{\link{fregre.basis}}, \code{\link{fregre.pls}}, \code{\link{fregre.np}} and \code{\link{fregre.plm}} functions.
+	Summary function for \code{\link{fregre.pc}}, \code{\link{fregre.basis}}, \code{\link{fregre.pls}}, \code{\link{fregre.np}}\cr
+  and \code{\link{fregre.plm}} functions.
 }
 \usage{
 \method{summary}{fregre.fd}(object,times.influ=3,times.sigma=3,draw=TRUE,\dots)
@@ -52,7 +53,8 @@ If \code{ask}=FALSE draw graphs in one window, by default. If \code{ask}=TRUE, d
 }
 \author{Manuel Febrero-Bande and Manuel Oviedo de la Fuente \if{latex}{\cr}\email{manuel.oviedo@usc.es}}
 \seealso{
-Summary function for  \code{\link{fregre.pc}}, \code{\link{fregre.basis}}, \code{\link{fregre.pls}},  \code{\link{fregre.np}} and \code{\link{fregre.plm}}.
+Summary function for  \code{\link{fregre.pc}}, \code{\link{fregre.basis}}, \code{\link{fregre.pls}}, \cr
+ \code{\link{fregre.np}} and \code{\link{fregre.plm}}.
 }
 \examples{
 

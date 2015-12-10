@@ -2,7 +2,7 @@
 \Rdversion{1.1}
 \alias{order.fdata}
 \title{ A wrapper for the  \code{\link{order}} function}
-\description{  The funcional data is oredered w.r.t the sample order of the values of vector.}
+\description{  The funcional data is ordered w.r.t the sample order of the values of vector.}
 \usage{
 \method{order}{fdata}(y,fdataobj,na.last = TRUE, decreasing = FALSE)
 }

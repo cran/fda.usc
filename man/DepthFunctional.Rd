@@ -19,8 +19,8 @@
  }
 }
 \usage{
-depth.FM(fdataobj,fdataori=fdataobj,trim=0.25,scale=FALSE,dfunc="FM1",
-par.dfunc = list(scale = TRUE), draw = FALSE)
+depth.FM(fdataobj,fdataori=fdataobj,trim=0.25,scale=FALSE,
+dfunc="FM1",par.dfunc = list(scale = TRUE), draw = FALSE)
 
 depth.mode(fdataobj,fdataori=fdataobj,trim=0.25,
 metric=metric.lp,h=NULL,scale=FALSE,draw=FALSE,...)
@@ -28,11 +28,12 @@ metric=metric.lp,h=NULL,scale=FALSE,draw=FALSE,...)
 depth.RT(fdataobj,fdataori=fdataobj, trim = 0.25, nproj = 10, 
 proj = 1, xeps = 1e-07, draw = FALSE, ...)
 
-depth.RP(fdataobj,fdataori=fdataobj,trim=0.25,nproj=50,proj="vexponential",
-dfunc="TD1",par.dfunc=list(),scale=FALSE,draw=FALSE,...)
+depth.RP(fdataobj,fdataori=fdataobj,trim=0.25,nproj=50,
+proj="vexponential",dfunc="TD1",par.dfunc=list(),scale=FALSE,
+draw=FALSE,...)
 
-depth.RPD(fdataobj,fdataori=fdataobj,nproj=50,proj=1,deriv=c(0,1),trim=0.25,
-dfunc2=depth.mode,method="fmm",draw=FALSE,...)  
+depth.RPD(fdataobj,fdataori=fdataobj,nproj=50,proj=1,deriv=c(0,1),
+trim=0.25,dfunc2=depth.mode,method="fmm",draw=FALSE,...)  
 }
 
 \arguments{
@@ -51,7 +52,13 @@ dfunc2=depth.mode,method="fmm",draw=FALSE,...)
   \item{dfunc2}{Second depth function in  RPD depth, by default \code{\link{depth.mode}}.}
   \item{deriv}{  Number of derivatives described in integer vector \code{deriv}. \code{=0} means no derivative.}
   \item{method}{  Type of derivative method. See   \code{\link{fdata.deriv}} for more details.}
-  \item{h}{ Bandwidth, \code{h>0}. Default argument values are provided as the 15\%--quantile of the distance between \code{fdataobj} and \code{fdataori}.}
+ 
+ \item{h}{ Bandwidth parameter. 
+  \enumerate{
+   \item If \code{h} is a numerical value, the procedure considers the argument value as bandwidth.
+ \item If is \code{NULL} (by default) the bandwidth is provided as the 15\%--quantile of the distance between \code{fdataobj} and \code{fdataori}.
+  \item If \code{h} is a character string (as \code{"q-0.15"}), the procedure subtracts from the third position of the vector until the end, then it becomes a numeric value and that value is used to compute the quantile of the distance between \code{fdataobj} and \code{fdataori} (as in the second case).
+  }}
   \item{metric}{ Metric function, by default \code{\link{metric.lp}}. Distance matrix between \code{fdataobj} and \code{fdataori}.}
   \item{scale}{ =TRUE, scale the depth.}   
   \item{xeps}{ Accuracy. The left limit  of the empirical distribution function.}
@@ -111,7 +118,8 @@ out.RP=depth.RP(fdataobj,trim=0.1,draw=TRUE)
 out.RT=depth.RT(fdataobj,trim=0.1,draw=TRUE)
 \dontrun{
 ## Double Random Projections
-out.RPD=depth.RPD(fdataobj,deriv=c(0,1),dfunc2=depth.FM,trim=0.1,draw=TRUE)
+out.RPD=depth.RPD(fdataobj,deriv=c(0,1),dfunc2=depth.FM,
+trim=0.1,draw=TRUE)
 out<-c(out.FM$mtrim,out.mode$mtrim,out.RP$mtrim,out.RPD$mtrim)
 plot(out)
 }

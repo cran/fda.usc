@@ -1,3 +1,18 @@
+Release 1.2.2:
+Warning message in fregre.basis.cv(), fregre.pc.cv(), fregre.pls.cv(), fregre.basis(),
+fregre.pc() and fregre.pls() functions when system is computationally singular.
+A bug in predict.classif() function using a fitted object by classif.knn() has been fixed.
+The argument "trim" is modified from 0.1 to 0.25 in the function quantile.outliers.trim
+The internal distance functions: euclidean, manhattan, minkowski and maximum allow a vector of weights.
+In classif.DD function, the  polynomial classifier ("DD1", "DD2" and "DD3") uses the original procedure
+ proposed by Li et al. (2012), rotating the DD-plot (to exchange abscise and ordinate). The procedure 
+ extend to multi-class problems by incorporating the method of majority voting in the case of polynomial
+ classifier and the method One vs the Rest in the logistic case ("glm" and "gam").
+The fregre.gkam function only considers  functional covariates (not implemented for non-functional covariates). 
+In the depth.FM function it has been renamed the argument "dfunc" by "dfunc2".
+subset.fdata is a wrapper function of subset function.
+
+
 Release 1.2.1:
 The functions dcor.xy, dcor.test(), bcdcor.dist() and dcor.dist() 
 (wrapper function of energy package) are added.

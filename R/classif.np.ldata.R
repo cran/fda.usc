@@ -1,73 +1,27 @@
-classif.knn=function(group,fdataobj,knn=NULL,metric,
-type.CV = GCV.S,par.CV=list(trim=0),par.S=list(),...){
-if (missing(metric))  {
-  if (is.fdata(fdataobj)) metric=metric.lp
-  else metric=metric.dist}
-classif.np(group,fdataobj,h=knn,Ker=Ker.unif,metric=metric,
-type.CV=type.CV,type.S=S.KNN,par.CV=par.CV,par.S=par.S,...)
-}
-
-classif.kernel=function(group,fdataobj,h=NULL,Ker=AKer.norm,metric,
-type.CV = GCV.S,par.CV=list(trim=0),par.S=list(),...){
-if (missing(metric))  {
-  if (is.fdata(fdataobj)) metric=metric.lp
-  else metric=metric.dist}
-classif.np(group,fdataobj,h,Ker,metric=metric,type.CV,type.S=S.NW,par.CV=par.CV,par.S=par.S,...)
-}
-
-
-classif.np<-function (group, fdataobj, h = NULL, Ker = AKer.norm, metric, 
-          type.CV = GCV.S, type.S = S.NW, par.CV = list(trim = 0), 
+################
+################
+classif.npp<-function (group,x, h = NULL, Ker = AKer.norm, metric,
+          type.CV = GCV.S,
+          type.S = S.NW, 
+          par.metric=list(),
+          par.CV = list(trim = 0), 
           par.S = list(), ...) 
 {
+  lfdata<-x
+  fdataobj<-lfdata[[1]]
   y <- group
-  if (missing(metric)) {
-    if (is.fdata(fdataobj)) 
-      metric = metric.lp
-    else metric = metric.dist
-  }
-  if (is.fdata(fdataobj)) {
-    nas <- apply(fdataobj$data, 1, count.na)
-    nas.g <- is.na(y)
-    C <- match.call()
-    if (is.null(names(y))) 
-      names(y) <- 1:length(y)
-    if (any(nas) & !any(nas.g)) {
-      bb <- !nas
-      cat("Warning: ", sum(nas), " curves with NA are omited\n")
-      fdataobj$data <- fdataobj$data[bb, ]
-      y <- y[bb]
-    }
-    else {
-      if (!any(nas) & any(nas.g)) {
-        cat("Warning: ", sum(nas.g), " values of group with NA are omited \n")
-        bb <- !nas.g
-        fdataobj$data <- fdataobj$data[bb, ]
-        y <- y[bb]
-      }
-      else {
-        if (any(nas) & any(nas.g)) {
-          bb <- !nas & !nas.g
-          cat("Warning: ", sum(!bb), " curves  and values of group with NA are omited \n")
-          fdataobj$data <- fdataobj$data[bb, ]
-          y <- y[bb]
-        }
-      }
-    }
-    x <- fdataobj[["data"]]
-    tt <- fdataobj[["argvals"]]
-    rtt <- fdataobj[["rangeval"]]
-  }
-  else {
-    x <- fdataobj
-    mdist = metric.dist(x, ...)
+  if (missing(metric))  {
+    if (is.fdata(lfdata[[1]])) metric="metric.ldata"
+    else metric="metric.dist"
   }
   C <- match.call()
   mf <- match.call(expand.dots = FALSE)
-  m <- match(c("y", "fdataboj", "h", "Ker", "metric", "type.CV", 
-               "type.S", "par.CV", "par.S"), names(mf), 0L)
+  m <- match(c("y", "lfdata", "h", "Ker", "metric", "type.CV", 
+               "type.S", "par.metric","par.CV", "par.S"), names(mf), 0L)
+  x<-lfdata[[1]]$data
   n = nrow(x)
   np <- ncol(x)
+# print(dim(x))  
   if (n != (length(y))) 
     stop("ERROR IN THE DATA DIMENSIONS")
   if (is.null(rownames(x))) 
@@ -79,7 +33,16 @@ classif.np<-function (group, fdataobj, h = NULL, Ker = AKer.norm, metric,
     mdist <- metric
     metric <- attributes(mdist)
   }
-  else mdist = metric(fdataobj, fdataobj, ...)
+  else {
+    par.metric$lfdata<-lfdata
+    par.metric$lfdataref<-lfdata
+# print("calculando distancias")    
+    mdist = do.call(metric,par.metric)
+  }
+#print("sale"  )
+  #si se pasa ua matriz classif.np==classif.npp
+  #sino metric.ldata  y el resto debe ser igual q la funcion classif.np
+  
   ty <- deparse(substitute(type.S))
   if (is.null(h)) 
     h = h.default(fdataobj, metric = mdist, Ker = Ker, type.S = ty, 
@@ -161,7 +124,7 @@ classif.np<-function (group, fdataobj, h = NULL, Ker = AKer.norm, metric,
   misclass = sum(group.pred != y)/n
   prob.classification <- diag(table(y, group.pred))/table(y)
   out <- list(C = C, group.est = group.pred, group = y, H = H, 
-              df = df, y = y, fdataobj = fdataobj, mdist = mdist, Ker = Ker, 
+              df = df, y = y,x =lfdata, mdist = mdist, Ker = Ker, 
               metric = metric, type.S = type.S, par.S = par.S, gcv = gcv, 
               h.opt = h.opt, h = h, prob.group = prob.group2, m = m, 
               pgrup = pgrup, pgrup2 = pgrup2, ty = ty, prob.classification = prob.classification, 
@@ -169,3 +132,8 @@ classif.np<-function (group, fdataobj, h = NULL, Ker = AKer.norm, metric,
   class(out) = "classif"
   return(out)
 }
+################
+
+
+
+

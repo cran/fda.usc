@@ -10,15 +10,17 @@
  The procedure extends the  Fraiman and Muniz (FM), modal, and random project depth functions from 1 functional dataset to p functional datasets.\cr
 }
 \usage{
-depth.FMp(lfdata, lfdataref = lfdata, trim = 0.25, dfunc = "mdepth.MhD",
-par.dfunc = list(scale = FALSE), draw = FALSE, ask = FALSE, ...) 
+depth.FMp(lfdata, lfdataref = lfdata, trim = 0.25, 
+dfunc = "mdepth.MhD",par.dfunc = list(scale = FALSE),
+draw = FALSE, ask = FALSE, ...) 
 
-depth.RPp(lfdata, lfdataref = lfdata, nproj = 50, proj = "vexponential",
-trim = 0.25, dfunc = "mdepth.TD", par.dfunc = list(scale = TRUE),
-draw = FALSE,ask = FALSE)  
+depth.RPp(lfdata, lfdataref = lfdata, nproj = 50,
+ proj = "vexponential",trim = 0.25, dfunc = "mdepth.TD",
+ par.dfunc = list(scale = TRUE), draw = FALSE,ask = FALSE)  
    
-depth.modep(lfdata, lfdataref = lfdata, h = NULL, metric, par.metric = list(), 
-method = "euclidean", scale = FALSE, trim = 0.25, draw = FALSE,ask = FALSE)
+depth.modep(lfdata, lfdataref = lfdata, h = NULL, metric,
+ par.metric = list(), method = "euclidean", scale = FALSE,
+ trim = 0.15, draw = FALSE,ask = FALSE)
 }
 
 \arguments{
@@ -31,7 +33,7 @@ method = "euclidean", scale = FALSE, trim = 0.25, draw = FALSE,ask = FALSE)
   \item  The \code{\link{mdepth.LD}} function provides the Likelihood depth measure based on Nadaraya--Watson estimator of empirical density function.  
    \item The \code{\link{mdepth.HS}} function implements a half-space depth measure based on random projections.
    \item The \code{\link{mdepth.TD}} function implements a Tukey depth measure.   
-   \item The \code{\link{mdepth.MhD}}function implements a Mahalanobis depth measure.
+   \item The \code{\link{mdepth.MhD}} function implements a Mahalanobis depth measure.
    \item The \code{\link{mdepth.RP}} function provides the depth measure using random projections for multivariate data.
       }
   }
@@ -101,22 +103,22 @@ Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 data(tecator)
 xx<-tecator$absorp
 xx1<-fdata.deriv(xx,1)
-
+lx<-list(xx=xx,xx=xx1)
 # Fraiman-Muniz Depth
 par.df<-list(scale =TRUE)
-out.FM1p=depth.FMp(list(xx,xx1),trim=0.1,draw=TRUE, par.dfunc = par.df)
-out.FM2p=depth.FMp(list(xx,xx1),trim=0.1,dfunc="mdepth.LD",par.dfunc = par.df,
-draw=TRUE)
+out.FM1p=depth.FMp(lx,trim=0.1,draw=TRUE, par.dfunc = par.df)
+out.FM2p=depth.FMp(lx,trim=0.1,dfunc="mdepth.LD",
+par.dfunc = par.df, draw=TRUE)
 
 # Random Project Depth
-out.RP1p=depth.RPp(list(xx,xx1),trim=0.1,dfunc="mdepth.TD",
+out.RP1p=depth.RPp(lx,trim=0.1,dfunc="mdepth.TD",
 draw=TRUE,par.dfunc = par.df)
-out.RP2p=depth.RPp(list(xx,xx1),trim=0.1,dfunc="mdepth.LD",
+out.RP2p=depth.RPp(lx,trim=0.1,dfunc="mdepth.LD",
 draw=TRUE,par.dfunc = par.df)
 
 #Modal Depth
-out.mode1p=depth.modep(list(xx,xx1),trim=0.1,draw=T,scale=T)
-out.mode2p=depth.modep(list(xx,xx1),trim=0.1,method="manhattan",
+out.mode1p=depth.modep(lx,trim=0.1,draw=T,scale=T)
+out.mode2p=depth.modep(lx,trim=0.1,method="manhattan",
 draw=T,scale=T)
 
 par(mfrow=c(2,3))

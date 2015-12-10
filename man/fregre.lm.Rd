@@ -16,7 +16,8 @@ where \eqn{Z=\left[ Z^1,\cdots,Z^p  \right]}{Z=[Z^1,...,Z^p]} are the non functi
 %are the non functional covariates and the basis representation of functional covariates .
 }
 \usage{
-fregre.lm(formula,data,basis.x=NULL,basis.b=NULL,rn,lambda,weights=rep(1,n),...)
+fregre.lm(formula,data,basis.x=NULL,basis.b=NULL,rn,
+          lambda,weights=rep(1,n),...)
 }
 \arguments{
  \item{formula}{ an object of class \code{formula} (or one that can be coerced to that class): a symbolic description of the model to be fitted. The details of model specification are given under \code{Details}.}

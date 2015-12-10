@@ -10,7 +10,14 @@ import(mgcv)
 import(rpart)
 import(stats)
 #import(pls)
-
+importFrom("grDevices", "adjustcolor", "dev.cur", "dev.interactive",
+           "dev.new", "devAskNewPage", "gray", "palette")
+importFrom("graphics", "abline", "boxplot", "contour", "curve",
+           "filled.contour", "image", "legend", "lines", "matlines",
+           "pairs", "par", "persp", "plot", "points", "polygon", "rug",
+            "stars", "text", "title")
+importFrom("methods", "callGeneric")
+importFrom("utils", "combn", "setTxtProgressBar", "txtProgressBar")
 
 # exportPattern("^[^\\.]")
 #export(.checkMFClasses, .getXlevels, .MFclass)
@@ -41,7 +48,7 @@ quantile.outliers.pond, quantile.outliers.trim,
 rproc2fdata,rangeval,
 S.basis,semimetric.basis,summary.classif,S.LLR,S.NW,S.KNN,
 semimetric.hshift,semimetric.mplsr,semimetric.pca,semimetric.deriv,semimetric.fourier,
-split.fdata,
+split.fdata,subset.fdata,
 summary.fdata.comp,summary.fregre.fd,summary.fregre.gkam,summary.anova,
 unlist.fdata,
 Var.y,Var.e,
@@ -57,37 +64,38 @@ classif.DD,predict.classif.DD,classif.tree,
 depth.FMp,depth.modep, depth.RPp,
 mdepth.LD,mdepth.HS,mdepth.SD,mdepth.RP,mdepth.MhD,mdepth.TD,
 metric.hausdorff,na.omit.fdata,na.fail.fdata,
-dcor.xy,dcor.dist,bcdcor.dist,dcor.test,plot.bifd
-)
+dcor.xy,dcor.dist,bcdcor.dist,dcor.test,plot.bifd)
 
 #func.med.HD,func.med.PD,func.med.SD,func.med.MhD,func.trim.HD,func.trim.PD,func.trim.SD,func.trim.MhD,
 #depth.MB,mdepth.MB,
 #classif.boosting,classif.glm.cv,fregre.basis.func.cv,
 #plot.bifd
-
-
 #count.na,traza: fda.usc.internal.Rd
 #hshift:	semimetric.NPFDA.Rd
 #intercambio,intercambio.l:  anova.RPm.Rd
 #int.simpson2: int.simpson.Rd
 #rkernel: Kernel.Rd
 # auxiliares de fdata2pls.R
+S3method(anova,hetero)
+S3method(anova,RPm)
+S3method(anova,onefactor)
 S3method(c,fdata)
 S3method(dim, fdata)
-#S3method(influence,fdata)
-#S3method(influence,quan)
+S3method(influence,fdata)
+S3method(influence,quan)
 #S3method(is,fdata)
 S3method(lines,fdata)
 S3method(Math, fdata)
 S3method(missing,fdata)
+S3method(min,basis)
+S3method(min,np)
 S3method(na.omit,fdata)
 S3method(na.fail,fdata) 
 #S3method(omit,fdata)
-S3method(Ops, fdata)
+S3method(Ops,fdata)
 S3method(order,fdata)
-
-
 S3method(plot,fdata)
+S3method(plot,bifd)
 S3method(predict,classif.DD)
 S3method(predict,classif)
 S3method(predict,fregre.fr)
@@ -100,16 +108,20 @@ S3method(predict,fregre.plm)
 S3method(print,classif)
 S3method(print,fregre.fd)
 S3method(print,fregre.gkam)
+S3method(quantile,outliers.pond)
+S3method(quantile,outliers.trim)
 S3method(nrow,fdata)
 S3method(ncol,fdata)
-
+S3method(split,fdata)
+S3method(subset,fdata)
 S3method(Summary,fdata)
 S3method(summary,anova)
+S3method(summary,classif)
 S3method(summary,fdata.comp)
 S3method(summary,fregre.fd)
 S3method(summary,fregre.gkam)
 #S3method(title, fdata)
-
+S3method(unlist,fdata)
 S3method("[", fdata)
 S3method("!=", fdata)
 S3method("*", fdata)

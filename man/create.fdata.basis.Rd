@@ -9,8 +9,10 @@
 \usage{
 create.fdata.basis(fdataobj,l=1:5,maxl=max(l),type.basis="bspline",
 rangeval=fdataobj$rangeval,class.out="fd")
-create.pc.basis(fdataobj,l=1:5,norm=TRUE,basis=NULL,lambda=0,P=c(0,0,1),...)
-create.pls.basis(fdataobj, y, l = 1:5,norm=TRUE,lambda=0,P=c(0,0,1),...)
+create.pc.basis(fdataobj,l=1:5,norm=TRUE,basis=NULL,lambda=0,
+P=c(0,0,1),...)
+create.pls.basis(fdataobj, y, l = 1:5,norm=TRUE,lambda=0,
+P=c(0,0,1),...)
 create.raw.fdata(fdataobj, l = 1:ncol(fdataobj))
 }
 \arguments{

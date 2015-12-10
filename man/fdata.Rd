@@ -5,7 +5,7 @@
 Converts raw data or other functional data classes into fdata class.
 }
 \description{
-Create a functional data object of class \code{fdata} from (\code{matrix, data.frame, numeric, integer,} \code{fd, fds, fts} or \code{sfts}) class data.
+Create a functional data object of class \code{fdata} from (\code{matrix}, \code{data.frame}, \code{numeric}, \code{integer}, \code{fd, fds, fts} or \code{sfts}) class data.
 }
 \usage{
 fdata(mdata,argvals=NULL,rangeval=NULL,names=NULL,fdata2d=FALSE)
@@ -53,7 +53,8 @@ fdataobj=fdata(fd1)
 
 # Convert  from class fds, fts or sfts to fdata
 #require(fds)
-#a=fds(x = 1:20, y = Simulationdata$y, xname = "x", yname = "Simulated value")
+#a=fds(x = 1:20, y = Simulationdata$y, xname = "x", 
+# yname = "Simulated value")
 #b=fts(x = 15:49, y = Australiasmoothfertility$y, xname = "Age",
 #    yname = "Fertility rate")
 #c=sfts(ts(as.numeric(ElNino$y), frequency = 12), xname = "Month",

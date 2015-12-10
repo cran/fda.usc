@@ -51,7 +51,7 @@ mdepth.HS <-function(x, xx=x,proj=50,scale=FALSE,xeps=1e-15,random=FALSE)
           warning("Method based on Random Projections")
           u <- matrix(runif(d*mm,-1,1),mm,d)
           norm <- sqrt(rowSums(u*u))
-          proj <- (u/norm) #hacer todos los cálculos akí y ver si es  similar al random projection)
+          proj <- (u/norm) 
          }
         }            
         }
@@ -59,7 +59,7 @@ mdepth.HS <-function(x, xx=x,proj=50,scale=FALSE,xeps=1e-15,random=FALSE)
       out <- matrix(0, mm,n) 
       if (d==3 & !random) {
                for(i in 1:mm) {
-#                 z<-t(a[,,i]%*%t(x))# este calculo esta mal!!  deme dar nproj*ndatos
+#                 z<-t(a[,,i]%*%t(x))# este calculo esta malm  debe dar nproj*ndatos
 #                 z2<-t(a[,,i]%*%t(xx))
         z  <- proj %*% t(x)            
         z2 <- proj %*% t(xx)
@@ -107,8 +107,16 @@ mdepth.HS <-function(x, xx=x,proj=50,scale=FALSE,xeps=1e-15,random=FALSE)
         #draw=TRUE, draw the points in a gray scale of its depth, the sample median (in red) and trimmed mean (in yellow)
      
 mdepth.RP<-function(x, xx=x,proj=50,scale=FALSE){
-        if (is.vector(x)) x<-matrix(x,nrow=1)      
-       if ( is.null(rownames(x)))  rownames(x)<-1:nrow(x)
+
+ if (is.vector(x)){
+   if (all(xx==x)) x<-xx<-matrix(x,ncol=1)#stop("One of x or xx must be a matrix")
+   else   {
+ 	m2=ncol(xx)
+	if (length(x)!=m2) stop("Length of x does not match with dimension of xx")
+	x=matrix(x,ncol=m2)
+   }
+ }
+     if ( is.null(rownames(x)))  rownames(x)<-1:nrow(x)
        nms<-rownames(x)
        m0<-nrow(x)
        xx<-na.omit(xx)
@@ -145,9 +153,6 @@ mdepth.RP<-function(x, xx=x,proj=50,scale=FALSE){
      names(ans)<-nms      
     return(invisible(list( dep = ans,  proj = proj)))
 }
-
-
-
 
 #################################################################################
 #################################################################################

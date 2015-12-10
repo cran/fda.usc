@@ -8,11 +8,12 @@
 \usage{
 classif.gkam(formula,family = binomial(),data,weights = rep(1, nobs),
  par.metric = NULL,par.np=NULL, offset=NULL,
- control = list(maxit = 100,epsilon = 0.001, trace = FALSE ,inverse="solve"),...)
+ control = list(maxit = 100,epsilon = 0.001, trace = FALSE ,
+ inverse="solve"),...)
 
 }
 \arguments{
- \item{formula}{ an object of class \code{formula} (or one that can be coerced to that class): a symbolic description of the model to be fitted. The details of model specification are given under \code{Details}.}
+ \item{formula}{ an object of class \code{formula} (or one that can be coerced to that class): a symbolic description of the model to be fitted. The procedure only considers  functional covariates (not implemented for non-functional covariates). The details of model specification are given under \code{Details}.}
   \item{data}{ List that containing the variables in the model. }
  \item{family}{ a description of the error distribution and link function to be used in the model. This can be a character string naming a family function, a family function or the result of a call to a family function. (See \code{\link{family}} for details of family functions.) }
   \item{weights}{ weights}

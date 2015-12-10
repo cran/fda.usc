@@ -6,8 +6,8 @@
  fdata.bootstrap  provides  bootstrap samples for functional data.
 }
 \usage{
-fdata.bootstrap(fdataobj,statistic=func.mean,alpha=0.05,nb=200,
-smo=0.0,draw=FALSE,draw.control=NULL,...)
+fdata.bootstrap(fdataobj,statistic=func.mean,alpha=0.05,
+nb=200,smo=0.0,draw=FALSE,draw.control=NULL,...)
 }
 \arguments{
 	\item{fdataobj}{ \code{fdata} class object.}       

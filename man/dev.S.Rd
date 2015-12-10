@@ -7,7 +7,8 @@
 }
 \usage{
 dev.S(y, S, obs,family = gaussian(),off,offdf,criteria="GCV",
-W = diag(1, ncol = ncol(S), nrow = nrow(S)), trim = 0, draw = FALSE,...)
+W = diag(1, ncol = ncol(S), nrow = nrow(S)), trim = 0,
+ draw = FALSE,...)
 }
 
 \arguments{
@@ -69,8 +70,10 @@ mlearn<-phoneme$learn
 np<-ncol(mlearn)
 tt<-mlearn[["argvals"]]
 S1 <- S.NW(tt,2.5)
-gcv1 <- dev.S(mlearn$data[1,],obs=(sample(150)), S1,off=rep(1,150),offdf=3)
-gcv2 <- dev.S(mlearn$data[1,],obs=sort(sample(150)), S1,off=rep(1,150),offdf=3)
+gcv1 <- dev.S(mlearn$data[1,],obs=(sample(150)), 
+S1,off=rep(1,150),offdf=3)
+gcv2 <- dev.S(mlearn$data[1,],obs=sort(sample(150)), 
+S1,off=rep(1,150),offdf=3)
  }
 
 \keyword{utilities} 

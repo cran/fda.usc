@@ -21,7 +21,9 @@ smo=0.1,smoX=0.05,alpha=0.95,kmax.fix=FALSE,\dots)
  \item{\dots}{ Further arguments passed to or from other methods.}	    
 }
 \details{
-Compute the quantile of measures of influence estimated in \code{\link{influence.fdata}} for functional regression using principal components representation (\code{\link{fregre.pc}}) or basis representation (\code{\link{fregre.basis}} or \code{\link{fregre.basis.cv}}).\cr
+Compute the quantile of measures of influence estimated in \code{\link{influence.fdata}} for functional\cr
+regression using principal components representation (\code{\link{fregre.pc}}) or basis representation\cr
+(\code{\link{fregre.basis}} or \code{\link{fregre.basis.cv}}).\cr
 A smoothed bootstrap method is used to estimate the quantiles of the influence measures, which allows  to point out which observations have the larger influence on estimation and prediction. 
 }
 \value{

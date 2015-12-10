@@ -29,7 +29,8 @@ which leads to the \emph{golden section bootstrap}.
 The wild bootstrap residuals computed using a sample of the random variable \eqn{V}{V}.
 }
 \author{
-Eduardo Garcia-Portugues, Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}.  
+Eduardo Garcia-Portugues, Manuel Febrero-Bande and  \cr
+Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}.  
 }
 
 \seealso{\code{\link{flm.test}}, \code{\link{flm.Ftest}}, \code{\link{dfv.test}}, \code{\link{fregre.bootstrap}}}

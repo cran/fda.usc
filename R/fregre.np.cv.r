@@ -112,7 +112,7 @@ par.CV$metric<-metric
 #      gcv[i]<- do.call(type.CV,par.CV)
       gcv[i]<- do.call(tcv,par.CV)
 ########################
-#      cálculo directo del CV y GCV (respuesta funcional)
+#      calculo directo del CV y GCV (respuesta funcional)
 #      yp<-fdata(y.est,tty,rtty,names=y$names)
 #      yp.cv<-fdata(y.est.cv,tty,rtty,names=y$names)
 #      ydif<-y-yp

@@ -6,13 +6,14 @@
   The function \code{flm.test} tests the composite null hypothesis of a Functional Linear Model with scalar response (FLM),
   \deqn{H_0:\,Y=\big<X,\beta\big>+\epsilon,}{H_0: Y=<X,\beta>+\epsilon,}
   versus a general alternative. If \eqn{\beta=\beta_0}{\beta=\beta_0} is provided, then the simple hypothesis \eqn{H_0:\,Y=\big<X,\beta_0\big>+\epsilon}{H_0: Y=<X,\beta_0>+\epsilon} is tested.
-  The way of testing the null hypothesis is via a Projected Cramer-von Mises test (see Details). 
+  The testing of the null hypothesis is done by a Projected Cramer-von Mises statistic (see Details). 
 }
 
 \usage{
-flm.test (X.fdata, Y, beta0.fdata = NULL, B = 5000, est.method = "pls",
-          p = NULL, type.basis = "bspline", verbose = TRUE,
-          plot.it = TRUE, B.plot = 100, G = 200, \dots)
+flm.test (X.fdata, Y, beta0.fdata = NULL, B = 5000, 
+          est.method = "pls", p = NULL, type.basis = "bspline", 
+          verbose = TRUE, plot.it = TRUE, B.plot = 100,
+          G = 200,\dots)
 }
 
 \arguments{
@@ -63,18 +64,15 @@ flm.test (X.fdata, Y, beta0.fdata = NULL, B = 5000, est.method = "pls",
  you are applying it to \code{Y-mean(Y)} and \code{fdata.cen(X.fdata)$Xcen}.
 
  The test statistic corresponds to the Cramer-von Mises norm of the \emph{Residual Marked empirical Process based on Projections} \eqn{R_n(u,\gamma)}{R_n(u,\gamma)} defined in Garcia-Portugues \emph{et al.} (2014). 
- The expression of this process in a \eqn{p}{p}-truncated basis of the space \eqn{L^2[0,T]}{L^2[0,T]} leads to the \eqn{p}{p}-multivariate process \eqn{R_{n,p}\big(u,\gamma^{(p)}\big)}{R_{n,p}(u,\gamma^{(p)})}, whose Cramer-von Mises norm 
- is easily computed.
+ The expression of this process in a \eqn{p}{p}-truncated basis of the space \eqn{L^2[0,T]}{L^2[0,T]} leads to the \eqn{p}{p}-multivariate process \eqn{R_{n,p}\big(u,\gamma^{(p)}\big)}{R_{n,p}(u,\gamma^{(p)})}, whose Cramer-von Mises norm is computed.
  
  The choice of an appropriate \eqn{p}{p} to represent the functional process \eqn{X}{X}, in case that is not provided, is done via the estimation of \eqn{\beta}{\beta} for the composite hypothesis. For the simple hypothesis, 
 as no estimation of \eqn{\beta}{\beta} is done, the choice of \eqn{p}{p} depends only on the functional process \eqn{X}{X}. As the result of the test may change for different \eqn{p}{p}'s, we recommend to use an automatic criterion to select \eqn{p}{p} instead of provide a fixed one.
-The distribution of the test statistic is approximated by a wild bootstrap on the residuals, using the \emph{golden section bootstrap}.
+The distribution of the test statistic is approximated by a wild bootstrap resampling on the residuals, using the \emph{golden section bootstrap}.
  
 Finally, the graph shown if \code{plot.it=TRUE} represents the observed trajectory, and the bootstrap trajectories under the null, of the process RMPP \emph{integrated on the projections}:
  \deqn{R_n(u)\approx\frac{1}{G}\sum_{g=1}^G R_n(u,\gamma_g),}{R_n(u) \approx \frac{1}{G} \sum_{g=1}^G R_n(u,\gamma_g),}
  where \eqn{\gamma_g}{\gamma_g} are simulated as Gaussians processes. This gives a graphical idea of how \emph{distant} is the observed trajectory from the null hypothesis.
- 
-For further details see Garcia-Portugues \emph{et al.} (2014).
 
 }
 
@@ -101,7 +99,7 @@ Garcia-Portugues, E., Gonzalez-Manteiga, W. and Febrero-Bande, M. (2014). A good
 \note{No NA's are allowed neither in the functional covariate nor in the scalar response.}
 
 
-\author{Eduardo Garcia-Portugues. Please, report bugs and suggestions to \if{latex}{\cr}\email{eduardo.garcia@usc.es}}
+\author{Eduardo Garcia-Portugues. Please, report bugs and suggestions to \if{latex}{\cr}\email{egarcia@math.ku.dk}}
 
 \seealso{\code{\link{Adot}}, \code{\link{PCvM.statistic}}, \code{\link{rwild}}, 
 \code{\link{flm.Ftest}}, \code{\link{dfv.test}},
@@ -145,7 +143,7 @@ flm.test(X,Y,beta0.fdata=beta0,B=5000)
 
 data(aemet)
 
-# Remove the 5% of the curves with less depth (i.e. 4 curves)
+# Remove the 5\% of the curves with less depth (i.e. 4 curves)
 dev.new()
 res.FM=depth.FM(aemet$temp,draw=TRUE)
 qu=quantile(res.FM$dep,prob=0.05)

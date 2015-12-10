@@ -15,7 +15,7 @@ GCV.S=function(y,S,criteria="GCV",W=NULL,trim=0,draw=FALSE,metric=metric.lp,...)
          if (trim>0) {
             e.trunc=quantile(ee,probs=(1-trim),na.rm=TRUE,type=4)
             ind<-ee<=e.trunc
-            if (draw)  plot(y,col=(2-ind))
+            if (draw)  plot.fdata(y,col=(2-ind))
             l<-which(abs(ee)<=e.trunc)
             res = mean(ee[ind],na.rm=TRUE)
             }

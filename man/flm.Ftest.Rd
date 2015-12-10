@@ -5,7 +5,7 @@
 \title{F-test for the Functional Linear Model with scalar response}
 \description{
    The function \code{flm.Ftest} tests the null hypothesis of no interaction between a functional covariate and a scalar response inside the Functional Linear Model (FLM): \eqn{Y=\big<X,\beta\big>+\epsilon}{Y=<X,\beta>+\epsilon}. The null hypothesis is \eqn{H_0:\,\beta=0}{H_0: \beta=0} and the alternative is \eqn{H_1:\,\beta\neq 0}{H_1: \beta\neq 0}. 
-   The way of testing the null hypothesis is via a functional extension of the classical F-test (see Details). 
+   The null hypothesis is tested by a functional extension of the classical F-test (see Details). 
  }
 
 \usage{
@@ -24,9 +24,7 @@ flm.Ftest (X.fdata, Y, B=5000, verbose=TRUE)
  The Functional Linear Model with scalar response (FLM), is defined as \eqn{Y=\big<X,\beta\big>+\epsilon}{Y=<X,\beta>+\epsilon},
  for a functional process \eqn{X}{X} such that \eqn{E[X(t)]=0}{E[X(t)]=0}, \eqn{E[X(t)\epsilon]=0}{E[X(t)\epsilon]=0} for all \eqn{t}{t} and for a scalar variable \eqn{Y}{Y} such that \eqn{E[Y]=0}{E[Y]=0}.
  The \emph{functional F-test} is defined as \deqn{T_n=\bigg\|\frac{1}{n}\sum_{i=1}^n (X_i-\bar X)(Y_i-\bar Y)\bigg\|,}{||\frac{1}{n} \sum_{i=1}^n (X_i-\bar X)(Y_i-\bar Y)||,} where \eqn{\bar X}{\bar X} is the functional mean of \eqn{X}{X}, \eqn{\bar Y}{\bar Y} is the ordinary mean of \eqn{Y}{Y} and \eqn{\|\cdot\|}{||.||} is the \eqn{L^2}{L^2} functional norm.
- The statistic is computed with the function \code{Ftest.statistic}. The distribution of the test statistic is approximated by a wild bootstrap on the residuals, using the \emph{golden section bootstrap}.
-
- For further details of the test and its implementation see Gonzalez-Manteiga \emph{et al.} (2012) and Garcia-Portugues \emph{et al.} (2014), respectively.
+ The statistic is computed with the function \code{Ftest.statistic}. The distribution of the test statistic is approximated by a wild bootstrap resampling on the residuals, using the \emph{golden section bootstrap}.
 
 }
 
@@ -44,13 +42,13 @@ flm.Ftest (X.fdata, Y, B=5000, verbose=TRUE)
 
 Garcia-Portugues, E., Gonzalez-Manteiga, W. and Febrero-Bande, M. (2014). A goodness--of--fit test for the functional linear model with scalar response. Journal of Computational and Graphical Statistics, 23(3), 761-778. \url{http://dx.doi.org/10.1080/10618600.2013.812519}
 
-Gonzalez-Manteiga, W., Gonzalez-Rodriguez, G., Martinez-Calvo, A. and Garcia-Portugues, E. Bootstrap independence test for functional linear models. 
+Gonzalez-Manteiga, W., Gonzalez-Rodriguez, G., Martinez-Calvo, A. and Garcia-Portugues, E. Bootstrap independence test for functional linear models. arXiv:1210.1072. \url{http://arxiv.org/abs/1210.1072}
 
 }
 
 \note{No NA's are allowed neither in the functional covariate nor in the scalar response.}
 
-\author{Eduardo Garcia-Portugues. Please, report bugs and suggestions to \if{latex}{\cr}\email{eduardo.garcia@usc.es}}
+\author{Eduardo Garcia-Portugues. Please, report bugs and suggestions to \if{latex}{\cr}\email{egarcia@math.ku.dk}}
 
 \seealso{\code{\link{rwild}}, \code{\link{flm.test}}, \code{\link{dfv.test}}}
 

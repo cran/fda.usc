@@ -1,5 +1,5 @@
 ################################################################################
-# classif.DD: Fits Nonparametric Classification Procedure Based on DD–plot
+# classif.DD: Fits Nonparametric Classification Procedure Based on DD-plot
 # File created by Manuel Oviedo de la Fuente  using code from paper:
 # Cuesta-Albertos, J.A., Febrero-Bande, M. and Oviedo de la Fuente, M.
 # The DDG-classifier in the functional setting. 
@@ -57,19 +57,16 @@ control=list(verbose=FALSE,draw=TRUE,col=NULL,alpha=.25)){
  else { 
   if (isfdata)  par.ldata[[1]]<-par.depth       
   else    par.ldata<-par.depth   }     
-# print(par.ldata)
  lenl<-1
  ng2<-ng
  nam2<-c()
  nam<-NULL
  integrated<-FALSE
-#  print(par.depth)
  if (missing(w)) {
    if (depth[1] %in% c("RPp","FMp","modep"))   {
      model=FALSE
 ################################################################################
 # integrated version modal
-# print("entra  integradora")  
    multi<-TRUE
    depth0<-depth
 #   if (is.null(par.depth$scale)) par.depth$scale<-TRUE
@@ -87,16 +84,10 @@ control=list(verbose=FALSE,draw=TRUE,col=NULL,alpha=.25)){
 #           ismdist<-TRUE
            hq<-rep(oo$hq,len=ng)
            }
-#     metric,par.metric=list(),   
-#llamamos a depth.modep,cogemos el h y lasdistancias y le rellamamaos 
-#metric.ldata(lfdata,lfdataref=lfdata,metric,par.metric=list(),method="euclidean") 
-#depth.modep=function(lfdata,lfdataref=lfdata,h=NULL,metric,par.metric=list(),
-#method="euclidean",scale=FALSE,trim=0.25,draw=FALSE,ask=FALSE)   
-    
-     
+
      fdataobj<-ldata[[1]]
      par.depth$lfdata<-ldata
-     for (i in 1:ng) {
+     for (i in 1:ng) {       
       ind[,i]<-group==lev[i]
       nam<-c(nam,paste("depth ",lev[i],sep=""))
       par.depth$lfdataref<-c.ldata(ldata,ind[,i]) #seleccionamos los de el grupo i
@@ -208,10 +199,8 @@ if (!integrated){
      else   par.depth$fdataori<-fdataobj[ind[,i],]
      oo<-do.call(depth.long,par.depth)
      if (depth %in% c("RHS","RP","RPD","RT")) par.depth$proj<-oo$proj
-#print(i)
      Df[,i]<-oo$dep
-#print(oo$dep[1:4])     
-#     if (dmode) hq[i]<-oo$hq    
+
   }
  if (dmode) par.depth$h<-hq
  for (i in 1:length(var.name)) var.name[i]<-unlist(strsplit(var.name[i], "[$]"))[[1]]
@@ -257,7 +246,7 @@ if (draw) {
      maxsq<-rg[2]+dff 
     sq<-seq(minsq,maxsq,len=control$fine)
     vec<-data.frame(expand.grid(sq,sq))
-    names(vec)<-nam2        
+    names(vec)<-nam2       
      pch0<-c(21,3) 
      pch1<-pch0[group]
 #     fill1<-c(4,2)
@@ -270,7 +259,52 @@ if (draw) {
 }
 switch(classif,
  DD1={ 
-  if (ng2>2) {stop("DD-plot for more than 2 levels not available")}
+   
+  if (ng2>2) {
+  #  stop("DD-plot for more than 2 levels not available")
+    warning("Majority voting classification")
+    par.classif$rotate<-FALSE #NOT IMPLEMENTED YET
+    #ojo ng es num de grupos y ng2 ng*ndepth
+    cvot<-combn(ng2,2)
+    nvot<-ncol(cvot)
+    votos<-matrix(0,ng,n)
+    b0<-list()
+    for (ivot in 1:nvot) {      
+      #cat("votando",ivot)
+      eps<-1e-10
+      Df[Df==0]<-eps
+      i2a2<-which(group==lev[cvot[1,ivot]] | group==lev[cvot[2,ivot]] )
+      Df0<-Df[i2a2,cvot[,ivot]]
+      ind0<-ind[i2a2,cvot[,ivot]]
+      b<-unique(Df0[,1]/Df0[,2])
+
+      mis <- sapply(b,MCR0,Df0,ind0)
+      b0[[ivot]] <- min(b[which.min(mis)])
+      group.log<-b0[[ivot]]*Df0[,1]<Df0[,2]
+      votos[cvot[1,ivot],i2a2]<-votos[cvot[1,ivot],i2a2]+as.numeric(!group.log)
+      votos[cvot[2,ivot],i2a2]<-votos[cvot[2,ivot],i2a2]+as.numeric(group.log)    
+}
+maj.voto<-apply(votos,2,which.max)
+group.est<-maj.voto
+for (ii in 1:n) {
+  l = seq_along(votos[,ii])[votos[,ii] == max(votos[,ii], na.rm = T)]      
+  if (length(l) > 1) {
+    abc<-which(Df[ii,]== max(Df[ii,l ], na.rm = T))  
+    group.est[ii] =group[abc]
+  }
+group.est <-  factor(group.est,levels = lev)
+incorrect<-group.est!=group
+mis<-mean(incorrect) 
+par.classif$pol<-b0
+}
+if (draw) { 
+  draw=FALSE
+  warning("Plot for majority voting classification not implemented yet")
+}
+}
+else {
+# en caso de empate dojo el grupo de los empatados con mayor profundiad: votos[cvot[1,ivot],i2a2]
+#En caso de empate ver cual ha sido la clasificacion entre esas 2 clases.
   if (is.null(par.classif$pol)) {
   b<-unique(Df[Df[,1]!=0&Df[,2]!=0,1]/Df[Df[,2]!=0&Df[,1]!=0,2])
   m <- length(b)
@@ -289,43 +323,143 @@ switch(classif,
      dff<-diff(rg)*.1
      bb2<-ifelse(b0*vec[,1]>vec[,2],0,1)
      }          
+}
 },
 DD2={
- if (ng2>2) {stop("DD-plot for more than 2 levels not available")}
+ #if (ng2>2) {stop("DD-plot for more than 2 levels not available")}
+  if (ng2>2) {
+    par.classif$rotate<-FALSE #NOT IMPLEMENTED YET
+    #  stop("DD-plot for more than 2 levels not available")
+    warning("Majority voting classification")
+    #ojo ng es num de grupos y ng2 ng*ndepth
+    cvot<-combn(ng2,2)
+    nvot<-ncol(cvot)
+    votos<-matrix(0,ng,n)
+    if (is.null(par.classif$nmax))   nmax=50000   #0
+    else   nmax<-par.classif$nmax
+    b0<-list()
+    for (ivot in 1:nvot) {      
+#       cat("votando",ivot)
+      eps<-1e-10
+      Df[Df==0]<-eps
+      i2a2<-which(group==lev[cvot[1,ivot]] | group==lev[cvot[2,ivot]] )
+      Df0<-Df[i2a2,cvot[,ivot]]
+      n0<-nrow(Df0)
+      ind.0<-ind[i2a2,cvot[,ivot]]
+      nsample<-choose(n0,2)
+      combs1<-NULL
+      if (nsample<nmax |  nmax==0 )  combs1 <- t(combn(n0,2))
+      else {
+        for(i in 1:nmax)      combs1<-rbind(combs1,sample(n0,2))
+        if (control$verbose & nmax<nsample) warning("The number of polynomials considered is too large ",nsample,", the function search is a subsample of size, nmax=50000")
+      }    
+#      b<-unique(Df0[,1]/Df0[,2])
+#      mis <- sapply(b,MCR0,Df0,ind0)
+#      b0 <- min(b[which.min(mis)])
+#      group.log<-b0*Df0[,1]<Df0[,2]
+       mcrs <- apply(combs1,1, quad.fit0, dep=Df0,ind=ind.0)
+       ind0 <- combs1[which.min(mcrs),] 
+       A <- matrix(c( Df0[,1][ind0[1]],( Df0[,1][ind0[1]])^2, Df0[,1][ind0[2]],( Df0[,1][ind0[2]])^2),byrow=TRUE,2,2)
+       ww <- c(Df0[,2][ind0[1]],Df0[,2][ind0[2]])
+       a0.2 <-try(solve(A,ww),silent=TRUE)
+
+       if (class(a0.2)=="try-error") {   #new
+          sv<-svd(A)
+          a0.2<-drop((sv$v%*%diag(1/sv$d)%*%t(sv$u))%*%ww)
+          if (control$verbose)  warning("Inverse of sigma computed by SVD")
+      } 
+      group.log<-sapply(Df0[,1],RR,a=a0.2)<Df0[,2]
+      votos[cvot[1,ivot],i2a2]<-votos[cvot[1,ivot],i2a2]+as.numeric(!group.log)
+      votos[cvot[2,ivot],i2a2]<-votos[cvot[2,ivot],i2a2]+as.numeric(group.log)    
+      b0[[ivot]]<-a0.2
+    }
+     par.classif$pol<-b0
+#    n<-nrow(Df)
+    maj.voto<-apply(votos,2,which.max)
+    group.est<-maj.voto
+    for (ii in 1:n) {
+      l = seq_along(votos[,ii])[votos[,ii] == max(votos[,ii], na.rm = T)]      
+      if (length(l) > 1) {
+        abc<-which(Df[ii,]== max(Df[ii,l ], na.rm = T))  
+        group.est[ii] =group[abc]
+      }
+      group.est <-  factor(group.est,levels = lev)
+    }
+    incorrect<-group.est!=group
+    mis<-mean(incorrect)         
+    if (draw) { 
+      draw=FALSE
+      warning("Plot for majority voting classification not implemented yet")
+    }
+  }
+else{                                                #DD2 con 2 grupos
  if (is.null(par.classif$pol)) {
  if (is.null(par.classif$nmax))   nmax=50000   #0
-   else   nmax<-par.classif$nmax
-  nsample<-choose(n,2)
-  combs1<-NULL
-  if (nsample<nmax |  nmax==0 )  combs1 <- t(combn(n,2))
-  else {
+ else   nmax<-par.classif$nmax
+ nsample<-choose(n,2)
+ combs1<-NULL
+ if (nsample<nmax |  nmax==0 )  combs1 <- t(combn(n,2))
+ else {
    for(i in 1:nmax)      combs1<-rbind(combs1,sample(n,2))
    if (control$verbose & nmax<nsample) warning("The number of polynomials considered is too large ",nsample,", the function search is a subsample of size, nmax=50000")
      }
-    mcrs <- apply(combs1,1, quad.fit0, dep=Df,ind=ind)
-    ind0 <- combs1[which.min(mcrs),] 
+  mcrs <- apply(combs1,1, quad.fit0, dep=Df,ind=ind)
+  ind0 <- combs1[which.min(mcrs),] 
   A <- matrix(c( Df[,1][ind0[1]],( Df[,1][ind0[1]])^2, Df[,1][ind0[2]],( Df[,1][ind0[2]])^2),byrow=TRUE,2,2)
   ww <- c(Df[,2][ind0[1]],Df[,2][ind0[2]])
   a0.2 <-try(solve(A,ww),silent=TRUE)
-  if (class(a0.2)=="try-error") {   #new
+ if (class(a0.2)=="try-error") {   #new
+   sv<-svd(A)
+   a0.2<-drop((sv$v%*%diag(1/sv$d)%*%t(sv$u))%*%ww)
+   if (control$verbose)  warning("Inverse of sigma computed by SVD")
+ } 
+ 
+ group.est<-factor(ifelse(sapply(Df[,1],RR,a=a0.2)<Df[,2],lev[2],lev[1])   )
+ incorrect<-group.est!=group
+ mis<-mean(incorrect) 
+ ####### #new exchange axis (rotate)
+ if (is.null(par.classif$rotate))   par.classif$rotate<-TRUE
+ if (par.classif$rotate)   {
+   Df<-Df[,2:1]
+  ind<-ind[,2:1]
+  mcrs <- apply(combs1,1, quad.fit0, dep=Df,ind=ind)
+  ind0 <- combs1[which.min(mcrs),] 
+  A <- matrix(c( Df[,1][ind0[1]],( Df[,1][ind0[1]])^2, Df[,1][ind0[2]],( Df[,1][ind0[2]])^2),byrow=TRUE,2,2)
+  ww <- c(Df[,2][ind0[1]],Df[,2][ind0[2]])
+  a0.22 <-try(solve(A,ww),silent=TRUE)
+  if (class(a0.22)=="try-error") {   #new
     sv<-svd(A)
-    a0.2<-drop((sv$v%*%diag(1/sv$d)%*%t(sv$u))%*%ww)
-     if (control$verbose)  warning("Inverse of sigma computed by SVD")
-    }    
-  group.est<-factor(ifelse(sapply(Df[,1],RR,a=a0.2)<Df[,2],lev[2],lev[1])   )
-  incorrect<-group.est!=group
-  mis<-mean(incorrect) 
+    a0.22<-drop((sv$v%*%diag(1/sv$d)%*%t(sv$u))%*%ww)
+  if (control$verbose)  warning("Inverse of sigma computed by SVD")
+  }
+  group.est2<-factor(ifelse(sapply(Df[,1],RR,a=a0.22)<Df[,2],lev[1],lev[2])   )#intercambio
+  incorrect<-group.est2!=group
+  mis2<-mean(incorrect) 
+  if (mis2<mis) {
+   a0.2<-a0.22
+   mis<-mis2
+   warning("the axis are rotated Df<-Df[1:2]")
+   par.classif$rotate<-TRUE
+   lev<-lev[2:1]
+  group.est<-group.est2
+  }
+  else{
+    Df<-Df[,2:1]
+    ind<-ind[,2:1]  
+    par.classif$rotate<-FALSE
+  }  
+ }
   a2<-a0.2
   if (control$verbose) cat("pol=",a2," misclassification=",mis,"\n")
   if (is.null(par.classif$tt)) ind.tt<-100
   else ind.tt<-c(100,90, 20,80,140,70,160,60,180)
   for (ii in ind.tt) {
  a02 <- optim(a0.2,AMCR0,dep=Df,ind=ind,tt=ii)$par
- group.est<-factor(ifelse(sapply(Df[,1],RR,a=a02)<Df[,2],lev[2],lev[1])   ) 
- incorrect<-group.est!=group
- mis.new<-mean(incorrect)
+ group.est.new<-factor(ifelse(sapply(Df[,1],RR,a=a02)<Df[,2],lev[2],lev[1])   ) 
+ incorrect.new<-group.est.new!=group
+ mis.new<-mean(incorrect.new)
  if (control$verbose) cat("pol=",a02," tt=",ii," misclassif=",mis.new,"\n")
- if (mis>=mis.new) {a2<-a02;mis<-mis.new;}
+ if (mis>=mis.new) {a2<-a02;mis<-mis.new;group.est<-group.est.new}
  }
  }
 else a2<-par.classif$pol 
@@ -336,10 +470,74 @@ else a2<-par.classif$pol
  par.classif$pol<-a2
  if (draw & ng2<=2)  {
       bb2<-ifelse(sapply(vec[,1],RR,a=a2)>vec[,2],0,1)
+      if (par.classif$rotate) bb2<-ifelse(sapply(vec[,1],RR,a=a2)>vec[,2],1,0)
      }
- },
+ }},
  DD3={
- if (ng2>2) {stop("DD-plot for more than 2 levels not available")}
+# if (ng2>2) {stop("DD-plot for more than 2 levels not available")}
+   if (ng2>2) {
+     #  stop("DD-plot for more than 2 levels not available")
+     warning("Majority voting classification")
+     #ojo ng es num de grupos y ng2 ng*ndepth
+     cvot<-combn(ng2,2)
+     nvot<-ncol(cvot)
+     votos<-matrix(0,ng,n)
+     if (is.null(par.classif$nmax))   nmax=50000   #0
+     else   nmax<-par.classif$nmax
+     b0<-list()
+     for (ivot in 1:nvot) {      
+  #cat("votando",ivot)
+       eps<-1e-10
+       Df[Df==0]<-eps
+       i2a2<-which(group==lev[cvot[1,ivot]] | group==lev[cvot[2,ivot]] )
+       Df0<-Df[i2a2,cvot[,ivot]]
+       n0<-nrow(Df0)
+       ind.0<-ind[i2a2,cvot[,ivot]]
+
+       nsample<-choose(n0,3)
+       combs1<-NULL
+       if (nsample<nmax |  nmax==0)  combs1 <- t(combn(n0,3))
+       else {
+         for(i in 1:nmax)      combs1<-rbind(combs1,sample(n0,3))
+         if (control$verbose & nmax<nsample) warning("The number of polynomials considered is too large ",nsample,", the function search is a subsample of size, nmax=50000")
+       }   
+       mcrs <- apply(combs1,1,cubic.fit0, dep=Df0,ind=ind.0)
+       ind0<- combs1[which.min(mcrs),]
+       A <- matrix(c( Df0[,1][ind0[1]],( Df0[,1][ind0[1]])^2,( Df0[,1][ind0[1]])^3,
+                      Df0[,1][ind0[2]],( Df0[,1][ind0[2]])^2,( Df0[,1][ind0[2]])^3,
+                      Df0[,1][ind0[3]],( Df0[,1][ind0[3]])^2,( Df0[,1][ind0[3]])^3),byrow=TRUE,3,3)
+       ww <- c(Df0[,2][ind0[1]],Df0[,2][ind0[2]],Df0[,2][ind0[3]])
+       a0.3 <-try(solve(A,ww),silent=TRUE)
+       if (class(a0.3)=="try-error") {   
+         sv<-svd(A)
+         a0.3<-drop((sv$v%*%diag(1/sv$d)%*%t(sv$u))%*%ww)
+         if (control$verbose) warning("Inverse of sigma computed by SVD")
+       }
+       group.log<-sapply(Df0[,1],RR,a=a0.3)<Df0[,2]
+       votos[cvot[1,ivot],i2a2]<-votos[cvot[1,ivot],i2a2]+as.numeric(!group.log)
+       votos[cvot[2,ivot],i2a2]<-votos[cvot[2,ivot],i2a2]+as.numeric(group.log)    
+       b0[[ivot]]<-a0.3
+     }
+      par.classif$pol<-b0
+     #    n<-nrow(Df)
+     maj.voto<-apply(votos,2,which.max)
+     group.est<-maj.voto
+     for (ii in 1:n) {
+       l = seq_along(votos[,ii])[votos[,ii] == max(votos[,ii], na.rm = T)]      
+       if (length(l) > 1) {
+         abc<-which(Df[ii,]== max(Df[ii,l ], na.rm = T))  
+         group.est[ii] =group[abc]
+       }
+       group.est <-  factor(group.est,levels = lev)
+     }
+     incorrect<-group.est!=group
+     mis<-mean(incorrect)         
+     if (draw) { 
+       draw=FALSE
+       warning("Plot for majority voting classification not implemented yet")
+     }
+   }
+else{   
  if (is.null(par.classif$pol)) {
    if (is.null(par.classif$nmax))   nmax=50000
    else     nmax<-par.classif$nmax
@@ -363,9 +561,43 @@ else a2<-par.classif$pol
      if (control$verbose) warning("Inverse of sigma computed by SVD")
     }
  group.est<-factor(ifelse(sapply(Df[,1],RR,a=a0.3)>Df[,2],lev[1],lev[2]))   
-  incorrect<-group.est!=group
+ incorrect<-group.est!=group
  mis<-mean(incorrect) 
-
+#new rotate .rot
+####### #new exchange axis (rotate)
+if (is.null(par.classif$rotate))   par.classif$rotate<-TRUE
+if (par.classif$rotate)   {
+  Df<-Df[,2:1]
+  ind<-ind[,2:1]
+  mcrs <- apply(combs1,1,cubic.fit0, dep=Df,ind=ind)
+  ind0<- combs1[which.min(mcrs),]
+  A <- matrix(c( Df[,1][ind0[1]],( Df[,1][ind0[1]])^2,( Df[,1][ind0[1]])^3,
+                 Df[,1][ind0[2]],( Df[,1][ind0[2]])^2,( Df[,1][ind0[2]])^3,
+                 Df[,1][ind0[3]],( Df[,1][ind0[3]])^2,( Df[,1][ind0[3]])^3),byrow=TRUE,3,3)
+  ww <- c(Df[,2][ind0[1]],Df[,2][ind0[2]],Df[,2][ind0[3]])
+  a0.33 <-try(solve(A,ww),silent=TRUE)
+  if (class(a0.33)=="try-error") {   
+    sv<-svd(A)
+    a0.33<-drop((sv$v%*%diag(1/sv$d)%*%t(sv$u))%*%ww)
+    if (control$verbose) warning("Inverse of sigma computed by SVD")
+  }
+  group.est2<-factor(ifelse(sapply(Df[,1],RR,a=a0.33)>Df[,2],lev[2],lev[1])   )#intercambio
+  incorrect<-group.est2!=group
+  mis2<-mean(incorrect) 
+  if (mis2<mis) {
+    a0.3<-a0.33
+    mis<-mis2
+    warning("the axis are rotated Df<-Df[1:2]")
+    par.classif$rotate<-TRUE
+    lev<-lev[2:1]
+    group.est<-group.est2
+  }
+  else{
+    Df<-Df[,2:1]
+    ind<-ind[,2:1]  
+    par.classif$rotate<-FALSE
+  }  
+}
  a2<-a0.3
  if (control$verbose) cat("pol=",a2," misclassification=",mis,"\n")
  if (is.null(par.classif$tt)) ind.tt<-100
@@ -384,8 +616,9 @@ else a2<-par.classif$pol
  par.classif$pol<-a2
   if (draw & ng2<=2)  {  
      bb2<-ifelse(sapply(vec[,1],RR,a=a2)>vec[,2],0,1)
+     if (par.classif$rotate) bb2<-ifelse(sapply(vec[,1],RR,a=a2)>vec[,2],1,0)     
      }        
- },
+ }},
  lda={
    dat<-data.frame(as.numeric(group)-1,Df)
    par.classif$x<-Df
@@ -608,7 +841,6 @@ integrated<-FALSE
     integrated<-TRUE
     n<-nrow(ldata[[1]])
     Df<-matrix(NA,ncol=ng,nrow=n)
-#    print("modep prediction")
     hq<-par.depth$h
     par.depth$lfdata<-new.fdataobj
    for (i in 1:ng) {
@@ -689,14 +921,112 @@ colnames(Df)<-colnames(object$dep)
 group.est<-switch(object$classif,
 # MD={gest<-apply(Df,1,which.max)},
  DD1={
-   group.est<- factor(ifelse(object$par.classif$pol*Df[,1]>Df[,2],lev[1],lev[2]),levels=lev)},   
+   if (ng>2) {#majority voting option 
+     #  stop("DD-plot for more than 2 levels not available")
+     warning("Majority voting classification")
+     #ojo ng es num de grupos y ng2 ng*ndepth
+     cvot<-combn(ng2,2)
+     nvot<-ncol(cvot)
+     votos<-matrix(0,ng,n)
+     eps<-1e-10
+     Df[Df<eps]<-eps
+     for (ivot in 1:nvot) {      
+#       cat("votando",ivot)
+#       i2a2<-which(group==lev[cvot[1,ivot]] | group==lev[cvot[2,ivot]] )
+       #Df0<-Df[i2a2,cvot[,ivot]]
+        Df0<-Df[,cvot[,ivot]]
+#       ind0<-ind[i2a2,cvot[,ivot]]
+#       b<-unique(Df0[,1]/Df0[,2])       
+#       mis <- sapply(b,MCR0,Df0,ind0)
+#       b0 <- min(b[which.min(mis)])
+       b0<-object$par.classif$pol[[ivot]]
+       group.log<-b0*Df0[,1]<Df0[,2]
+       votos[cvot[1,ivot],]<-votos[cvot[1,ivot],]+as.numeric(!group.log)
+       votos[cvot[2,ivot],]<-votos[cvot[2,ivot],]+as.numeric(group.log)    
+     }
+     maj.voto<-apply(votos,2,which.max)
+     group.est<-maj.voto
+     for (ii in 1:n) {
+       l = seq_along(votos[,ii])[votos[,ii] == max(votos[,ii], na.rm = T)]      
+       if (length(l) > 1) {
+         abc<-which(Df[ii,]== max(Df[ii,l ], na.rm = T))  
+         group.est[ii] =group[abc]
+       }
+       group.est <-  factor(group.est,levels = lev)
+     }
+group.est
+   } #######  fin   voting en prediccion #####################   
+   else group.est<- factor(ifelse(object$par.classif$pol*Df[,1]>Df[,2],lev[1],lev[2]),levels=lev)},   
  DD2={
- group.est<- factor(ifelse(sapply(Df[,1],RR,a=object$par.classif$pol)>Df[,2],lev[1],lev[2]),levels=lev)
+   if (ng>2) {#majority voting option 
+     #  stop("DD-plot for more than 2 levels not available")
+     warning("Majority voting classification")     
+     cvot<-combn(ng2,2)
+     nvot<-ncol(cvot)
+     votos<-matrix(0,ng,n)
+     eps<-1e-10
+     Df[Df<eps]<-eps
+     for (ivot in 1:nvot) {      
+#       cat("votando",ivot)
+       Df0<-Df[,cvot[,ivot]]
+       b0<-object$par.classif$pol[[ivot]]
+       #group.log<-b0*Df0[,1]<Df0[,2]
+       group.log<-sapply(Df0[,1],RR,a=b0)<Df0[,2]   
+       votos[cvot[1,ivot],]<-votos[cvot[1,ivot],]+as.numeric(!group.log)
+       votos[cvot[2,ivot],]<-votos[cvot[2,ivot],]+as.numeric(group.log)    
+     }
+     maj.voto<-apply(votos,2,which.max)
+     group.est<-maj.voto
+     for (ii in 1:n) {
+       l = seq_along(votos[,ii])[votos[,ii] == max(votos[,ii], na.rm = T)]      
+       if (length(l) > 1) {
+         abc<-which(Df[ii,]== max(Df[ii,l ], na.rm = T))  
+         group.est[ii] =group[abc]
+       }
+       group.est <-  factor(group.est,levels = lev)
+     }
+     group.est
+   } #######  fin   voting en prediccion #####################   
+   else {
+     if (object$par.classif$rotate) group.est<- factor(ifelse(sapply(Df[,2],RR,a=object$par.classif$pol)>Df[,1],lev[2],lev[1]),levels=lev)
+     else group.est<- factor(ifelse(sapply(Df[,1],RR,a=object$par.classif$pol)>Df[,2],lev[1],lev[2]),levels=lev)
+   }
  },
  DD3={
-  group.est<- factor(ifelse(sapply(Df[,1],RR,a=object$par.classif$pol)>Df[,2],lev[1],lev[2]),levels=lev)
-  },
-  
+   if (ng>2) {#majority voting option 
+     #  stop("DD-plot for more than 2 levels not available")
+     warning("Majority voting classification")
+     cvot<-combn(ng,2)
+     nvot<-ncol(cvot)
+     votos<-matrix(0,ng,n)
+     eps<-1e-10
+     Df[Df<eps]<-eps 
+     for (ivot in 1:nvot) {      
+       #cat("votando",ivot)
+       Df0<-Df[,cvot[,ivot]]
+       b0<-object$par.classif$pol[[ivot]]
+       #group.log<-b0*Df0[,1]<Df0[,2]
+       group.log<-sapply(Df0[,1],RR,a=b0)<Df0[,2]       
+       votos[cvot[1,ivot],]<-votos[cvot[1,ivot],]+as.numeric(!group.log)
+       votos[cvot[2,ivot],]<-votos[cvot[2,ivot],]+as.numeric(group.log)    
+     }
+     maj.voto<-apply(votos,2,which.max)
+     group.est<-maj.voto
+     for (ii in 1:n) {
+       l = seq_along(votos[,ii])[votos[,ii] == max(votos[,ii], na.rm = T)]      
+       if (length(l) > 1) {
+         abc<-which(Df[ii,]== max(Df[ii,l ], na.rm = T))  
+         group.est[ii] =group[abc]
+       }
+       group.est <-  factor(group.est,levels = lev)
+     }
+     group.est
+   }
+else{
+   if (object$par.classif$rotate) group.est<- factor(ifelse(sapply(Df[,2],RR,a=object$par.classif$pol)>Df[,1],lev[2],lev[1]),levels=lev)
+  else group.est<- factor(ifelse(sapply(Df[,1],RR,a=object$par.classif$pol)>Df[,2],lev[1],lev[2]),levels=lev)
+}
+  },  
  lda={group.es<-predict(object$fit,Df)$class},
  qda={group.es<-predict(object$fit,Df)$class},
  glm={
@@ -728,4 +1058,4 @@ group.est<-switch(object$classif,
  if (type=="dep") return(list("group.pred"=group.est,"dep"=Df))
  else   return(group.est)
 }
-################################################################################
+###########################################

@@ -9,6 +9,9 @@ classif.DD(group,fdataobj,depth="FM",classif="glm",w,
 par.classif=list(),par.depth=list(),
 control=list(verbose=FALSE,draw=TRUE,col=NULL,alpha=.25))
 }
+
+
+
 \arguments{
   \item{group}{ Factor of length \emph{n} with \emph{G} levels.}
   \item{fdataobj}{ \code{\link{data.frame}}, \code{\link{fdata}} or list with the multivariate, functional or both covariates respectively.}     
@@ -40,7 +43,8 @@ Make the group classification of a training dataset using DD-classifier estimati
   	\item  \code{"FMp"}: Fraiman and Muniz depth with common support. Suppose that all p--fdata objects have the same support (same rangevals),  see \code{\link{depth.FMp}}.
 		\item  \code{"modep"}: h--modal depth using a p--dimensional metric, see \code{\link{depth.modep}}.
 %\code{\link{metric.dist}} function is used to compute the distances between the rows of a data matrix (as \code{\link{dist}} function.  
-		\item  \code{"RPp"}: random project depth using a p--variate depth with the projections, see \code{\link{depth.RPp}}.
+		\item  \code{"RPp"}: random project depth using a p--variate depth with the projections,\cr
+     see \code{\link{depth.RPp}}.
 			}
 If the procedure requires to compute a distance such as in  \code{"knn"} or \code{"np"} classifier or \code{"mode"} depth, the user must use a proper distance function:  \code{\link{metric.lp}} for functional data and \code{\link{metric.dist}} for multivariate data.\cr
 
@@ -61,16 +65,21 @@ If the procedure requires to compute a distance such as in  \code{"knn"} or \cod
     \item   \code{"DD1"}: Search the best separating polynomial of degree 1.
     \item   \code{"DD2"}: Search the best separating polynomial of degree 2.%Polynomial classifier with 2 degrees.
     \item   \code{"DD3"}: Search the best separating polynomial of degree 3.%Polynomial classifier with 3 degrees.
-		\item   \code{"glm"}: Logistic regression is computed using Generalized Linear Models \code{\link{classif.glm}}.
-    \item   \code{"gam"}: Logistic regression is computed using Generalized Additive Models \code{\link{classif.gsam}}. 
+		\item   \code{"glm"}: Logistic regression is computed using Generalized Linear Models\cr  \code{\link{classif.glm}}.
+    \item   \code{"gam"}: Logistic regression is computed using Generalized Additive Models\cr \code{\link{classif.gsam}}. 
   	\item  \code{"lda"}:  Linear Discriminant Analysis is computed using \code{\link{lda}}.
 \item  \code{"qda"}:  Quadratic Discriminant Analysis is computed using \code{\link{qda}}.
 		\item   \code{"knn"}:  k-Nearest Neighbour classification is computed using \code{\link{classif.knn}}. 
 		\item   \code{"np"}:  Non-parametric Kernel classifier is computed using \code{\link{classif.np}}. 
 	}
 The user can be specify the parameters for classifier function in \code{par.classif} such as the smoothing parameter \code{par.classif[[``h'']]}, if \code{classif="np"} or the k-Nearest Neighbour \code{par.classif[[``knn'']]}, if \code{classif="knn"}.	
+
+In the case of polynomial classifier (\code{"DD1"}, \code{"DD2"} and \code{"DD3"}) uses the original procedure proposed by Li et al. (2012), rotating the DD-plot (to exchange abscise and ordinate).  The procedure extend to multi-class problems by incorporating the method of \emph{majority voting} in the case of polynomial classifier and the method \emph{One vs the Rest} in the logistic case (\code{"glm"} and \code{"gam"}).
+
   }
  }
+ 
+ 
  
 \value{
   \item{group.est}{ Estimated vector groups by classified method selected.}

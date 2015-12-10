@@ -18,7 +18,7 @@ for (j in 1:ngroups){
      if (sum((grupo==j))>0) {
                dm=z[grupo==j,]
                ind=which(grupo==j)
-               if (is.vector(dm) || nrow(dm)<3) {k=j}
+               if (is.vector(dm) || nrow(dm)<3) {k=j}#revisar pq  k no hace nada!!
                else   {
                      par.dfunc$fdataobj<-centers
                      par.dfunc$fdataobj$data<-dm

@@ -94,8 +94,8 @@ if (missing(type)) type="l"
 if (missing(main)) main=x[["names"]][["main"]]
 if (missing(xlab)) xlab=x[["names"]][["xlab"]]
 if (missing(ylab)) ylab=x[["names"]][["ylab"]]
-if (is.vector(x[["data"]])) matplot(x[["argvals"]],(x[["data"]]),type=type,main=main,ylab=ylab,xlab=xlab,...)
-else matplot(x[["argvals"]],t(x[["data"]]),type=type,main=main,ylab=ylab,xlab=xlab,...)
+if (is.vector(x[["data"]])) matplot.default(x[["argvals"]],(x[["data"]]),type=type,main=main,ylab=ylab,xlab=xlab,...)
+else matplot.default(x[["argvals"]],t(x[["data"]]),type=type,main=main,ylab=ylab,xlab=xlab,...)
 }
 }
 

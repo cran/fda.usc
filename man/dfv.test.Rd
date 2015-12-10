@@ -4,8 +4,7 @@
 
 \title{Delsol, Ferraty and Vieu test for no functional-scalar interaction}
 \description{
-  The function \code{dfv.test} tests the null hypothesis of no interaction between a functional covariate and a scalar response in a general framework. The null hypothesis is \deqn{H_0:\,m(X)=0,}{H_0: m(X)=0,} where \eqn{m(\cdot)}{m(.)} denotes the regression function of the functional variate \eqn{X}{X} over the centred scalar response \eqn{Y}{Y} (\eqn{E[Y]=0}{E[Y]=0}).
-  The way of testing the null hypothesis is via the smoothed integrated square error of the response (see Details). 
+  The function \code{dfv.test} tests the null hypothesis of no interaction between a functional covariate and a scalar response in a general framework. The null hypothesis is \deqn{H_0:\,m(X)=0,}{H_0: m(X)=0,} where \eqn{m(\cdot)}{m(.)} denotes the regression function of the functional variate \eqn{X}{X} over the centred scalar response \eqn{Y}{Y} (\eqn{E[Y]=0}{E[Y]=0}). The null hypothesis is tested by the smoothed integrated square error of the response (see Details). 
  }
 
 \usage{
@@ -43,8 +42,6 @@ dfv.test (X.fdata, Y, B=5000, h=quantile(x=metric.lp(X.fdata),
  
  Please note that if a grid of bandwidths is passed, a harmless warning message will prompt at the end of the test (it comes from returning several p-values in the \code{htest} class).
 
- For further details of the test and its implementation see Delsol \emph{et al.} (2011) and Garcia-Portugues \emph{et al.} (2012), respectively.
-
 }
 \value{
   The value of \code{dfv.statistic} is a vector of length \code{length(h)} with the values of the statistic for each bandwidth. The value of \code{dfv.test} is an object with class \code{"htest"} whose underlying structure is a list containing the following components:
@@ -65,16 +62,13 @@ dfv.test (X.fdata, Y, B=5000, h=quantile(x=metric.lp(X.fdata),
 Delsol, L., Ferraty, F. and Vieu, P. (2011). Structural test in regression on functional variables. 
 Journal of Multivariate Analysis, 102, 422-447. \url{http://dx.doi.org/10.1016/j.jmva.2010.10.003}
 
-Delsol, L., Ferraty, F. and Vieu, P. No effect tests in regression on functional variable and some applications to spectrometric studies.
-
-Garcia-Portugues, E., Gonzalez-Manteiga, W. and Febrero-Bande, M. (2012). A goodness--of--fit test for the functional linear model with scalar
-response. \url{http://arxiv.org/abs/1205.6167}
+Delsol, L. (2013). No effect tests in regression on functional variable and some applications to spectrometric studies. Computational Statistics, 28(4), 1775-1811. \url{http://dx.doi.org/10.1007/s00180-012-0378-1}
 
 }
 
 \note{No NA's are allowed neither in the functional covariate nor in the scalar response.}
 
-\author{Eduardo Garcia-Portugues. Please, report bugs and suggestions to \if{latex}{\cr}\email{eduardo.garcia@usc.es}}
+\author{Eduardo Garcia-Portugues. Please, report bugs and suggestions to \if{latex}{\cr}\email{egarcia@math.ku.dk}}
 
 \seealso{\code{\link{rwild}}, \code{\link{flm.test}}, \code{\link{flm.Ftest}}, \code{\link{fregre.np}}}
 

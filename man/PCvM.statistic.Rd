@@ -22,7 +22,7 @@ Adot (X, inpr)
  }
 
 \details{
-In order to optimize the computation of the statistic, the critical parts of these two functions are programmed in FORTRAN. The hardest part corresponds to the function \code{Adot}, which involves the computation of a symmetric matrix of dimension \eqn{n\times n}{n x n} where each entry is a sum of \eqn{n}{n} elements.
+In order to optimize the computation of the statistic, the critical parts of these two functions are coded in FORTRAN. The hardest part corresponds to the function \code{Adot}, which involves the computation of a symmetric matrix of dimension \eqn{n\times n}{n x n} where each entry is a sum of \eqn{n}{n} elements.
 As this matrix is symmetric, the order of the method can be reduced from \eqn{O(n^3)}{O(n^3)} to \eqn{O\big(\frac{n^3-n^2}{2}\big)}{O((n^3-n^2)/2)}. The memory requirement can also be reduced to \eqn{O\big(\frac{n^2-n+2}{2}\big)}{O((n^2-n+2)/2)}. The value of \code{Adot} is a vector of length \eqn{\frac{n^2-n+2}{2}}{(n^2-n+2)/2} 
 where the first element is the common diagonal element and the rest are the lower triangle entries of the matrix, sorted by rows (see Examples).
 }
@@ -42,7 +42,7 @@ Garcia-Portugues, E., Gonzalez-Manteiga, W. and Febrero-Bande, M. (2014). A good
 
 \note{No NA's are allowed in the functional covariate.}
 
-\author{Eduardo Garcia-Portugues. Please, report bugs and suggestions to \if{latex}{\cr}\email{eduardo.garcia@usc.es}}
+\author{Eduardo Garcia-Portugues. Please, report bugs and suggestions to \if{latex}{\cr}\email{egarcia@math.ku.dk}}
 
 \seealso{\code{\link{flm.test}}}
 

@@ -48,7 +48,7 @@ else {
               prob.group[,i]<-1-a[[i]]$fitted.values
             }
          
-   yest<-ny[apply(prob.group,1,which.max)]#no será which.max
+   yest<-ny[apply(prob.group,1,which.max)]
    yest<-factor(yest,levels=ny)
    tab<-table(yest,y)
    prob.group<-prob.group/apply(prob.group,1,sum)

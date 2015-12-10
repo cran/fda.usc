@@ -5,19 +5,22 @@ if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
 #        omit <- omit.fdata(fdataobj, y)
 #        fdataobj <- omit[[1]]
 #        y <- omit[[2]]
+tol<-sqrt(.Machine$double.eps)
 x<-fdataobj[["data"]]
 tt<-fdataobj[["argvals"]]
 rtt<-fdataobj[["rangeval"]]
 n = nrow(x)
 np <- ncol(x)
 W<-diag(weights)
+tol<-sqrt(.Machine$double.eps)
 if (n != (length(y))) stop("ERROR IN THE DATA DIMENSIONS")
 if (is.null(rownames(x)))        rownames(x) <- 1:n
 if (is.null(colnames(x)))        colnames(x) <- 1:np
 if (is.matrix(y)) y=as.vector(y)
 fou<-FALSE
 if (is.null(basis.x))  {
-  nbasis1=seq(max(floor(np/10),11),max(floor(np/5),11),by=2)
+  #nbasis1=seq(max(floor(np/10),11),max(floor(np/5),11),by=2)
+  nbasis1=seq(5,max(floor(np/5),11),by=2)
   lenbasis.x=length(nbasis1)
   basis.x=list()
   for (nb.x in 1:lenbasis.x) {
@@ -36,26 +39,9 @@ if (is.null(basis.x))  {
 }
 else nbasis1<-basis.x
 if (is.null(basis.b))  {
-#  2=seq(max(floor(np/10),5),max(floor(np/10),11),by=2)
-#  lenbasis.b=length(nbasis2)
-#  basis.b=list()
-#  for (nb.x in 1:lenbasis.b) {
-#	if (!is.null(type.basis))  {
-#    if (length(type.basis)>1)    aa1 <- paste("create.",type.basis[2], ".basis", sep = "")
-#    else     aa1 <- paste("create.",type.basis, ".basis", sep = "")
-#    as <- list()
-#    as[[1]] <- rtt
-#    names(as)[[1]] <- "rangeval"
-#    as[[2]] <- nbasis2[nb.x]
-#    names(as)[[2]] <- "nbasis"
-#    basis.b[[nb.x]]=do.call(aa1, as)
-#    }
-#  else   basis.b[[nb.x]]=create.bspline.basis(rangeval=rtt,nbasis=nbasis2[nb.x])
-#} 
 basis.b<-basis.x
 nbasis2<-nbasis1
 fou<-TRUE
-#nb.y<-nb.x
  }
 else nbasis2<-basis.b
 lenlambda=length(lambda)
@@ -150,20 +136,20 @@ else  {
      J<-inprod(basis.x[[nb.x]],basis.b[[nb.y]])        
 	   Z=C%*%J
      Z=cbind(rep(1,len=n),Z)
-	   if (min(lambda)!=0) {
+	   if (min(lambda,na.rm=TRUE)!=0) {
        R=diag(0,ncol= basis.b[[nb.y]]$nbasis+1,nrow=basis.b[[nb.y]]$nbasis+1)
        R[-1,-1]<-eval.penalty(basis.b[[nb.y]],Lfdobj)
-                    }
+       }
      else R=0
      for (k in 1:lenlambda) {
-       Sb=t(Z)%*%W%*%Z+lambda[k]*R
-#      eigchk(Sb)
-       Cinv<-solve(Sb)
+      Sb=t(Z)%*%W%*%Z+lambda[k]*R
+      #Cinv<-solve(Sb)
+      Cinv<-Minverse(Sb)
        Sb2=Cinv%*%t(Z)%*%W
        par.CV$S <-Z%*%Sb2
        par.CV$y<-y
        gcv[nb.x,nb.y,k]<- do.call(type.CV,par.CV)
-       if (gcv[nb.x,nb.y,k]<pr) {
+       if ((gcv[nb.x,nb.y,k]+tol)<pr) {
           pr=gcv[nb.x,nb.y,k]
           lambda.opt=lambda[k]
           basis.b.opt=basis.b[[nb.y]]
@@ -173,9 +159,12 @@ else  {
           Cm.opt=Cm
           J.opt=J
           Cinv.opt=Cinv
+    } 
+
+       }
     }  }
-    }  }
-    l = which.min(gcv)
+if (all(is.na(gcv))) stop("System is computationally singular. Try to reduce the number of basis elements")
+       l = which.min(gcv)[1]
     gcv.opt=min(gcv,na.rm=TRUE)
     S=Z.opt%*%Sb.opt
     DD<-t(Z.opt)%*%y
@@ -198,7 +187,7 @@ else  {
     object.lm$residuals<-drop(e)
     object.lm$fitted.values<-yp
     object.lm$y<-y
-     object.lm$x<-Z#############################################################ok
+     object.lm$x<-Z.opt
     object.lm$rank<-df
     object.lm$df.residual<-n-df
     vfunc=call[[2]]
@@ -237,4 +226,3 @@ out<-list("call"=call,"coefficients"=coefficients,"residuals"=e,"fitted.values"=
 class(out)="fregre.fd"
 return(invisible(out))
 }
-

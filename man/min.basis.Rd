@@ -11,7 +11,8 @@ Functional data estimation via basis representation using cross-validation (CV) 
 %type.basis="bspline",par.CV=list(trim=0,draw=FALSE),...) 
 \method{min}{basis}(fdataobj,type.CV=GCV.S,W=NULL,lambda=0,
 numbasis=floor(seq(ncol(fdataobj)/16,ncol(fdataobj)/2,len=10)),
-type.basis="bspline",par.CV=list(trim=0,draw=FALSE),verbose=FALSE,\dots)
+type.basis="bspline",par.CV=list(trim=0,draw=FALSE),
+verbose=FALSE,\dots)
 }
 
 \arguments{

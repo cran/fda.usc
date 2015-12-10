@@ -204,6 +204,7 @@ return(invisible(list("median"=med,"lmed"=k,"mtrim"=mtrim,"ltrim"=lista,
 ################################################################################
 depth.FMp=function(lfdata,lfdataref=lfdata,trim=0.25,dfunc="mdepth.MhD",
 par.dfunc=list(scale=FALSE),draw=FALSE,ask=FALSE,...){
+  #   print("FMp")
 #if (!is.list(lfdata)) stop("lfdata1 must be a list")
 #if (!is.list(lfdataref)) stop("lfdata1 must be a list")
 nam1<-names(lfdata)
@@ -311,5 +312,6 @@ if (draw){
    legend("topleft",legend=c(tr,"Median"),lwd=2,col=c("yellow","red"),box.col=0)
  }
 }
+# print("sale FMp")
 return(invisible(list("lmed"=k,"ltrim"=lista,"dep"=ans,"par.dfunc"=par.dfunc)))
 }

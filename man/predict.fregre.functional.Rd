@@ -79,7 +79,7 @@ for (ind in 1:35){
  res2 <-  fregre.basis.fr(tempfd[-ind], log10precfd[-ind],
  basis.s=basiss,basis.t=basist)
  pred2<-predict.fregre.fr(res2,tempfd[ind])
- plot( log10precfd[ind],col=1,ylim=range(log10precfd$coef),main=nam[ind]) 
+ plot(log10precfd[ind],col=1,ylim=range(log10precfd$coef),main=nam[ind]) 
  lines(pred2,lty=2,col=2)
  Sys.sleep(1)
 }

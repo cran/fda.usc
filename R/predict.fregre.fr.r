@@ -18,12 +18,14 @@ else {
 H = t(xcoef) %*% object$H 
 beta.xest = beta.est %*% t(H)
 beta.xfd   = fd(beta.xest, object$basis.t)
-yhat = eval.fd(object$argvals.y,object$alpha.est) %*% matrix(1,1,ncurves) + eval.fd(object$argvals.y, beta.xfd)
 if (isfdx) {
- fitted.values  <- fd(coef=yhat, basisobj=object$y$basis, fdnames=object$y$fdnames)
+ #fitted.values  <- fd(coef=yhat, basisobj=object$y$basis, fdnames=object$y$fdnames)
+  yhat = eval.fd(object$argvals.y,object$alpha.est) %*% matrix(1,1,ncurves) + eval.fd(object$argvals.y, beta.xfd)  
+  fitted.values  <-smooth.basis(object$argvals.y, yhat, object$y$basis)$fd 
 }
 else {
- fitted.values<-fdata(t(yhat),new.fdataobj$argvals,new.fdataobj$rangeval,new.fdataobj$names)
+  yhat = eval.fd(object$y$argvals,object$alpha.est) %*% matrix(1,1,ncurves) + eval.fd(object$y$argvals, beta.xfd)
+  fitted.values<-fdata(t(yhat),new.fdataobj$argvals,new.fdataobj$rangeval,new.fdataobj$names)
 }
 return(fitted.values)
 }

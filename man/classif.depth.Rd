@@ -5,7 +5,8 @@
 \description{
 Classification of functional data using maximum depth.}
 \usage{
-classif.depth(group,fdataobj,newfdataobj,depth="RP",par.depth=list(),CV="none")
+classif.depth(group,fdataobj,newfdataobj,depth="RP",
+par.depth=list(),CV="none")
 
 }
 \arguments{

@@ -27,7 +27,7 @@ The dataset starts on 23 February and ends on 26 June, in 2005. We split the who
 Twelve curves that contained missing data were eliminated.
 }
 \source{
-\url{http://mediambient.gencat.cat/cat/el_medi/atmosfera/informacio_on_line/}
+\url{http://mediambient.gencat.cat}
 }
 \references{
 Febrero-Bande, M., Galeano, P., and Gonzalez-Manteiga, W. (2008).  \emph{Outlier detection in functional data by depth measures with application to identify abnormal NOx levels}. Environmetrics 19, 4, 331{-}345. 

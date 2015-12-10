@@ -37,7 +37,8 @@ period=NULL,...)
   \item{q}{  If \code{semimetric.pca}: the retained number of principal components.\cr
 	If \code{semimetric.mplsr}: the retained number of factors.}
   \item{nknot}{  semimetric.deriv argument: number of interior knots (needed for defining the B-spline basis).}
- \item{nderiv}{  Order of derivation, used in \code{semimetric.deriv} and \code{semimetric.fourier}}
+ \item{nderiv}{  Order of derivation, used in \code{semimetric.deriv} and \cr
+                 \code{semimetric.fourier}}
 \item{nbasis}{ \code{semimetric.fourier}: size of the basis.}
 \item{period}{ \code{semimetric.fourier}:allows to select the period for the fourier expansion.} 
 \item{t}{ \code{semimetric.hshift}: vector which defines  \code{t} (one can choose \code{1,2,...,nbt} where \code{nbt} is the number of points of the discretization)}

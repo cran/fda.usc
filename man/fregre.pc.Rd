@@ -18,7 +18,8 @@ fregre.pc(fdataobj, y, l =NULL,lambda=0,P=c(1,0,0),
 
 \arguments{
 %  \item{fdataobj}{ \code{\link{fdata}} class object.}  
-\item{fdataobj}{ \code{\link{fdata}} class object or \code{fdata.comp} class object created by \code{\link{create.pc.basis}} function.}  
+\item{fdataobj}{ \code{\link{fdata}} class object or \code{fdata.comp} class object created\cr
+ by \code{\link{create.pc.basis}} function.}  
 	\item{y}{ Scalar response with length \code{n}.}
   \item{l}{ Index of components to include in the model.If is null \code{l} (by default), \code{l=1:3}.}
   \item{lambda}{ Amount of penalization. Default value is 0, i.e. no penalization is used.}

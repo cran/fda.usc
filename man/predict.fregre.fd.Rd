@@ -8,8 +8,9 @@
 }
 \usage{
 %predict.fregre.fd(object,new.fdataobj=NULL,...)
-\method{predict}{fregre.fd}(object,new.fdataobj=NULL,se.fit=FALSE,scale = NULL,df=df,
-    interval = "none", level = 0.95,weights = 1, pred.var = res.var/weights,\dots)
+\method{predict}{fregre.fd}(object,new.fdataobj=NULL,se.fit=FALSE, 
+        scale = NULL,df=df, interval = "none", level = 0.95,
+        weights = 1, pred.var = res.var/weights,\dots)
 }
 \arguments{
    \item{object}{ \code{fregre.fd} object.}

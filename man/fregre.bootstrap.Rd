@@ -4,8 +4,9 @@
 \title{  Bootstrap regression}
 \description{Estimate the beta parameter by wild or smoothed bootstrap procedure }
 \usage{
-fregre.bootstrap(model, nb = 500, wild = TRUE,type.wild="golden",newX = NULL,
- smo = 0.1, smoX = 0.05, alpha = 0.95, kmax.fix = FALSE, draw = TRUE,...)                 
+fregre.bootstrap(model, nb = 500, wild = TRUE,type.wild="golden",
+                 newX = NULL, smo = 0.1, smoX = 0.05, alpha = 0.95, 
+                 kmax.fix = FALSE, draw = TRUE,...)                 
 }
 \arguments{
   \item{model}{ \code{fregre.pc}, \code{fregre.pls} or  \code{fregre.basis} object.}	

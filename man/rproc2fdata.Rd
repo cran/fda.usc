@@ -7,7 +7,8 @@ Generate Functional data from: Ornstein Uhlenbeck process, Brownian process, Gau
 }
 \usage{
 rproc2fdata(n,t=NULL,mu=rep(0,length(t)),sigma=1,
-par.list=list("scale"=1,"theta"=.2*diff(rtt)),norm=FALSE,verbose=FALSE,...)
+            par.list=list("scale"=1,"theta"=.2*diff(rtt)),
+            norm=FALSE,verbose=FALSE,...)
 }
 \arguments{
 	\item{n}{ Number of functional data to generate.}       
@@ -22,7 +23,8 @@ If \code{sigma} is a character: create a random process using the covariance mat
 \itemize{              
  \item \code{"OU"} or \code{"OrnsteinUhlenbeck"}, creates an random Ornstein Uhlenbeck process with
   \eqn{\Sigma_{s,t}=\frac{\sigma^2}{2\theta}e^{-\theta\left(s+t\right)} \left(e^{2\theta\left(s+t\right)}-1\right)}{\Sigma=\sigma^2/\theta exp(-\theta(s+t))(exp(2\theta(s+t)-1))},
-   by default \eqn{\theta=1/(3range(t))}{\theta=1/(3range(t))}, \eqn{\sigma^2={1}}{\sigma^2=1}.
+   by default \cr
+   \eqn{\theta=1/(3range(t))}{\theta=1/(3range(t))}, \eqn{\sigma^2={1}}{\sigma^2=1}.
  \item \code{"wiener"}, creates an random Wiener process with \eqn{\Sigma_{s,t}=\sigma^2 min(s,t)}{\Sigma=\sigma^2 min(s,t)}, by default \eqn{\sigma^2=1}{\sigma^2=1}.
  \item \code{"vexponential"}, creates an random Exponential variogram process with
   \eqn{\Sigma_{s,t}=\sigma^2 e^{\left(-\frac{\left|s-t\right|}{\theta}\right)}}{\Sigma=\sigma^2 exp(-|s-t|/\theta )}, 
@@ -50,6 +52,6 @@ plot(rproc2fdata(200,t=tt,sigma="vexponential"))
 plot(rproc2fdata(200,t=tt,sigma=1:lent))
 plot(rproc2fdata(200,t=tt,sigma="brownian"))
 plot(rproc2fdata(200,t=tt,sigma="wiener"))
-#plot(rproc2fdata(200,seq(0,1,len=30),sigma="oo")) # this is a error 
+#plot(rproc2fdata(200,seq(0,1,len=30),sigma="oo")) # this is an error 
 }
 \keyword{datagen}

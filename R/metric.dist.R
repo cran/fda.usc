@@ -1,10 +1,42 @@
-euclidean<-function(u) sqrt(sum(u^2,na.rm=TRUE))
-manhattan<-function(u) sqrt(sum(abs(u),na.rm=TRUE))
-manhattan<-function(u) sqrt(sum(abs(u),na.rm=TRUE))
-maximum<-function(u) sqrt(max(u,na.rm=TRUE))
-minkowski<-function(u,p) (sum(u,na.rm=TRUE)^p)^1/p
+#no importa sino se divide por la suma de los pesos
+euclidean<-function(u,weights=rep(1,length(u))) {  
+  u<- sqrt(sum(weights*u^2,na.rm=TRUE))
+  st<-attributes(u)
+  attributes(u)<-st
+  attr(u, "weigthts") <- weights
+  u
+}
+manhattan<-function(u,weights=rep(1,length(u))) {  
+  u<- sqrt(sum(weights*abs(u),na.rm=TRUE))
+  st<-attributes(u)
+  attributes(u)<-st
+  attr(u, "weigthts") <- weights
+  u
+}
+minkowski<-function(u,weights=rep(1,length(u)),p) {  
+  u<- (sum(weights*(u^p),na.rm=TRUE))^(1/p)
+  st<-attributes(u)
+  attributes(u)<-st
+  attr(u, "weigthts") <- weights
+  u
+}
+maximum<-function(u,weights=rep(1,length(u))) {  
+  u<- sqrt(weights*max(u,na.rm=TRUE))
+  st<-attributes(u)
+  attributes(u)<-st
+  attr(u, "weigthts") <- weights
+  u
+}
+###########################################################
+###########################################################
+
+#euclidean<-function (u)   sqrt(sum(u^2, na.rm = TRUE))
+#manhattan<-function(u) sqrt(sum(abs(u),na.rm=TRUE))
+#minkowski<-function(u,p) (sum(u,na.rm=TRUE)^p)^1/p
+#no hace falta w
+#maximum<-function(u) sqrt(max(u,na.rm=TRUE))
 ################################################################################
-metric.ldata=function(lfdata,lfdataref=lfdata,metric,par.metric=list(),method="euclidean") {
+metric.ldata=function(lfdata,lfdataref=lfdata,metric,par.metric=list(),weights,method="euclidean") {
 if (class(lfdata)=="list"){
  lenl<-length(lfdata)
  lenl2<-length(lfdataref)
@@ -12,9 +44,10 @@ if (class(lfdata)=="list"){
  m<-nrow(lfdataref[[1]]) 
  mdist2<-matrix(0,n,n)
  amdist<-array(NA,dim=c(n,m,lenl))
- mdist<-list()
+ ldist<-mdist<-list()
  nam1<-names(lfdata)
  nam2<-names(lfdataref) 
+ attr<-list()
  if (is.null(nam1)) {names(lfdata)<-nam1<-paste("var",1:lenl,sep="")}
  if (is.null(nam2)) {names(lfdataref)<-nam2<-paste("var",1:lenl2,sep="")} 
  # verificar que todos los nam1 estan en nam2
@@ -23,9 +56,11 @@ if (class(lfdata)=="list"){
    if (is.fdata(lfdata[[nam1[1]]])) metric<-rep("metric.lp",len=lenl)
    else    metric<-rep("metric.dist",len=lenl)   
  }
- 
- 
+if (missing(weights)) weights<-rep(1,length=lenl)
+# print("metric.ldata2")
  for (i in 1:lenl){
+# print("metric.ldata3")
+if (is.character(metric)) {
  if (is.null(par.metric[[nam1[i]]])) par.metric[[nam1[i]]]<-list()
   if (is.fdata(lfdata[[nam1[i]]])) { 
    par.metric[[nam1[i]]][["fdata1"]]<-lfdata[[nam1[i]]]
@@ -38,15 +73,33 @@ if (class(lfdata)=="list"){
    par.metric[[nam1[i]]][["y"]]<-lfdataref[[nam1[i]]]   
    mdist<-do.call(metric[i],par.metric[[nam1[i]]])
    }
-
+}
+else {
+  
+  if (is.list(metric)) mdist<-metric[[nam1[i]]]
+  
+}
+  ldist[[nam1[i]]]<-mdist
   amdist[,,i]<- mdist
-  atr<-attributes(mdist)     
+  #attr[[nam1[i]]]<-attributes(mdist)     
  }
-mdist<-apply(amdist,1:2,method)
+# print("sale1")
+#print(Weights)
+###for (k in len) sqrt(w[i])*
+# print(weights)
+mdist<-apply(amdist,1:2,method,weights=weights)
+# print("sale2")
 }
 else stop("Error in lfdata argument")
-attributes(mdist)<-atr
+# print("a")
+# print(dim(amdist))
+# print(dim(mdist))
+# print(attributes(mdist))
+# print(attr)
+#attributes(mdist)<-atr
 attr(mdist, "method") <-method
+attr(mdist, "weights") <- weights
+for (i in 1:lenl) attr(mdist, nam1[i]) <- attributes(ldist[[nam1[i]]])
 return(mdist)
 }
 
@@ -89,7 +142,11 @@ else{
 # namesx<-rownames(x)
 # if (ynull) dimnames(mdist) <- list(namesx,namesx)
 # else dimnames(mdist) <- list(namesx, rownames(y))
- if (is.function(dscale)) dscale<-dscale(as.dist(mdist))
+ if (is.function(dscale)) {
+   if (nrow(mdist)==ncol(mdist)) diag(mdist)<-NA ################# ojjjooo solo para matrices cuadradas
+   dscale<-dscale(as.dist(mdist))
+   if (nrow(mdist)==ncol(mdist)) diag(mdist)<-0   
+ } 
  mdist<-mdist/dscale
  attr(mdist, "call") <- "metric.dist"
  attr(mdist, "par.metric") <- list(method =method,p=p,dscale=dscale) 

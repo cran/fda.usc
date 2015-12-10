@@ -6,7 +6,8 @@
  The generalized cross-validation (GCV) score. 
 }
 \usage{
-GCV.S(y,S,criteria="GCV",W=NULL,trim=0,draw=FALSE,metric=metric.lp,...)
+GCV.S(y,S,criteria="GCV",W=NULL,trim=0,
+      draw=FALSE,metric=metric.lp,\ldots)
 }
 
 \arguments{

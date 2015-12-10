@@ -17,15 +17,17 @@
 }
 }
 \usage{
-\method{predict}{fregre.lm}(object,newx=NULL,type="response",se.fit=FALSE,scale = NULL,df=df,
-    interval = "none", level = 0.95,weights = 1, pred.var = res.var/weights, \dots)
+\method{predict}{fregre.lm}(object,newx=NULL,type="response",se.fit=FALSE,
+      scale = NULL,df=df, interval = "none", level = 0.95,weights = 1, 
+      pred.var = res.var/weights, \dots)
 \method{predict}{fregre.plm}(object,newx=NULL,\dots)
 \method{predict}{fregre.glm}(object,newx=NULL,type="response",\dots)
 \method{predict}{fregre.gsam}(object, newx = NULL, type = "response",\dots)
 \method{predict}{fregre.gkam}(object, newx = NULL, type = "response",\dots)
 }
 \arguments{
-  \item{object}{ \code{fregre.lm},  \code{fregre.plm}, \code{fregre.glm},  \code{fregre.gsam} or \code{fregre.gkam} object.}
+  \item{object}{ \code{fregre.lm},  \code{fregre.plm}, \code{fregre.glm},  \code{fregre.gsam}\cr
+   or \code{fregre.gkam} object.}
   \item{newx}{ An optional data list in which to look for variables with which to predict. If omitted, the fitted values are used. List of new explanatory data.}
   \item{type}{ Type of prediction (response or model term).}
   \item{se.fit}{=TRUE (not default) standard error estimates are returned for each prediction.}

@@ -5,8 +5,10 @@
 \title{ Partial least squares components for functional data.}
 \description{ Compute penalized partial least squares (PLS) components for functional data. fdata2ppls is deprecated.}
 \usage{ 
-fdata2pls(fdataobj, y, ncomp = 2, lambda = 0, P = c(0, 0, 1),norm=TRUE,...) 
-fdata2ppls(fdataobj, y, ncomp = 2, lambda = 0, P = c(0, 0, 1),norm=TRUE,...) 
+fdata2pls(fdataobj, y, ncomp = 2, lambda = 0, P = c(0, 0, 1),
+norm=TRUE,...) 
+fdata2ppls(fdataobj, y, ncomp = 2, lambda = 0, P = c(0, 0, 1),
+norm=TRUE,...) 
  }
 \arguments{
   \item{fdataobj}{ \code{\link{fdata}} class object.}  

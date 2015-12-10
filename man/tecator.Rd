@@ -24,10 +24,7 @@ Water, Fat and Protein content of meat samples
 \code{absorp.fdata} absorbance data for 215 samples. The first 129 were originally used as a training set 
 endpoints the percentages of Fat, Water and Protein.\cr 
 for more details see tecator package}
-\source{
-\url{http://lib.stat.cmu.edu/datasets/tecator}
-}
-
+%\source{\url{http://lib.stat.cmu.edu/datasets/tecator}}
 \author{Manuel Febrero-Bande and Manuel Oviedo de la Fuente \if{latex}{\cr}\email{manuel.oviedo@usc.es}}
 \examples{
 data(tecator)

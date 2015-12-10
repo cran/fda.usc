@@ -8,7 +8,8 @@ Kullback--Leibler distance%# for densityesfunctional data
 Measures the proximity between two groups of densities (of class \code{fdata}) by computing the Kullback--Leibler distance.
 }
 \usage{
-metric.kl(fdata1, fdata2 = NULL, symm=TRUE,base=exp(1),eps=1e-10,...) 
+metric.kl(fdata1, fdata2 = NULL, symm=TRUE, 
+          base=exp(1), eps=1e-10,...) 
 }
 \arguments{  
   \item{fdata1}{Functional data 1 (\code{fdata} class) with the densities. The dimension of \code{fdata1} object is (\code{n1} x \code{m}), where \code{n1} is the number of densities and   \code{m} is the number of coordinates of the points where the density is observed.}

@@ -33,5 +33,5 @@ See also  \code{\link{dist}} for multivariate date case and \code{\link{metric.l
 # data(iris)
 # d<-metric.dist(iris[,1:4])
 # matplot(d,type="l",col=as.numeric(iris[,5]))
-}
+}%incluir pesos en las matrices dedistancias
 \keyword{ cluster }

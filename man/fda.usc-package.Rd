@@ -1,6 +1,6 @@
       
 \name{fda.usc-package}
-\Rdversion{1.0.0}
+\Rdversion{1.2.2}
 \alias{fda.usc-package}
 \alias{fda.usc}
 \docType{package}
@@ -158,11 +158,11 @@ This section allows the estimation of the groups in a  functional data set \code
 \tabular{ll}{
 Package: \tab fda.usc\cr
 Type: \tab Package\cr
-Version: \tab 1.2.0\cr
-Date: \tab 2014-05-05\cr
+Version: \tab 1.2.2\cr
+Date: \tab 2015-12-10\cr
 License: \tab GPL-2 \cr
 LazyLoad: \tab yes\cr
-Url: \url{ http://eio.usc.es/pub/MAESFE/}, \url{http://eio.usc.es/pub/gi1914/}
+Url: \url{http://eio.usc.es/pub/MAESFE/}, \url{http://eio.usc.es/pub/gi1914/}
 }
 }
 \author{

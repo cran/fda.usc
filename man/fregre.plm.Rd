@@ -29,7 +29,8 @@ par.S=list(w=1),...)}
   \item{metric}{ Metric function, by default \code{\link{metric.lp}}.}
   \item{type.CV}{ Type of cross-validation. By default generalized cross-validation \code{\link{GCV.S}} method.} 
   \item{type.S}{ Type of smothing matrix \code{S}. By default \code{S} is calculated by Nadaraya-Watson kernel estimator (\code{S.NW}).}   
-  \item{par.CV}{ List of parameters for \code{type.CV}: \code{trim}, the alpha of the trimming and \code{draw=TRUE}.}	  
+  \item{par.CV}{ List of parameters for \code{type.CV}: \code{trim}, the alpha of the trimming\cr
+   and \code{draw=TRUE}.}	  
    \item{par.S}{ List of parameters for \code{type.S}: \code{w}, the weights.}	      
    \item{\dots}{ Further arguments passed to or from other methods.}
 }

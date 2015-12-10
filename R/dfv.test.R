@@ -5,7 +5,7 @@
 ##############################################
 
 ##############################################
-## File created by Eduardo García-Portugués ##
+## File created by Eduardo Garcia-Portugues ##
 ## using code from library fda.usc          ##
 ##############################################
 

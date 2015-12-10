@@ -7,7 +7,8 @@
 \description{
  Distance correlation t-test of multivariate and functional independence (wrapper functions of energy package).}
 \usage{
-dcor.xy(x,y,test=TRUE,metric.x,metric.y,par.metric.x,par.metric.y,n)
+dcor.xy(x,y,test=TRUE,metric.x,metric.y,par.metric.x,
+par.metric.y,n)
 dcor.test(D1,D2,n)
 bcdcor.dist(D1,D2,n)
 dcor.dist(D1, D2)
@@ -35,7 +36,8 @@ Distance correlation is a measure of dependence between random vectors introduce
  
   \code{dcor.test} similar to  \code{dcor.xy}  but only for distance matrix.
     
- \code{dcor.dist}  compute distance correlation statistic.  Wrapper function of \code{energy:::dcor}  but only for distance matrix.
+ \code{dcor.dist}  compute distance correlation statistic.  Wrapper function of\cr
+  \code{energy:::dcor}  but only for distance matrix.
  
  \code{bcdcor.dist} compute bias corrected distance correlation statistic.  Wrapper function of \code{energy:::bcdcor}  but only for distance matrix.
 }

@@ -75,7 +75,8 @@ f=Fat~Protein+x
 basis.x=list("x"=basis1)
 basis.b=list("x"=basis2)
 ldata=list("df"=dataf,"x"=x)
-res=fregre.glm(f,family=gaussian(),data=ldata,basis.x=basis.x,basis.b=basis.b)
+res=fregre.glm(f,family=gaussian(),data=ldata,basis.x=basis.x,
+basis.b=basis.b)
 summary(res)
 }
 \keyword{regression}

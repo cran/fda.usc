@@ -148,8 +148,7 @@ if (ngroup==2) {
          }
       else prob[2]<-0
       prob.group<-a$fitted.values
-
-      #devolver a mayores y estimada!
+      #devolver a mayores y estimada
    }
 else {
    ny<-as.numeric(names(table(y)))
@@ -163,7 +162,7 @@ else {
               weights=weights,basis.x=basis.x,basis.b=basis.b,CV=CV,...)
               prob.group[,i]<-a[[i]]$fitted.values
             }
-   yest<-ny[apply(prob.group,1,which.min)]#no será which.max
+   yest<-ny[apply(prob.group,1,which.min)]######no sera which.max
    yest<-factor(yest,levels=ny)
    tab<-table(yest,y)
    for (i in 1:ngroup) {     prob[i]=tab[i,i]/sum(tab[,i])     }
@@ -268,7 +267,7 @@ else {
               par.metric=par.metric,par.np=par.np,offset=offset,control=control,...)
               prob.group[,i]<-a[[i]]$fitted.values
               }
-   yest<-ny[apply(prob.group,1,which.min)]#no será which.max
+   yest<-ny[apply(prob.group,1,which.min)]#no sera which.max
    yest<-factor(yest,levels=ny)
    tab<-table(yest,y)
    for (ii in 1:ngroup) {

@@ -207,7 +207,7 @@ if (lenvfunc>0) {
   }  
 if    (basis.x[[vfunc[i]]]$type=="pls") {
    hay.pls<-TRUE
-   rn0<-TRUE # SI ES Pls ASÍ TIENE EN CUENTA LOS DOF QUE EN EL LM() NO LO TENDRIA
+   rn0<-TRUE # SI ES Pls ASI TIENE EN CUENTA LOS DOF QUE EN EL LM() NO LO TENDRIA
    lenl<-ncol(basis.x[[vfunc[i]]]$x)
    df<-df+basis.x[[vfunc[i]]]$df[lenl]
    }
@@ -547,7 +547,7 @@ if (lenvfunc>0) {
   }  
 if    (basis.x[[vfunc[i]]]$type=="pls") {
    hay.pls<-TRUE
-   rn0<-TRUE # SI ES Pls ASÍ TIENE EN CUENTA LOS DOF QUE EN EL LM() NO LO TENDRIA
+   rn0<-TRUE # SI ES Pls ASI TIENE EN CUENTA LOS DOF QUE EN EL LM() NO LO TENDRIA
    lenl<-ncol(basis.x[[vfunc[i]]]$x)
    df<-df+basis.x[[vfunc[i]]]$df[lenl]
    }
