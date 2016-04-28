@@ -738,7 +738,7 @@ fregre.pc=function (fdataobj, y, l =NULL,lambda=0,P=c(1,0,0),weights=rep(1,len=n
     Sb<-t(scores)%*%W%*%scores+mat
     # S<-solve(Sb)       
     #    S=solve(t(Z)%*%W%*%Z)    
-    s<-Minverse(Sb) 
+    S<-Minverse(Sb) 
     Cinv<-S%*%t(scores)%*%W         
     coefs<-Cinv%*%y
     yp<-drop(scores%*%coefs)
@@ -795,10 +795,10 @@ fregre.pc=function (fdataobj, y, l =NULL,lambda=0,P=c(1,0,0),weights=rep(1,len=n
     Z=cbind(rep(1,len=n),Z)
     #    S=solve(t(Z)%*%W%*%Z)    
     S<-t(Z)%*%W%*%Z
-    s<-Minverse(S) 
+    S<-Minverse(S) 
     H<-Z%*%S%*%t(Z)
     e<-object.lm$residuals
-    df<-traza(H)#n- object.lm$df
+    df<-traza(df)#n- object.lm$df
     sr2 <- sum(e^2)/(n - df)
     Vp<-sr2*S 
     r2 <- 1 - sum(e^2)/sum(ycen^2)

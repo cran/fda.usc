@@ -1,8 +1,8 @@
 Package: fda.usc
 Type: Package
 Title: Functional Data Analysis and Utilities for Statistical Computing
-Version: 1.2.2
-Date: 2015-12-10
+Version: 1.2.3
+Date: 2016-04-28
 Authors@R: c(person("Manuel Febrero Bande",role="aut", email = "manuel.febrero@usc.es"), person("Manuel Oviedo de la Fuente",role=c("aut","cre"), email="manuel.oviedo@usc.es"),
              person("Pedro Galeano",role="ctb"),
              person("Alicia Nieto",role="ctb"),
@@ -21,5 +21,5 @@ Author: Manuel Febrero Bande [aut],
 Maintainer: Manuel Oviedo de la Fuente <manuel.oviedo@usc.es>
 NeedsCompilation: yes
 Repository: CRAN
-Packaged: 2015-12-10 08:54:50 UTC; moviedo
-Date/Publication: 2015-12-10 10:29:21
+Packaged: 2016-04-28 10:20:57 UTC; moviedo
+Date/Publication: 2016-04-28 15:55:24

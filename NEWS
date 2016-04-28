@@ -1,5 +1,13 @@
+Release 1.2.3:
+Modification of classif.DD function for DDk classifier.
+New functions length.fdata, NROW.fdata, NCOL.fdata, gridfdata and rcombfdata.
+depth.KFSD  function implements a depth measure based on Kernelized Functional Spatial Depth.   
+depth.FSD  function implements a depth measure based on Functional Spatial Depth.   
+A bug in fregre.pc() function has been fixed.
+A bug in depth.RPD() function has been fixed.
+
 Release 1.2.2:
-Warning message in fregre.basis.cv(), fregre.pc.cv(), fregre.pls.cv(), fregre.basis(),
+Warning message in fregre.basis.cv(), fregre.pc.cv() and fregre.pls.cv(), fregre.basis(),
 fregre.pc() and fregre.pls() functions when system is computationally singular.
 A bug in predict.classif() function using a fitted object by classif.knn() has been fixed.
 The argument "trim" is modified from 0.1 to 0.25 in the function quantile.outliers.trim

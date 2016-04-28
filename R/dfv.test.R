@@ -46,13 +46,13 @@ dfv.test=function(X.fdata,Y,B=5000,h=quantile(x=metric.lp(X.fdata),probs=c(0.05,
 	}
 	
 	# P-value
-	pvalue<-sapply(1:length(h),function(i) sum(Tn.star[,i]>Tn[i]))/B
+	pvalue=sapply(1:length(h),function(i) sum(Tn.star[,i]>Tn[i]))/B
 	names(pvalue)=paste("p-value(",sprintf("h=%.3f",h),")",sep="")
 
 	# Result: class htest
 	names(Tn)=paste("Tn(",sprintf("h=%.3f",h),")",sep="")
-	result<-list(statistic=Tn,boot.statistics=Tn.star,p.value=pvalue,method="Delsol, Ferraty and Vieu test for no functional-scalar interaction",B=B,h=h,K=K,weights=weights,d=d,data.name="Y=0+e")
-	class(result)<-"htest"
+	result=list(statistic=Tn,boot.statistics=Tn.star,p.value=pvalue,method="Delsol, Ferraty and Vieu test for no functional-scalar interaction",B=B,h=h,K=K,weights=weights,d=d,data.name="Y=0+e")
+	class(result)="htest"
 	return(result)
 	
 }

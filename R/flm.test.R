@@ -10,16 +10,16 @@
 ##############################################
 
 # Generation of centred random variables with unit variance for the wild bootstrap
-rwild<-function(residuals,type="golden"){
-n<-length(residuals)
-res=switch(type,
- golden=sample(c((1-sqrt(5))/2,(1+sqrt(5))/2),size=n,prob=c((5+sqrt(5))/10,(5-sqrt(5))/10),replace=TRUE), 
- Rademacher={	
-	sample(c(-1,1),size=n,prob=c(.5,.5),replace=TRUE)
-	},
-	normal=rnorm(n)
-	)
-return(residuals*res)
+rwild=function(residuals,type="golden"){
+  n=length(residuals)
+  res=switch(type,
+   golden=sample(c((1-sqrt(5))/2,(1+sqrt(5))/2),size=n,prob=c((5+sqrt(5))/10,(5-sqrt(5))/10),replace=TRUE), 
+   Rademacher={	
+  	sample(c(-1,1),size=n,prob=c(.5,.5),replace=TRUE)
+  	},
+  	normal=rnorm(n)
+  	)
+  return(residuals*res)
 }
 
 # Adot function to call Fortran code
@@ -403,7 +403,10 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 				X.matrix=mod.basis$lm$x
 			}		
 		}
-		
+	  
+	  # Projection matrix
+	  P=(diag(rep(1,n))-X.matrix%*%solve(t(X.matrix)%*%X.matrix)%*%t(X.matrix))
+	  
 		# Bootstrap resampling
 		for(i in 1:B){
 		
@@ -414,7 +417,7 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 			Y.star=Y-e+e.hat
 			
 			# Residuals from the bootstrap estimated model
-			e.hat.star[i,]=(diag(rep(1,n))-X.matrix%*%solve(t(X.matrix)%*%X.matrix)%*%t(X.matrix))%*%Y.star
+			e.hat.star[i,]=P%*%Y.star
 		
 			# Calculate PCVM.star
 			pcvm.star[i]=PCvM.statistic(X=X.est,residuals=e.hat.star[i,],p=p.opt,Adot.vec=Adot.vec)
@@ -444,7 +447,7 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 	## 3. MC estimation of the p-value and order the result ##
 	
 	# Compute the p-value
-	pvalue<-sum(pcvm.star>pcvm)/B
+	pvalue=sum(pcvm.star>pcvm)/B
 	
 	## 4. Graphical representation of the integrated process ##
 	
@@ -491,10 +494,9 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",p=NULL,type
 	
 	# Result: class htest
 	names(pcvm)="PCvM statistic"
-	result<-structure(list(statistic=pcvm,boot.statistics=pcvm.star,p.value=pvalue,method=meth,B=B,type.basis=type.basis,
-							beta.est=beta.est,p=p.opt,ord=ord.opt,data.name="Y=<X,b>+e"))
+	result=structure(list(statistic=pcvm,boot.statistics=pcvm.star,p.value=pvalue,method=meth,B=B,type.basis=type.basis,beta.est=beta.est,p=p.opt,ord=ord.opt,data.name="Y=<X,b>+e"))
 							
-	class(result)<-"htest"
+	class(result)="htest"
 	return(result)
 	
 }

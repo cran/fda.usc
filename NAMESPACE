@@ -64,7 +64,9 @@ classif.DD,predict.classif.DD,classif.tree,
 depth.FMp,depth.modep, depth.RPp,
 mdepth.LD,mdepth.HS,mdepth.SD,mdepth.RP,mdepth.MhD,mdepth.TD,
 metric.hausdorff,na.omit.fdata,na.fail.fdata,
-dcor.xy,dcor.dist,bcdcor.dist,dcor.test,plot.bifd)
+dcor.xy,dcor.dist,bcdcor.dist,dcor.test,plot.bifd,
+# version 1.2.3
+NROW.fdata,NCOL.fdata,length.fdata,gridfdata,rcombfdata,depth.FSD,depth.KFSD)
 
 #func.med.HD,func.med.PD,func.med.SD,func.med.MhD,func.trim.HD,func.trim.PD,func.trim.SD,func.trim.MhD,
 #depth.MB,mdepth.MB,
@@ -85,6 +87,7 @@ S3method(influence,fdata)
 S3method(influence,quan)
 #S3method(is,fdata)
 S3method(lines,fdata)
+S3method(length,fdata)
 S3method(Math, fdata)
 S3method(missing,fdata)
 S3method(min,basis)
@@ -110,6 +113,8 @@ S3method(print,fregre.fd)
 S3method(print,fregre.gkam)
 S3method(quantile,outliers.pond)
 S3method(quantile,outliers.trim)
+S3method(NROW,fdata)
+S3method(NCOL,fdata)
 S3method(nrow,fdata)
 S3method(ncol,fdata)
 S3method(split,fdata)

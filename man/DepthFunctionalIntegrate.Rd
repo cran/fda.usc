@@ -20,7 +20,7 @@ depth.RPp(lfdata, lfdataref = lfdata, nproj = 50,
    
 depth.modep(lfdata, lfdataref = lfdata, h = NULL, metric,
  par.metric = list(), method = "euclidean", scale = FALSE,
- trim = 0.15, draw = FALSE,ask = FALSE)
+ trim = 0.25, draw = FALSE,ask = FALSE)
 }
 
 \arguments{
@@ -33,7 +33,7 @@ depth.modep(lfdata, lfdataref = lfdata, h = NULL, metric,
   \item  The \code{\link{mdepth.LD}} function provides the Likelihood depth measure based on Nadaraya--Watson estimator of empirical density function.  
    \item The \code{\link{mdepth.HS}} function implements a half-space depth measure based on random projections.
    \item The \code{\link{mdepth.TD}} function implements a Tukey depth measure.   
-   \item The \code{\link{mdepth.MhD}} function implements a Mahalanobis depth measure.
+   \item The \code{\link{mdepth.MhD}}function implements a Mahalanobis depth measure.
    \item The \code{\link{mdepth.RP}} function provides the depth measure using random projections for multivariate data.
       }
   }

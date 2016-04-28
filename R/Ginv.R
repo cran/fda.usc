@@ -19,7 +19,8 @@ Minverse<-function (X, tol = sqrt(.Machine$double.eps))
 #"The inverse of X is computed by svd procedure, \n
 #         -Effective Rank of X is: ",sum(Positive))  
   
-  warning("System is computationally singular (rank  ",dim(X)[2],")\n The  matrix inverse is computed by svd (effective rank ",sum(Positive),")")    
+  warning("System is computationally singular (rank  ",dim(X)[2],")\n
+          The  matrix inverse is computed by svd (effective rank ",sum(Positive),")")    
   if (all(Positive)) 
     Xsvd$v %*% (1/Xsvd$d * t(Xsvd$u))
   else if (!any(Positive)) 

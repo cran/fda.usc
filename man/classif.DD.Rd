@@ -1,33 +1,49 @@
 \name{classif.DD}
 \Rdversion{1.1}
 \alias{classif.DD}
-\title{ DD-Classifier Based on DD-plot for G levels and h dephts }
+\title{ DD-Classifier Based on DD-plot}
 \description{
-Fits Nonparametric Classification Procedure Based on DD--plot (depth-versus-depth plot) for G groups.}
+Fits Nonparametric Classification Procedure Based on DD--plot (depth-versus-depth plot) for G dimensions (\eqn{G=g\times h}{G=g x p}, g levels and p data depth). }
 \usage{
 classif.DD(group,fdataobj,depth="FM",classif="glm",w,
-par.classif=list(),par.depth=list(),
-control=list(verbose=FALSE,draw=TRUE,col=NULL,alpha=.25))
+           par.classif=list(),par.depth=list(),
+           control=list(verbose=FALSE,draw=TRUE,col=NULL,alpha=.25))
 }
 
 
 
 \arguments{
-  \item{group}{ Factor of length \emph{n} with \emph{G} levels.}
-  \item{fdataobj}{ \code{\link{data.frame}}, \code{\link{fdata}} or list with the multivariate, functional or both covariates respectively.}     
-\item{depth}{ Character vector specifying the type of depth functions to use, see \code{Details}. }     
+\item{group}{ Factor of length \emph{n} with \emph{g} levels.}
+  
+\item{fdataobj}{ \code{\link{data.frame}}, \code{\link{fdata}} or \code{list} with the multivariate, functional or both covariates respectively.}
+  
+\item{depth}{ Character vector specifying the type of depth functions to use, see \code{Details}. }   
+
 \item{classif}{ Character vector specifying the type of classifier method to use, see \code{Details}.}
-  \item{w}{ Optional case weights, weights for each value of \code{depth} argument, see \code{Details}.}
-	\item{par.depth}{ List of parameters for \code{depth} function.}	  
-  \item{par.classif}{ List of parameters for \code{classif} procedure.}	      
-  \item{control}{  List of parameters for controlling the process. If \code{draw=TRUE} print DD-plot of two samples based on data depth.
-  \code{col}, The colors for points in DD--plot.  \code{alpha}, the alpha transparency used in the background of DD--plot, a number in [0,1].}  
-  }
-  \details{
+
+\item{w}{ Optional case weights, weights for each value of \code{depth} argument, see \code{Details}.}
+  
+\item{par.depth}{ List of parameters for \code{depth} function.}	 
+  
+\item{par.classif}{ List of parameters for \code{classif} procedure.}	      
+
+\item{control}{  List of parameters for controlling the process. 
+
+  If \code{verbose=TRUE}, report extra information on progress.
+  
+  If \code{draw=TRUE} print DD-plot of two samples based on data depth.
+
+  \code{col}, the colors for points in DD--plot.  
+  
+  \code{alpha}, the alpha transparency used in the background of DD--plot, a number in [0,1].}  
+}
+
+\details{
 Make the group classification of a training dataset using DD-classifier estimation in the following steps.\cr  
+
 \enumerate{
-		\item  The function computes the selected \code{depth} measure of the points in \code{fdataobj} w.r.t. a subsample of each G level
-   group.  The user can be specify the parameters for depth function in \code{par.depth}.\cr
+		\item  The function computes the selected \code{depth} measure of the points in \code{fdataobj} w.r.t. a subsample of each g level
+   group and p data dimension (\eqn{G=g \times p}{G=g x p}).  The user can be specify the parameters for depth function in \code{par.depth}.\cr
 
 (i) Type of depth function from functional data, see \code{\link{Depth}}: 
    \itemize{
@@ -74,7 +90,19 @@ If the procedure requires to compute a distance such as in  \code{"knn"} or \cod
 	}
 The user can be specify the parameters for classifier function in \code{par.classif} such as the smoothing parameter \code{par.classif[[``h'']]}, if \code{classif="np"} or the k-Nearest Neighbour \code{par.classif[[``knn'']]}, if \code{classif="knn"}.	
 
-In the case of polynomial classifier (\code{"DD1"}, \code{"DD2"} and \code{"DD3"}) uses the original procedure proposed by Li et al. (2012), rotating the DD-plot (to exchange abscise and ordinate).  The procedure extend to multi-class problems by incorporating the method of \emph{majority voting} in the case of polynomial classifier and the method \emph{One vs the Rest} in the logistic case (\code{"glm"} and \code{"gam"}).
+In the case of polynomial classifier (\code{"DD1"}, \code{"DD2"} and \code{"DD3"}) uses the original procedure proposed by Li et al. (2012), by defalut rotating the DD-plot (to exchange abscise and ordinate) using  in \code{par.classif} argument \code{rotate=TRUE}. Notice that the maximum depth classifier can be considered as a particular case of DD1, fixing the slope with a value of 1 (\code{par.classif=list(pol=1)}). 
+
+The number of possible different polynomials depends on the sample size \code{n} and increases polynomially with order \eqn{k}. In the case of \eqn{g} groups, so the procedure applies some multiple-start optimization scheme to save time:
+
+\itemize{
+
+\item generate all combinations of the elements of n taken k at a time: \eqn{g \times combn(N,k)}{g x combs(N, k)} candidate solutions, and, when this number is larger than \code{nmax=10000},  a random sample of \code{10000} combinations. 
+
+\item smooth the empirical loss with the logistic function \eqn{1/(1+e^{-tx})}{1/(1+e^{- tt x})}. The classification rule is constructed optimizing the best \code{noptim} combinations in this random sample (by default  \code{noptim=1} and \code{tt=50/range(depth values)}). Note that Li et al.  found that the optimization results become stable for \eqn{t \in [50, 200]}{t between [50, 200]} when the depth is standardized with upper bound 1.  
+}
+The original procedure (Li et al. (2012)) not need to try many initial polynomials (\code{nmax=1000}) and that the procedure optimize the best (\code{noptim=1}), but we recommended to repeat the last step for different solutions, as for example \code{nmax=250} and \code{noptim=25}. User can change the parameters \code{pol}, \code{rotate}, \code{nmax}, \code{noptim} and \code{tt} in the argument \code{par.classif}. 
+
+The  \code{classif.DD} procedure extends to multi-class problems by incorporating the method of \emph{majority voting} in the case of polynomial classifier and the method \emph{One vs the Rest} in the logistic case (\code{"glm"} and \code{"gam"}).
 
   }
  }
@@ -149,7 +177,7 @@ summary.classif(out10)
 out11=classif.DD(group,list(x,x),depth=c("MhD","RP"),classif="lda")
 summary.classif(out11)
 
-# DD-classif for functional data: G levels 
+# DD-classif for functional data: g levels 
 data(phoneme)
 mlearn<-phoneme[["learn"]]
 glearn<-as.numeric(phoneme[["classlearn"]])-1

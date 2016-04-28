@@ -1,10 +1,12 @@
 ################################################################################
 # dscale puede ser una funcion o un valor
 ################################################################################
-depth.modep=function(lfdata,lfdataref=lfdata,h=NULL,metric,par.metric=list(),
-method="euclidean",scale=FALSE,trim=0.15,draw=FALSE,ask=FALSE) {
-equal<-identical(lfdata,lfdataref)
-if (class(lfdata)=="list"){
+depth.modep=function(lfdata,lfdataref=lfdata,h=NULL,metric,
+                     par.metric=list(),method="euclidean",
+                     scale=FALSE,trim=0.25,draw=FALSE,ask=FALSE) 
+{
+ equal<-identical(lfdata,lfdataref)
+ if (class(lfdata)=="list"){
   lenl <- length(lfdata)
   lenl2 <- length(lfdataref)
   m0 <- nrow(lfdata[[1]])

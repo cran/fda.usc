@@ -12,6 +12,9 @@
 \alias{dim.fdata}
 \alias{ncol.fdata}
 \alias{nrow.fdata}
+\alias{NROW.fdata}
+\alias{NCOL.fdata}
+\alias{length.fdata}
 \alias{is.fdata}
 \alias{*.fdata}
 \alias{^.fdata}
@@ -34,8 +37,11 @@
 \method{^}{fdata}(fdataobj,pot)
 \method{c}{fdata}(\dots) 
 \method{dim}{fdata}(x)
-\method{nrow}{fdata}(fdataobj)
-\method{ncol}{fdata}(fdataobj)
+\method{nrow}{fdata}(x)
+\method{ncol}{fdata}(x)
+\method{NROW}{fdata}(x)
+\method{NCOL}{fdata}(x)
+\method{length}{fdata}(x)
 \method{is}{fdata}(fdataobj)
 \method{omit}{fdata}(fdataobj,y=NULL)
 \method{omit2}{fdata}(fdataobj,index.na=FALSE)
