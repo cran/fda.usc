@@ -3,13 +3,13 @@ metric.hausdorff=function (fdata1, fdata2 = fdata1)
     if (is.fdata(fdata1)) {
         tt <- fdata1[["argvals"]]
         rtt <- fdata1[["rangeval"]]
-        nas1 <- apply(fdata1$data, 1, count.na)
+        nas1 <- is.na.fdata(fdata1)
         if (any(nas1)) 
             stop("fdata1 contain ", sum(nas1), " curves with some NA value \n")
         else if (!is.fdata(fdata2)) {
             fdata2 <- fdata(fdata2, tt, rtt)
         }
-        nas2 <- apply(fdata2$data, 1, count.na)
+        nas2 <- is.na.fdata(fdata2)
         if (any(nas2)) 
             stop("fdata2 contain ", sum(nas2), " curves with some NA value \n")
         DATA1 <- fdata1[["data"]]

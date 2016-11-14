@@ -2,7 +2,7 @@ min.basis<-function(fdataobj,type.CV=GCV.S,W=NULL,lambda=0,
 numbasis=floor(seq(ncol(fdataobj)/16,ncol(fdataobj)/2,len=10)),
 type.basis="bspline",par.CV=list(trim=0,draw=FALSE), verbose = FALSE,...){
  if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
-  nas1<-apply(fdataobj$data,1,count.na)
+  nas1<-is.na.fdata(fdataobj)
  if (any(nas1))  stop("fdataobj contain ",sum(nas1)," curves with some NA value \n")
 
 x<-fdataobj[["data"]]

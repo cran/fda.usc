@@ -8,7 +8,7 @@ summary.fregre.fd<-function(object,times.influ=3,times.sigma=3,draw=TRUE,...){
      up=mean(object$residuals)+times.sigma*sqrt(object$sr2)
      lo=mean(object$residuals)-times.sigma*sqrt(object$sr2)
      i.atypical=which(object$residuals>up|object$residuals<lo)
-     lim.influ=traza(object$H)/n
+     lim.influ=fdata.trace(object$H)/n
      influence=diag(object$H)
      i.influence=which(influence>times.influ*lim.influ)
      if (length(i.influence) == 0) i.influence=NA

@@ -1,3 +1,153 @@
+################################################################################
+
+"+.fdata" <- function(fdata1,fdata2){
+  inhe.fdata1 <-  inherits(fdata1, "fdata")
+  inhe.fdata2 <-  inherits(fdata2, "fdata")
+  if (!inhe.fdata1 && !inhe.fdata2)
+    stop("Neither argument for + is a functional data object fdata.")
+  if (inhe.fdata1 && inhe.fdata2) {
+    if (ncol(fdata1)!=ncol(fdata2)) stop("Error in columns dimensions")
+    if (!(all(fdata1[["argvals"]] == fdata2[["argvals"]])))  stop("Error in argvals")
+    n1=nrow(fdata1)
+    n2=nrow(fdata2)
+    if (n1==n2){
+      fdataobj <- fdata1
+      fdataobj[["data"]] <- fdata1[["data"]]+fdata2[["data"]] } 
+    else {
+      if (n1<n2) {
+        if (n2%%n1!=0) stop("Number of rows not compatible")
+        fdataobj=fdata2
+        fdataobj[["data"]]=fdata2[["data"]]+matrix(rep(t(fdata1$data),n2%/%n1),ncol=ncol(fdata1),byrow=TRUE)
+      } else {
+        if (n1%%n2!=0) stop("Number of rows not compatible")
+        fdataobj=fdata1
+        fdataobj[["data"]]=fdata1[["data"]]+matrix(rep(t(fdata2$data),n1%/%n2),ncol=ncol(fdata2),byrow=TRUE)
+      }
+    }
+  }
+  if (!inhe.fdata1 && inhe.fdata2) {
+    fdataobj <- fdata2
+    fdataobj[["data"]] <- fdata1+fdata2[["data"]]
+  }
+  if (inhe.fdata1 && !inhe.fdata2) {
+    fdataobj <- fdata1
+    fdataobj[["data"]] <- fdata1[["data"]]+fdata2
+  }
+  fdataobj
+}
+################################################################################
+
+"-.fdata" <- function(fdata1,fdata2){
+  inhe.fdata1 <-  inherits(fdata1, "fdata")
+  inhe.fdata2 <-  inherits(fdata2, "fdata")
+  if (!inhe.fdata1 && !inhe.fdata2)
+    stop("Neither argument for - is a functional data object fdata.")
+  if (inhe.fdata1 && inhe.fdata2) {
+    if (ncol(fdata1)!=ncol(fdata2)) stop("Error in columns dimensions")
+    if (!(all(fdata1[["argvals"]] == fdata2[["argvals"]])))  stop("Error in argvals")
+    n1=nrow(fdata1)
+    n2=nrow(fdata2)
+    if (n1==n2){
+      fdataobj <- fdata1
+      fdataobj[["data"]] <- fdata1[["data"]]-fdata2[["data"]] } 
+    else {
+      if (n1<n2) {
+        if (n2%%n1!=0) stop("Number of rows not compatible")
+        fdataobj=fdata2
+        fdataobj[["data"]]=matrix(rep(t(fdata1$data),n2%/%n1),ncol=ncol(fdata1),byrow=TRUE)-fdata2[["data"]]
+      } else {
+        if (n1%%n2!=0) stop("Number of rows not compatible")
+        fdataobj=fdata1
+        fdataobj[["data"]]=fdata1[["data"]]-matrix(rep(t(fdata2$data),n1%/%n2),ncol=ncol(fdata2),byrow=TRUE)
+      }
+    }
+  }
+  if (!inhe.fdata1 && inhe.fdata2) {
+    fdataobj <- fdata2
+    fdataobj[["data"]] <- fdata1-fdata2[["data"]]
+  }
+  if (inhe.fdata1 && !inhe.fdata2) {
+    fdataobj <- fdata1
+    fdataobj[["data"]] <- fdata1[["data"]]-fdata2
+  }
+  fdataobj
+}
+################################################################################
+
+"*.fdata" <- function(fdata1,fdata2){
+  inhe.fdata1 <-  inherits(fdata1, "fdata")
+  inhe.fdata2 <-  inherits(fdata2, "fdata")
+  if (!inhe.fdata1 && !inhe.fdata2)
+    stop("Neither argument for * is a functional data object fdata.")
+  if (inhe.fdata1 && !inhe.fdata2) {
+    fdataobj <- fdata1
+    fdataobj[["data"]] <- fdata1[["data"]]*fdata2
+  }
+  if (!inhe.fdata1 && inhe.fdata2) {
+    fdataobj <- fdata2
+    fdataobj[["data"]] <- fdata1*fdata2[["data"]]
+  }
+  if (inhe.fdata1 && inhe.fdata2) {
+    if (ncol(fdata1)!=ncol(fdata2)) stop("Error in columns dimensions")
+    if (!(all(fdata1[["argvals"]] == fdata2[["argvals"]])))  stop("Error in argvals")
+    n1=nrow(fdata1)
+    n2=nrow(fdata2)
+    if (n1==n2){
+      fdataobj <- fdata1
+      fdataobj[["data"]] <- fdata1[["data"]]*fdata2[["data"]] } 
+    else {
+      if (n1<n2) {
+        if (n2%%n1!=0) stop("Number of rows not compatible")
+        fdataobj=fdata2
+        fdataobj[["data"]]=fdata2[["data"]]*matrix(rep(t(fdata1$data),n2%/%n1),ncol=ncol(fdata1),byrow=TRUE)
+      } else {
+        if (n1%%n2!=0) stop("Number of rows not compatible")
+        fdataobj=fdata1
+        fdataobj[["data"]]=fdata1[["data"]]*matrix(rep(t(fdata2$data),n1%/%n2),ncol=ncol(fdata2),byrow=TRUE)
+      }
+    }
+  }
+  fdataobj
+}
+################################################################################
+
+"/.fdata" <- function(fdata1,fdata2){
+  inhe.fdata1 <-  inherits(fdata1, "fdata")
+  inhe.fdata2 <-  inherits(fdata2, "fdata")
+  if (!inhe.fdata1 && !inhe.fdata2)
+    stop("Neither argument for / is a functional data object fdata.")
+  if (inhe.fdata1 && !inhe.fdata2) {
+    fdataobj <- fdata1
+    fdataobj[["data"]] <- fdata1[["data"]]/fdata2
+  }
+  if (!inhe.fdata1 && inhe.fdata2) {
+    fdataobj <- fdata2
+    fdataobj[["data"]] <- fdata1/fdata2[["data"]]
+  }
+  if (inhe.fdata1 && inhe.fdata2) {
+    if (ncol(fdata1)!=ncol(fdata2)) stop("Error in columns dimensions")
+    if (!(all(fdata1[["argvals"]] == fdata2[["argvals"]])))  stop("Error in argvals")
+    n1=nrow(fdata1)
+    n2=nrow(fdata2)
+    if (n1==n2){
+      fdataobj <- fdata1
+      fdataobj[["data"]] <- fdata1[["data"]]/fdata2[["data"]] } 
+    else {
+      if (n1<n2) {
+        if (n2%%n1!=0) stop("Number of rows not compatible")
+        fdataobj=fdata2
+        fdataobj[["data"]]=matrix(rep(t(fdata1$data),n2%/%n1),ncol=ncol(fdata1),byrow=TRUE)/fdata2[["data"]]
+      } else {
+        if (n1%%n2!=0) stop("Number of rows not compatible")
+        fdataobj=fdata1
+        fdataobj[["data"]]=fdata1[["data"]]/matrix(rep(t(fdata2$data),n1%/%n2),ncol=ncol(fdata2),byrow=TRUE)
+      }
+    }
+  }
+  fdataobj
+}
+################################################################################
+
 "[.fdata"  <-  function(fdataobj, i = TRUE, j = TRUE,drop=FALSE) {
 if (is.numeric(j) && j==1 && length(j)==1)
 fdataobj[["data"]]  <-  matrix(fdataobj[["data"]][i,j],nrow=1)
@@ -52,97 +202,7 @@ if (d1[2]!=d2[2]) return(FALSE)#print("Different dimensions in columns")
     }
  return(fdataequal)
 }
-################################################################################
 
-"+.fdata" <- function(fdata1,fdata2){
-inhe.fdata1 <-  inherits(fdata1, "fdata")
-inhe.fdata2 <-  inherits(fdata2, "fdata")
-if (!inhe.fdata1 && !inhe.fdata2)
-  stop("Neither argument for * is a functional data object fdata.")
-if (inhe.fdata1 && inhe.fdata2) {
- if (!(all(dim(fdata1[["data"]])==dim(fdata1[["data"]])))) stop("Error in data dimenstion")
- if (!(all(fdata1[["argvals"]] == fdata2[["argvals"]])))  stop("Error in argvals")
- fdataobj <- fdata1
- fdataobj[["data"]] <- fdata1[["data"]]+fdata2[["data"]]
-}
-if (!inhe.fdata1 && inhe.fdata2) {
- fdataobj <- fdata2
- fdataobj[["data"]] <- fdata1+fdata2[["data"]]
-}
-if (inhe.fdata1 && !inhe.fdata2) {
- fdataobj <- fdata1
- fdataobj[["data"]] <- fdata1[["data"]]+fdata2
-}
-fdataobj
-}
-################################################################################
-"-.fdata" <- function(fdata1,fdata2){
-inhe.fdata1 <-  inherits(fdata1, "fdata")
-inhe.fdata2 <-  inherits(fdata2, "fdata")
-if (!inhe.fdata1 && !inhe.fdata2)
-  stop("Neither argument for * is a functional data object fdata.")
-if (inhe.fdata1 && inhe.fdata2) {
- if (!(all(dim(fdata1[["data"]])==dim(fdata1[["data"]])))) stop("Error in data dimenstion")
- if (!(all(fdata1[["argvals"]] == fdata2[["argvals"]])))  stop("Error in argvals")
- fdataobj <- fdata1
- fdataobj[["data"]] <- fdata1[["data"]]-fdata2[["data"]]
-}
-if (!inhe.fdata1 && inhe.fdata2) {
- fdataobj <- fdata2
- fdataobj[["data"]] <- fdata1-fdata2[["data"]]
-}
-if (inhe.fdata1 && !inhe.fdata2) {
- fdataobj <- fdata1
- fdataobj[["data"]] <- fdata1[["data"]]-fdata2
-}
-fdataobj
-}
-
-################################################################################
-
-"*.fdata" <- function(fdata1,fdata2){
-inhe.fdata1 <-  inherits(fdata1, "fdata")
-inhe.fdata2 <-  inherits(fdata2, "fdata")
-if (!inhe.fdata1 && !inhe.fdata2)
-  stop("Neither argument for * is a functional data object fdata.")
-if (inhe.fdata1 && !inhe.fdata2) {
- fdataobj <- fdata1
- fdataobj[["data"]] <- fdata1[["data"]]*fdata2
-}
-if (!inhe.fdata1 && inhe.fdata2) {
- fdataobj <- fdata2
- fdataobj[["data"]] <- fdata1*fdata2[["data"]]
-}
-if (inhe.fdata1 && inhe.fdata2) {
- if (!(all(dim(fdata1[["data"]])==dim(fdata1[["data"]])))) stop("Error in data dimenstion")
- if (!(all(fdata1[["argvals"]] == fdata2[["argvals"]])))  stop("Error in argvals")
- fdataobj <- fdata1
- fdataobj[["data"]] <- fdata1[["data"]]*fdata2[["data"]]
-}
-fdataobj
-}
-################################################################################
-"/.fdata" <- function(fdata1,fdata2){
-inhe.fdata1 <-  inherits(fdata1, "fdata")
-inhe.fdata2 <-  inherits(fdata2, "fdata")
-if (!inhe.fdata1 && !inhe.fdata2)
-  stop("Neither argument for * is a functional data object fdata.")
-if (inhe.fdata1 && !inhe.fdata2) {
- fdataobj <- fdata1
- fdataobj[["data"]] <- fdata1[["data"]]/fdata2
-}
-if (!inhe.fdata1 && inhe.fdata2) {
- fdataobj <- fdata2
- fdataobj[["data"]] <- fdata1/fdata2[["data"]]
-}
-if (inhe.fdata1 && inhe.fdata2) {
- if (!(all(dim(fdata1[["data"]])==dim(fdata1[["data"]])))) stop("Error in data dimenstion")
- if (!(all(fdata1[["argvals"]] == fdata2[["argvals"]])))  stop("Error in argvals")
- fdataobj <- fdata1
- fdataobj[["data"]] <- fdata1[["data"]]/fdata2[["data"]]
-}
-fdataobj
-}
 ################################################################################
 
 "^.fdata" <- function(fdataobj,pot){
@@ -233,7 +293,6 @@ c.fdata <- function(...) {
 }
 
 ################################################################################
-count.na <- function(A){any(is.na(A))}
 
 argvals <- function(fdataobj){
     if (!inherits(fdataobj, "fdata")) stop("Object must be of class fdata")
@@ -265,3 +324,56 @@ attr(fdataobj,"par.metric") <- a3
 invisible(fdataobj)
 }
 
+################################################################################
+# Deprecated
+#count.na <- function(A){any(is.na(A))}
+#####################
+is.na.fdata <- function(x){
+  if (inherits(x,"fdata")) apply(x$data,1,anyNA)
+  else warning("No fda.usc class object")
+}
+#####################
+anyNA.fdata <- function(x, recursive = FALSE){
+  if (inherits(x,"fdata")) anyNA(x$data, recursive = recursive)
+  else warning("No fda.usc class object")
+}
+count.na.fdata <- function(x){
+  if (inherits(x,"fdata")) rowSums(is.na(x$data))
+  else warning("No fda.usc class object")
+}
+##################### 
+# is.square.fdata <- function( x )
+# {
+#   if ( is.fdata( x ) )  x <- x$data
+#   if ( is.matrix( x ) ) return( nrow(x) == ncol(x) )  
+#   else stop( "argument x is not a matrix or fdata class" )
+# }
+#####################
+# is.symmetric.fdata <- function( x )
+# {
+#   if ( is.fdata( x ) )  x <- x$data
+#   if ( !is.matrix( x ) ) {
+#     stop( "argument x is not a matrix" )
+#   }
+#   if ( !is.numeric( x ) ) {
+#     stop( "argument x is not a numeric matrix" )
+#   }    
+#   if ( !is.square.matrix( x ) )
+# stop( "argument x is not a square numeric matrix" )
+#   return( sum( x == t(x) ) == ( nrow(x) ^ 2 ) )
+# }
+#####################
+# matrix.trace<-function (x) #tracemat<-function(x)
+# {
+#   if (!is.square.matrix(x)) 
+#     stop("argument x is not a square matrix")
+#   return(sum(diag(x)))
+# }
+##################### 
+#DEPRECATED
+traza<-function (A) 
+{
+  if (!is.fdata(A)) 
+    sum(diag(A), na.rm = TRUE)
+  else sum(diag(A$data), na.rm = TRUE)
+}

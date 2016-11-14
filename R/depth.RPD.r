@@ -4,7 +4,7 @@
 {
     if (!is.fdata(fdataobj))         fdataobj = fdata(fdataobj)
     if (!is.fdata(fdataori)) fdataobj=fdata(fdataori)    
-#     nas <- apply(fdataobj$data, 1, count.na)
+#     nas <- is.na.fdata(fdataobj)
 #     if (any(nas)) {
 #         fdataobj$data <- fdataobj$data[!nas, ]
 #         cat("Warning: ", sum(nas), " curves with NA are not used in the calculations \n")

@@ -23,8 +23,16 @@
 \alias{missing.fdata}
 \alias{omit.fdata}
 \alias{omit2.fdata}
+\alias{is.na.fdata}
+\alias{anyNA.fdata}
+\alias{count.na.fdata}
+
+\alias{argvals}
+\alias{rangeval}
+
 \title{ fda.usc internal functions}
-\description{Internal undocumentation functions for fda.usc package}
+\description{Internal undocumentation functions for fda.usc package.\cr
+}
 \usage{
 \method{[}{fdata}(fdataobj, i = TRUE, j = TRUE,drop=FALSE)
 \method{[}{fdist}(fdataobj, i = TRUE, j = TRUE,drop=FALSE)
@@ -46,6 +54,9 @@
 \method{omit}{fdata}(fdataobj,y=NULL)
 \method{omit2}{fdata}(fdataobj,index.na=FALSE)
 \method{missing}{fdata}(fdataobj,basis=NULL)
+\method{is.na}{fdata}(x)
+\method{anyNA}{fdata}(x, recursive = FALSE)
+count.na.fdata( x )
 argvals(fdataobj)
 rangeval(fdataobj)
 %"[.fdist"(fdataobj, i = TRUE, j = TRUE,drop=FALSE)
@@ -59,6 +70,10 @@ rangeval(fdataobj)
   \item{y}{ Vector}
   \item{basis}{ fd basis}
 \item{index.na}{ Return the index of NA elements}  
+\item{recursive}{ should \code{anyNA} be applied recursively to lists and pairlists?}
+
+}
+\note{ In "Ops" functions \code{"+.fdata"}, \code{"-.fdata"}, \code{"*.fdata"} and \code{"/.fdata"}: The lengths of the objects \code{fdata1} and \code{fdata2} may be different because operates recycled into minimum size as necessary.
 }
 \references{
 Febrero-Bande,  M., Oviedo de la Fuente, M. (2012).  \emph{Statistical Computing in Functional Data Analysis: The R Package fda.usc.}

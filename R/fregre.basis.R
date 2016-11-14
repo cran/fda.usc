@@ -3,7 +3,7 @@ fregre.basis=function(fdataobj,y,basis.x=NULL,basis.b=NULL,lambda=0,
 Lfdobj=vec2Lfd(c(0,0),rtt),weights= rep(1,n),...){
 R<-NULL
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
-nas<-apply(fdataobj$data,1,count.na)
+nas<-is.na.fdata(fdataobj)
 nas.g<-is.na(y)
 if (is.null(names(y))) names(y)<-1:length(y)
 if (any(nas) & !any(nas.g)) {

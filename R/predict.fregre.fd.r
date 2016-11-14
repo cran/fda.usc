@@ -15,7 +15,7 @@ if (!isfdata) {
    }
 else y.mat<-y$data
 gg<-1:nrow(new.fdataobj)
-nas<-apply(new.fdataobj$data,1,count.na)
+nas<- is.na.fdata(new.fdataobj)
 if (any(nas)) {
    bb<-!nas
    cat("Warning: ",sum(nas)," curves with NA are omited\n")
@@ -130,7 +130,7 @@ else return(predictor)
   predictor<-drop(yp)
   if (se.fit || interval != "none") {    
     ip<- drop(H%*%y.mat^2-yp^2  )
-    df<-traza(object$H)
+    df<-fdata.trace(object$H)
     edf<-n-df
     res.var<-object$sr2    
     se<-sqrt(ip/edf)  

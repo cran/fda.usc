@@ -32,9 +32,9 @@ GCV.S=function(y,S,criteria="GCV",W=NULL,trim=0,draw=FALSE,metric=metric.lp,...)
              ee = t(e)
              e.trunc=quantile(abs(ee),probs=(1-trim),na.rm=TRUE,type=4)
              l<-which(abs(ee)<=e.trunc)
-             res=traza(t(e[l])%*%W[l,l]%*%e[l])
+             res=fdata.trace(t(e[l])%*%W[l,l]%*%e[l])
              }
-     else    res=traza(t(e)%*%W%*%e)
+     else    res=fdata.trace(t(e)%*%W%*%e)
     }
     d<-diag(S)[l] 
     df<-sum(d)

@@ -129,7 +129,7 @@ fdata2ppc<-function (fdataobj,  ncomp = 2,norm = TRUE,lambda=0,P=c(0,0,1),...)
     C <- match.call()
     if (!is.fdata(fdataobj))
         stop("No fdata class")
-    nas1 <- apply(fdataobj$data, 1, count.na)
+    nas1 <- is.na.fdata(fdataobj)
     if (any(nas1))
         stop("fdataobj contain ", sum(nas1), " curves with some NA value \n")
     X <- fdataobj[["data"]]
@@ -207,7 +207,7 @@ fregre.ppc.cv=function (fdataobj, y, kmax=8,lambda=0,P=c(0,0,1),criteria = "SIC"
       normx<-sqrt(sum(abs((t(x)%*%x)^2)))
       normp<-sqrt(sum(abs(P^2)))
       normip<-sqrt(sum(abs(diag(np)+P)^2))
-      pii <-traza(P)
+      pii <-fdata.trace(P)
       lambda0<-(-2*pii+sqrt(4*pii^2-4*(np-normx^2)*normp^2))/(2*normp^2)
       #  lambda1<-normx/normp
       #print(lambda0)
@@ -419,7 +419,7 @@ else {
     S=solve(t(Z)%*%Z)
     H<-Z%*%S%*%t(Z)
     e<-object.lm$residuals
-    df<-traza(H)
+    df<-fdata.trace(H)
     rdf<-n-df
     sr2 <- sum(e^2)/rdf
     Vp<-sr2*S 
@@ -493,7 +493,7 @@ else {
     S=solve(t(Z)%*%Z)
     H<-Z%*%S%*%t(Z)
     e<-object.lm$residuals
-#    df = traza(H)
+#    df = fdata.trace(H)
    df<-pc$df[lenl]+1
     rdf<-n-df
     sr2 <- sum(e^2)/rdf
@@ -537,7 +537,7 @@ else {
       normx<-sqrt(sum(abs((t(x)%*%x)^2)))
       normp<-sqrt(sum(abs(P^2)))
       normip<-sqrt(sum(abs(diag(nc)+P)^2))
-      pii <-traza(P)
+      pii <-fdata.trace(P)
       lambda0<-(-2*pii+sqrt(4*pii^2-4*(nc-normx^2)*normp^2))/(2*normp^2)
       #  lambda1<-normx/normp
       #print(lambda0)

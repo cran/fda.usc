@@ -27,7 +27,7 @@ classif.np<-function (group, fdataobj, h = NULL, Ker = AKer.norm, metric,
     else metric = metric.dist
   }
   if (is.fdata(fdataobj)) {
-    nas <- apply(fdataobj$data, 1, count.na)
+    nas <- is.na.fdata(fdataobj)
     nas.g <- is.na(y)
     C <- match.call()
     if (is.null(names(y))) 
@@ -155,7 +155,7 @@ classif.np<-function (group, fdataobj, h = NULL, Ker = AKer.norm, metric,
   else if (h.opt == max(h) & par.fda.usc$warning) 
     cat(" Warning: h.opt is the maximum value of bandwidths\n   provided, range(h)=", 
         range(h), "\n")
-  df = traza(H)
+  df = fdata.trace(H)
   names(gcv) <- h
   group.pred <- factor(group.pred, levels = ny)
   misclass = sum(group.pred != y)/n

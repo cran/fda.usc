@@ -9,7 +9,7 @@ else ty<-type.S
 #print(ty)
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
 isfdata<-is.fdata(y)
-nas<-apply(fdataobj$data,1,count.na)
+nas<-is.na.fdata(fdataobj)
 nas.g<-is.na(y)
 if (is.null(names(y))) names(y)<-1:length(y)
 if (any(nas) & !any(nas.g)) {
@@ -118,12 +118,12 @@ par.CV$metric<-metric
 #      ydif<-y-yp
 #      ydif.cv<-y-yp.cv
 #      nmdist1<-norm.fdata(ydif,metric=metric,...)^2
-#      gcv1[i]<-sum(nmdist1)/(n*(1-traza(H)/(n))^2)
+#      gcv1[i]<-sum(nmdist1)/(n*(1-fdata.trace(H)/(n))^2)
 #      nmdist2<-norm.fdata(ydif.cv,metric=metric,...)^2
 #      cv[i]<- sum(nmdist2)
       }
 #     e2=y-H%*%y
-#     cv.error[i]=sum(e2^2)/(n-traza(H))
+#     cv.error[i]=sum(e2^2)/(n-fdata.trace(H))
    }
 if (all(is.infinite(gcv)) &   par.fda.usc$warning) warning(" Warning: Invalid range for h")
    l = which.min(gcv)
@@ -141,7 +141,7 @@ if (all(is.infinite(gcv)) &   par.fda.usc$warning) warning(" Warning: Invalid ra
   par.S$cv<-TRUE
   Hcv<-do.call(ty,par.S)
  	ypcv<-Hcv%*%y.mat
-  df=traza(H)
+  df=fdata.trace(H)
 	names(gcv)<-h
   if (isfdata) {
   	names(cv)<-h

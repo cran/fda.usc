@@ -1,3 +1,25 @@
+Release 1.3.0:
+This version was released in Nov. 2016 as the working version to
+accompany paper: 
+'Oviedo de la Fuente M., Febrero-Bande M., Munoz M.P., Dominguez A.
+Predicting seasonal influenza transmission using Regression Models with Temporal Dependence'
+arXiv:1610.08718, URL  https://arxiv.org/pdf/1610.08718.pdf'
+  
+Beta version functions to Fit Functional Linear Model Using Generalized Least Squares:
+"fregre.gls", "fregre.igls", "GCCV.S", "predict.fregre.gls" and "predict.fregre.igls"
+Internal function "auxiliar", "corSigma", "corStruct".
+
+The functionality of the functions "+.fdata", "-.fdata", "*.fdata"
+an "/.fdata" has been improved.
+
+S3 functions for fdata class calculations: "is.na.fdata" and "anyNA.fdata".
+Function "count.na.fdata"  returns a vector with the number of "NA" of each curve.
+
+Internal function "count.na" is deprecated.
+
+fdata function converts "xtab" and "ftable" class object into "fdata" class object.
+
+
 Release 1.2.3:
 Modification of classif.DD function for DDk classifier.
 New functions length.fdata, NROW.fdata, NCOL.fdata, gridfdata and rcombfdata.

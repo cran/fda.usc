@@ -1,5 +1,5 @@
 Var.y=function(y,S,Var.e=NULL){
-  df=traza(S)
+  df=fdata.trace(S)
   if (is.null(Var.e)) {
      if (is.vector(y)) {
      	  n=length(y)

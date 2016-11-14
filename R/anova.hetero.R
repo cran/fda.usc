@@ -92,9 +92,9 @@ if (pr) print("INI ANOVA.HETERO")
           }
       DM=diag(diag(MM))
       if (pr) {print(paste("MM",nombres[i]));print(MM)}
-      FNM=sum(n)*vecm%*%MM%*%t(vecm)/traza(DM%*%SN)
-      f1=traza(DM%*%SN)^2/traza(MM%*%SN%*%MM%*%SN)
-      f0=traza(DM%*%SN)^2/traza(DM%*%DM%*%SN%*%SN%*%Delta)
+      FNM=sum(n)*vecm%*%MM%*%t(vecm)/fdata.trace(DM%*%SN)
+      f1=fdata.trace(DM%*%SN)^2/fdata.trace(MM%*%SN%*%MM%*%SN)
+      f0=fdata.trace(DM%*%SN)^2/fdata.trace(DM%*%DM%*%SN%*%SN%*%Delta)
       pF=1-pf(FNM,f1,f0)
       ans[i,]=c(FNM,f1,f0,pF)
   }
@@ -122,9 +122,9 @@ for (jj in 1:ncol(vvf)) {
   vecDelta.f=as.vector(1/(n.f-1))
   Delta.f=diag(vecDelta.f)
   SN.f=sum(n.f)*diag(ssig.f)
-      FNM.f=sum(n.f)*vecm.f%*%MM.f%*%t(vecm.f)/traza(DM.f%*%SN.f)
-      f1.f=traza(DM.f%*%SN.f)^2/traza(MM.f%*%SN.f%*%MM.f%*%SN.f)
-      f0.f=traza(DM.f%*%SN.f)^2/traza(DM.f%*%DM.f%*%SN.f%*%SN.f%*%Delta.f)
+      FNM.f=sum(n.f)*vecm.f%*%MM.f%*%t(vecm.f)/fdata.trace(DM.f%*%SN.f)
+      f1.f=fdata.trace(DM.f%*%SN.f)^2/fdata.trace(MM.f%*%SN.f%*%MM.f%*%SN.f)
+      f0.f=fdata.trace(DM.f%*%SN.f)^2/fdata.trace(DM.f%*%DM.f%*%SN.f%*%SN.f%*%Delta.f)
       pF.f=1-pf(FNM.f,f1.f,f0.f)
       ans[length(nombres)+jj2,]=c(FNM.f,f1.f,f0.f,pF.f)
       jj2=jj2+1

@@ -1,7 +1,7 @@
 fdata.deriv<-function(fdataobj,nderiv=1,method="bspline",class.out='fdata'
 ,nbasis=NULL,...) {
  if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
- nas1<-apply(fdataobj$data,1,count.na)
+ nas1<-is.na.fdata(fdataobj)
  if (any(nas1))  stop("fdataobj contain ",sum(nas1)," curves with some NA value \n")
  DATA<-fdataobj[["data"]]
  tt=fdataobj[["argvals"]]

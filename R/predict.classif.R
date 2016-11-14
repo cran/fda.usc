@@ -297,7 +297,7 @@ predict.classif<-function (object, new.fdataobj = NULL, type = "class", ...)
   if (object$C[[1]] == "classif.np") {
     gg <- 1:nrow(new.fdataobj)
     if (isfdata) {
-      nas <- apply(new.fdataobj$data, 1, count.na)
+      nas <- is.na.fdata(new.fdataobj)
       if (any(nas)) {
         bb <- !nas
         cat("Warning: ", sum(nas), " curves with NA are omited\n")

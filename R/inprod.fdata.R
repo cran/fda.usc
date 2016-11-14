@@ -2,14 +2,14 @@ inprod.fdata=function (fdata1,fdata2=NULL, w = 1, ...)   {
 if (!inherits(fdata1,"fdata")) stop("No fdata class")
 tt1<-fdata1[["argvals"]]
 DATA1<-fdata1[["data"]]
-nas1<-apply(fdata1$data,1,count.na)
+nas1<-is.na.fdata(fdata1)
 rtt<-fdata1[["rangeval"]]
 if (any(nas1)) {
    stop("fdata1 contain ",sum(nas1)," curves with some NA value \n")
    }
  if (is.null(fdata2)) {fdata2<-fdata1}
  else  if (!inherits(fdata2,"fdata")) stop("No fdata class")
- nas2<-apply(fdata2$data,1,count.na)
+ nas2<-is.na.fdata(fdata2)
  if (any(nas2)) {
    stop("fdata2 contain ",sum(nas2)," curves with some NA value \n")
    }

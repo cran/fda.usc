@@ -73,7 +73,7 @@ type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),par.S=list(w=1),...){
     e=yph[,i]-drop(y)
     c1=solve(t(xh)%*%xh)%*%t(xh)
     H[,,i]=wh%*%XX%*%c1%*%wh+ww
-    df[i]=traza(H[,,i])
+    df[i]=fdata.trace(H[,,i])
     y.pred3=H[,,i]%*%y
 #    gcv[i] <- type.CV(y,H[,,i],trim=par.CV$trim,draw=par.CV$draw,...)
      par.CV$S<-H[,,i]

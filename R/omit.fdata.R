@@ -1,7 +1,7 @@
 #################################################################
 #################################################################
 omit.fdata<-function(fdataobj,y=NULL){
-nas<-apply(fdataobj$data,1,count.na)
+nas<-is.na.fdata(fdataobj)
 if (!is.null(y)) {
 nas.g<-is.na(y)
 if (is.null(names(y))) names(y)<-1:length(y)
@@ -39,7 +39,7 @@ return(list(fdataobj,y))
 
 omit2.fdata<-function(fdataobj,index.na=FALSE){
 if (is.fdata(fdataobj)) {
-   nas<-apply(fdataobj$data,1,count.na)
+   nas<-is.na.fdata(fdataobj)
    ind.na<-which(!nas)
    fdataobj<-fdataobj[ind.na]
    if (index.na) return(list("fdataobj"=fdataobj,"index.na"=ind.na))
@@ -53,15 +53,16 @@ if (is.list(fdataobj)) {
  ind.na3<-NULL
  n2<-NULL
  nobj<-length(fdataobj)
+ isnas <- function(x) any(is.na(x))
  if (is.null(names(fdataobj))) namesobj<-1:nobj
  else namesobj<-names(fdataobj)
  for (i in 1:nobj) {
  list.na[[i]]<-NULL
  x<-fdataobj[[i]]
  ind.na2[[i]]<-switch(class(x),
-     "fdata"={     n<-nrow(x); nas<-apply(x$data,1,count.na)},
-     "matrix"={    n<-nrow(x); nas<-apply(x,1,count.na)},
-   "data.frame"={  n<-nrow(x); nas<-apply(x,1,count.na)},
+     "fdata"={     n<-nrow(x); nas<-is.na.fdata(x)},
+     "matrix"={    n<-nrow(x); nas<-apply(x,1,isnas)},
+   "data.frame"={  n<-nrow(x); nas<-apply(x,1,isnas)},
    "vector"={    n<-length(x); nas<-is.na(x)},
    "factor"={    n<-length(x); nas<-is.na(x)},
    "integer"={   n<-length(x); nas<-is.na(x) },
@@ -99,7 +100,7 @@ missing.fdata<-function(fdataobj,basis=NULL){
    n<-nrow(fdataobj) 
    np<-length(tt)
 
-   nas <- apply(fdataobj$data, 1, count.na)
+   nas <- is.na.fdata(fdataobj)
    if (any(nas))  cat("Warning: ", sum(nas), " curves with NA are omited\n")
    nas <- which(nas)
    xall<-fdataobj

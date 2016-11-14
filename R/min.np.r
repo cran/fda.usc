@@ -2,7 +2,7 @@ min.np<-function (fdataobj, h =NULL, W = NULL, Ker = Ker.norm,type.CV = GCV.S,
 type.S=S.NW,par.CV=list(trim=0,draw=FALSE), verbose = FALSE,...)
 {           
  if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
-  nas1<-apply(fdataobj$data,1,count.na)
+  nas1<-is.na.fdata(fdataobj)
  if (any(nas1))  stop("fdataobj contain ",sum(nas1)," curves with some NA value \n")
 
 x<-fdataobj[["data"]]
@@ -20,7 +20,7 @@ names<-fdataobj[["names"]]
         S2 <- type.S(tt, h[i], Ker)
         if (is.null(par.CV$trim)) par.CV$trim<-0
         gcv[i] <- type.CV(fdataobj,S=S2, W=W,trim=par.CV$trim,draw=par.CV$draw, ...)#####
-        df[i]<-traza(S2)
+        df[i]<-fdata.trace(S2)
     }
     l = which.min(gcv)
     h.opt <- h[l]

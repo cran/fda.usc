@@ -7,7 +7,7 @@ metric.lp=function (fdata1, fdata2 = NULL, lp = 2, w = 1, dscale=1,...)
         fdat <- TRUE
         tt <- tt1 <- fdata1[["argvals"]]
         rtt <- fdata1[["rangeval"]]
-        nas1 <- apply(fdata1$data, 1, count.na)
+        nas1 <- is.na.fdata(fdata1)
         if (any(nas1)) 
             warning("fdata1 contain ", sum(nas1), " curves with some NA value \n")
         if (is.null(fdata2)) {
@@ -17,7 +17,7 @@ metric.lp=function (fdata1, fdata2 = NULL, lp = 2, w = 1, dscale=1,...)
         else if (!is.fdata(fdata2)) {
             fdata2 <- fdata(fdata2, tt1, rtt, fdata1$names)
         }
-        nas2 <- apply(fdata2$data, 1, count.na)
+        nas2 <- is.na.fdata(fdata2)
         if (any(nas2)) {
             warning("fdata2 contain ", sum(nas2), " curves with some NA value \n")
         }

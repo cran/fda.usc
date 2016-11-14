@@ -2,11 +2,11 @@ cond.quantile<-function(qua=0.5,fdata0,fdataobj,y,fn,
 a=min(y),b=max(y),tol=10^floor(log10(max(y)-min(y))-3),iter.max=100,...){
 
  if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
-  nas1<-apply(fdataobj$data,1,count.na)
+  nas1<-is.na.fdata(fdataobj)
 tt<-fdataobj$argvals
  if (any(nas1))  stop("fdataobj contain ",sum(nas1)," curves with some NA value \n")
 if (!is.fdata(fdata0))  fdata0=fdata(fdata0,tt)
-  nas2<-apply(fdata0$data,1,count.na)
+  nas2<-is.na.fdata(fdata0)
  if (any(nas2))  stop("fdata0 contain ",sum(nas2)," curves with some NA value \n")
  if (any(is.na(y)))   stop("y contain ",sum(is.na(y)),"  NA values \n")
   i<-0

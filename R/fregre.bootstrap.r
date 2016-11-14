@@ -2,7 +2,7 @@
 fregre.bootstrap<-function(model,nb=500,wild=TRUE,type.wild="golden",newX=NULL,smo=0.1,smoX=0.05,alpha=0.95,
 kmax.fix=FALSE,draw=TRUE,...){
 fdataobj=model$fdataobj
-nas<-apply(fdataobj$data,1,count.na)
+nas<-is.na.fdata(fdataobj)
 if (any(nas))  {
    fdataobj$data<-fdataobj$data[!nas,]
    cat("Warning: ",sum(nas)," curves with NA are not used in the calculations \n")

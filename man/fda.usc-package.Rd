@@ -1,6 +1,6 @@
-      
+    
 \name{fda.usc-package}
-\Rdversion{1.0.0}
+\Rdversion{1.3.0}
 \alias{fda.usc-package}
 \alias{fda.usc}
 \docType{package}
@@ -96,14 +96,11 @@ functional generalized spectral additive model \code{\link{fregre.gsam}}  are an
 \tab \code{\link{fregre.gkam}}  \cr
 }
 
+C.4. Functional response model (\code{\link{fregre.basis.fr}}) allows the estimation of functional regression models with a functional response and a single functional explicative covariate.\cr
 
-C.4. Functional explanatory covariate and  response\cr
-The functions included in this section allow the estimation of  functional regression models with a functional response and a single functional explicative covariate.\cr
-\tabular{ll}{
-\tab \code{\link{fregre.basis.fr}}  \cr
-}
+C.5. \code{\link{fregre.gls}} fits  functional linear model using generalized least squares.  \code{\link{fregre.igls}} fits  iteratively a functional linear model using generalized least squares.  	\cr
 
-  D.- Functional Supervised Classification	\cr
+  D.- Functional Supervised Classification	\cr 
 This section allows the estimation of the groups in a training set of functional data \code{fdata} class by different nonparametric methods of supervised classification. Once these classifiers have been trained, they can be used to predict on new functional data.\cr	
 \cr
 Package allows the estimation of the groups in a training set of functional data by different methods of supervised classification. \cr
@@ -158,8 +155,8 @@ This section allows the estimation of the groups in a  functional data set \code
 \tabular{ll}{
 Package: \tab fda.usc\cr
 Type: \tab Package\cr
-Version: \tab 1.2.3\cr
-Date: \tab 2016-04-28\cr
+Version: \tab 1.3.0\cr
+Date: \tab 2016-11-14\cr
 License: \tab GPL-2 \cr
 LazyLoad: \tab yes\cr
 Url: \url{http://eio.usc.es/pub/MAESFE/}, \url{http://eio.usc.es/pub/gi1914/}

@@ -147,7 +147,7 @@ depth.mode=function(fdataobj,fdataori=fdataobj,trim=0.25,metric=metric.lp,h=NULL
 draw=FALSE,...){    
 if (is.fdata(fdataobj)) {
  fdat<-TRUE
-# nas<-apply(fdataobj$data,1,count.na)
+# nas<-is.na.fdata(fdataobj)
 #if (any(nas))  {
 #   fdataobj$data<-fdataobj$data[!nas,]
 #   cat("Warning: ",sum(nas)," curves with NA are not used in the calculations \n")

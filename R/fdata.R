@@ -1,4 +1,5 @@
-fdata=function(mdata,argvals=NULL,rangeval=NULL,names=NULL,fdata2d=FALSE){
+fdata=function(mdata, argvals = NULL, rangeval = NULL,
+               names = NULL, fdata2d = FALSE){
 call<-match.call()
 if (length(call[[2]])>1) nam<-"fdataobj"
 else nam<-call[[2]]
@@ -119,6 +120,14 @@ matrix={
 data.frame={
             out[["data"]]=as.matrix(mdata)
             out},
+ftable={
+  mdata<-matrix(mdata,nrow=dm[1])
+  out[["data"]]<-mdata
+  out},
+xtabs={
+  mdata<-matrix(mdata,nrow=dm[1])
+  out[["data"]]<-mdata
+  out},
 fdata=stop("The data could not be converted into fdata class"),
 numeric={
          out[["data"]]=matrix(mdata,nrow=1)
@@ -213,3 +222,8 @@ class(out)="fdata"
 return(out)
 }
 }
+
+
+
+ 
+ 

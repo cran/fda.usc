@@ -500,7 +500,7 @@ if (!is.data.frame(XX)) XX=data.frame(XX)
 ################################################################################
 ################################################################################           
       H<-scores%*%Cinv
-      if  (!hay.pls) df<-traza(H)  
+      if  (!hay.pls) df<-fdata.trace(H)  
       coefs<-drop(coefs)
 #      cnames<-names(XX[,-(1:2)])
 #      names(coefs)<-c("Intercept",cnames)  

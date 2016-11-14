@@ -2,7 +2,7 @@ fregre.np<-function(fdataobj,y,h=NULL,Ker=AKer.norm,metric=metric.lp,
 type.S=S.NW,par.S=list(w=1),...){
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
 isfdata<-is.fdata(y)
-nas<-apply(fdataobj$data,1,count.na)
+nas<-is.na.fdata(fdataobj)
 nas.g<-is.na(y)
 if (is.null(names(y))) names(y)<-1:length(y)
 if (any(nas) & !any(nas.g)) {
@@ -74,7 +74,7 @@ if (is.null(h)) h=h.default(fdataobj,probs=c(0.05,0.05),len=1,metric = mdist,Ker
 #        y.est[,j]=H%*%y.mat[,j]
 #        y.est.cv[,j]=H.cv%*%y.mat[,j]
 #        }
-   df=traza(H)
+   df=fdata.trace(H)
    yp=H%*%y.mat
    yp2<-H.cv%*%y.mat^2-(H.cv%*%y.mat)^2
    if (isfdata) {

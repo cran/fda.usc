@@ -14,7 +14,7 @@ dev.S=function (y, S, obs,family = gaussian(),off,offdf,criteria="GCV",
             l <- which(abs(e) <= e.trunc)
     }
     else {  l = 1:n  }
-    res = traza(t(e[l]) %*% W[l,l] %*% e[l])
+    res = fdata.trace(t(e[l]) %*% W[l,l] %*% e[l])
     ndf <- sum(diag(S)[l],na.rm=TRUE)+offdf
     if (is.na(type.i)) {
         if (ndf>0.8*n)  vv = Inf

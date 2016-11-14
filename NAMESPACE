@@ -10,6 +10,9 @@ import(mgcv)
 import(rpart)
 import(stats)
 #import(pls)
+import(nlme)
+#importFrom("nlme","gls","predict.gls","getGroupsFormula","getCovariate","getGroups"
+#,"getCovariateFormula","corMatrix","Initialize")
 importFrom("grDevices", "adjustcolor", "dev.cur", "dev.interactive",
            "dev.new", "devAskNewPage", "gray", "palette")
 importFrom("graphics", "abline", "boxplot", "contour", "curve",
@@ -18,6 +21,7 @@ importFrom("graphics", "abline", "boxplot", "contour", "curve",
             "stars", "text", "title")
 importFrom("methods", "callGeneric")
 importFrom("utils", "combn", "setTxtProgressBar", "txtProgressBar")
+
 
 # exportPattern("^[^\\.]")
 #export(.checkMFClasses, .getXlevels, .MFclass)
@@ -66,18 +70,27 @@ mdepth.LD,mdepth.HS,mdepth.SD,mdepth.RP,mdepth.MhD,mdepth.TD,
 metric.hausdorff,na.omit.fdata,na.fail.fdata,
 dcor.xy,dcor.dist,bcdcor.dist,dcor.test,plot.bifd,
 # version 1.2.3
-NROW.fdata,NCOL.fdata,length.fdata,gridfdata,rcombfdata,depth.FSD,depth.KFSD)
-
+NROW.fdata,NCOL.fdata,length.fdata,gridfdata,rcombfdata,depth.FSD,depth.KFSD,
+ # version 1.2.4
+fregre.gls,fregre.igls,GCCV.S,predict.fregre.gls,predict.fregre.igls,
+#is.square.fdata,is.symmetric.fdata,fdata.trace,
+is.na.fdata,anyNA.fdata,count.na.fdata
+#no se importan (funciones internas)
+#corSigma,simul.arma, filter.arima, corUnstruc, cor.AR, cor.ARMA, corExpo, cor.Exp, corCloud
+)
+# Importar importFrom(nlme,......lista funciones)
 #func.med.HD,func.med.PD,func.med.SD,func.med.MhD,func.trim.HD,func.trim.PD,func.trim.SD,func.trim.MhD,
 #depth.MB,mdepth.MB,
 #classif.boosting,classif.glm.cv,fregre.basis.func.cv,
 #plot.bifd
-#count.na,traza: fda.usc.internal.Rd
+#count.na, fda.usc.internal.Rd    DEPRECATED
 #hshift:	semimetric.NPFDA.Rd
 #intercambio,intercambio.l:  anova.RPm.Rd
 #int.simpson2: int.simpson.Rd
 #rkernel: Kernel.Rd
 # auxiliares de fdata2pls.R
+S3method(is.na,fdata)
+S3method(anyNA,fdata)
 S3method(anova,hetero)
 S3method(anova,RPm)
 S3method(anova,onefactor)
@@ -106,6 +119,8 @@ S3method(predict,fregre.fd)
 S3method(predict,fregre.glm)
 S3method(predict,fregre.gsam)
 S3method(predict,fregre.gkam)
+S3method(predict,fregre.gls)
+S3method(predict,fregre.igls)
 S3method(predict,fregre.lm)
 S3method(predict,fregre.plm)
 S3method(print,classif)

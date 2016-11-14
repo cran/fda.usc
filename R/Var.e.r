@@ -1,5 +1,5 @@
 Var.e=function(y,S){
-  df=traza(S)
+  df=fdata.trace(S)
   if (is.vector(y)) {
 	  n=length(y)
 	  y.est=S%*%y

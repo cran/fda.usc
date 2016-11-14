@@ -2,7 +2,7 @@
 outliers.depth.trim<-function(fdataobj,nb=200,smo=0.05,trim=0.01,quan=0.5,
 dfunc=depth.mode,...){
  if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
- nas1<-apply(fdataobj$data,1,count.na)
+ nas1<-is.na.fdata(fdataobj)
  if (any(nas1))  stop("fdataobj contain ",sum(nas1)," curves with some NA value \n")         
  x<-fdataobj[["data"]]
  tt<-fdataobj[["argvals"]]

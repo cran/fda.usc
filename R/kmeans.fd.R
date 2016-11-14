@@ -4,7 +4,7 @@ par.ini=list(method="sample"),draw=TRUE,...) {
 #if (is.data.frame(z)) z=as.matrix(z)
 #else if (is.vector(z))     z <- as.matrix(t(z))
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
- nas1<-apply(fdataobj$data,1,count.na)
+ nas1<-is.na.fdata(fdataobj)
  if (any(nas1))  stop("fdataobj contain ",sum(nas1)," curves with some NA value \n")
 z<-fdataobj[["data"]]
 tt<-fdataobj[["argvals"]]
