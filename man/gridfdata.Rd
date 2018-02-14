@@ -9,7 +9,7 @@
 
 %Por ejemplo se pueden generar proyeccionnes a partir de las componentes principales funcionales.
 
-\code{rcombfdata} generates \code{n} random combinations of the \code{fdataobj} curves plus a functional trend \code{mu}. The coefficients of the combinations follows a normal distribution with zero mean and standard deviation \code{sdarg}. 
+\code{rcombfdata} generates \code{n} random linear combinations of the \code{fdataobj} curves plus a functional trend \code{mu}. The coefficients of the combinations follows a normal distribution with zero mean and standard deviation \code{sdarg}. 
 
 }
 \usage{

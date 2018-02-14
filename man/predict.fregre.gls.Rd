@@ -1,13 +1,12 @@
 \name{predict.fregre.gls}
 \title{Predictions from a functional gls object}
 \usage{
-\method{predict}{fregre.gls}(object,  newx = NULL, type = "response", 
-          se.fit = FALSE, scale = NULL, df = df, interval = "none", 
-          level = 0.95, weights = 1, pred.var = res.var/weights, 
-          n.ahead = 1,  \dots)
-\method{predict}{fregre.igls}(object,new.fdataobj=NULL,data,se.fit=FALSE,
-scale = NULL,df=df,interval = "none", level = 0.95,weights = 1, 
-pred.var = res.var/weights,\ldots)
+\method{predict}{fregre.gls}(object, newx = NULL, type = "response",
+    se.fit= FALSE, scale = NULL,df , interval = "none", 
+    level = 0.95, weights = 1, pred.var, n.ahead = 1,  \dots)
+\method{predict}{fregre.igls}(object, new.fdataobj = NULL, data, 
+          se.fit = FALSE, scale = NULL, df = df, interval = "none",
+          level = 0.95, weights = 1, pred.var, n.ahead =1L,\dots)
 }
 \alias{predict.fregre.gls}
 \alias{predict.fregre.igls}
@@ -17,7 +16,7 @@ pred.var = res.var/weights,\ldots)
   \item{type}{ Type of prediction (response or model term).}
   \item{se.fit}{=TRUE (not default) standard error estimates are returned for each prediction.}
  \item{scale}{	Scale parameter for std.err. calculation.}
-  \item{df}{Degrees of freedom for scale.}
+  \item{df}{ Degrees of freedom for scale.}
   \item{interval}{Type of interval calculation.}
   \item{level}{Tolerance/confidence level.}
   \item{weights}{variance weights for prediction. This can be a numeric vector or a one-sided model formula. In the latter case, it is interpreted as an expression evaluated in newdata}  

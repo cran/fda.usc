@@ -54,6 +54,7 @@ See Also as  \code{\link{min.np}}. \cr
 Alternative method (independent case):  \code{\link{GCV.S}}
 }
 \examples{
+\dontrun{
 data(tecator)
 x=tecator$absorp.fdata
 x.d2<-fdata.deriv(x,nderiv=)
@@ -78,5 +79,5 @@ res.gls=fregre.gls(Fat~x.d2,data=ldata, correlation=corAR1(),
 GCCV.S(y,res.gls$H,"GCCV1",W=res.gls$W)
 res.gls$gcv
 }
-
+}
 \keyword{utilities} 

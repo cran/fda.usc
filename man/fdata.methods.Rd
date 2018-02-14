@@ -17,7 +17,7 @@
  \item{na.rm}{ logical: should missing values be removed? }  
 }
 \seealso{
-See  \link[base]{Ops}, \link[base]{Math}, \link[base]{Summary} and \link[base]{Complex}.
+See  \link[base]{Summary} and \link[base]{Complex}.
 }
 \examples{
 #######################

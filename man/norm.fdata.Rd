@@ -3,10 +3,10 @@
 \alias{norm.fdata}
 \alias{norm.fd}
 \title{
-Aproximates Lp-norm  for functional data. 
+Approximates Lp-norm  for functional data. 
 }
 \description{	
-Aproximates Lp-norm for functional data (fdata) object  using metric or semimetric functions. Norm for functional data  using by default Lp-metric.
+Approximates Lp-norm for functional data (fdata) object  using metric or semimetric functions. Norm for functional data  using by default Lp-metric.
 }
 \usage{
 norm.fdata(fdataobj,metric=metric.lp,...)

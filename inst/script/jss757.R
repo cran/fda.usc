@@ -216,9 +216,9 @@ res.pc2$MSC
 ###################################################
 ### chunk number 17: fregre.pls
 ###################################################
-fregre.pls(X.d1, y, l = 1:5)
-res.pls1 <- fregre.pls.cv(X.d1, y)$fregre.pls
-
+fregre.pls(X.d1, y, l = 5)
+res.pls1 <- fregre.pls.cv(X.d1, y,kmax=5)$fregre.pls
+#criteria = "SIC",
 ###################################################
 ### chunk number 18: influence measures
 ###################################################
@@ -233,29 +233,48 @@ pairs(mat)
 ###################################################
 ### chunk number 19: functional beta estimation
 ###################################################
-res.boot1 <- fregre.bootstrap(res.basis1, nb = 1000,
-kmax.fix = TRUE, alpha = 0.999)
-res.boot2 <- fregre.bootstrap(res.pc1, nb = 1000,
-kmax.fix = TRUE, alpha = 0.999)
-res.boot3 <- fregre.bootstrap(res.pls1, nb = 1000,
-kmax.fix = TRUE, alpha = 0.999)
+nb <- 1000
+alpha <- 0.999
+
+res.boot1 <- fregre.bootstrap(res.basis1, nb = nb,
+kmax.fix = TRUE, alpha = alpha)
+res.boot2 <- fregre.bootstrap(res.pc1, nb = nb,
+kmax.fix = TRUE, alpha = alpha)
+
+res.pls1 <- fregre.pls.cv(X.d1, y,kmax=5)$fregre.pls
+res.boot3 <- fregre.bootstrap(res.pls1, nb = nb,
+kmax.fix = FALSE, alpha = alpha)
 
 dev.new( width = 170, height = 130, units = "mm")
 par(mfrow=c(1, 3))
 yl <- c(-200, 220)
-out  <-  res.boot1$norm.boot > quantile(res.boot1$norm.boot, 0.999)
+out  <-  res.boot1$norm.boot > quantile(res.boot1$norm.boot, alpha)
 plot(res.boot1$betas.boot, 
 col="grey", main = "5 Fourier basis elements", ylim = yl, lty=1, lwd=2)
 lines(res.basis1$beta.est, col = 4, lwd = 1, lty = 1)
 lines(res.boot1$betas.boot[out], lwd = 2, col = 2, lty = 2)
-out  <-  res.boot2$norm.boot > quantile(res.boot2$norm.boot, 0.999)
+out  <-  res.boot2$norm.boot > quantile(res.boot2$norm.boot, alpha)
 plot(res.boot2$betas.boot,
 col="grey", main="1st 6 FPC", ylim = yl, lty = 1, lwd = 2)
 lines(res.pc1$beta.est,col = 4, lwd = 1, lty = 1)
 lines(res.boot2$betas.boot[out], lwd = 2, col = 2, lty = 2)
-out  <- res.boot3$norm.boot > quantile(res.boot3$norm.boot, 0.999)
+out  <- res.boot3$norm.boot > quantile(res.boot3$norm.boot, alpha)
 plot(res.boot3$betas.boot, 
 col = "grey", main = "1st 5 FPLS", ylim = yl, lty = 1, lwd = 2)
+lines(res.pls1$beta.est, col = 4, lwd = 1, lty = 1)
+lines(res.boot3$betas.boot[out], col = 2, lwd=2, lty = 2)
+
+
+######################### codigo a eliminar
+nb <- 100
+alpha<-.99
+kmax.fix = FALSE # TRUE
+res.pls1 <- fregre.pls.cv(X.d1, y)$fregre.pls
+res.boot3 <- fregre.bootstrap(res.pls1, nb = nb,
+                              kmax.fix = TRUE, alpha = alpha)
+out  <- res.boot3$norm.boot > quantile(res.boot3$norm.boot, alpha)
+plot(res.boot3$betas.boot, 
+     col = "grey", main = "1st 5 FPLS", ylim = yl, lty = 1, lwd = 2)
 lines(res.pls1$beta.est, col = 4, lwd = 1, lty = 1)
 lines(res.boot3$betas.boot[out], col = 2, lwd=2, lty = 2)
 

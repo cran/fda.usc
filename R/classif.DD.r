@@ -320,9 +320,6 @@ classif.DD <- function(group,fdataobj,depth="FM",classif="glm",w,
              mis<-mean(incorrect) 
              group.est2<-factor(as.numeric(b0*Df[,1]<Df[,2]),levels=lev)
              mis2<-mean(group.est!=group)
-             # print(mis)
-             # print(mis2)
-             
              par.classif$pol<-b0
              if (draw & ng2<=2) {
                rg<-range(Df)
@@ -436,8 +433,6 @@ classif.DD <- function(group,fdataobj,depth="FM",classif="glm",w,
                a2<-c(1,1)
                while (iwhile<=2){
                  iwhile<-iwhile+1
-                 #    print("While")
-                 #    print(iwhile)
                  if (noptim!=nmax) {
                    mcrs <- apply(combs1,1, quad.fit0, dep=Df,ind=ind)    
                    ioptim<-order(mcrs)[1:noptim]
@@ -603,8 +598,6 @@ classif.DD <- function(group,fdataobj,depth="FM",classif="glm",w,
                a2<-c(1,1)
                while (iwhile<=2){
                  iwhile<-iwhile+1
-                 #  print("While")
-                 #  print(iwhile)
                  if (noptim!=nmax) {
                    mcrs <- apply(combs1,1, cubic.fit0, dep=Df,ind=ind)    
                    ioptim<-order(mcrs)[1:noptim]
@@ -666,8 +659,6 @@ classif.DD <- function(group,fdataobj,depth="FM",classif="glm",w,
              }
            }},
          DDk={
-           #  print("DDk")  
-           #  print(ng2)
            if (ng2>2) {
              par.classif$rotate<-FALSE #NOT IMPLEMENTED YET
              #  stop("DD-plot for more than 2 levels not available")
@@ -737,7 +728,6 @@ classif.DD <- function(group,fdataobj,depth="FM",classif="glm",w,
              }
            }
            else{      
-             #print("aaaaaaaaaaaaaaaaa")  
              #DD2 con 2 grupos
              if (is.null(par.classif$pol)) {
                if (is.null(par.classif$nmax))   nmax=50000   #0
@@ -775,28 +765,13 @@ classif.DD <- function(group,fdataobj,depth="FM",classif="glm",w,
                               Df[,1][ind0[3]],( Df[,1][ind0[3]])^2,( Df[,1][ind0[3]])^3),byrow=TRUE,3,3)
                ww <- c(Df[,2][ind0[1]],Df[,2][ind0[2]],Df[,2][ind0[3]])
                a0.3 <- solve.ab(A,ww)
-               
-               #      mcrs <- apply(comb2,1, cubic.fit, Df=Df,Dg=Dg,x=x,y=y,n1=n1,n2=n2)
-               #      ind <- comb2[which.min(mcrs),] 
-               #      A <- matrix(c(Df[ind[1]],(Df[ind[1]])^2,(Df[ind[1]])^3,
-               #                    Df[ind[2]],(Df[ind[2]])^2,(Df[ind[2]])^3,
-               #                    Df[ind[3]],(Df[ind[3]])^2,(Df[ind[3]])^3),byrow=TRUE,3,3)
-               #      w <- c(Dg[ind[1]],Dg[ind[2]],Dg[ind[3]])
-               #      a0.3 <- a3.MD <- solve(A,w)
-               # print("DDk")      
-               # print(lev)      
-               x.g1<-fdataobj[group==lev[1], ]
+             x.g1<-fdataobj[group==lev[1], ]
                x.g2<-fdataobj[group==lev[2], ]
-               # print(depth0)
                if (is.fdata(fdataobj))
                  nam.depth2<-paste("depth.",depth0,sep="")
                else
                  nam.depth2<-paste("mdepth.",depth0,sep="")
-               # print(nam.depth2)
                mis.cv <- DD.cv.depth(x.g1,x.g2,a0.2,a0.3,nam.depth2)[-1]
-               # print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1")
-               # print(mis.cv)
-               #################################################################
                if (which.min(mis.cv)==1) {      
                  group.est<-factor(ifelse(Df[,1]<Df[,2],lev[2],lev[1])   )
                }      
@@ -807,8 +782,7 @@ classif.DD <- function(group,fdataobj,depth="FM",classif="glm",w,
                  group.est<-factor(ifelse(sapply(Df[,1],RR,a=a0.3)<Df[,2],lev[2],lev[1])   )
                  a0.2<-a0.3
                }
-               # print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa2")
-               # print(group.est)
+             
                incorrect<-group.est!=group
                mis<-mean(incorrect) 
                ####### #new exchange axis (rotate)

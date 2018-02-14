@@ -396,7 +396,7 @@ else {
   ind =1:kmax
   l = l2 = list()
   ck = 1
-  tab = list("AIC", "AICc","SIC", "SICc","HQIC","rho","CV")
+  tab = list("AIC", "AICc","SIC", "SICc","HQIC","CV")
   type.i = pmatch(criteria, tab)
   MSC.min<-Inf
   cv.AIC <- matrix(NA,nrow=lenrn,ncol=kmax)
@@ -417,8 +417,8 @@ else {
               "AICc"=log(s2) + 2 * (ck)/(n - ck - 2),
               "SIC"=log(s2) + log(n) * ck/n,
               "SICc"=log(s2) + log(n) * ck/(n-ck-2),
-              "HQIC"=log(s2) + 2*log(log(n)) * ck/n,
-              "rho"={A<-out$residuals;B<-1-diag(out$H)/n; D1<-(A/B)^2;sum(D1)})
+              "HQIC"=log(s2) + 2*log(log(n)) * ck/n
+			  )
      if ( MSC.min>(cv.AIC[r,j]+tol)) {
        rn.opt<-r
        pc.opt<-j
@@ -458,7 +458,7 @@ else {
     colnames(cv.AIC) = paste("PLS",1:kmax , sep = "")
     rownames(cv.AIC) = paste("lambda=",signif(lambda,4) , sep = "")
 #    pc2$basis<-pc$rotation[1:pc.opt]
-    fregre=fregre.pls(fdataobj,y,l=1:pc.opt,lambda=rn.opt,P=P,...)
+    fregre=fregre.pls(fdataobj,y,l=1:pc.opt,lambda=lambda[rn.opt],P=P,...) #B.B bug detected
     MSC.min = cv.AIC[rn.opt,pc.opt]
     return(list("fregre.pls"=fregre,pls.opt = 1:pc.opt,lambda.opt=lambda[rn.opt],
     MSC.min = MSC.min,MSC = cv.AIC))
@@ -511,7 +511,7 @@ fregre.pc.cv=function (fdataobj, y, kmax=8,lambda=0,P=c(1,0,0),criteria = "SIC",
   max.c = length(c1)
   c0 = 1:kmax
   use = rep(FALSE, kmax)
-  tab = list("AIC", "AICc","SIC", "SICc","rho","CV")
+  tab = list("AIC", "AICc","SIC", "SICc","CV")
   type.i = pmatch(criteria, tab)
   #pc2<-pc
   lenrn<-length(lambda)
@@ -555,8 +555,8 @@ fregre.pc.cv=function (fdataobj, y, kmax=8,lambda=0,P=c(1,0,0),criteria = "SIC",
                               "AICc"=log(s2) + 2 * (ck)/(n - ck - 2),
                               "SIC"=log(s2) + log(n) * ck/n,
                               "SICc"=log(s2) + log(n) * ck/(n-ck-2),
-                              "HQIC"=log(s2) + 2*log(log(n)) * ck/n,
-                              "rho"={A<-out$residuals;B<-1-diag(out$H)/n; D1<-(A/B)^2;sum(D1)})
+                              "HQIC"=log(s2) + 2*log(log(n)) * ck/n
+                              )
           }
           #                min.AIC = min(cv.AIC)
           #                pc.opt1 <- c1[, which.min(cv.AIC)]
@@ -715,7 +715,6 @@ fregre.pc=function (fdataobj, y, l =NULL,lambda=0,P=c(1,0,0),weights=rep(1,len=n
     #   val<-log(.25*(pc$d[1]^2),base=2)
     lambda<-.25*(pc$d[1]^2)#lambda<-c(0,2^seq(0,val,len=10))
   }
-  
   if (lambda>0) {
     xmean<-pc$mean
     d<-pc$newd[l]
@@ -813,12 +812,3 @@ fregre.pc=function (fdataobj, y, l =NULL,lambda=0,P=c(1,0,0),weights=rep(1,len=n
   return(out)
 }
 #############################################################
-
-
-
-
-
-
-
-
-

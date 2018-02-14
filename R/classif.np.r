@@ -1,10 +1,14 @@
-classif.knn=function(group,fdataobj,knn=NULL,metric,
-type.CV = GCV.S,par.CV=list(trim=0),par.S=list(),...){
-if (missing(metric))  {
-  if (is.fdata(fdataobj)) metric=metric.lp
-  else metric=metric.dist}
-classif.np(group,fdataobj,h=knn,Ker=Ker.unif,metric=metric,
-type.CV=type.CV,type.S=S.KNN,par.CV=par.CV,par.S=par.S,...)
+classif.knn=function(group, fdataobj, knn=NULL, metric,
+      type.CV = GCV.S, par.CV=list(cv=TRUE,trim=0),
+      par.S=list(),...){
+ if (missing(metric))  {
+  if (is.fdata(fdataobj)) 
+    metric=metric.lp
+  else metric=metric.dist
+ }
+  classif.np(group, fdataobj, h=knn, Ker=Ker.unif, metric=metric,
+            type.CV=type.CV, type.S=S.KNN, par.CV=par.CV, 
+            par.S=par.S,...)
 }
 
 classif.kernel=function(group,fdataobj,h=NULL,Ker=AKer.norm,metric,
@@ -16,10 +20,11 @@ classif.np(group,fdataobj,h,Ker,metric=metric,type.CV,type.S=S.NW,par.CV=par.CV,
 }
 
 
-classif.np<-function (group, fdataobj, h = NULL, Ker = AKer.norm, metric, 
+classif.np <-function (group, fdataobj, h = NULL, Ker = AKer.norm, metric, 
           type.CV = GCV.S, type.S = S.NW, par.CV = list(trim = 0), 
           par.S = list(), ...) 
 {
+#print("entra np2"  )
   y <- group
   if (missing(metric)) {
     if (is.fdata(fdataobj)) 
@@ -64,7 +69,7 @@ classif.np<-function (group, fdataobj, h = NULL, Ker = AKer.norm, metric,
   }
   C <- match.call()
   mf <- match.call(expand.dots = FALSE)
-  m <- match(c("y", "fdataboj", "h", "Ker", "metric", "type.CV", 
+  m <- match(c("y", "fdataobj", "h", "Ker", "metric", "type.CV", 
                "type.S", "par.CV", "par.S"), names(mf), 0L)
   n = nrow(x)
   np <- ncol(x)
@@ -108,11 +113,10 @@ classif.np<-function (group, fdataobj, h = NULL, Ker = AKer.norm, metric,
     par.S$h <- h
   if (is.null(par.S$Ker) & ty != "S.KNN") 
     par.S$Ker <- Ker
-
   for (i in 1:lenh) {
     par.S$tt <- mdist
     par.S$h <- h[i]
-#    if (is.null(par.S$cv) par.S$cv= TRUE
+    if (is.null(par.S$cv)) par.S$cv= TRUE  # si es cv=TRUE df es 0pq no hay diagonal que valga
     H = do.call(ty, par.S)
     for (j in 1:numg) {
       Y[j, ] = as.integer(y == ny[j])
@@ -122,17 +126,17 @@ classif.np<-function (group, fdataobj, h = NULL, Ker = AKer.norm, metric,
       for (ii in 1:n) {
         l = seq_along(pgrup[, ii, i])[pgrup[, ii, i] == 
                                         max(pgrup[, ii, i], na.rm = T)]
-        if (length(l) > 1) {
-          l <- y[seq_along(mdist[ii, ])[mdist[ii, ] == 
-                                          min(mdist[ii, ], na.rm = T)]]
+               if (length(l) > 1) {
+          ll <- which(levels(y[1:n]) %in% l)
+          abc <- which(mdist[ii,ll] == min(mdist[ii,ll], na.rm = T))
+          group.est[i,ii] =levels(y)[y[ll[abc[1]]]]
         }
-        group.est[i, ii] = ny[l[1]]
+        else  group.est[i,ii] = ny[l[1]]
       }
     }
     else {
-      group.est[i, ] <- ny[as.vector(apply(pgrup[, , i], 
-                                           2, which.max))]
-    }
+        group.est[i, ] <- ny[as.vector(apply(pgrup[, , i],2, which.max))]
+       }
     gcv[i] = sum(group.est[i, ] != y)/n
     if (pr > gcv[i]) {
       pr = gcv[i]
@@ -169,3 +173,6 @@ classif.np<-function (group, fdataobj, h = NULL, Ker = AKer.norm, metric,
   class(out) = "classif"
   return(out)
 }
+
+#fdata.trace<-fda.usc:::fdata.trace
+#par.fda.usc<-fda.usc:::par.fda.usc 

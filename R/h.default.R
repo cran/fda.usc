@@ -24,6 +24,7 @@ h.default=function (fdataobj, prob=c(0.025,0.25),len=51, metric = metric.lp,
                   }
             h = unique(seq(h.min, h.max, len = len))
             h<-h+h*0.0001
+            if (any(h==0)) h<-h[(which(h==0)+1):len]
         }
         else if (type.S=="S.KNN") {
             if (len>n) {len=n-2;print("len=nrow-2")}

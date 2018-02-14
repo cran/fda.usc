@@ -1,5 +1,6 @@
 # Refer to all C/Fortran routines by their name prefixed by C_
-useDynLib(fda.usc, .registration = TRUE, .fixes = "C_")
+#useDynLib(fda.usc, .registration = TRUE, .fixes = "C_")
+useDynLib(fda.usc, .registration = TRUE)
 #useDynLib(fda.usc)
 #exportPattern("^[^\\.]")
 
@@ -77,6 +78,7 @@ fregre.gls,fregre.igls,GCCV.S,predict.fregre.gls,predict.fregre.igls,
 is.na.fdata,anyNA.fdata,count.na.fdata
 #no se importan (funciones internas)
 #corSigma,simul.arma, filter.arima, corUnstruc, cor.AR, cor.ARMA, corExpo, cor.Exp, corCloud
+,LMDC.select,LMDC.regre
 )
 # Importar importFrom(nlme,......lista funciones)
 #func.med.HD,func.med.PD,func.med.SD,func.med.MhD,func.trim.HD,func.trim.PD,func.trim.SD,func.trim.MhD,
@@ -153,3 +155,10 @@ S3method("^", fdata)
 
 #S3method(predict,depth)
 #exportPattern("\\.test$")
+
+#version 1.4.0
+export(rdir.pc)
+export(rp.flm.statistic)
+export(rp.flm.test)
+#export(r.cfs.2003,r.hh.2006,r.bridge,r.gbm,r.ou)
+export(r.ou)

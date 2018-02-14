@@ -2,7 +2,7 @@
 \Rdversion{1.1}
 \alias{metric.lp}
 \title{
-Aproximates Lp-metric distances for functional data. 
+Approximates Lp-metric distances for functional data. 
 }
 \description{	
 Measures the  proximity between the functional data and curves approximating Lp-metric.

@@ -38,18 +38,23 @@ The criteria selection is done by cross-validation (CV) or Model Selection Crite
 	\code{criteria}=``CV''
 	
 	\item Model Selection Criteria:  \eqn{MSC(k_n)=log \left[ \frac{1}{n}\sum_{i=1}^{n}{\Big(y_i-\hat{y}_i\Big)^2} \right] +p_n\frac{k_n}{n} }{MSC(k_n)=log [ 1/n \sum_(i=1:n){ (y_i- \hat{y}_i )^2} ] +p_n k_n/n } \cr
-	   \eqn{p_n=\frac{log(n)}{n}}{p_n=log(n)/n}, \code{criteria}=``SIC'' (by default)\cr
-	   \eqn{p_n=\frac{log(n)}{n-k_n-2}}{p_n=log(n)/(n-k_n-2)}, \code{criteria}=``SICc''\cr
-	   \eqn{p_n=2}, \code{criteria}=``AIC''\cr
-	   \eqn{p_n=\frac{2n}{n-k_n-2}}{p_n=2n/(n-k_n-2)}, \code{criteria}=``AICc''\cr
-	   \eqn{p_n=\frac{2log(log(n))}{n}}{p_n=2log(log(n))/(n)}, \code{criteria}=``HQIC''\cr 
+	
+	   \eqn{p_n=\frac{log(n)}{n}}{p_n=log(n)/n}, \code{criteria}=``SIC'', Schwarz information criterion (by default).\cr
+	   
+	   \eqn{p_n=\frac{log(n)}{n-k_n-2}}{p_n=log(n)/(n-k_n-2)}, \code{criteria}=``SICc'', corrected Schwarz information criterion.\cr
+	   
+	   \eqn{p_n=2}, \code{criteria}=``AIC'',  Akaike information criterion. \cr
+	   
+	   \eqn{p_n=\frac{2n}{n-k_n-2}}{p_n=2n/(n-k_n-2)}, \code{criteria}=``AICc'',  corrected Akaike information criterion \cr
+	   
+	   \eqn{p_n=\frac{2log(log(n))}{n}}{p_n=2log(log(n))/(n)}, \code{criteria}=``HQIC'', Hannan-Quinn information criterion. \cr 
 
 \item The generalized minimum description length (gmdl) criteria: \cr
 
  \eqn{gmdl(k_n)=log \left[ \frac{1}{n-k_n}\sum_{i=1}^{n}{\Big(y_i-\hat{y}_i\Big)^2} \right] +K_n log \left(\frac{(n-k_n)\sum_{i=1}^{n}\hat{y}_i^2}{{\sum_{i=1}^{n}\Big(y_i-\hat{y}_i\Big)^2} }\right)+log(n) }
  
  %{MSC(k_n)=log [ 1/(n-k_n) \sum_(i=1:n){ (y_i- < X_i , \beta_(i,k_n) > )^2} ] +p_n k_n/n }
-\item The rho criteria:  \eqn{rho(k_n)=log \left[ \frac{1}{n-k_n}\sum_{i=1}^{n}\left(\frac{y_i-\hat{y}_i}{1-H_{ii}} \right)^2\right]}	
+
 }  where \code{criteria} is an argument that controls the type of validation used in the selection of the smoothing parameter \code{kmax}\eqn{=k_n} and penalized parameter \code{lambda}\eqn{=\lambda}.\cr
 
 \code{criteria=``CV''} is not recommended: time-consuming.
@@ -66,9 +71,14 @@ Return:\cr
 See also as:   \code{\link{fregre.ppls}} and  \code{\link{fregre.ppc}} .
 }
 \references{
+Schwarz, G. (1978). \emph{Estimating the dimension of a model.} The annals of statistics, 6(2), 461-464.
+
+Hannan, E. J., Quinn, B. G. (1979). \emph{The determination of the order of an autoregression.} Journal of the Royal Statistical Society. Series B (Methodological), 190-195.
+
 Preda C. and Saporta G. \emph{PLS regression on a stochastic process}. Comput. Statist. Data Anal. 48 (2005): 149{-}158.
 
 Kraemer, N., Sugiyama M. (2011). \emph{The Degrees of Freedom of Partial Least Squares Regression}. Journal of the American Statistical Association. Volume 106, 697-705.
+
 
 Febrero-Bande,  M., Oviedo de la Fuente, M. (2012).  \emph{Statistical Computing in Functional Data Analysis: The R Package fda.usc.}
 Journal of Statistical Software, 51(4), 1-28. \url{http://www.jstatsoft.org/v51/i04/}

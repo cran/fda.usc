@@ -1,13 +1,14 @@
 
-predict.fregre.gls<-function(object,newx=NULL,type="response",se.fit=FALSE,scale = NULL,df=df,
-    interval = "none", level = 0.95,weights = 1, pred.var = res.var/weights,n.ahead=1, ...){
+predict.fregre.gls<-function(object, newx = NULL, type = "response",
+    se.fit= FALSE, scale = NULL,df , interval = "none", 
+    level = 0.95, weights = 1, pred.var, n.ahead = 1, ...){
 # print("entra p predcit f.gls")    
  if (is.null(object)) stop("No fregre.lm object entered")
  if (is.null(newx)) {
     yp=predict(object,type=type,se.fit=se.fit,interval=interval,level=level,weights=weights,pred.var=pred.var,df=df,scale=scale,...)    
     print("No newx entered")
     return(yp)
-    }
+    } 
  else {
  data=newx
  basis.x=object$basis.x
@@ -27,6 +28,7 @@ predict.fregre.gls<-function(object,newx=NULL,type="response",se.fit=FALSE,scale
  off<-attr(tf,"offset")
  beta.l=list()
  kterms=1
+
 # print(attributes(tf))
 # print(tf)
 #print("entra p predcit f.gls33")    
@@ -150,7 +152,7 @@ if (length(vfunc)>0)  {
        }  }
        }
 #print(object$rn)
- nn<-nrow(XX) 
+ n.ahead<-nn<-nrow(XX) 
  n<-length(object$residuals) 
  if (!is.data.frame(XX)) XX=data.frame(XX)
 #print(object$rn)
@@ -238,7 +240,7 @@ ypx<-predict.gls(object=object,newdata=XX)     #call to internal function predic
 #alternativa al bucle
 # print("AR1")
 # print(ype)
-ab<-arima(object$residuals, order = c(1,0,0),fixed=coef(object$modelStruct,unconstrained=FALSE)
+ab<-arima(object$residuals, order = c(1,0,0), fixed=coef(object$modelStruct,unconstrained=FALSE)
           ,include.mean=FALSE)
 ab<-predict(ab,n.ahead=n.ahead)
 print(ab)
@@ -470,6 +472,7 @@ ype[ii2]<- drop(t(sig21)%*%W%*%as.matrix(object$residuals[ii]))
 
 predictor<-drop(yp)
 res.var<-object$sr2 
+if (missing(pred.var)) pred.var = res.var/weights
 if (se.fit || interval != "none") {    
   XX2<-as.matrix(XX[,colnames(object$Vp),drop=FALSE])
    # print("peeeetaaa1")    
@@ -478,6 +481,8 @@ if (se.fit || interval != "none") {
   ip<-rowSums((XX2 %*%object$Vp)*XX2)   
   # print("peeeetaaa2")      
   df<-object$df.residual
+  print(ip)
+  print(ab)
   se<-sqrt(ip+ab$se^2)#+ype[[2]]                        
   # print(ip)
   # print(ab$se^2)

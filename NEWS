@@ -1,3 +1,35 @@
+Release 1.4.0:
+
+This version was released in Dec. 2017 to accompany paper: 
+
+Ordonez, C., Oviedo de la Fuente, M., Roca-Pardiñas, J.,  Rodriguez-Perez, J. R. (2017).
+ Determining optimum wavelengths for leaf water content estimation from reflectance: A 
+ distance correlation approach. \emph{Chemometrics and Intelligent Laboratory Systems.}
+ \url{https://doi.org/10.1016/j.chemolab.2017.12.001}. In Press.
+New functions implemented: LMDC.select() and LMDC.regression().
+
+'Oviedo de la Fuente M., Febrero-Bande M., Munoz M.P., Dominguez A.
+Predicting seasonal influenza transmission using Regression Models with Temporal Dependence'
+arXiv:1610.08718, URL  https://arxiv.org/pdf/1610.08718.pdf' 
+The functions fregre.gls and fregre.igls implement the functional linear model
+with dependent errors (functional GLs and functional iterative GLS respectively).
+The "fda.usc/inst/script/" folder contains the code that reproduces the results
+of the paper (see the scripts whose prefix is "PLOS").
+
+This package version ALSO companion for the paper:
+"Goodness-of-fit tests for the functional linear model
+based on randomly projected empirical processes" 
+Cuesta-Albertos et al., 2017). The package implements 
+goodness-of-fit tests for the functional linear model with scalar response.
+
+A bug in functional derivative by raw derivation 
+(function fdata.deriv() with method="diff") has been fixed, thanks to Marcos Matabuena.
+
+A bug in classif.knn() and  predict.classif() has been fixed, thanks to Ricardo Recarey.
+A bug in CV.S() function has been fixed, thanks to Miquel Carbajo.
+A bug in anova.hetero has been fixed, thanks to Beatriz Bueno.
+
+
 Release 1.3.0:
 This version was released in Nov. 2016 as the working version to
 accompany paper: 

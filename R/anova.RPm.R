@@ -119,7 +119,7 @@ if (pr) {
       pFDR[l,1:(nterms-1+sum(ncontrast))]=
       apply(matrix(mat[1:RP[l],1:(nterms-1+sum(ncontrast))],,ncol=(nterms-1+sum(ncontrast))),2,pvalue.FDR)}
   }
-  tbonf = (tmat < matrix(bonf, nrow = length(RP), ncol = ncol(mat), byrow = TRUE))
+  tbonf = (tmat < matrix(bonf, nrow = length(RP), ncol = ncol(mat)))
   colnames(tbonf) = colnames(mat);rownames(tbonf) = rownames(tmat)
   pbonf=tmat*RP
   colnames(pbonf) = colnames(mat);rownames(pbonf) = rownames(tmat)

@@ -3,7 +3,7 @@
 \alias{semimetric.basis}
 \title{Proximities between  functional data}
 \description{
-Aproximates semi-metric distances for functional data of class \code{fdata} or \code{fd}.
+Approximates semi-metric distances for functional data of class \code{fdata} or \code{fd}.
 }
 \usage{
 semimetric.basis(fdata1, fdata2 = fdata1,nderiv=0,type.basis1=NULL,
@@ -20,7 +20,7 @@ nbasis1=NULL,type.basis2=type.basis1,nbasis2=NULL,...)
   \item{\dots}{ Further arguments passed to or from other methods.}    
 }
 \details{
-Aproximates semi-metric distances for functional data of two \code{fd} class objects. 
+Approximates semi-metric distances for functional data of two \code{fd} class objects. 
 If functional data are not functional \code{fd} class, the \code{semimetric.basis} function creates a basis to represent the functional data, by default is used \code{\link{create.bspline.basis}} and the \code{fdata} class object  is converted to \code{fd} class  using the \code{\link{Data2fd}}.\cr 
 The function  calculates distances between the derivative of order \code{nderiv} of curves using \code{\link{deriv.fd}} function.
 }

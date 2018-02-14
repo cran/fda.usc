@@ -371,9 +371,10 @@ predict.classif<-function (object, new.fdataobj = NULL, type = "class", ...)
         if (length(l) > 1) {
 #cat(ii,"-",l)
           #clase del mas cercano
-          abc<-which(nmdist[ii, ] == min(nmdist[ii, ], na.rm = T))
+		  ll=which(levels(y[1:n]) %in% l)
+          abc<-which(nmdist[ii,ll] == min(nmdist[ii,ll], na.rm = T))
 
-        group.est[ii] =y[abc]
+        group.est[ii] =ny[y[ll[abc[1]]]]
         }
      else  group.est[ii] = ny[l[1]]
       }

@@ -33,8 +33,7 @@ See also  \code{\link{integrate}}.
 x<-seq(0,2*pi,length=1001)
 fx<-fdata(sin(x)/sqrt(pi),x)
 fx0<-fdata(rep(0,length(x)),x)
-int.simpson(fx0$data,fx$data)
+int.simpson(fx0)
 int.simpson(fx)
-
 }
 \keyword{ cluster }
