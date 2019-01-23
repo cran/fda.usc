@@ -503,7 +503,7 @@ fregre.pc.cv=function (fdataobj, y, kmax=8,lambda=0,P=c(1,0,0),criteria = "SIC",
   #  pc<-fdata2ppc(fdataobj,ncomp=kmax,lambda=lambda,P=P,...)
   if (is.null(names(y))) names(y)<-1:length(y)
   rtt<-fdataobj[["rangeval"]]
-  n <- nrow(x);    #nc <- ncol(x)
+  n <- length(y);    #nc <- ncol(x)
   cv.opt1 = Inf;    pc.opt1 = NA
   c1 = matrix(1:kmax, nrow = 1)
   num.pc = nrow(c1)
@@ -524,7 +524,7 @@ fregre.pc.cv=function (fdataobj, y, kmax=8,lambda=0,P=c(1,0,0),criteria = "SIC",
   min.rn<-lambda[1]
   if (is.na(type.i))     stop("Error: incorrect criteria")
   else {
-    if (type.i < 6) {
+    if (type.i < 5) {
       for (r in 1:lenrn) {
         pc<-fdata2pc(fdataobj,ncomp=kmax,lambda=lambda[r],P=P)
         #       pc<-fdata2pc(fdataobj,ncomp=kmax,...)
@@ -699,7 +699,6 @@ fregre.pc=function (fdataobj, y, l =NULL,lambda=0,P=c(1,0,0),weights=rep(1,len=n
   names <- fdataobj[["names"]]
   n = nrow(x); np <- ncol(x);lenl = length(l)
   if (is.null(rownames(x)))        rownames(x) <- 1:n
-  X <-xcen<-pc$fdataobj.cen
   if (n != (length(y)))   stop("ERROR IN THE DATA DIMENSIONS")
   C <- match.call()
   ycen = y - mean(y)
@@ -708,8 +707,6 @@ fregre.pc=function (fdataobj, y, l =NULL,lambda=0,P=c(1,0,0),weights=rep(1,len=n
   cnames<-colnames(pc$x)[l]
   df<-lenl+1
   J<-min(np,lenl)
-  ymean<-mean(y)
-  ycen<- y - ymean
   W<-diag(weights) 
   if (is.logical(lambda)) {
     #   val<-log(.25*(pc$d[1]^2),base=2)
