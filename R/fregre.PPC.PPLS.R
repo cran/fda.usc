@@ -524,7 +524,7 @@ fregre.pc.cv=function (fdataobj, y, kmax=8,lambda=0,P=c(1,0,0),criteria = "SIC",
   min.rn<-lambda[1]
   if (is.na(type.i))     stop("Error: incorrect criteria")
   else {
-    if (type.i < 6) {
+    if (type.i < 5) {
       for (r in 1:lenrn) {
         pc<-fdata2pc(fdataobj,ncomp=kmax,lambda=lambda[r],P=P)
         #       pc<-fdata2pc(fdataobj,ncomp=kmax,...)
