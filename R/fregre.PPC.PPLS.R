@@ -503,7 +503,7 @@ fregre.pc.cv=function (fdataobj, y, kmax=8,lambda=0,P=c(1,0,0),criteria = "SIC",
   #  pc<-fdata2ppc(fdataobj,ncomp=kmax,lambda=lambda,P=P,...)
   if (is.null(names(y))) names(y)<-1:length(y)
   rtt<-fdataobj[["rangeval"]]
-  n <- nrow(x);    #nc <- ncol(x)
+  n <- length(y);    #nc <- ncol(x)
   cv.opt1 = Inf;    pc.opt1 = NA
   c1 = matrix(1:kmax, nrow = 1)
   num.pc = nrow(c1)
