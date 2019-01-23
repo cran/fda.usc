@@ -699,7 +699,6 @@ fregre.pc=function (fdataobj, y, l =NULL,lambda=0,P=c(1,0,0),weights=rep(1,len=n
   names <- fdataobj[["names"]]
   n = nrow(x); np <- ncol(x);lenl = length(l)
   if (is.null(rownames(x)))        rownames(x) <- 1:n
-  X <-xcen<-pc$fdataobj.cen
   if (n != (length(y)))   stop("ERROR IN THE DATA DIMENSIONS")
   C <- match.call()
   ycen = y - mean(y)
@@ -708,8 +707,6 @@ fregre.pc=function (fdataobj, y, l =NULL,lambda=0,P=c(1,0,0),weights=rep(1,len=n
   cnames<-colnames(pc$x)[l]
   df<-lenl+1
   J<-min(np,lenl)
-  ymean<-mean(y)
-  ycen<- y - ymean
   W<-diag(weights) 
   if (is.logical(lambda)) {
     #   val<-log(.25*(pc$d[1]^2),base=2)
