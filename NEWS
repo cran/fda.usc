@@ -1,11 +1,33 @@
-Release 1.4.0:
+Release 1.5.0:
+This version was released in Jan. 2019 to accompany Manuel Oviedo de la Fuente PhD Thesis, 
+see Minerva (University of Santiago de Compostela) repository.
+ 
+New function implemented: fregre.gsam.vs() accompany paper: 
+Febrero-Bande, M., Gonz\'{a}lez-Manteiga, W. and Oviedo de la Fuente, M. 
+Variable selection in functional additive regression models, (2018).  
+Computational Statistics, 1-19. DOI: \url{https://doi.org/10.1007/s00180-018-0844-5}
 
-This version was released in Dec. 2017 to accompany paper: 
+The current function "fregre.basis.cv" returns an object called fregre.basis 
+(same output as if the "fregre.basis" function had been used) that uses the selected parameters
+according to the indicated criteria (see example below).  The previous function version
+(up to version 1.5.0) has been renamed in the function "fregre.basis.cv.old". 
+It is marked as deprecated in the current version and will be deleted in the next 
+version of the package, thanks to Beatriz Bueno.
+
+New functions: plot.fregre.lm and summary.fregre.lm solve errors in the summary of the 
+in fregre.lm function, thanks to Prof. Andros Kourtellos.
+A bug in fregre.pc has been fixed (thanks to Prof. Eduardo Garcia-Portugues).
+
+
+
+
+This version Release 1.4.0:
+as released in Dec. 2017 to accompany paper: 
 
 Ordonez, C., Oviedo de la Fuente, M., Roca-Pardiñas, J.,  Rodriguez-Perez, J. R. (2017).
  Determining optimum wavelengths for leaf water content estimation from reflectance: A 
- distance correlation approach. \emph{Chemometrics and Intelligent Laboratory Systems.}
- \url{https://doi.org/10.1016/j.chemolab.2017.12.001}. In Press.
+ distance correlation approach. \emph{Chemometrics and Intelligent Laboratory Systems},
+ (2018)  173,41-50  \url{https://doi.org/10.1016/j.chemolab.2017.12.001}. 
 New functions implemented: LMDC.select() and LMDC.regression().
 
 'Oviedo de la Fuente M., Febrero-Bande M., Munoz M.P., Dominguez A.

@@ -61,7 +61,6 @@ mdepth.SD=function(x,xx=NULL,scale=FALSE){
     xx<-as.matrix(xx)
     }
    nam<-colnames(xx)
-
        if ( is.null(rownames(x)))  rownames(x)<-1:nrow(x)
        nms<-rownames(x)
        m0<-nrow(x)
@@ -69,7 +68,7 @@ mdepth.SD=function(x,xx=NULL,scale=FALSE){
        x<-na.omit(x)
        nas<-na.action(x)
        nullans<-!is.null(nas) 
-          
+  
    n=nrow(x)
    nn=nrow(xx)
    rownames(xx)<-NULL#1:nn
@@ -104,7 +103,6 @@ mdepth.SD=function(x,xx=NULL,scale=FALSE){
         dep<-ans1      
         }
    names(dep)<-nms         
-
- return(invisible(list(dep = dep)))
+ return(invisible(list(dep = dep,x=x,xx=xx)))
 }
 

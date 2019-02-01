@@ -17,7 +17,7 @@ fregre.pls.cv(fdataobj, y, kmax=8,  lambda = 0, P = c(0, 0, 1),
   \item{lambda}{ Vector with the amounts of penalization. Default value is 0, i.e. no penalization is used.
   If \code{lambda=TRUE} the algorithm computes a sequence of lambda values.}
  \item{P}{ The vector of coefficients to define the penalty matrix object. For example,  if \code{P=c(0,0,1)}, penalized regression is computed penalizing the second derivative (curvature). }
- \item{criteria}{ Type of cross-validation (CV) or  Model Selection Criteria (MSC) applied. Possible values are \emph{"CV"}, \emph{"AIC"}, \emph{"AICc"}, \emph{"SIC"},\emph{"SICc"}.} 	
+ \item{criteria}{ Type of cross-validation (CV) or  Model Selection Criteria (MSC) applied. Possible values are \emph{"CV"}, \emph{"AIC"}, \emph{"AICc"}, \emph{"SIC"}, \emph{"SICc"}, \emph{"HQIC"}.} 	
  \item{\dots}{ Further arguments passed to \code{\link{fregre.pls}}.}  
 }
 \details{ 
@@ -42,7 +42,7 @@ The criteria selection is done by cross-validation (CV) or Model Selection Crite
 	   \eqn{p_n=\frac{log(n)}{n-k_n-2}}{p_n=log(n)/(n-k_n-2)}, \code{criteria}=``SICc''\cr
 	   \eqn{p_n=2}, \code{criteria}=``AIC''\cr
 	   \eqn{p_n=\frac{2n}{n-k_n-2}}{p_n=2n/(n-k_n-2)}, \code{criteria}=``AICc''\cr
-%	   \eqn{p_n=\frac{2log(log(n))}{n}}{p_n=2log(log(n))/(n)}, \code{criteria}=``HQIC''\cr 
+	   \eqn{p_n=\frac{2log(log(n))}{n}}{p_n=2log(log(n))/(n)}, \code{criteria}=``HQIC''\cr 
 
 %\item The generalized minimum description length (gmdl) criteria: \cr
 %

@@ -5,7 +5,7 @@
 # Journal of the American Statistical Association (2012), Vol. 107, 737--753. 
 ################################################################################
         
-#################################################################################################################
+###############################################################################################################
 #mdepth.HS:  calculates the half-space depth (HS) of the points in x w.r.t. xx based on projections 
         #xx is a d-dimension multivariate sample, a d-column matrix
         #x is a set of points, a d-column matrix, x can be missing
@@ -82,10 +82,11 @@ mdepth.HS <-function(x, xx=x,proj=50,scale=FALSE,xeps=1e-15,random=FALSE)
         ans<-ans1      
         }
    names(ans)<-nms   
-   return(invisible(list(dep = ans, proj = proj)))
+   out <- list(dep = ans, proj = proj, x=x,xx=xx,name="HS")
+   return(invisible(out))
 }
 
-
+#names
 # revisar 3d sapply
 #  a<-mdepth.HS(iris[,1:2],random=F)
 # b<-mdepth.HS(iris[,1:2],random=T)  
@@ -132,26 +133,34 @@ mdepth.RP<-function(x, xx=x,proj=50,scale=FALSE){
           proj <- u/norm
         }
         z <- proj %*% t(xx)
-        mm<-nrow(proj)
-        m1 <- m2 <- rep(0, mm)
-        for(i in 1:mm) {
-                m1[i] <- median(z[i,  ])
-                m2[i] <- median(abs(z[i,  ] - m1[i]))
-        }
         z1 <- proj %*% t(x)        
-        out1 <- rep(0, n)  
-        for(j in 1:n) {  out1[j] <- max(abs(z1[, j] - m1)/m2)       }             
-        ans = 1/(1 + out1)        
-        if (scale){ 
-          ans<-ans/max(ans) #*2 =/.5
-        }   
+        mm<-nrow(proj)
+		pdep=matrix(NA,nrow=n,ncol=mm)
+		for (i in 1:mm){
+		pdep[,i]=mdepth.TD1(z1[i,],z[i,],scale=scale)$dep
+#        m1 <- m2 <- rep(0, mm)
+#        for(i in 1:mm) {
+#				 m1[i]= min(z[i,])
+#				 m2[i]= max(z[i,])
+#                m1[i] <- median(z[i,  ])
+#                m2[i] <- median(abs(z[i,  ] - m1[i]))
+        }
+        out1 <- apply(pdep,1,mean)  
+#        for(j in 1:n) {  out1[j] <- max(abs(z1[, j] - m1)/m2)       }             
+#        for(j in 1:n) {  out1[j] <- mean(abs(z1[, j] - m1)/(m2-m1))       }             
+		ans=out1
+#        ans = 1/(1 + out1)        
+#        if (scale){ 
+#          ans<-ans/max(ans) #*2 =/.5
+#        }   
   if  (nullans){
         ans1<-rep(NA,len=m0)
         ans1[-nas] <-ans 
         ans<-ans1
         }
-     names(ans)<-nms      
-    return(invisible(list( dep = ans,  proj = proj)))
+     names(ans)<-nms    
+     out <- list( dep = ans,  proj = proj,x=x,xx=xx,name="RP")
+    return(invisible(out))
 }
 
 #################################################################################
@@ -198,51 +207,10 @@ if  (nullans){
         }
   names(ans)<-nms   
 #   if (scale) {        ans <- ans/max(ans)    }
-   return(invisible(list( dep = ans)))
+  out <- list( dep = ans,  x=x,xx=xx,name="MhD")
+   return(invisible(out))
 }  
 
   
-#################################################################################
-#################################################################################
-plot.mdepth<-function(x,xx=x,dep, trim = 0.25){
-    ans<-dep
-    	d<-ncol(x)
-    k = which.max(ans)
-    med = x[k, ]
-    lista = which(ans >= quantile(ans, probs = trim, na.rm = TRUE))
-    if (length(lista) == 1) {        mtrim <- x[lista, ]    }
-    else mtrim = apply(x[lista, ], 2, mean, na.rm = TRUE)
-    dd = 0
-    if (d == 2) 
-          dd = 2
-    if (d > 2) 
-          dd = 3   
-    if (d > 5)   
-          dd = 4
-    if (dd != 0) {
-        tr <- paste("PD.trim", trim * 100, "%", sep = "")
-        ind1 <- !is.na(ans)
-        cgray = 1 - (ans - min(ans, na.rm = TRUE))/(max(ans, 
-            na.rm = TRUE) - min(ans, na.rm = TRUE))
-        if (is.data.frame(x)) 
-            nam <- names(x)
-        if (is.matrix(xx)) 
-            nam <- colnames(x)
-        if (dd == 2) {
-            plot(x[ind1, 1], x[ind1, 2], col = gray(cgray[ind1]),
-             main = "Mahalanobis Depth",xlab = nam[1], ylab = nam[2])
-            points(mtrim[1], mtrim[2], lwd = 2, col = "yellow", 
-                pch = 16)
-            points(med[1], med[2], col = "red", lwd = 2, pch = 17)
-            legend("topleft", legend = c(tr, "Median"), pch = 16:17, 
-                box.col = 0, col = c("yellow", "red"))
-        }
-        if (dd == 3) 
-            pairs(x[ind1, ], pch = 1, col = gray(cgray[ind1]), 
-                main = "Projection Depth")
-        if (dd == 4) 
-            stars(x[ind1, ], col.stars = gray(cgray[ind1]))
-    }
-}
 #################################################################################
 #################################################################################

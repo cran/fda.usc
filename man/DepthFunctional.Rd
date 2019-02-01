@@ -8,10 +8,10 @@
 \alias{depth.RT}
 \alias{depth.FSD}
 \alias{depth.KFSD}
-\title{ Provides the depth measure for functional data}
+\title{ Computation of depth measures for functional data}
 \description{
- Compute measure of centrality of the functional data. Type of depth function: 
- Fraiman and Muniz (FM) depth, modal depth, random tukey (RT), random project (RP) depth and double random project depth (RPD).\cr
+ Several depth measures can be computed for functional data for descriptive or classification purposes. Type of depth functions: 
+ Fraiman and Muniz (FM) depth, modal depth, random Tukey (RT), random projection (RP) depth and double random projection depth (RPD).\cr
 \itemize{
 
 \item  \code{\link{depth.FM}} computes the integration of an univariate depth along the axis x (see Fraiman and Muniz 2001). It is also known as Integrated Depth. 
@@ -43,8 +43,8 @@ depth.RP(fdataobj,fdataori=fdataobj,trim=0.25,nproj=50,
 proj="vexponential",dfunc="TD1",par.dfunc=list(),scale=FALSE,
 draw=FALSE,...)
 
-depth.RPD(fdataobj,fdataori=fdataobj,nproj=50,proj=1,deriv=c(0,1),
-trim=0.25,dfunc2=depth.mode,method="fmm",draw=FALSE,...)  
+depth.RPD(fdataobj,fdataori=fdataobj,nproj=20,proj=1,deriv=c(0,1),
+trim=0.25,dfunc2=mdepth.LD,method="fmm",draw=FALSE,...)  
 
 depth.FSD(fdataobj, fdataori = fdataobj, 
           trim = 0.25, scale = FALSE, draw = FALSE)
@@ -54,18 +54,18 @@ depth.KFSD(fdataobj, fdataori = fdataobj, trim = 0.25,
 }
 
 \arguments{
- \item{fdataobj}{  A set of new curves to evaluate the depth. \code{\link{fdata}} class object. }    
- \item{fdataori}{  A set of original curves where the depth is computed.  \code{\link{fdata}} class object.}  
+ \item{fdataobj}{  The set of new curves to evaluate the depth. \code{\link{fdata}} class object. }    
+ \item{fdataori}{  The set of reference curves respect to which the depth is computed.  \code{\link{fdata}} class object.}  
   \item{trim}{ The alpha of the trimming.}
-  \item{nproj}{ The number of projections.}
+  \item{nproj}{ The number of projections. Ignored if a \code{fdata} class object is provided in \code{proj}}.
     %\item{proj}{ Random projections.  If is a character: create the random projection using a covariance matrix by process indicated in the argument (by default, proj=1, sigma=diag(ncol(fdataobj))), else if is a  matrix or fdata, it is a random projection provided by the user.} 
     
-\item{proj}{   matrix or fdata class object with a random projection provided by the user. If is a character: create the random projection using a covariance matrix by process indicated in the argument. Otherwise, it is a \code{sigma} parameter of \code{\link{rproc2fdata}} function.}         
+\item{proj}{if a \code{fdata} class, projections provided by the user. Otherwise, it is the \code{sigma} parameter of \code{\link{rproc2fdata}} function.}. In the last case, this argument maybe character, numeric or matrix.          
         
-\item{dfunc}{type of univariate depth function used inside depth function: "FM1" refers to the original Fraiman and Muniz univariate depth (default), "TD1" Tukey (Halfspace),"Liu1" for simplical depth, "LD1" for Likelihood depth and "MhD1" for Mahalanobis 1D depth. Also, any user function fulfilling the following pattern \emph{FUN.USER(x,xx,...)} and returning a \code{dep} component can be included.}
+\item{dfunc}{type of univariate depth function used inside depth function: "FM1" refers to the original Fraiman and Muniz univariate depth (default), "TD1" Tukey (Halfspace),"Liu1" for simplical depth, "LD1" for Likelihood depth and "MhD1" for Mahalanobis 1D depth. Also, any user function fulfilling the following pattern \code{FUN.USER(x,xx,...)} and returning a \code{dep} component can be included.}
   \item{par.dfunc}{List of parameters for \emph{dfunc}.}
   
-  \item{dfunc2}{Second depth function in  RPD depth, by default \code{\link{depth.mode}}.}
+  \item{dfunc2}{Multivariate depth function (second step depth function) in  RPD depth, by default \code{\link{mdepth.LD}}. Any user function with the pattern \code{FUN.USER(x,xx,...)} can be employed.}
   
   \item{deriv}{  Number of derivatives described in integer vector \code{deriv}. \code{=0} means no derivative.}
   
@@ -74,27 +74,27 @@ depth.KFSD(fdataobj, fdataori = fdataobj, trim = 0.25,
  \item{h}{ Bandwidth parameter. 
   \enumerate{
   
-  \item If \code{h} is a numerical value, the procedure considers the argument value as bandwidth.
- \item If is \code{NULL} (by default) the bandwidth is provided as the 15\%--quantile of the distance between \code{fdataobj} and \code{fdataori}.
+  \item If \code{h} is a numerical value, the procedure considers the argument value as the bandwidth.
+ \item If is \code{NULL} (by default) the bandwidth is provided as the 15\%--quantile of the distance among curves of \code{fdataori}.
   
-  \item If \code{h} is a character string (like \code{"q-0.15"}), the procedure reads the numeric value from the third position of the character to the end and uses it to compute the quantile of the distance between \code{fdataobj} and \code{fdataori} (as in the second case).
+  \item If \code{h} is a character string (like \code{"0.15"}), the procedure reads the numeric value and consider it as the quantile of the distance in \code{fdataori} (as in the second case).
   }}
  
  \item{metric}{ Metric function, by default \code{\link{metric.lp}}. Distance matrix between \code{fdataobj} and \code{fdataori}.}
   
-  \item{scale}{ =TRUE, scale the depth.}   
+  \item{scale}{ =TRUE, the depth is scaled respect to depths in \code{fdataori}.}   
 
   \item{xeps}{ Accuracy. The left limit  of the empirical distribution function.}
   
   \item{draw}{ =TRUE, draw the curves, the sample median and trimmed mean.}
   
-  \item{\dots}{ Further arguments passed to or from other methods.}
-}
+  \item{\dots}{ Further arguments passed to or from other methods. For \code{depth.mode} parameters for \code{metric}. For random projection depths, parameters to be included in \code{rproc2fdata} not included before.
+}}
 
 \details{
  \itemize{
  
-\item The modal depth \code{\link{depth.mode}} function calculates the depth of a datum accounting the number of curves in its neighbourhood. By default, the distance is calculated using \code{\link{metric.lp}} function although any other distance could be employed through argument \code{metric} (with the general pattern \code{USER.DIST(fdataobj,fdataori)}).
+\item The \code{\link{depth.mode}} function calculates the depth of a datum accounting the number of curves in its neighbourhood. By default, the distance is calculated using \code{\link{metric.lp}} function although any other distance could be employed through argument \code{metric} (with the general pattern \code{USER.DIST(fdataobj,fdataori)}).
 
 \item The \code{\link{depth.RP}} function summarizes the random projections through averages whereas the \code{\link{depth.RT}} function uses the minimum of all projections. 
  

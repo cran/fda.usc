@@ -1,5 +1,7 @@
-fregre.glm=function(formula,family = gaussian(),data,basis.x=NULL,
-basis.b=NULL,CV=FALSE,...){
+fregre.glm=function(formula,family = gaussian(), data, 
+                    basis.x=NULL, basis.b=NULL,CV=FALSE,
+                    subset = NULL,...)
+  {
  tf <- terms.formula(formula)
  terms <- attr(tf, "term.labels")
  nt <- length(terms)
@@ -162,7 +164,8 @@ else {
     yp<-rep(NA,ndatos)
     if (CV) {
      for (k in 1:ndatos) {
-      z=glm(formula=pf,data=XX[-k,],family=family,x=TRUE,y=TRUE,...)
+      z=glm(formula=pf,data=XX[-k,],family=family,
+            x=TRUE,y=TRUE,subset=subset,...)
       for (i in 1:length(vfunc)) {
 
       if (bsp1) beta.est=fdata(fd(z[[1]][name.coef[[vfunc[i]]]],basis.b[[vfunc[i]]]),tt)
@@ -192,17 +195,21 @@ else {
     }
     else {    
       if (length(vfunc)==0 & length(vnf)==0)      {
+       
         pf<-as.formula(paste(pf,1,sep=""))
-        z=glm(formula=pf,data=XX,family=family,x=TRUE,y=TRUE,...)
+                     
+        z=glm(formula=pf,data=XX,family=family,
+              x=TRUE,y=TRUE,subset=subset,...)
+       
         class(z)<-c(class(z),"fregre.glm")
         z$formula.ini=pf
         z$XX=XX
         z$data<-data
         return(z )
        }
-      else    z=glm(formula=pf,data=XX,family=family,x=TRUE,y=TRUE,...)
-      
-     }
+      else    z=glm(formula=pf,data=XX,family=family,
+                    x=TRUE,y=TRUE,subset=subset,...)
+      }
 
     z$call<-z$call[1:2]
 if (lenfunc) {    
@@ -247,7 +254,7 @@ if (lenfunc) {
  z
 }
 
-  fregre.lm<-function(formula,data,basis.x=NULL,basis.b=NULL,
+fregre.lm<-function(formula,data,basis.x=NULL,basis.b=NULL,
 rn,lambda,weights=rep(1,n),...){
  tf <- terms.formula(formula)
  terms <- attr(tf, "term.labels")

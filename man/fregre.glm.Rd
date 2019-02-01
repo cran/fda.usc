@@ -13,7 +13,7 @@ where \eqn{Z=\left[ Z^1,\cdots,Z^p  \right]}{ Z = [Z_1 ,..., Z_p]} are the non f
 }
 \usage{
 fregre.glm(formula,family = gaussian(),data,
-basis.x=NULL,basis.b=NULL,CV=FALSE,...)
+basis.x=NULL,basis.b=NULL,CV=FALSE, subset = NULL,...)
 }
 \arguments{
   \item{formula}{ an object of class \code{formula} (or one that can be coerced to that class): a symbolic description of the model to be fitted. The details of model specification are given under \code{Details}.} 
@@ -22,7 +22,8 @@ basis.x=NULL,basis.b=NULL,CV=FALSE,...)
   %\item{weigths}{ weights}
 	\item{basis.x}{ List of basis for functional explanatory data estimation.}
 	\item{basis.b}{ List of basis for \eqn{\beta(t)} parameter estimation.}
-	\item{CV}{ =TRUE, Cross-validation (CV) is done .}	
+	\item{CV}{ =TRUE, Cross-validation (CV) is done .}
+	\item{subset}{an optional vector specifying a subset of observations to be used in the fitting process.}
   \item{\dots}{ Further arguments passed to or from other methods.}
 }
 \details{ 

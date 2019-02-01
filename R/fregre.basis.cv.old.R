@@ -1,4 +1,4 @@
-fregre.basis.cv <- function(fdataobj,y,basis.x=NULL,basis.b=NULL,
+fregre.basis.cv.old <- function(fdataobj,y,basis.x=NULL,basis.b=NULL,
                            type.basis=NULL,lambda=0,Lfdobj=vec2Lfd(c(0,0),rtt),
                            type.CV=GCV.S,par.CV=list(trim=0),weights= rep(1,n),
                            verbose=FALSE,...){
@@ -14,6 +14,7 @@ fregre.basis.cv <- function(fdataobj,y,basis.x=NULL,basis.b=NULL,
   n = nrow(x)
   np <- ncol(x)
   W<-diag(weights)
+  tol<-sqrt(.Machine$double.eps)
   if (n != (length(y))) stop("ERROR IN THE DATA DIMENSIONS")
   if (is.null(rownames(x)))        rownames(x) <- 1:n
   if (is.null(colnames(x)))        colnames(x) <- 1:np
@@ -137,16 +138,12 @@ fregre.basis.cv <- function(fdataobj,y,basis.x=NULL,basis.b=NULL,
        J<-inprod(basis.x[[nb.x]],basis.b[[nb.y]])        
   	   Z=C%*%J
        Z=cbind(rep(1,len=n),Z)
-  	   if (any(lambda!=0)) {
+  	   if (min(lambda,na.rm=TRUE)!=0) {
          R=diag(0,ncol= basis.b[[nb.y]]$nbasis+1,nrow=basis.b[[nb.y]]$nbasis+1)
          R[-1,-1]<-eval.penalty(basis.b[[nb.y]],Lfdobj)
          }
        else R=0
        for (k in 1:lenlambda) {
-         
-# norm(R)/norm(t(Z)%*%W%*%Z
-# R
-         
         Sb=t(Z)%*%W%*%Z+lambda[k]*R
         #Cinv<-solve(Sb)
         Cinv<-Minverse(Sb)
@@ -164,16 +161,13 @@ fregre.basis.cv <- function(fdataobj,y,basis.x=NULL,basis.b=NULL,
             Cm.opt=Cm
             J.opt=J
             Cinv.opt=Cinv
-            R.opt=R
-          } 
+      } 
   
          }
       }  }
   if (all(is.na(gcv))) stop("System is computationally singular. Try to reduce the number of basis elements")
          l = which.min(gcv)[1]
-         
       gcv.opt=min(gcv,na.rm=TRUE)
-      
       S=Z.opt%*%Sb.opt
       DD<-t(Z.opt)%*%y
       yp=S%*%y
@@ -195,7 +189,7 @@ fregre.basis.cv <- function(fdataobj,y,basis.x=NULL,basis.b=NULL,
       object.lm$residuals<-drop(e)
       object.lm$fitted.values<-yp
       object.lm$y<-y
-      object.lm$x<-Z.opt
+       object.lm$x<-Z.opt
       object.lm$rank<-df
       object.lm$df.residual<-n-df
       vfunc=call[[2]]
@@ -226,28 +220,13 @@ fregre.basis.cv <- function(fdataobj,y,basis.x=NULL,basis.b=NULL,
   dimnames(gcv)<-list(nbasis12,nbasis22,lambda2)
   }
   x.fd=Data2fd(argvals=tt,y=t(xcen$data),basisobj=basis.x.opt)          
-  # model2<-list("call"=call,"coefficients"=coefficients,"residuals"=e,
-  #           "fitted.values"=yp,"beta.est"=beta.est,weights= weights,
-  #           "df"=df,"r2"=r2,"sr2"=sr2,"Vp"=Vp,"H"=S,"y"=y,
-  #           "fdataobj"=fdataobj,x.fd=x.fd,
-  #           "basis.x.opt"=basis.x.opt,"basis.b.opt"=basis.b.opt,
-  #           "J"=J.opt,"lambda.opt"=lambda.opt,
-  #           P=R.opt, Lfdobj=Lfdobj,
-  #           lm=object.lm,"mean"=xmean,
-  #           "b.est"=b.est,"a.est"=a.est,
-  #           "lm"=object.lm,"mean"=xmean,
-  #           XX=Z[,-1])
-  model<-fregre.basis(fdataobj = fdataobj, y =y, basis.x=basis.x.opt,
-                    basis.b= basis.b.opt, lambda=lambda.opt, 
-                    Lfdobj= Lfdobj, weights=weights,...)
-  model$coefficients=coefficients
-  class(model)="fregre.fd"
-  out<-list("fregre.basis"=model,    
-            basis.x.opt=basis.x.opt$nbasis,
-            basis.b.opt=basis.b.opt$nbasis,
-           "lambda.opt"=lambda.opt,
-           "gcv.opt"=gcv.opt,"gcv"=gcv)
+  out<-list("call"=call,"coefficients"=coefficients,"residuals"=e,
+            "fitted.values"=yp,"beta.est"=beta.est,weights= weights,
+            "df"=df,"r2"=r2,"sr2"=sr2,"Vp"=Vp,"H"=S,"y"=y,
+            "fdataobj"=fdataobj,x.fd=x.fd,"gcv"=gcv,"lambda.opt"=lambda.opt,
+            "gcv.opt"=gcv.opt,"b.est"=b.est,"a.est"=a.est,
+            "basis.x.opt"=basis.x.opt,"basis.b.opt"=basis.b.opt,
+            "J"=J.opt,"lm"=object.lm,"mean"=xmean)
+  class(out)="fregre.fd"
   return(invisible(out))
 }
-############
-

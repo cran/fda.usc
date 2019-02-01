@@ -37,7 +37,7 @@ Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
 See Also as \code{\link{plot.fdata}}}
 
 \examples{
-
+\dontrun{
 data(phoneme)
 mlearn<-phoneme$learn[1:4,1:150]
 # Center curves
@@ -61,6 +61,6 @@ fdataobj=fdata(fd1)
 #yname = "Sea surface temperature")
 #class(a);class(b);class(c)
 #fdataobj=fdata(b)
-
+}
 }
 \keyword{manip}  

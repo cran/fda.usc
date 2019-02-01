@@ -2,6 +2,8 @@
 \Rdversion{1.1}
 \alias{summary.fregre.fd}
 \alias{print.fregre.fd}
+\alias{summary.fregre.lm}
+\alias{plot.summary.lm}
 
 \title{ Summarizes information from fregre.fd objects. }
 \description{
@@ -11,6 +13,9 @@
 \usage{
 \method{summary}{fregre.fd}(object,times.influ=3,times.sigma=3,draw=TRUE,\dots)
 \method{print}{fregre.fd}(x, digits = max(3, getOption("digits") - 3),\dots)
+\method{summary}{fregre.lm}(object, correlation = FALSE, symbolic.cor = FALSE, 
+times.influ = 3,times.sigma = 3,\dots)
+\method{plot}{summary.lm}(x,times.influ=3,times.sigma=3,\dots)
 }
 \arguments{
   \item{object,x}{ Estimated by functional regression, \code{fregre.fd} object.}
@@ -18,7 +23,9 @@
 	\item{times.sigma}{ Limit for detect possible oultiers or atypical curves.}
 	\item{draw}{ =TRUE draw   estimation and residuals graphics.}
 	\item{digits}{a non-null value for digits specifies the minimum number of significant digits to be printed in values. The default, NULL, uses \code{\link{getOption}}(digits).}	
-  \item{\dots}{ Further arguments passed to or from other methods.}
+	\item{correlation}{logical; if \code{TRUE}, the correlation matrix of the estimated parameters is returned and printed.}
+\item{symbolic.cor}{logical. If \code{TRUE}, print the correlations in a symbolic form (see \code{\link{symnum}}) rather than as numbers.} 
+\item{\dots}{ Further arguments passed to or from other methods.}
 }
 \details{
 Shows:\cr

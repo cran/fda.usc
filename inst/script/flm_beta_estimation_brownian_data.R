@@ -7,7 +7,6 @@
 # response. Journal of Multivariate Analysis 101, 327-339.
 ################################################################################
 
-
 #####################################################################################
 # The function fdata.brown() generates functional data independent of a movement
 # Brownian defined in the interval [0, Tend]. The data appear in a matrix
@@ -142,7 +141,7 @@ fdata.hh.2006 <- function(n,J,R2){
 }
 ################################################################################
 # Case studied
-n=100;J=50;r2=0.3
+n=200;J=101;r2=0.75
 fx=fdata.brown(n,J)
 fdatos.a=fdata.cfs.2003.a(fx,R2=r2)
 fdatos.b=fdata.cfs.2003.b(fx,R2=r2)
@@ -215,7 +214,7 @@ for (i in 2:nrow(resquan$betas.boot)) matbeta.est2<-c(matbeta.est2,res$beta.est)
 bb2<-matbeta.est2-resquan$betas.boot
 norm.boot2<-  norm.fdata(bb2)
 
-# displaying the  differencies
+# displaying the  differences
 plot(density(norm.boot2),main="L2-norm(beta.est-beta.boost)",xlab="DISTANCE")
 # percentile 95% of the distances (red line)
 dist095<-quantile(norm.boot2,probs=0.95)

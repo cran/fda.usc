@@ -149,7 +149,8 @@
 ################################################################################
 
 "[.fdata"  <-  function(fdataobj, i = TRUE, j = TRUE,drop=FALSE) {
-if (is.numeric(j) && j==1 && length(j)==1)
+#if (is.numeric(j) && j==1 && length(j)==1)
+if (is.numeric(j) & length(j)==1)
 fdataobj[["data"]]  <-  matrix(fdataobj[["data"]][i,j],nrow=1)
 else  fdataobj[["data"]]  <-  fdataobj[["data"]][i,j,drop=drop]
 fdataobj[["argvals"]]  <-  fdataobj[["argvals"]][j]
@@ -203,7 +204,6 @@ if (d1[2]!=d2[2]) return(FALSE)#print("Different dimensions in columns")
  return(fdataequal)
 }
 
-################################################################################
 
 "^.fdata" <- function(fdataobj,pot){
 if (!inherits(fdataobj, "fdata"))  stop("No fdata object")
@@ -217,7 +217,6 @@ dim.fdata <- function(x) {dim(x[["data"]])}
 ncol.fdata  <-  function(x){ncol(x[["data"]])}
 nrow.fdata  <-  function(x){nrow(x[["data"]])}
 
-
 length.fdata  <-  function(x){
   NROW(x[["data"]])
 }
@@ -229,7 +228,8 @@ NCOL.fdata  <-  function(x){
   NCOL(x[["data"]])
 }
 
-
+rownames.fdata<- function(x) {unlist(dimnames(x[["data"]])[1])}
+colnames.fdata<- function(x) {unlist(dimnames(x[["data"]])[2])}
 
 c.fdata <- function(...) {
     C=match.call()    
@@ -303,8 +303,6 @@ rangeval <- function(fdataobj){
     if (!inherits(fdataobj, "fdata")) stop("Object must be of class fdata")
     fdataobj$rangeval
 }
-
-
 
 ################################################################################
  "[.fdist" <- function(fdataobj, i = TRUE, j = TRUE,drop=FALSE) {

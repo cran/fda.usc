@@ -26,7 +26,8 @@
 \alias{is.na.fdata}
 \alias{anyNA.fdata}
 \alias{count.na.fdata}
-
+\alias{colnames.fdata}
+\alias{rownames.fdata}
 \alias{argvals}
 \alias{rangeval}
 
@@ -49,6 +50,8 @@
 \method{ncol}{fdata}(x)
 \method{NROW}{fdata}(x)
 \method{NCOL}{fdata}(x)
+\method{colnames}{fdata}(x)
+\method{rownames}{fdata}(x)
 \method{length}{fdata}(x)
 \method{is}{fdata}(fdataobj)
 \method{omit}{fdata}(fdataobj,y=NULL)

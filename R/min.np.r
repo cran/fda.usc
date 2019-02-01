@@ -12,7 +12,8 @@ names<-fdataobj[["names"]]
     nc <- nrow(fdataobj)
     np <- ncol(fdataobj)
    if (is.null(h)) {
-   h<-seq(rtt[2]/80,rtt[2]/6,len=100)}
+   ran=diff(rtt)
+   h<-seq(ran/80,ran/6,len=101)}
     lenh <- length(h)
     gcv <- array(NA, dim = c(lenh))
     df <- array(NA, dim = c(lenh))
@@ -37,8 +38,8 @@ names<-fdataobj[["names"]]
     if (h.opt>rtt[2]/6)  print("Warning: h value too large")
 
 if (lenh>1) {
-  if (h.opt==min(h))  cat(" Warning: h.opt is the minimum bandwidth vaulue provided, range(h)=",range(h),"\n")
-  else  if (h.opt==max(h))  cat(" Warning: h.opt is the maximum bandwidth vaulue provided, range(h)=",range(h),"\n")
+  if (h.opt==min(h))  cat(" Warning: h.opt is the minimum bandwidth value provided, range(h)=",range(h),"\n")
+  else  if (h.opt==max(h))  cat(" Warning: h.opt is the maximum bandwidth value provided, range(h)=",range(h),"\n")
 }
 }
 fdata.est=fdata(fdata.est,tt,rtt,names)

@@ -7,7 +7,7 @@
 Functional Regression with scalar response using selection of number of  (penalized) principal components PC through cross-validation. The algorithm selects the PC with best estimates the response. The selection is performed by cross-validation (CV) or  Model Selection Criteria (MSC). After is computing  functional regression using the best selection of principal components.
 	}
 \usage{
-fregre.pc.cv(fdataobj, y, kmax=8,  lambda = 0, P = c(1, 0, 0), 
+fregre.pc.cv(fdataobj, y, kmax=8,  lambda = 0, P = c(0, 0, 1), 
     criteria = "SIC",weights=rep(1,len=n),...) 
 }
 \arguments{
@@ -17,7 +17,7 @@ fregre.pc.cv(fdataobj, y, kmax=8,  lambda = 0, P = c(1, 0, 0),
   \item{lambda}{ Vector with the amounts of penalization. Default value is 0, i.e. no penalization is used.
   If \code{lambda=TRUE} the algorithm computes a sequence of lambda values.}
  \item{P}{ The vector of coefficients to define the penalty matrix object. For example,  if \code{P=c(1,0,0)}, ridge regresion is computed and if \code{P=c(0,0,1)}, penalized regression is computed penalizing the second derivative (curvature). }
- \item{criteria}{ Type of cross-validation (CV) or  Model Selection Criteria (MSC) applied. Possible values are \emph{"CV"}, \emph{"AIC"}, \emph{"AICc"}, \emph{"SIC"},\emph{"SICc"}.} 	
+ \item{criteria}{ Type of cross-validation (CV) or  Model Selection Criteria (MSC) applied. Possible values are \emph{"CV"}, \emph{"AIC"}, \emph{"AICc"}, \emph{"SIC"}, \emph{"SICc"}, \emph{"HQIC"}.} 	
    \item{weights}{ weights}
  \item{\dots}{ Further arguments passed to \code{\link{fregre.pc}} or \code{\link{fregre.pls}}}  
 }

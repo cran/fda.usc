@@ -402,7 +402,7 @@ else {
   cv.AIC <- matrix(NA,nrow=lenrn,ncol=kmax)
   if (is.na(type.i))     stop("Error: incorrect criteria")
   else {
-  if (type.i < 7) {
+  if (type.i < 6) {
 #        cv.AIC <- rep(NA, kmax)
       for (r in 1:lenrn) {    
         pls<-fdata2pls(fdataobj,y,ncomp=kmax,lambda=lambda[r],P=P,...)
@@ -468,7 +468,7 @@ else {
 
 #################################################################
 #################################################################
-fregre.pc.cv=function (fdataobj, y, kmax=8,lambda=0,P=c(1,0,0),criteria = "SIC",weights=rep(1,len=n),...) {
+fregre.pc.cv=function (fdataobj, y, kmax=8,lambda=0,P=c(0,0,1),criteria = "SIC",weights=rep(1,len=n),...) {
   sequen=FALSE
   if (length(kmax)>1) {
     sequen=TRUE
@@ -500,10 +500,11 @@ fregre.pc.cv=function (fdataobj, y, kmax=8,lambda=0,P=c(1,0,0),criteria = "SIC",
       }
     }
   }
+  n=nrow(fdataobj)
   #  pc<-fdata2ppc(fdataobj,ncomp=kmax,lambda=lambda,P=P,...)
   if (is.null(names(y))) names(y)<-1:length(y)
   rtt<-fdataobj[["rangeval"]]
-  n <- nrow(x);    #nc <- ncol(x)
+#  n <- nrow(x);    #nc <- ncol(x)
   cv.opt1 = Inf;    pc.opt1 = NA
   c1 = matrix(1:kmax, nrow = 1)
   num.pc = nrow(c1)
@@ -511,7 +512,7 @@ fregre.pc.cv=function (fdataobj, y, kmax=8,lambda=0,P=c(1,0,0),criteria = "SIC",
   max.c = length(c1)
   c0 = 1:kmax
   use = rep(FALSE, kmax)
-  tab = list("AIC", "AICc","SIC", "SICc","CV")
+  tab = list("AIC", "AICc","SIC", "SICc","HQIC","CV")
   type.i = pmatch(criteria, tab)
   #pc2<-pc
   lenrn<-length(lambda)
@@ -674,7 +675,7 @@ fregre.pc.cv=function (fdataobj, y, kmax=8,lambda=0,P=c(1,0,0),criteria = "SIC",
 ####################################################################
 
 #################################################################
-fregre.pc=function (fdataobj, y, l =NULL,lambda=0,P=c(1,0,0),weights=rep(1,len=n),...){
+fregre.pc=function (fdataobj, y, l =NULL,lambda=0,P=c(0,0,1),weights=rep(1,len=n),...){
   if (class(fdataobj)=="fdata.comp") {
     pc<-fdataobj
     fdataobj<-pc$fdataobj

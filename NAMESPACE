@@ -14,14 +14,15 @@ import(stats)
 import(nlme)
 #importFrom("nlme","gls","predict.gls","getGroupsFormula","getCovariate","getGroups"
 #,"getCovariateFormula","corMatrix","Initialize")
-importFrom("grDevices", "adjustcolor", "dev.cur", "dev.interactive",
+importFrom("grDevices", "adjustcolor", "dev.cur", "dev.interactive","colorRampPalette",
            "dev.new", "devAskNewPage", "gray", "palette")
 importFrom("graphics", "abline", "boxplot", "contour", "curve",
            "filled.contour", "image", "legend", "lines", "matlines",
            "pairs", "par", "persp", "plot", "points", "polygon", "rug",
             "stars", "text", "title")
 importFrom("methods", "callGeneric")
-importFrom("utils", "combn", "setTxtProgressBar", "txtProgressBar")
+importFrom("utils", "combn", "setTxtProgressBar", "txtProgressBar","modifyList")
+
 
 
 # exportPattern("^[^\\.]")
@@ -75,10 +76,12 @@ NROW.fdata,NCOL.fdata,length.fdata,gridfdata,rcombfdata,depth.FSD,depth.KFSD,
  # version 1.2.4
 fregre.gls,fregre.igls,GCCV.S,predict.fregre.gls,predict.fregre.igls,
 #is.square.fdata,is.symmetric.fdata,fdata.trace,
-is.na.fdata,anyNA.fdata,count.na.fdata
+is.na.fdata,anyNA.fdata,count.na.fdata,rownames.fdata,colnames.fdata
 #no se importan (funciones internas)
 #corSigma,simul.arma, filter.arima, corUnstruc, cor.AR, cor.ARMA, corExpo, cor.Exp, corCloud
-,LMDC.select,LMDC.regre
+,LMDC.select,LMDC.regre,rownames.fdata,colnames.fdata,plot.depth,plot.mdepth
+# version 1.5.0
+,plot.summary.lm,summary.fregre.lm,fregre.gsam.vs#fregre.basis.cv.old
 )
 # Importar importFrom(nlme,......lista funciones)
 #func.med.HD,func.med.PD,func.med.SD,func.med.MhD,func.trim.HD,func.trim.PD,func.trim.SD,func.trim.MhD,
@@ -114,6 +117,7 @@ S3method(Ops,fdata)
 S3method(order,fdata)
 S3method(plot,fdata)
 S3method(plot,bifd)
+S3method(plot,summary.lm)
 S3method(predict,classif.DD)
 S3method(predict,classif)
 S3method(predict,fregre.fr)
@@ -153,6 +157,12 @@ S3method("/", fdata)
 S3method("==", fdata)
 S3method("^", fdata)
 
+S3method(rownames,fdata)
+S3method(colnames,fdata)
+S3method(plot,depth)
+S3method(plot,mdepth)
+S3method(plot,summary.lm)
+S3method(summary,fregre.lm)
 #S3method(predict,depth)
 #exportPattern("\\.test$")
 

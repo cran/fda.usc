@@ -126,10 +126,8 @@ The  \code{classif.DD} procedure extends to multi-class problems by incorporatin
  
 
 \references{
-Li, J., P.C., Cuesta-Albertos, J.A. and Liu, R. \emph{DD--Classifier: Nonparametric Classification Procedure Based on DD-plot}. 
-Journal of the American Statistical Association (2012), Vol. 107, 737--753. 
-
-Cuesta-Albertos, J.A., Febrero-Bande, M. and Oviedo de la Fuente, M. \emph{The DDG-classifier in the functional setting}. Submitted. 
+ 
+Cuesta-Albertos, J.A., Febrero-Bande, M. and Oviedo de la Fuente, M. \emph{The DDG-classifier in the functional setting}, (2017). Test, 26(1), 119-142. DOI: \url{https://doi.org/10.1007/s11749-016-0502-6}.
 }
 
 \author{

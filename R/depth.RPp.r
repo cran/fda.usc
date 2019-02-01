@@ -125,6 +125,11 @@ if (draw){
    legend("topleft",legend=c(tr,"Median"),lwd=2,col=c("yellow","red"),box.col=0)
  }
 }
-return(invisible(list(median = med, lmed = k, mtrim = mtrim,
-        ltrim = lista, dep = dep,proj = z,dfunc=dfunc,par.dfunc=par.dfunc)))
+    out<- list(median = med, lmed = k, mtrim = mtrim,
+               ltrim = lista, dep = dep,proj = z,dfunc=dfunc,par.dfunc=par.dfunc)
+    out$trim= out$trim
+    out$fdataobj=fdataobj
+    out$fdataori=fdataori
+    class(out)<-"depth"
+return(invisible(out))
 }  

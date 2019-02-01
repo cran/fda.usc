@@ -118,7 +118,7 @@ classif.npp<-function (group,x, h = NULL, Ker = AKer.norm, metric,
   else if (h.opt == max(h) & par.fda.usc$warning) 
     cat(" Warning: h.opt is the maximum value of bandwidths\n   provided, range(h)=", 
         range(h), "\n")
-  df = fdata.trace(H)
+  df = traza(H)
   names(gcv) <- h
   group.pred <- factor(group.pred, levels = ny)
   misclass = sum(group.pred != y)/n

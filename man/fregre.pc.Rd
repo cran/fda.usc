@@ -11,7 +11,7 @@ where \eqn{ \big<  \cdot , \cdot \big>}{<.,.>} denotes the inner product on \eqn
  
 }
 \usage{
-fregre.pc(fdataobj, y, l =NULL,lambda=0,P=c(1,0,0),
+fregre.pc(fdataobj, y, l =NULL,lambda=0,P=c(0,0,1),
  weights = rep(1, len = n),...)
 %fregre.pc(fdataobj, y, l = NULL,rn = 0,weights= rep(1,len=n),...) 
 }

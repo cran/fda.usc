@@ -1,23 +1,45 @@
-anova.RPm=function(object,formula,data.fac,RP=min(30,ncol(object)),alpha=0.95,
-hetero=TRUE,pr=FALSE,w=rep(1,ncol(object)),nboot=0,contrast=NULL,...){
-  if (is.data.frame(object)) data=as.matrix(object)
-  else if (is.fdata(object)) data=object[["data"]]
-  if (class(fdata)=="data.fac") data.fac=as.matrix(data.fac) #new
-  min.data.fac<-min(table(data.fac))
-  if (min.data.fac==0)  stop("Contingency table of factor levels (data.fac argument) contains 0 counts  values")
-  nrow=nrow(data);ncol=ncol(data)
+anova.RPm=function(object,formula,data.fac,RP=min(30,ncol(object)),alpha=0.95,zproj=NULL,par.zproj=list(norm=TRUE),hetero=TRUE,pr=FALSE,w=rep(1,ncol(object)),nboot=0,contrast=NULL,...){
+  if (class(object) %in% c("matrix","data.frame")) dataM=as.matrix(object)
+  else if (is.fdata(object)) dataM=object[["data"]]
+#  if (class(data.fac)=="data.frame") data.fac=as.matrix(data.fac) #new
+  lfac=unlist(lapply(data.fac,is.factor))
+  min.data.fac<-min(table(data.fac[,lfac]))
+  if (min.data.fac==0)  warning("Contingency table of factor levels (data.fac argument) contains 0 counts  values")
+  nrow=nrow(dataM);ncol=ncol(dataM)
   bonf=(1-alpha)/RP
   nprRP=max(RP)
   terms.fd=attr(terms(formula),"term.labels")
   fml=as.formula(paste("value ~ ", paste(terms.fd, collapse= "+")))
   if (is.null(nrow) || is.null(ncol)) stop("fdata must be a matrix")
   nterms=length(terms.fd)+1
-  modulo=function(z){sqrt(sum(z^2))}
-  z=rnorm(ncol*nprRP)
-  z=matrix(z,nrow=nprRP,ncol=ncol)
-  z=t(t(z)*w)
-  modu=apply(z,1,modulo)
-  z=z/modu
+#  
+projMV=function(n,m,w=rep(1,m),norm=TRUE){
+	modulo=function(z){sqrt(sum(z^2))}
+	z=rnorm(n*m)
+	z=matrix(z,nrow=n,ncol=m)
+	z=t(t(z)*w)
+	if (norm) {
+	modu=apply(z,1,modulo)
+	z=z/modu}
+}
+if ((class(object) %in% c("matrix","data.frame")) & is.null(zproj)) zproj=projMV  
+if ((class(object)=="fdata") & is.null(zproj)) zproj=rproc2fdata  
+  if (class(zproj)=="fdata" & class(object)=="fdata") { 
+	if (nrow(zproj)>=nprRP) { 
+			z=zproj[1:nprRP] 
+			} else {
+			stop(paste("Not enough functions in zproj",length(zproj)," to compute ",nprRP," projections"))  
+			}
+			} else if (class(zproj)=="matrix" & (class(object) %in% c("matrix","data.frame"))){
+	if (nrow(zproj)>=nprRP){
+			z=zproj[1:nprRP,] } else {
+			stop(paste("Not enough rows in zproj",nrow(zproj)," to compute ",nprRP," projections"))
+			}
+			}  else if (class(zproj)=="function"){
+			if (class(object)=="fdata") {z=do.call(zproj,modifyList(list(n=nprRP,t=object$argvals),par.zproj))}
+			 else if (class(object) %in% c("matrix","data.frame")) {z=do.call(zproj,modifyList(list(n=nprRP,m=ncol(object)),par.zproj))}
+			} else {stop("Parameter zproj is neither an fdata object or a function")}
+
   ff=attr(terms.fd,"factors")
   ffcol=colnames(ff)
   if (is.null(contrast)){
@@ -67,7 +89,12 @@ if (pr) {
    }
   }
   for (j in 1:nprRP){
-    value=data%*%z[j,]
+#    value=data%*%z[j,]
+	if (class(object)=="fdata") {
+	value=inprod.fdata(object,z[j]) 
+	} else if (class(object)=="data.frame" | class(object)=="matrix") {
+	value=dataM%*%z[j,]
+	}
     mdata=as.data.frame(cbind(value,data.fac))
     colnames(mdata)=c("value",colnames(data.fac))
     result=aov(fml,data=mdata)
@@ -129,8 +156,9 @@ if (pr) {
   if (pr) {print(tbonf);print(pbonf);print(tFDR);print(pFDR)}
   if (nboot>0){
      if (pr) print("bootstrap procedure") ############
-     resboot=anova.RPm.boot(data,formula,data.fac,RP=RP,alpha=alpha,nboot=nboot,
-     z=z,hetero=hetero,contrast=contrast,pr=pr,...)
+     resboot=anova.RPm.boot(dataM,formula,data.fac,RP=RP,alpha=alpha,
+                            nboot=nboot,zproj=z,hetero=hetero,
+                            contrast=contrast,pr=pr,...)
      if (pr) print(resboot)
      if (is.null(contrast)){nbuc=nterms-1}
      else {nbuc=nterms-1+sum(ncontrast)}

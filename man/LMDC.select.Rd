@@ -53,7 +53,7 @@ Models that use the indicated function of the required package:
 		
 		\item	"flam": Fit the Fused Lasso Additive Model for a Sequence of Tuning Parameters (flam function, flam package).
 		
-		\item "novas": NOnparametric VAriable Selection (code available in \url{https://www.math.univ-toulouse.fr/~ferraty/SOFTWARES/NOVAS/novas-routines.R}).
+		\item "novas": NOnparametric VAriable Selection (code available in {https://www.math.univ-toulouse.fr/~ferraty/SOFTWARES/NOVAS/novas-routines.R}).
 		
 		\item "cosso": Fit Regularized Nonparametric Regression Models Using COSSO Penalty (cosso function, cosso package).
 		\item "npreg": kernel regression estimate of a one (1) dimensional dependent variable on p-variate explanatory data (npreg function, np package).
@@ -77,7 +77,7 @@ LMDC.regre function return a list of folowing elements:\cr
 \item{nvar}{Number of selected variables (impact points).}
 }
 \references{
-Ordonez, C., Oviedo de la Fuente, M., Roca-Pardinas, J.,  Rodriguez-Perez, J. R. (2017). Determining optimum wavelengths for leaf water content estimation from reflectance: A distance correlation approach. \emph{Chemometrics and Intelligent Laboratory Systems.} \url{https://doi.org/10.1016/j.chemolab.2017.12.001}. In Press.
+Ordonez, C., Oviedo de la Fuente, M., Roca-Pardinas, J.,  Rodriguez-Perez, J. R. (2018). Determining optimum wavelengths for leaf water content estimation from reflectance: A distance correlation approach. \emph{Chemometrics and Intelligent Laboratory Systems}. 173,41-50 \url{https://doi.org/10.1016/j.chemolab.2017.12.001}. 
 }
 \author{
 Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}

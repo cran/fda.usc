@@ -4,6 +4,8 @@
 \alias{lines.fdata}
 \alias{title.fdata}
 \alias{plot.bifd}
+\alias{plot.depth}
+\alias{plot.mdepth}
 \title{ Plot functional data: fdata.
 }
 \description{
@@ -15,6 +17,8 @@ mfrow = c(1, 1), time = 1,\dots)
 \method{lines}{fdata}(x,\dots)
 \method{title}{fdata}(x,main=NULL,xlab=NULL,ylab=NULL,rownames=NULL) 
 \method{plot}{bifd}(x,argvals.s,argvals.t,\dots)
+\method{plot}{depth}(x, trim, levgray=.9,\dots)
+\method{plot}{mdepth}(x, trim, levgray=.9,\dots)
 }
 \arguments{
   \item{x}{ \code{fdata} class object with: 
@@ -41,7 +45,12 @@ The following values are possible for \code{fdata2d} class object: "image.contou
  \item{argvals.s}{ a vector of argument values for the first argument s of the functional data object to be evaluated.}
  \item{argvals.t}{a vector of argument values for the second argument t of the functional data object to be evaluated.}
   \item{\dots}{ Further arguments passed to \link[graphics]{matplot} function (for fdata class) or \link[graphics]{image}, \link[graphics]{contour}, \link[graphics]{persp} or \link[graphics]{filled.contour} (for fdata2d class).}
-  }
+ %\item{y}{ \code{fdata} class object with (fdataori object in depth functions and xx object in mdepth functions).} 
+ %\item{dep}{ Depth of each curve of x w.r.t. y.}
+ \item{trim}{ The alpha of the trimming.}
+%\item{name}{ Name.}
+\item{ levgray}{ A vector of desired gray levels between 0 and 1; zero indicates "black" and one indicates "white".}
+}
 %\details{  Plot \code{fdata} object.}
 \author{
 Manuel Febrero Bande and Manuel Oviedo de la Fuente <manuel.oviedo@usc.es>
