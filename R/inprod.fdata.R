@@ -3,7 +3,6 @@ if (!inherits(fdata1,"fdata")) stop("No fdata class")
 tt1<-fdata1[["argvals"]]
 DATA1<-fdata1[["data"]]
 nas1<-is.na.fdata(fdata1)
-rtt<-fdata1[["rangeval"]]
 if (any(nas1)) {
    stop("fdata1 contain ",sum(nas1)," curves with some NA value \n")
    }
@@ -21,8 +20,7 @@ if (any(nas1)) {
  eps<-as.double(.Machine[[1]]*10)
  inf<-dtt-eps;sup<-dtt+eps
  np<-length(tt1)
- if (all(dtt>inf) & all(dtt<sup)) {equi=TRUE}
- else equi=FALSE
+ equi<-all(abs(diff(tt,lag=2))<eps) # Check if data is equispaced
  if ((length(w)!=np) & (length(w) != 1)) {
     stop("DATA ERROR: The weight vector hasn't the length of the functions\n")
  }

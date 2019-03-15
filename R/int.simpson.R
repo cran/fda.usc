@@ -3,16 +3,8 @@ int.simpson=function(fdataobj,equi=TRUE,method="TRAPZ"){
  n<-nrow(fdataobj)
  out<-rep(NA,n)
  tt<-fdataobj$argvals
- if (equi & method=="TRAPZ"){   
-  p<-length(tt)
-#  w<-(c(0,tt[2:(p)-tt[1:(p-1)]])+c(tt[2:(p)-tt[1:(p-1)]],0))/(p-1)
-  w<-(c(0,tt[2:(p)]-tt[1:(p-1)])+c(tt[2:(p)]-tt[1:(p-1)],0))/2
-  out<-drop(fdataobj$data%*%w )
- }
- else{
  for (i in 1:n) {
    out[i]<-int.simpson2(tt,fdataobj$data[i,],equi=equi,method=method)
-   }
    }
 	return(out)
 }
@@ -24,8 +16,15 @@ int.simpson2=function(x,y,equi=TRUE,method="TRAPZ"){
 	if (n==2 || ny==2) method="TRAPZ"
   out <- switch(method,
         "TRAPZ" = {
-   		idx=2:length(x)
-	    value<-as.double((x[idx]-x[idx-1])%*%(y[idx]+y[idx-1]))/2
+        if (!equi){
+       		idx=2:n
+    	    value<-as.double((x[idx]-x[idx-1])%*%(y[idx]+y[idx-1]))/2
+        } else {
+          h=(max(x)-min(x))/(n-1)
+          y[c(1,n)]=y[c(1,n)]/2
+          value<-h*sum(y)
+        }
+        value
 	  },"CSR" = {
      if (!equi){
         n=2*n-1
