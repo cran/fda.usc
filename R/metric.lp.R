@@ -73,7 +73,7 @@ metric.lp=function (fdata1, fdata2 = NULL, lp = 2, w = 1, dscale=1,...)
                   ii = i + 1
                   for (ii in i:numgr2) {
                     f = w * abs(DATA1[i, ] - DATA2[ii, ])^p
-                    mdist[i, ii] = (int.simpson2(tt, f, equi))^(1/p)
+                    mdist[i, ii] = (int.simpson2(tt, f, equi,...))^(1/p)
                   }
                 }
                 mdist = t(mdist) + mdist
@@ -83,7 +83,7 @@ metric.lp=function (fdata1, fdata2 = NULL, lp = 2, w = 1, dscale=1,...)
             for (i in 1:numgr) {
                 for (ii in 1:numgr2) {
                   f = w * abs(DATA1[i, ] - DATA2[ii, ])^p
-                  mdist[i, ii] = (int.simpson2(tt, f, equi))^(1/p)
+                  mdist[i, ii] = (int.simpson2(tt, f, equi,...))^(1/p)
                 }
             }
         }
