@@ -16,7 +16,7 @@ dcor.y<-function(ldist,response,n,bcdcor=TRUE){
     if (is.vector(ldist[[1]]))    n <- length(response)
   }
   
-  if (missing(response)) {print("se calculan todas las distancia")
+  if (missing(response)) {print("se calculan todas las distancias")
     dst<-diag(lenldist)
     for (i in 1:(lenldist-1)) {
       for (j in i:(lenldist)) {
@@ -44,8 +44,7 @@ dcor.y<-function(ldist,response,n,bcdcor=TRUE){
   dst
 }
 ################################################################################
-################################################################################
-#se calculan todas las distancias respecto as? mismas
+#se calculan todas las distancias respecto si mismas
 dist.list<-function(ldata,...){
   lenldata<-length(ldata)
   ldist<-list()
@@ -60,24 +59,15 @@ dist.list<-function(ldata,...){
 }
 ################################################################################
 
-# pvalue.anova puede no salir el  Pr(>F) pq los edf cambian
-# provocando que el edf2 < edf1 por ello se pone !is.na()
 ####################
 #best.pc.dcor<- function(data,"x","y"){
 #  dd=dcor.xy(ldata$df[[i]],res,n=n) #edf
 #  dcor[j,i]=dd$estimate*(dd$p.value < pvalor)
 #}
 ####################
-#http://stats.stackexchange.com/questions/80216/stepwise-model-selection-using-generalized-akaike-information-criterion
-#gamlss: Generalised Additive Models for Location Scale and Shape
-#I run a series of models using gamlss stepGAIC() model
-#selection. The problem that I have is that in gamlss,
-# stepGAIC() uses AIC values to select the variables in the model. Since my sample size is considered small I probably need to use the AICc values to select the best model. I don’t know if I would be able to create models using AIC and select from those models the best based on AICc.
-# seleccionar por GCV, AIC, AICc,  p-valor, dcor!!!
 pvalue.anova<- function(model1,model2){
   anova(model1,model2,test="F")
 }
-#pvalue.anova(res3$model,res4$model)
 
 # AICc<-function(model){
 #   suma<-summary(model)          

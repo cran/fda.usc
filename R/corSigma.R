@@ -3,7 +3,7 @@ corSigma<-function(par.gls,fixed=FALSE){
  type.cor<-class(par.gls$correlation)[1]
  ff<-as.formula("e~1") 
 #print("entra corSigma")
-# viene del min.np 
+# viene del optim.np 
  isfdata<-class(par.gls$data)=="list"
  if (isfdata) { 
 #  print("si es fdata")

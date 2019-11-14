@@ -1,40 +1,70 @@
-#################################################################
-#################################################################
+#' Correlation for functional data by Principal Component Analysis
+#' 
+#' Compute correlation principal components of functional data and scalar
+#' response \code{y}. 
+#' 
+#' @param object fdata.comp class object calculated by: \code{fdata2pc},
+#' \code{fdata2pls}, \code{fregre.pc} or \code{fregre.pls}.
+#' @param y (optional) The argument is only necessary if corplot=TRUE.
+#' @param biplot =TRUE draw the biplot and PC (or PLS) components.
+#' @param corplot =TRUE draw correlations between y and PC (or PLS) components.
+#' @param \dots Further arguments passed to or from other methods.
+#' @return If \code{corplot}=TRUE, are displaying the biplot between the PC (or PLS) components.\cr
+#'  If \code{corplot}=TRUE, are displaying the correlations between the PC (or PLS) components and response \code{y}.\cr 
+#'  If \code{ask}=TRUE, draw each graph in a window, waiting to confirm the change
+#' of page with a click of the mouse or pressing ENTER.  If \code{ask}=FALSE draw graphs in one window.
+#' @author Manuel Febrero-Bande and Manuel Oviedo de la Fuente \email{manuel.oviedo@@usc.es}
+#' @seealso See Also as \code{\link{fdata2pc}}, \code{\link{fdata2pls}} and \link[stats]{cor}
+#' @references Becker, R. A., Chambers, J. M. and Wilks, A. R. (1988).
+#' \emph{The New S Language}. Wadsworth \& Brooks/Cole.
+#' 
+#' Venables, W. N. and B. D. Ripley (2002). \emph{Modern Applied Statistics
+#' with S}. Springer-Verlag.
+#' @keywords multivariate
+#' @examples
+#' \dontrun{
+#' n= 200
+#' tt= seq(0,1,len=101)
+#' x0<-rproc2fdata(n,tt,sigma="wiener")
+#' x1<-rproc2fdata(n,tt,sigma=0.1)
+#' x<-x0*3+x1
+#' beta = tt*sin(2*pi*tt)^2
+#' fbeta = fdata(beta,tt)
+#' y<-inprod.fdata(x,fbeta)+rnorm(n,sd=0.1)
+#' pc1=fdata2pc(x)
+#' summary(pc1,y)
+#' pls1=fdata2pls(x,y)
+#' summary(pls1,cor=TRUE)
+#' }
+#' 
+#' @export
 summary.fdata.comp=function(object,y=NULL,biplot=TRUE,corplot=FALSE,...) {
-if (inherits(object, "fdata.comp"))         {
-   a1=TRUE
-   pr.com<-object
-   if (is.null(y)) {
-      if (object$call[[1]]=="fdata2pls" | object$call[[1]]=="fdata2ppls")
-       y<-object$y
-#                    else stop("Argument y no introduced")
-                    }
-   }
-else if (inherits(object, "fregre.fd"))     {
-   a1=FALSE
-   pr.com<-object$fdata.comp
-   y<-object$y
+  if (inherits(object, "fdata.comp"))         {
+     a1=TRUE
+     pr.com<-object
+     if (is.null(y)) {
+        if (object$call[[1]]=="fdata2pls" | object$call[[1]]=="fdata2ppls")
+         y<-object$y                  
      }
-else stop("Error in input data")
-#  pr.com=object
+  } else if (inherits(object, "fregre.fd"))     {
+     a1=FALSE
+     pr.com<-object$fdata.comp
+     y<-object$y
+  } else stop("Error in input data")
   out2=pr.com$x
-#  object<-object[["data"]]
-#  if (nrow(object) != (length(y))) stop("ERROR IN THE DATA DIMENSIONS")
  l<-object$l
  le=length(l)
  rotation=aperm(pr.com$rotation$data)
  p=pr.com$x
-if (object$call[[1]]=="fdata2pls" | object$call[[1]]=="fdata2ppls") {
- var.1<-apply(p, 2, var)
- pr.x2= var.1/sum(var.1)
-}
-else {
+ if (object$call[[1]]=="fdata2pls" | object$call[[1]]=="fdata2ppls") {
+  var.1<-apply(p, 2, var)
+  pr.x2= var.1/sum(var.1)
+ } else {
  d<-object$d
  if (is.null(object$rn)) rn<-0
  pr.x2<-(d^2+rn)/sum(d^2+rn)
  names(pr.x2)<-colnames(out2)[l]
  }
-# print(pr.x2)
  C<-match.call()
  lenC=length(C)
  cor.y.pc=rep(NA,le)
@@ -45,9 +75,9 @@ else {
  if (object$call[[1]]=="fdata2pc" | object$call[[1]]=="fdata2ppc") {
    cat("\n-With",le," components are explained ",round(sum(pr.x2[l])*100
  ,2),"%\n of the variability of explicative variables.\n \n-Variability for each component (%):\n")
-# print(round(pr.x[l] * 100, 2))
-print(round(pr.x2[l] * 100, 2))
-}
+  # print(round(pr.x[l] * 100, 2))
+  print(round(pr.x2[l] * 100, 2))
+  }
   if (corplot){
    if (is.null(y)) stop("Argument y no introduced")
    names(cor.y.pc)=paste("cor(y,",types[l],")",sep="")
@@ -122,11 +152,7 @@ print(round(pr.x2[l] * 100, 2))
                }
             else plot(p[,c(l[j],i)],main="BIPLOT")
      }  }    }  }
-#return(invisible(pr.com))
-return(invisible(object))
+  #return(invisible(pr.com))
+  return(invisible(object))
 }
-#################################################################
-#################################################################
-
-
 

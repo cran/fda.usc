@@ -1,7 +1,9 @@
-summary.anova<-function (object,ndec=NULL,...) {
+#' @rdname fanova.RPm
+#' @export
+summary.fanova.RPm<-function (object, ndec=NULL,...) {
  if (is.null(ndec)) ndec=5
- if (class(object)=="anova.RPm") {
-    cat("     - SUMMARY anova.RPm - \n")
+ if (class(object)=="fanova.RPm") {
+    cat("     - SUMMARY fanova.RPm - \n")
     cat("\n p-value for Bonferroni method \n" )
     print(round(object$p.Bonf,ndec))
     cat("\n  p-value for False Discovery Rate method \n")
@@ -11,7 +13,7 @@ summary.anova<-function (object,ndec=NULL,...) {
            print(round(object$p.Boot,ndec))
      }
  }
- if (class(object)=="anova.hetero") {
+ if (class(object)=="fanova.hetero") {
      cat("\n  - SUMMARY ANOVA HETEROCEDASTHIC - \n")
           print(object)
   }

@@ -1,11 +1,76 @@
-
-predict.fregre.gls<-function(object, newx = NULL, type = "response",
-    se.fit= FALSE, scale = NULL,df , interval = "none", 
-    level = 0.95, weights = 1, pred.var, n.ahead = 1, ...){
-# print("entra p predcit f.gls")    
+#' @title Predictions from a functional gls object
+#' 
+#' @description The predictions for the functional generalized least squares fitted linear
+#' model represented by \code{object} are obtained at the covariate values
+#' defined in \code{newx}.
+#'  
+#' @aliases predict.fregre.gls predict.fregre.igls
+#' 
+#' @param object \code{fregre.gls} object.
+#' @param newx An optional data list in which to look for
+#' variables with which to predict. If omitted, the fitted values are used.
+#' List of new explanatory data.
+#' @param type Type of prediction (response or model term).
+#' @param se.fit =TRUE (not default) standard error estimates are returned for
+#' each prediction.
+#' @param scale Scale parameter for std.err. calculation.
+#' @param df Degrees of freedom for scale.
+#' @param interval Type of interval calculation.
+# @param level Tolerance/confidence level.
+#' @param weights variance weights for prediction. This can be a numeric vector
+#' or a one-sided model formula. In the latter case, it is interpreted as an
+#' expression evaluated in newdata
+#' @param pred.var the variance(s) for future observations to be assumed for
+#' prediction intervals. See \code{link{predict.lm}} for more details.
+#' @param data Data frame with the time or spatinal index
+#' @param n.ahead number of steps ahead at which to predict.
+#' @param \dots Further arguments passed to or from other methods.
+#' 
+#' @return a vector with the predicted values.
+#' 
+#' @author Manuel Febrero-Bande, Manuel Oviedo de la Fuente
+#' \email{manuel.oviedo@@usc.es}
+#' @seealso \code{\link{fregre.gls}}
+#' @references Oviedo de la Fuente, M., Febrero-Bande, M., Pilar Munoz, and
+#' Dominguez, A. Predicting seasonal influenza transmission using Functional
+#' Regression Models with Temporal Dependence. arXiv:1610.08718.
+#' \url{https://arxiv.org/abs/1610.08718}
+#' @keywords models regresion
+#' 
+#' @examples 
+#' \dontrun{
+#' data(tecator)
+#' ind<-1:190
+#' x <-fdata.deriv(tecator$absorp.fdata,nderiv=1)
+#' dataf=as.data.frame(tecator$y)
+#' dataf$itime <- 1:nrow(x)
+#' ldat=list("df"=dataf[ind,],"x"=x[ind])
+#' newldat=list("df"=dataf[-ind,],"x"=x[-ind])
+#' newy <- tecator$y$Fat[-ind]
+#' ff <- Fat ~ x
+#' res.lm <- fregre.lm(ff,data=ldat)
+#' summary(res.lm)
+#' res.gls <- fregre.gls(ff,data=ldat, correlation=corAR1())
+#' summary(res.gls)
+#' par.cor <- list("cor.ARMA"=list("p"=1))
+#' par.cor <- list("cor.ARMA"=list("index"=c("itime"),"p"=1))
+#' res.igls <- fregre.igls(ff,data=ldat,correlation=par.cor) 
+#' pred.lm <- predict(res.lm,newldat)
+#' pred.gls <- predict(res.gls,newldat)
+#' pred.igls <- predict(res.igls,newldat)
+#' mean((pred.lm-newldat$df$Fat)^2)
+#' mean((pred.gls-newldat$df$Fat)^2)
+#' mean((pred.igls-newldat$df$Fat)^2)
+#' }
+#' 
+#' @rdname predict.fregre.gls
+#' @export 
+predict.fregre.gls<-function(object, newx = NULL, type = "response",se.fit= FALSE, scale = NULL,df , interval = "none", ...){
+  level=.95
+  class(object)<-c("gls","lm","fregre.lm")
  if (is.null(object)) stop("No fregre.lm object entered")
  if (is.null(newx)) {
-    yp=predict(object,type=type,se.fit=se.fit,interval=interval,level=level,weights=weights,pred.var=pred.var,df=df,scale=scale,...)    
+    yp=predict(object,type=type,se.fit=se.fit,interval=interval,...)    
     print("No newx entered")
     return(yp)
     } 
@@ -31,7 +96,7 @@ predict.fregre.gls<-function(object, newx = NULL, type = "response",
 
 # print(attributes(tf))
 # print(tf)
-#print("entra p predcit f.gls33")    
+# print("entra p predict f.gls33")    
  if (attr(tf, "response") > 0) {
         response <- as.character(attr(tf, "variables")[2])
         pf <- rf <- paste(response, "~", sep = "")
@@ -70,7 +135,7 @@ else {
 #print(names(XX))
 #print(vnf)
 #print(dim(XX))
-
+# print(vnf);print(vfunc)
 #yp<-object$coefficients[1]*rep(1,len=nrow(newx[[vfunc[i]]]))
 if (length(vnf)>0) {
 #  print(object$coefficients[names(XX)])
@@ -162,7 +227,7 @@ if (length(vfunc)>0)  {
     if (class(object)[1]=="gls"){  
 # print(names(XX))    
 # print(names(object$XX))    
-     if (is.null(object$correlation)) return(predict(object=object,newdata=XX)  )    #call to nlme:::predict.gls            
+     if (is.null(object$correlation)) return(predict(object=object,newdata=XX)  )    #call to nlme::predict.gls            
 # realmente hay que buscar el form Y PONER EL INDICADOR
 #    print(" buscar en correlation el AR y hacer el predict")
     ype<-numeric(nn)
@@ -171,17 +236,24 @@ if (length(vfunc)>0)  {
     XX=data.frame(XX,newx$df)
 
 
-# print(se.fit)
-# print("0")
+#print(se.fit)
+#print("0")
 # oo<-lm(object$formula,data=object$XX)
 # # ypx<-predict.lm(object=oo,newdata=object$XX[1:10,],se.fit=se.fit)    
 # print(ypx)
-# print("1")
+#print("1")
 # ypx<-nlme::predict.gls(object=object,newdata=object$XX[1:10,])    
-# # print(ypx)
-#print("2")
-ypx<-predict.gls(object=object,newdata=XX)     #call to internal function predict.gls an not to nlme:::predict.gls 
-#print("3")
+# # #print(ypx)
+# print("2")
+ypx  <-predict.gls(object=object,newdata=XX,se.fit=se.fit,...)     #call to internal function predict.gls an not to nlme::predict.gls
+# print("3")
+#class(object)<-class(object)[-1]
+#ypxx <-predict.lm(object=object,newdata=XX,se.fit=se.fit,...)     #call to internal function predict.gls an not to nlme::predict.gls 
+ypxx <-predictSE.gls(object, XX, se.fit = se.fit, ...)
+# print("4")
+#print(ypx)
+#print("333")
+#print(ypxx)
 # print(ypx)
 # print(ypx)    
 #    ypx2<-predict.lm(object=object,newdata=XX)    
@@ -190,19 +262,27 @@ ypx<-predict.gls(object=object,newdata=XX)     #call to internal function predic
 #class(res3$correlation)[1]    ==corARMA o corAR1
     yp<-switch(class(object$correlation)[1],
      "corAR1"={  
-       #      print("corAR111")
+# print("corAR1")       
 #    if (names(rho)!="range"){        
     if (!is.null(object$correlation))       groups <- nlme::getGroupsFormula(object$correlation)
     else groups <- NULL
     cls1<-nlme::getCovariate(object$correlation,data=data$df)
     if (is.null(groups)){ 
-      ype[1] <- rho *object$residuals[n]      
-      if (nn>1){
-      for (i in 2:nn)   ype[i] <- rho * ype[i-1] 
-     }
-       yp<-ypx+ype
-     }
-     else{
+      
+      # 2019/04/23 
+      # new code
+      ab <- arima(object$residuals, order = c(1,0,0),fixed=rho ,include.mean=FALSE)
+      ab <- predict(ab,n.ahead=n.ahead)
+      ype <- ab$pred
+#print(ab)      
+      #print("5")     
+      # old code
+      # ype[1] <- rho *object$residuals[n]      
+      # if (nn>1){
+      #  for (i in 2:nn)   ype[i] <- rho * ype[i-1] 
+      # }
+      yp<-ypx+ype
+     }      else{
 #      warning("Conditional predictions for each group are not yet done.")
     gr<-  nlme::getGroups(object$correlation,data=data$df)   
     ind<- nlme::getCovariate(object$correlation,data=data$df)
@@ -226,6 +306,13 @@ ypx<-predict.gls(object=object,newdata=XX)     #call to internal function predic
             order.ind.old<-order(ind.old[[i]])
             order.ind<-order(ind[[i]])
             res.gr<-object$residuals[ii][order.ind.old]     
+            
+            # 2019/04/23 
+            # completar este new code para diferentes grupos
+            # ab<-arima(res.gr, order = c(1,0,0),fixed=rho ,include.mean=FALSE)
+            # ab<-predict(ab,n.ahead=length(ii2))
+            # ype2 <- ab$pred
+            
             ype2[1] <- rho *res.gr[ng]             
             if (ng>1){
               for (j in 2:ng)   ype2[j] <- rho * ype2[j-1] 
@@ -238,12 +325,12 @@ ypx<-predict.gls(object=object,newdata=XX)     #call to internal function predic
      ype[ii2]<-ype2
      }
 #alternativa al bucle
-# print("AR1")
+ #print("AR1")
 # print(ype)
 ab<-arima(object$residuals, order = c(1,0,0), fixed=coef(object$modelStruct,unconstrained=FALSE)
           ,include.mean=FALSE)
 ab<-predict(ab,n.ahead=n.ahead)
-print(ab)
+#print(ab)
 
 yp<-ypx+ab$pred
 # print(yp)
@@ -252,7 +339,7 @@ yp<-ypx+ab$pred
      }
      },
     "corARMA"={  
-      #print("corARMA")
+# print("corARMA")
 #print(rho)
     if (!is.null(object$correlation))       groups <- nlme::getGroupsFormula(object$correlation)
     else groups <- NULL
@@ -294,14 +381,16 @@ yp<-ypx+ab$pred
      #yp<-ypx+ype
 #print(model) 
 # print(p)
-#print(q)
-#  print("#alternativa a este rollo ")
+##print(q)
+#print("#alternativa a este rollo ")
       ab<-arima(object$residuals, order = c(p,0,q),fixed=coef(object$modelStruct,unconstrained=FALSE)
           ,include.mean=FALSE)
+#print("ab ab est")      
       ab<-predict(ab,n.ahead=n.ahead)
-
-# print("a mano")
-# print(ype)
+      #print("ab ab pred")      
+#print("a mano")
+#print(names(ab))
+# #print(ype)
 # print("pred arima")
 # print(ab)
 # print("pred regre")
@@ -453,11 +542,6 @@ ype[ii2]<- drop(t(sig21)%*%W%*%as.matrix(object$residuals[ii]))
 #print(cbind(ypx,ype,kc2$predict,ype-kc2$predict,ypx+ype-data$df$yprec))
 # print(cbind(ypx,ype,ypx+ype-data$df$yprec))
 
-
-
-
-
-
 #print("geoR")
 #print(names(kc2))
 #    loci<-SpatialPoints(loci)
@@ -469,25 +553,47 @@ ype[ii2]<- drop(t(sig21)%*%W%*%as.matrix(object$residuals[ii]))
 
      })#end switch
 #     return(list(yp,ype))
-
+  
 predictor<-drop(yp)
 res.var<-object$sr2 
-if (missing(pred.var)) pred.var = res.var/weights
+# print(res.var)
+if (!is.vector(weights))  weights <- rep(1,n)
+pred.var = res.var/weights
+# print("7")
+
 if (se.fit || interval != "none") {    
   XX2<-as.matrix(XX[,colnames(object$Vp),drop=FALSE])
-   # print("peeeetaaa1")    
-  #   print((XX2))
-  # print(object$Vp)  
+    #print("peeeetaaa1")    
+  #   #print((XX2))
+  # #print(object$Vp)  
   ip<-rowSums((XX2 %*%object$Vp)*XX2)   
-  # print("peeeetaaa2")      
+#print(ip[1:3])  
+#print(ab$se[1:3])
+
   df<-object$df.residual
-  print(ip)
-  print(ab)
-  se<-sqrt(ip+ab$se^2)#+ype[[2]]                        
+  #print(ip)
+  #print(names(ab))
+  #se<-sqrt(ip+ab$se^2)#+ype[[2]]                        
+  #print(se)
   # print(ip)
   # print(ab$se^2)
-  yp<-list("pred"=yp,"se"=se)
+  #print("petooooooooaaaaaaaaaaaaa")
+  XX3 <- sweep(XX2,1,(ab$se),"*")
+  seip3<-rowSums((XX3 %*% object$Vp)*XX3)  
+  #seip2<-t(XX2) %*% diag(ab$se)^2
   
+  # LM 
+  # XRinv <- if (missing(newdata) && is.null(w)) 
+  #   qr.Q(qr.lm(object))[, p1, drop = FALSE]
+  # else X[, piv] %*% qr.solve(qr.R(qr.lm(object))[p1, p1])
+  #ip <- drop(XRinv^2 %*% rep(res.var, p))
+  
+  # ip <- matrix(ncol = nterms, nrow = NROW(X))
+  # dimnames(ip) <- list(rownames(X), names(asgn))
+  # Rinv <- qr.solve(qr.R(qr.lm(object))[p1, p1])
+  yp<-list("pred"=yp
+           #,"se"=se,"seip"=ab$se
+           ,"se"=sqrt(seip3))
 #  if (interval != "none") {
 #    tfrac <- qt((1 - level)/2, df)
 #hwid <- tfrac * switch(interval, confidence = sqrt(ip),prediction = sqrt(ip + pred.var))    
@@ -498,13 +604,14 @@ if (se.fit || interval != "none") {
 
 #else yp<-ypx+ype
      return(yp)
-# print("sale2")
+#print("sale2")
 }
 #     print(names(XX))
 #     print(object$formula)
 # print(se.fit)
-     yp=predict(object,newdata=XX,type=type,se.fit=se.fit,interval=interval,level=level,weights=weights,pred.var=pred.var,df=df,scale=scale,...)
-# print(12)
+#print("lo hace pq")    
+     yp=predict(object,newdata=XX,type=type,se.fit=se.fit,interval=interval,weights=weights,df=df,scale=scale,...)
+#print(12)
      if (is.null(newx$corStruct)) {
         ype=predict(object$corStruct,se.fit=se.fit,n.ahead=nn)
         if (se.fit) {
@@ -769,4 +876,99 @@ if (class(object$corStruct[[1]])[1]=="lm")  {
  }
 return(predictor)  
 }
-#####
+
+#' @rdname predict.fregre.gls
+#' @export 
+predict.fregre.igls<-function (object, newx = NULL, data, df = df
+                               #, se.fit = FALSE, scale = NULL, interval = "none"
+                               #level = 0.95
+                               ,weights = 1, pred.var, n.ahead =1L,...) 
+{
+  level = 0.95 # corregir
+  se.fit=FALSE
+  if (is.null(object)) 
+    stop("No object entered")
+  if (is.null(newx)) {
+    yp <- object$fitted.values
+    print("No newx entered")
+    return(yp)
+  }
+  else {
+    #print(1)    
+    yp <- predict.fregre.lm(object, newx, #se.fit = se.fit, 
+                            # scale = scale, df = df, interval = interval, level = level, 
+                            weights = weights, pred.var = pred.var, ...)
+    #print(2)        
+    
+    if (se.fit) predictor <- yp$pred
+    else  predictor <- yp
+    predictor <- drop(predictor)
+    nn <- length(predictor)
+    n <- length(object$residuals)
+    
+    res.var <- object$sr2
+    if (missing(pred.var)) pred.var = res.var/weights
+    if (!is.null(object$corStruct)) {
+      if (names(object$correlation) == "cor.AR" | names(object$correlation) == 
+          "cor.ARMA") {
+        if ((class(object$corStruct[[1]])[1] == "Arima" | 
+             class(object$corStruct[[1]])[1] == "ar") & 
+            length(object$corStruct) > 1) {
+          ype <- NULL
+          gr <- data[, object[["correlation"]][[1]][["group"]]]
+          lev <- levels(gr)
+          tab <- table(gr)
+          for (j in 1:length(tab)) {
+            lennn <- tab[j]
+            previousone <- object$corStruct[[lev[j]]]
+            ind <- gr == lev[j]
+            if (lennn != 0) {
+              if (class(object$corStruct[[1]])[1] == 
+                  "Arima") 
+                out = predict(object$corStruct[[lev[j]]], 
+                              se.fit = se.fit, n.ahead = lennn)
+              if (se.fit)
+                ype[ind] <- out$pred
+              else ype[ind] <- out
+            }
+          }
+        }
+        if (class(object$corStruct$ar) == "Arima") {
+          ype = predict(object$corStruct$ar, se.fit = se.fit, 
+                        n.ahead = nn)
+        }
+        if (class(object$corStruct$ar) == "ar") {
+          ype = predict(object$corStruct$ar, object$residuals, 
+                        se.fit = se.fit, n.ahead = nn)
+        }          
+        if (class(object$corStruct[[1]])[1] == "lm") {
+          coef.lm <- coef(object$corStruct$lm)
+          p <- length(coef.lm)
+          lenp <- length(p)
+          ype <- NULL
+          gr <- data[, object[["correlation"]][[1]][["group"]]]
+          if (!is.factor(gr)) 
+            gr <- factor(gr)
+          lev <- levels(gr)
+          tab <- table(gr)
+          for (j in 1:length(tab)) {
+            lennn <- tab[j]
+            previousone <- object$corStruct$lm$res.x[, 
+                                                     j]
+            ind <- gr == lev[j]
+            e <- rep(NA, len = lennn)
+            for (i in 1:lennn) {
+              e[i] <- sum(coef.lm * previousone)
+              previousone <- c(e[i], previousone[-p])
+            }
+            ype[ind] <- e
+          }
+        }
+      }
+      predictor <- predictor + as.numeric(ype)
+    }
+    return(predictor)
+  }
+  return(predictor)
+}
+

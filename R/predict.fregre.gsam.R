@@ -1,4 +1,6 @@
-predict.fregre.gsam<-function(object,newx=NULL,type="response",...){
+#' @rdname predict.fregre.lm
+#' @export 
+predict.fregre.gsam <- function(object, newx=NULL, type="response",...){
  if (is.null(object)) stop("No fregre.gsam object entered")
  if (is.null(newx)) {
     yp=predict.gam(object,...)
@@ -268,8 +270,7 @@ k=1
     }       }
      if (first) {    XX=Z;              first=FALSE         }
      else XX = cbind(XX, Z)
-    }
-   else stop("Please, enter functional covariate")
+    } #   else stop("Please, enter functional covariate")
    }
    }
         }

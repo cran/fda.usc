@@ -1,3 +1,46 @@
+#' Proximities between functional data
+#' 
+#' Approximates semi-metric distances for functional data of class \code{fdata}
+#' or \code{fd}.
+#' 
+#' @details Approximates semi-metric distances for functional data of two \code{fd}
+#' class objects.  If functional data are not functional \code{fd} class, the
+#' \code{semimetric.basis} function creates a basis to represent the functional
+#' data, by default is used \code{\link{create.bspline.basis}} and the
+#' \code{fdata} class object is converted to \code{fd} class using the
+#' \code{\link{Data2fd}}.\cr The function calculates distances between the
+#' derivative of order \code{nderiv} of curves using \code{\link{deriv.fd}}
+#' function.
+#' 
+#' @param fdata1 Functional data 1 or curve 1.
+#' @param fdata2 Functional data 2 or curve 2.
+#' @param nderiv Order of derivation, used in \code{deriv.fd}
+#' @param type.basis1 Type of Basis for \code{fdata1}.
+#' @param nbasis1 Number of Basis for \code{fdata1}.
+#' @param type.basis2 Type of Basis for \code{fdata2}.
+#' @param nbasis2 Number of Basis for \code{fdata2.}
+#' @param \dots Further arguments passed to or from other methods.
+#' @return Returns a proximities matrix between functional data.
+#' @seealso See also \code{\link{metric.lp}}, \code{\link{semimetric.NPFDA}}
+#' and \code{\link{deriv.fd}}
+#' @references Ferraty, F. and Vieu, P. (2006). \emph{Nonparametric functional
+#' data analysis.} Springer Series in Statistics, New York.
+#' @keywords cluster
+#' @examples
+#' \dontrun{
+#' data(phoneme)
+#' DATA1<-phoneme$learn[c(30:50,210:230)]
+#' DATA2<-phoneme$test[231:250]
+#' a1=semimetric.basis(DATA1,DATA2)
+#' a2=semimetric.basis(DATA1,DATA2,type.basis1="fourier",
+#' nbasis1=11, type.basis2="fourier",nbasis2=11)
+#' fd1 <- fdata2fd(DATA1)
+#' fd2 <- fdata2fd(DATA2)
+#' a3=semimetric.basis(fd1,fd2)
+#' a4=semimetric.basis(fd1,fd2,nderiv=1)
+#' }
+#' 
+#' @export
 semimetric.basis=function(fdata1, fdata2 = fdata1,nderiv=0,type.basis1=NULL,
 nbasis1=NULL,type.basis2=type.basis1,nbasis2=NULL,...) {
  if (any(class(fdata1)=="fd")) {

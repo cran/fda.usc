@@ -1,3 +1,101 @@
+#' Fitting Functional Generalized Linear Models
+#' 
+#' Computes functional generalized linear model between functional covariate
+#' \eqn{X^j(t)}{X_j(t)} (and non functional covariate \eqn{Z^j}{Z_j}) and
+#' scalar response \eqn{Y} using basis representation.
+#' 
+#' This function is an extension of the linear regression models:
+#' \code{\link{fregre.lm}} where the \eqn{E[Y|X,Z]} is related to the linear
+#' prediction \eqn{\eta} via a link function \eqn{g(.)}.
+#' 
+#' \deqn{E[Y|X,Z]=\eta=g^{-1}(\alpha+\sum_{j=1}^{p}\beta_{j}Z^{j}+\sum_{k=1}^{q}\frac{1}{\sqrt{T_k}}\int_{T_k}{X^{k}(t)\beta_{k}(t)dt})}{E[Y|X,Z]=
+#' \eta = g^{-1}(\alpha + \sum \beta_j Z_j+\sum < X_k(t) , \beta_k(t) >)}
+#' 
+#' where \eqn{Z=\left[ Z^1,\cdots,Z^p \right]}{ Z = [Z_1 ,..., Z_p]} are the
+#' non functional covariates and \eqn{X(t)=\left[ X^{1}(t_1),\cdots,X^{q}(t_q)
+#' \right]}{X(t) = [ X_1(t_1) ,..., X_q(t_q)]} are the functional ones.
+#' 
+#' The first item in the \code{data} list is called \emph{"df"} and is a data
+#' frame with the response and non functional explanatory variables, as
+#' \code{\link{glm}}.\cr
+#' 
+#' Functional covariates of class \code{fdata} or \code{fd} are introduced in
+#' the following items in the \code{data} list.\cr \code{basis.x} is a list of
+#' basis for represent each functional covariate. The basis object can be
+#' created by the function: \code{\link{create.pc.basis}}, \code{\link{pca.fd}}
+#' \code{\link{create.pc.basis}}, \code{\link{create.fdata.basis}} o
+#' \code{\link{create.basis}}.\cr \code{basis.b} is a list of basis for
+#' represent each \eqn{\beta(t)} parameter. If \code{basis.x} is a list of
+#' functional principal components basis (see \code{\link{create.pc.basis}} or
+#' \code{\link{pca.fd}}) the argument \code{basis.b} is ignored.
+#' 
+#' %When using functional data derived recommend using a number of basis to
+#' represent beta lower than the number of basis used to represent the
+#' functional data.
+#' 
+#' @param formula an object of class \code{formula} (or one that can be coerced
+#' to that class): a symbolic description of the model to be fitted. The
+#' details of model specification are given under \code{Details}.
+#' @param family a description of the error distribution and link function to
+#' be used in the model. This can be a character string naming a family
+#' function, a family function or the result of a call to a family function.
+#' (See \code{\link{family}} for details of family functions.)
+#' @param data List that containing the variables in the model.
+#' @param basis.x List of basis for functional explanatory data estimation.
+#' @param basis.b List of basis for \eqn{\beta(t)} parameter estimation.
+#' @param CV =TRUE, Cross-validation (CV) is done .
+#' @param subset an optional vector specifying a subset of observations to be
+#' used in the fitting process.
+#' @param \dots Further arguments passed to or from other methods.
+#' @return Return \code{glm} object plus:
+#' \itemize{ 
+#' \item \code{basis.x}{ Basis used for \code{fdata} or \code{fd} covariates.} 
+#' \item \code{basis.b}{ Basis used for beta parameter estimation.} 
+#' \item \code{beta.l}{ List of estimated beta parameter of functional covariates.} 
+#' \item \code{data}{ List that containing the variables in the model.} 
+#' \item \code{formula}{ formula.} 
+#' \item \code{CV}{ predicted response by cross-validation.}
+#' }
+#' @note If the formula only contains a non functional explanatory variables
+#' (multivariate covariates), the function compute a standard \code{\link{glm}}
+#' procedure.
+#' @author Manuel Febrero-Bande, Manuel Oviedo de la Fuente
+#' \email{manuel.oviedo@@usc.es}
+#' @seealso See Also as: \code{\link{predict.fregre.glm}} and
+#' \code{\link{summary.glm}}.\cr Alternative method if
+#' \code{family}=\emph{gaussian}: \code{\link{fregre.lm}}.
+#' @references Ramsay, James O., and Silverman, Bernard W. (2006), \emph{
+#' Functional Data Analysis}, 2nd ed., Springer, New York.
+#' 
+#' McCullagh and Nelder (1989), \emph{Generalized Linear Models} 2nd ed.
+#' Chapman and Hall.
+#' 
+#' Venables, W. N. and Ripley, B. D. (2002) \emph{Modern Applied Statistics
+#' with S}, New York: Springer.
+#' @keywords regression
+#' @examples
+#' \dontrun{ 
+#' data(tecator)
+#' x=tecator$absorp.fdata
+#' y=tecator$y$Fat
+#' tt=x[["argvals"]]
+#' dataf=as.data.frame(tecator$y)
+#' 
+#' nbasis.x=11
+#' nbasis.b=7
+#' basis1=create.bspline.basis(rangeval=range(tt),nbasis=nbasis.x)
+#' basis2=create.bspline.basis(rangeval=range(tt),nbasis=nbasis.b)
+#'  
+#' f=Fat~Protein+x
+#' basis.x=list("x"=basis1)
+#' basis.b=list("x"=basis2)
+#' ldata=list("df"=dataf,"x"=x)
+#' res=fregre.glm(f,family=gaussian(),data=ldata,basis.x=basis.x,
+#' basis.b=basis.b)
+#' summary(res)
+#' }
+
+#' @export
 fregre.glm=function(formula,family = gaussian(), data, 
                     basis.x=NULL, basis.b=NULL,CV=FALSE,
                     subset = NULL,...)
@@ -250,10 +348,10 @@ if (lenfunc) {
  z$formula.ini=formula
  z$data=z$data
  z$XX=XX
- class(z)<-c(class(z),"fregre.glm")
+ class(z)<-c("fregre.glm",class(z))
  z
 }
-
+#' @export
 fregre.lm<-function(formula,data,basis.x=NULL,basis.b=NULL,
 rn,lambda,weights=rep(1,n),...){
  tf <- terms.formula(formula)
@@ -468,7 +566,6 @@ if    (basis.x[[vfunc[i]]]$type=="pls") {
    df<-df+basis.x[[vfunc[i]]]$df[lenl]
    }
 }       
-  
 if (!is.data.frame(XX)) XX=data.frame(XX)
     par.fregre$formula=pf
     par.fregre$data=XX
@@ -503,9 +600,6 @@ if (!is.data.frame(XX)) XX=data.frame(XX)
       z<-list()      
       z$fitted.values<-yp<-drop(scores%*%coefs)
       e<-z$residuals<-XX[,1]- z$fitted.values      
-################################################################################
-################################################################################
-################################################################################           
       H<-scores%*%Cinv
       if  (!hay.pls) df<-fdata.trace(H)  
       coefs<-drop(coefs)
@@ -591,7 +685,7 @@ for (i in 1:length(vfunc)) {
  z$lambda<-lambda0
  z$vs.list=vs.list   
 ## z$ar<-aa
- class(z)<-c("lm","fregre.lm")
+ class(z)<-c("fregre.lm","lm")
  z
 }     
  

@@ -1,3 +1,60 @@
+Version 2.0.0 is a major release with several new features, including:
+
+inprod.fdata and metric.lp funcitons addapted to parallel backend.
+
+zzz.R file includes .onAttach() function (welcome package message)
+
+ops.fda.usc.R file includes ops.fda.usc() function that control general parameters of packages such as ncores argument.
+
+par.fda.usc.R file is deleted: par.fda.usc is now an internal object created and modified by ops.fda.usc()
+
+New function metric.DTW computes distances between functional data using dynamic time warping (DTW)
+metric.WDTW and metric.TWED are extended version. (not parallelized yet, pending to completed the Rd document)
+
+New functions S.LPR and S.LCR for computing smoothing matrix S by nonparametric method.
+
+The functions anova.hetero, anova.onefactor, anova.RPm, influence.fdata, influence.quan, min.basis, min.np and unlist.fdata
+are renamed fanova.hetero, fanova.onefactor, fanova.RPm, influence.fregre.fd, influence_quan, optim.basis, optim.np and unlist_fdata
+
+optim.np (deprecated min.np)  allows Local polynomial regression with correlated errors using the new parameter (correl=TRUE) 
+Kernel.correlated new functions
+
+New class: "ldata": ldata() class definition.
+Redefined metric.ldata, it computes distance for ldata object: list with m functional data "mfdata" and univariate data included in a data frame called "df"
+New function metric.mfdata: compute distance for mfdata class object:  list with m functional data
+
+plot.ldata: plots for ldata object, it allows drawing using a color bar.
+plot.mfdata: plot for  mfdata object (internal function, pending to completed the Rd document)
+depth.modep, depth.mode  call metric.lp and metric.ldata propperly
+New functions: subset.ldata, is.lfdata "[.lfdata"  "[.ldata" is.ldata names.ldata c.ldata
+
+classic.tree() is replaced by the classic.rpart() (which requires the rpart library to be installed). 
+The internal function classif.tree2boost() and the dependency of the rpart package are also removed
+
+New functions and utilities in accuracy.r file.  
+
+New functions related with Machine Learning procedures (rdepend on packages not included in "fda.usc"):
+classif.svm and classif.naiveBayes(e1071 pkg), classif.ksvm (personalized pkg), 
+classif.rpart (rpart pkg), classif.nnet (nnet pkg), classif.multinom (nnet pkg),
+classif.randomForest (randomForest)
+clasiff.univariante is used in classif.DD and allow multiclass labels
+classif.kfold selects the parameters using k-fold cross-validation 
+
+Minor changes in classif.gkam and fregre.gkam
+
+Settings in fregre.np, fregre.np.cv with type.S = S.KNN
+
+New script file: FDA_REviewClasif_V2 classification example
+
+Bug corrected in h.default (specially using k-nearest neighbors smoothing, type.S="S.KNN")
+
+"type.CV" and "par.CV" arguments are removed in classif.np, classif.kernel and classif.knn
+
+dcor.xy.r/.Rd includes Rdnames
+
+fdata2model.R shortcut to use in classif and fregre method 
+
+
 Release 1.5.0:
 This version was released in Jan. 2019 to accompany Manuel Oviedo de la Fuente PhD Thesis, 
 see Minerva (University of Santiago de Compostela) repository.
@@ -24,7 +81,7 @@ A bug in fregre.pc has been fixed (thanks to Prof. Eduardo Garcia-Portugues).
 This version Release 1.4.0:
 as released in Dec. 2017 to accompany paper: 
 
-Ordonez, C., Oviedo de la Fuente, M., Roca-Pardiñas, J.,  Rodriguez-Perez, J. R. (2017).
+Ordonez, C., Oviedo de la Fuente, M., Roca-Pardinas, J.,  Rodriguez-Perez, J. R. (2017).
  Determining optimum wavelengths for leaf water content estimation from reflectance: A 
  distance correlation approach. \emph{Chemometrics and Intelligent Laboratory Systems},
  (2018)  173,41-50  \url{https://doi.org/10.1016/j.chemolab.2017.12.001}. 

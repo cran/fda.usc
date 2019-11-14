@@ -2,37 +2,53 @@
 % Please edit documentation in R/rp.flm.test.R
 \name{rdir.pc}
 \alias{rdir.pc}
-\title{Data-driven sampling of random directions guided by sample of functional data}
+\title{Data-driven sampling of random directions guided by sample of functional
+data}
 \usage{
-rdir.pc(n, X.fdata, ncomp = 0.95,
-  fdata2pc.obj = fda.usc::fdata2pc(X.fdata, ncomp =
-  min(length(X.fdata$argvals), nrow(X.fdata))), sd = 0,
+rdir.pc(n, X.fdata, ncomp = 0.95, fdata2pc.obj = fdata2pc(X.fdata,
+  ncomp = min(length(X.fdata$argvals), nrow(X.fdata))), sd = 0,
   zero.mean = TRUE, norm = FALSE)
 }
 \arguments{
 \item{n}{number of curves to be generated.}
 
-\item{X.fdata}{an \code{\link[fda.usc]{fdata}} object used to compute the functional principal components.}
+\item{X.fdata}{an \code{\link{fdata}} object used to compute the
+functional principal components.}
 
-\item{ncomp}{if an integer vector is provided, the index for the principal components to be considered. If a threshold between \code{0} and \code{1} is given, the number of components \eqn{k}{k} is determined automatically as the minimum number that explains at least the \code{ncomp} proportion of the total variance of \code{X.fdata}.}
+\item{ncomp}{if an integer vector is provided, the index for the principal
+components to be considered. If a threshold between \code{0} and \code{1} is
+given, the number of components \eqn{k}{k} is determined automatically as
+the minimum number that explains at least the \code{ncomp} proportion of the
+total variance of \code{X.fdata}.}
 
-\item{fdata2pc.obj}{output of \code{\link[fda.usc]{fdata2pc}} containing as many components as the ones to be selected by \code{ncomp}. Otherwise, it is computed internally.}
+\item{fdata2pc.obj}{output of \code{\link{fdata2pc}} containing as
+many components as the ones to be selected by \code{ncomp}. Otherwise, it is
+computed internally.}
 
-\item{sd}{if \code{0}, the standard deviations \eqn{\sigma_j} are estimated by the standard deviations of the scores for \eqn{e_j}. If not, the \eqn{\sigma_j}'s are set to \code{sd}.}
+\item{sd}{if \code{0}, the standard deviations \eqn{\sigma_j} are estimated
+by the standard deviations of the scores for \eqn{e_j}. If not, the
+\eqn{\sigma_j}'s are set to \code{sd}.}
 
-\item{zero.mean}{whether the projections should have zero mean. If not, the mean is set to the mean of \code{X.fdata}.}
+\item{zero.mean}{whether the projections should have zero mean. If not, the
+mean is set to the mean of \code{X.fdata}.}
 
 \item{norm}{whether the samples should be L2-normalized or not.}
 }
 \value{
-A \code{\link[fda.usc]{fdata}} object with the sampled directions.
+A \code{\link{fdata}} object with the sampled directions.
 }
 \description{
-Generation of random directions based on the principal components \eqn{\hat e_1,\ldots,\hat e_k}{\hat e_1,...,\hat e_k} of a sample of functional data \eqn{X_1,\ldots,X_n}{X_1,...,X_n}. The random directions are sampled as
-\deqn{h=\sum_{j=1}^kh_j\hat e_j,}{h=\sum_{j=1}^kh_j\hat e_j,}
-with \eqn{h_j\sim\mathcal{N}(0, \sigma_j^2)}{h_j~N(0, \sigma_j^2)}, \eqn{j=1,\ldots,k}{j=1,...,k}. Useful for sampling non-orthogonal random directions \eqn{h}{h} such that they are non-orthogonal for the random sample.
+Generation of random directions based on the principal components \eqn{\hat
+e_1,\ldots,\hat e_k}{\hat e_1,...,\hat e_k} of a sample of functional data
+\eqn{X_1,\ldots,X_n}{X_1,...,X_n}. The random directions are sampled as
+\deqn{h=\sum_{j=1}^kh_j\hat e_j,}{h=\sum_{j=1}^kh_j\hat e_j,} with
+\eqn{h_j\sim\mathcal{N}(0, \sigma_j^2)}{h_j~N(0, \sigma_j^2)},
+\eqn{j=1,\ldots,k}{j=1,...,k}. Useful for sampling non-orthogonal random
+directions \eqn{h}{h} such that they are non-orthogonal for the random
+sample.
 }
 \examples{
+\dontrun{
 # Simulate some data
 set.seed(345673)
 X.fdata <- r.ou(n = 200, mu = 0, alpha = 1, sigma = 2, t = seq(0, 1, l = 201), 
@@ -45,7 +61,6 @@ rdir.pc(n = 5, X.fdata = X.fdata, zero.mean = FALSE)$data[, 1:5]
 set.seed(34567)
 rdir.pc(n = 5, X.fdata = X.fdata, fdata2pc.obj = pc)$data[, 1:5]
 
-\dontrun{
 # Comparison for the variance type
 set.seed(456732)
 n.proj <- 100
@@ -114,5 +129,6 @@ plot(samp5, col = cols[5], lty = 1, main = "Threshold = 0.999")
 }
 }
 \author{
-Eduardo Garcia-Portugues (\email{edgarcia@est-econ.uc3m.es}) and Manuel Febrero-Bande (\email{manuel.febrero@usc.es}).
+Eduardo Garcia-Portugues (\email{edgarcia@est-econ.uc3m.es}) and
+Manuel Febrero-Bande (\email{manuel.febrero@usc.es}).
 }

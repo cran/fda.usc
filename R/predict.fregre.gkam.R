@@ -1,4 +1,5 @@
-################################################################################
+#' @rdname predict.fregre.lm
+#' @export 
 predict.fregre.gkam<-function (object, newx = NULL, type = "response", ...)
 {
     namesx <- names(object$result)

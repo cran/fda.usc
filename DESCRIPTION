@@ -1,14 +1,15 @@
 Package: fda.usc
 Type: Package
 Title: Functional Data Analysis and Utilities for Statistical Computing
-Version: 1.5.0
-Date: 2019-02-01
+Version: 2.0.0
+Date: 2019-11-11
 Authors@R: c(person("Manuel Febrero Bande",role="aut", email = "manuel.febrero@usc.es"), person("Manuel Oviedo de la Fuente",role=c("aut","cre"), email="manuel.oviedo@usc.es"),
              person("Pedro Galeano",role="ctb"),
              person("Alicia Nieto",role="ctb"),
              person("Eduardo Garcia-Portugues",role="ctb"))
-Depends: R (>= 2.10), fda, splines, MASS, mgcv, rpart
-Imports: methods, grDevices, graphics, utils, stats, nlme
+Depends: R (>= 2.10), fda, splines, MASS, mgcv
+Imports: methods, grDevices, graphics, utils, stats, nlme, doParallel,
+        parallel, iterators, foreach
 Description: Routines for exploratory and descriptive analysis of functional data such as depth measurements, atypical curves detection, regression models, supervised classification, unsupervised classification and functional analysis of variance.
 License: GPL-2
 URL: http://www.jstatsoft.org/v51/i04/
@@ -24,5 +25,5 @@ NeedsCompilation: yes
 Repository: CRAN
 Encoding: UTF-8
 RoxygenNote: 6.1.1
-Packaged: 2019-02-01 10:42:04 UTC; moviedo
-Date/Publication: 2019-02-01 13:53:18 UTC
+Packaged: 2019-11-14 20:42:06 UTC; moviedo
+Date/Publication: 2019-11-14 21:40:02 UTC

@@ -1,3 +1,5 @@
+#' @rdname Descriptive
+#' @export
 func.mean.formula<-function(formula, data = NULL,...,drop=FALSE)
 {
  tf <- terms.formula(formula)

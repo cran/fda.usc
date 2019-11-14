@@ -24,21 +24,3 @@ for (i in 1:nlev) out[[lev[i]]]<-fdata(out[[lev[i]]],x$argvals,x$rangeval,x$name
 out
 }
 
-#################################################
-unlist.fdata<-function(x, recursive = TRUE, use.names = TRUE){
-nlev<-length(x)
-lev<-names(x)
-dat<-x[[1]]$data
-arg<-x[[1]]$argvals
-rng<-x[[1]]$rangeval     
-for (i in 2:nlev){
-   dat<-rbind(dat,x[[i]]$data)
-   arg<-rbind(arg,x[[i]]$argvals)   
-   rng<-rbind(rng,x[[i]]$rangeval)      
-}
-if (any(diff(arg))>0 ) stop("Error in argvals")
-if (any(diff(rng))>0 ) stop("Error in rangeval")
-dat<-fdata(dat,arg[1,],rng[1,],x[[1]]$names)
-return(dat)
-}
-

@@ -1,3 +1,65 @@
+#' Summarizes information from fregre.fd objects.
+#' 
+#' Summary function for \code{\link{fregre.pc}}, \code{\link{fregre.basis}},
+#' \code{\link{fregre.pls}}, \code{\link{fregre.np}}\cr and
+#' \code{\link{fregre.plm}} functions.
+#' 
+#' Shows:\cr \tabular{ll}{ \tab -Call.\cr \tab -R squared.\cr \tab -Residual
+#' variance.\cr \tab -Index of possible atypical curves or possible
+#' outliers.\cr \tab -Index of possible influence curves.\cr } If the
+#' \code{fregre.fd} object comes from the \code{\link{fregre.pc}} then shows:
+#' \tabular{ll}{ \tab -Variability of explicative variables explained by
+#' Principal Components.\cr \tab -Variability for each principal components
+#' -PC-.\cr }
+#' 
+#' If draw=TRUE plot: \cr \tabular{ll}{ \tab -y vs y fitted values.\cr \tab
+#' -Residuals vs fitted values.\cr \tab -Standarized residuals vs fitted
+#' values.\cr \tab -Levarage.\cr \tab -Residual boxplot.\cr \tab
+#' -Quantile-Quantile Plot (qqnorm).\cr } If \code{ask}=FALSE draw graphs in
+#' one window, by default. If \code{ask}=TRUE, draw each graph in a window,
+#' waiting to confirm.
+#' 
+#' @aliases summary.fregre.fd print.fregre.fd summary.fregre.lm plot.summary.lm
+#' summary.fregre.igls print.fregre.igls 
+#' @param object Estimated by functional regression, \code{fregre.fd} object.
+#' @param times.influ Limit for detect possible infuence curves.
+#' @param times.sigma Limit for detect possible oultiers or atypical curves.
+#' @param draw =TRUE draw estimation and residuals graphics.
+#' @param \dots Further arguments passed to or from other methods.
+#' @return 
+#' \itemize{
+#' \item {Influence}{ Vector of influence measures.} 
+#' \item {i.influence}{ Index of possible influence curves.} 
+#' \item {i.atypical}{ Index of possible atypical curves or possible outliers.}
+#' }
+#' @author Manuel Febrero-Bande and Manuel Oviedo de la Fuente \email{manuel.oviedo@@usc.es}
+#' @seealso Summary function for \code{\link{fregre.pc}},
+#' \code{\link{fregre.basis}}, \code{\link{fregre.pls}}, \cr
+#' \code{\link{fregre.np}} and \code{\link{fregre.plm}}.
+#' @keywords print
+#' @examples
+#' \dontrun{
+#' # Ex 1. Simulated data
+#' n= 200;tt= seq(0,1,len=101)
+#' x0<-rproc2fdata(n,tt,sigma="wiener")
+#' x1<-rproc2fdata(n,tt,sigma=0.1)
+#' x<-x0*3+x1
+#' beta = tt*sin(2*pi*tt)^2
+#' fbeta = fdata(beta,tt)
+#' y<-inprod.fdata(x,fbeta)+rnorm(n,sd=0.1)
+#' 
+#' # Functional regression
+#' res=fregre.pc(x,y,l=c(1:5))
+#' summary(res,3,ask=TRUE)
+#' 
+#' res2=fregre.pls(x,y,l=c(1:4))
+#' summary(res2)
+#' 
+#' res3=fregre.pls(x,y)
+#' summary(res3)
+#' }
+#' 
+#' @export 
 summary.fregre.fd<-function(object,times.influ=3,times.sigma=3,draw=TRUE,...){
     x<-object$fdataobj$data
     t=object$fdataobj$argvals
@@ -219,8 +281,52 @@ abline(v=times.influ*lim.influ,col=2,lwd=2,lty=2)
 return(invisible(list("Influence"=influence,"i.influence"=i.influence,
 "i.atypical"=i.atypical)))
 }
-##############################################################################
-##############################################################################
+
+
+#' Summarizes information from fregre.gkam objects.
+#' 
+#' Summary function for \code{\link{fregre.gkam}} function.
+#' 
+#' \tabular{ll}{ \tab -Family used.\cr \tab -Number or iteration of algorithm
+#' and if it has converged. \cr \tab -Residual and null deviance.\cr \tab
+#' -Number of data.\cr } Produces a list of summary information for a fitted
+#' fregre.np object for each functional covariate.  \tabular{ll}{ \tab
+#' -Call.\cr \tab -R squared.\cr \tab -Residual variance.\cr \tab -Index of
+#' possible atypical curves or possible outliers.\cr \tab -Index of possible
+#' influence curves.\cr } If draw=TRUE plot: \cr \tabular{ll}{ \tab -y vs y
+#' fitted values.\cr \tab -Residuals vs fitted values.\cr \tab -Residual
+#' boxplot.\cr \tab -Quantile-Quantile Plot (qqnorm).\cr \tab -Plot for a each
+#' single model term.\cr } If \code{ask}=FALSE draw graphs in one window, by
+#' default. If \code{ask}=TRUE, draw each graph in a window, waiting to
+#' confirm.
+#' 
+#' @aliases summary.fregre.gkam print.fregre.gkam
+#' @param object Estimated by functional regression, \code{fregre.fd} object.
+#' @param draw =TRUE draw estimation and residuals graphics.
+#' @param selec Allows the plot for a single model term to be selected for
+#' printing. e.g. if you just want the plot for the second smooth term set
+#' selec=2.  .
+#' @param times.influ Limit for detect possible infuence curves.
+#' @param \dots Further arguments passed to or from other methods.
+#' @author Manuel Febrero-Bande and Manuel Oviedo de la Fuente \email{manuel.oviedo@@usc.es}
+#' @seealso Summary function for \code{\link{fregre.gkam}}.
+#' @keywords print
+#' @examples
+#' \dontrun{
+#' # Time consuming
+#' data(tecator)
+#' ind<-1:129
+#' ab=tecator$absorp.fdata[ind]
+#' ab2=fdata.deriv(ab,2)
+#' yfat=as.integer(cut(tecator$y[ind,"Fat"],c(0,15,100)))-1
+#' xlist=list("df"=data.frame(yfat),"ab2"=ab2,"ab"=ab)
+#' f<-yfat~ab+ab2
+#' res=fregre.gkam(f,data=xlist,family=binomial("logit"),control=list(maxit=2))
+#' summary(res)
+#' res
+#' }
+#' 
+#' @export 
 summary.fregre.gkam<-function(object,draw=TRUE,selec=NULL,times.influ=3,...){
    cat(" *** Summary Functional Data Regression with backfiting algorithm *** \n")
  print(object$family,"\n")
@@ -290,8 +396,6 @@ summary.fregre.gkam<-function(object,draw=TRUE,selec=NULL,times.influ=3,...){
        if (ask) {          par(mfrow=c(1,1))
           }
        else                par(mfrow = c(2,3))
-
-
 # plot(object$fitted.values,y,xlab="Fitted values",main=paste("R-squared=",
 #     round(r.sq,2)))
 col1<-rep(1,n)
@@ -367,8 +471,7 @@ text(influence[i.influence],i.influence,rowname[i.influence],cex=0.7)
 return(invisible(list("Influence"=influence,"object"=object)))
 }
 
-##############################################################################
-##############################################################################
+#' @export 
 print.fregre.gkam<-function(x,digits = max(3, getOption("digits") - 3),...){
  object<-x
  print(object$family,"\n")
@@ -411,8 +514,8 @@ print.fregre.gkam<-function(x,digits = max(3, getOption("digits") - 3),...){
 return(invisible(object))
 }
 
-##############################################################################
-##############################################################################
+
+
 kgam.H<-function(object,inverse="svd") {
 #print("kgam.H")
  lenH<-length(object)
@@ -457,6 +560,3 @@ kgam.H<-function(object,inverse="svd") {
   HH
   }
  }
-##############################################################################
-##############################################################################
- 

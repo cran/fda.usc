@@ -1,24 +1,97 @@
-###############################################################################
-###############################################################################
-# Description
-# Computes functional inear modelusing generalized least squares between functional (and non functional) explanatory variables and scalar response using basis representation.
-# The errors are allowed to be correlated and/or have unequal variances.
-#
-# Arguments
-# model: formula object describing the model.
-# data:  List that containing the variables in the model.
-# basis.x: List of basis for functional explanatory data estimation.
-# basis.b: List of basis for functional beta parameter estimation.
-# rn: List of Ridge parameter.
-# lambda: List of Roughness penalty parameter.
-# weights: an optional varFunc object or one-sided formula describing the within-group heteroscedasticity structure.  Defaults to NULL, corresponding to homoscedastic errors.
-# subset: an optional expression indicating which subset of the rows of data should be used in the fit. 
-# method:	a character string. If "REML" the model is fit by maximizing the restricted log-likelihood. If "ML" the log-likelihood is maximized. Defaults to "REML".
-# control: a list of control values for the estimation algorithm to replace the default values returned by the function glsControl. Defaults to an empty list.
-# verbose: an optional logical value. If TRUE information on the evolution of the iterative algorithm is printed. Default is FALSE.
-# ...: some methods for this generic require additional arguments. None are used in this method.
-###############################################################################
-###############################################################################
+#' Fit Functional Linear Model Using Generalized Least Squares
+#' 
+#' @description This function fits a functional linear model using generalized least
+#' squares. The errors are allowed to be correlated and/or have unequal
+#' variances.
+#' 
+#' @param formula a two-sided linear formula object describing the model, with
+#' the response on the left of a \code{~} operator and the terms, separated by
+#' \code{+} operators, on the right.
+#' @param data an optional data frame containing the variables named in
+#' \code{model}, \code{correlation}, \code{weights}, and \code{subset}. By
+#' default the variables are taken from the environment from which \code{gls}
+#' is called.
+#' @param correlation an optional \code{\link{corStruct}} object describing the
+#' within-group correlation structure. See the documentation of
+#' \code{\link{corClasses}} for a description of the available \code{corStruct}
+#' classes. If a grouping variable is to be used, it must be specified in the
+#' \code{form} argument to the \code{corStruct} constructor. Defaults to
+#' \code{NULL}, corresponding to uncorrelated errors.
+#' @param basis.x List of basis for functional explanatory data estimation.
+#' @param basis.b List of basis for \eqn{\beta(t)} parameter estimation.
+#' @param rn List of Ridge parameter.
+#' @param lambda List of Roughness penalty parameter.
+#' @param weights an optional \code{\link{varFunc}} object or one-sided formula
+#' describing the within-group heteroscedasticity structure. If given as a
+#' formula, it is used as the argument to \code{\link{varFixed}}, corresponding
+#' to fixed variance weights. See the documentation on \code{\link{varClasses}}
+#' for a description of the available \code{\link{varFunc}} classes. Defaults
+#' to \code{NULL}, corresponding to homoscedastic errors.
+#' @param subset an optional expression indicating which subset of the rows of
+#' \code{data} should be used in the fit. This can be a logical vector, or a
+#' numeric vector indicating which observation numbers are to be included, or a
+#' character vector of the row names to be included.  All observations are
+#' included by default.
+#' @param method a character string.  If \code{"REML"} the model is fit by
+#' maximizing the restricted log-likelihood.  If \code{"ML"} the log-likelihood
+#' is maximized.  Defaults to \code{"REML"}.
+#' @param control a list of control values for the estimation algorithm to
+#' replace the default values returned by the function
+#' \code{\link{glsControl}}.  Defaults to an empty list.
+#' @param verbose an optional logical value. If \code{TRUE} information on the
+#' evolution of the iterative algorithm is printed. Default is \code{FALSE}.
+#' @param criteria GCCV criteria, see \code{\link{GCCV.S}}.
+#' @param \dots some methods for this generic require additional arguments.
+#' None are used in this methodl.
+#' @return an object of class \code{"gls"} representing the functional linear
+#' model fit. Generic functions such as \code{print}, \code{plot}, and
+#' \code{summary} have methods to show the results of the fit.\cr 
+#' See \code{\link{glsObject}} for the components of the fit. The functions
+#' \code{\link{resid}}, \code{\link{coef}} and \code{\link{fitted}}, can be
+#' used to extract some of its components.\cr 
+#' Beside, the class(z) is "gls", "lm" and "fregre.lm" with the following
+#' objects: 
+#' \itemize{
+#' \item \code{sr2}{ Residual variance.} 
+#' \item \code{Vp}{ Estimated covariance matrix for the parameters.} 
+#' \item \code{lambda}{ A roughness penalty.}
+#' \item \code{basis.x}{ Basis used for \code{fdata} or \code{fd} covariates.}
+#' \item \code{basis.b}{ Basis used for beta parameter estimation.} 
+#' \item \code{beta.l}{ List of estimated beta parameter of functional covariates.} 
+#' \item \code{data}{ List that containing the variables in the model.} 
+#' \item \code{formula}{ formula used in ajusted model.} 
+#' \item \code{formula.ini}{ formula in call.}
+#' \item \code{W}{ inverse of covariance matrix} 
+#' \item \code{correlation}{ See glsObject for the components of the fit. }
+#' }
+#' @references Oviedo de la Fuente, M., Febrero-Bande, M., Pilar Munoz, and
+#' Dominguez, A. Predicting seasonal influenza transmission using Functional
+#' Regression Models with Temporal Dependence. arXiv:1610.08718.
+#' \url{https://arxiv.org/abs/1610.08718}
+#' @keywords regression models
+#' @examples
+#' \dontrun{ 
+#' data(tecator)
+#' x=tecator$absorp.fdata
+#' x.d2<-fdata.deriv(x,nderiv=)
+#' tt<-x[["argvals"]]
+#' dataf=as.data.frame(tecator$y)
+#' 
+#' # plot the response
+#' plot(ts(tecator$y$Fat))
+#' 
+#' nbasis.x=11;nbasis.b=7
+#' basis1=create.bspline.basis(rangeval=range(tt),nbasis=nbasis.x)
+#' basis2=create.bspline.basis(rangeval=range(tt),nbasis=nbasis.b)
+#' basis.x=list("x.d2"=basis1)
+#' basis.b=list("x.d2"=basis2)
+#' ldata=list("df"=dataf,"x.d2"=x.d2)
+#' res.gls=fregre.gls(Fat~x.d2,data=ldata, correlation=corAR1(),
+#'                    basis.x=basis.x,basis.b=basis.b)
+#' summary(res.gls)                   
+#' }
+#' @rdname fregre.gls
+#' @export
 fregre.gls<-function(formula,data,correlation = NULL,
 basis.x=NULL,basis.b=NULL,rn,lambda,weights=NULL,subset, 
 method = c("REML", "ML"),control = list(),verbose = FALSE, criteria="GCCV1",...){
@@ -341,7 +414,6 @@ if (length(vfunc)>0) {
 ################################################################################
 ################################################################################           
 #      H<-scores%*%Cinv
-#      df<-traza(H)
       coefs<-drop(coefs)
 #      z$coefficients<-coefs
       z$mean.list<-mean.list
@@ -433,9 +505,7 @@ for (i in 1:length(vfunc)) {
  z$vs.list=vs.list   
  z$correlation<-correlation
 
- class(z)<-c("gls","lm","fregre.lm")
+ class(z)<-c("fregre.gls","gls","lm")
  z
 }     
-###############################################################################
-###############################################################################
- 
+

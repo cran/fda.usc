@@ -1,3 +1,46 @@
+#' @title Subsetting
+#' 
+#' @description Return subsets of \code{fdata} which meet conditions.
+#' 
+#' @param x object to be subsetted (\code{fdata} class).
+#' @param subset logical expression indicating elements or rows to keep.
+#' @param select logical expression indicating points or columns to keep.
+#' @param drop passed on to \code{[} indexing operator.
+# @param list() further arguments to be passed to or from other methods.
+#' @param \dots Further arguments passed to or from other methods.
+#' 
+#' @return An object similar to \code{x} contain just the selected elements.
+#' 
+#' @seealso See \code{\link{subset}} and \code{\link{fdata}}.
+#' 
+#' @rdname subset.fdata
+#' @export
+subset.fdata<-function(x,subset,select,drop=TRUE,...){
+  if (!is.fdata(x)) stop("No fdata class object")
+  if (missing(select) & missing(subset)) stop("You must specify at least the argument 'subset' or 'select'")
+  if (missing(subset)) subset<-!logical(nrow(x$data))
+  range<-TRUE
+  if (missing(select)) {
+    range<-FALSE
+    select<-1:ncol(x$data)
+  }
+  if (is.numeric(subset)) {
+    subset2<-logical(nrow(x$data))
+    subset2[subset]<-TRUE
+    subset<-subset2    
+  }
+  newx<-x
+  newx$data<-subset(x$data,subset,select,drop=drop,...)
+  #print(select)
+  newx$argvals<-newx$argvals[select]
+  if (range) newx$rangeval<-c(min(newx$argvals),max(newx$argvals))
+  return(invisible(newx))
+}
+################################################################################
+################################################################################
+
+
+
 ################################################################################
 ################################################################################
 plot.lfdata<-function(lfdata,ask=FALSE,color,...){
@@ -34,42 +77,52 @@ plot.lfdata<-function(lfdata,ask=FALSE,color,...){
   
 }
 ################################################################################
+is.lfdata=function(lfdata){
+n=nrow(lfdata[[1]])
+lo1=all(unlist(lapply(lfdata,nrow))==n)
+if (!lo1) warning("The number of rows are different")
+lo2=all(unlist(lapply(lfdata,is.fdata)))
+if (!lo2) warning("Not all components are fdata")
+return( lo1 & lo2 )
+}
 ################################################################################
-#plot.lfdata(ab,col=color,lwd=2)
-#el color puede ser un alista para cada fdata o un vector el mismo para todos
-#plot.lfdata(ab)
+"[.ldata"=function(ldata,i){
+if (missing(i)) return(ldata)
+for (m in seq_along(ldata)){
+if (class(ldata[[m]])=="data.frame") {ldata[[m]]=ldata[[m]][i,]} else {ldata[[m]]=ldata[[m]][i]}
+}
+return(ldata)
+}
 ################################################################################
-subset.lfdata<-function(x,subset,select,drop=TRUE,...){
+"[.lfdata"=function(lfdata,i){
+if (missing(i)) return(lfdata)
+res=lapply(lfdata,"[",i)
+class(res)="lfdata"
+return(res)
+}
+################################################################################
+subset.lfdata<-function(x,subset,...){
   #if (any(class(x)!="lfdata")) stop("No list class object")
   nvar<-length(x)
+  namx=names(x)
+  if (missing(subset)) subset<-!logical(nrow(x[[1]]))
+  if (is.numeric(subset) & max(subset)<nrow(x[[1]])) {
+    subset2<-logical(nrow(x[[1]]))
+    subset2[subset]<-TRUE
+    subset<-subset2    
+  }  
   newx<-x
   for (i in 1:nvar){
-    newx[[i]]<-subset.fdata(x[[i]],subset,select,drop,...)   
+	if (is.fdata(x[[i]])) {
+    newx[[i]]<-subset.fdata(x[[i]],subset,...)
+		} else {
+	newx[[i]]<-subset(x[[i]],subset,...)	
+		}
   } 
   return(invisible(newx))
 }
 ################################################################################
+
 ################################################################################
-subset.fdata<-function(x,subset,select,drop=TRUE,...){
-  if (!is.fdata(x)) stop("No fdata class object")
-  if (missing(select) & missing(subset)) stop("You must specify at least the argument 'subset' or 'select'")
-  if (missing(subset)) subset<-!logical(nrow(x$data))
-  range<-TRUE
-  if (missing(select)) {
-    range<-FALSE
-    select<-1:ncol(x$data)
-  }
-  if (is.numeric(subset)) {
-    subset2<-logical(nrow(x$data))
-    subset2[subset]<-TRUE
-    subset<-subset2    
-  }
-  newx<-x
-  newx$data<-subset(x$data,subset,select,drop=drop,...)
-  #print(select)
-  newx$argvals<-newx$argvals[select]
-  if (range) newx$rangeval<-c(min(newx$argvals),max(newx$argvals))
-  return(invisible(newx))
-}
-################################################################################
-################################################################################
+
+

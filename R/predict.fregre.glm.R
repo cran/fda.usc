@@ -1,3 +1,6 @@
+# @S3method predict fregre.glm
+#' @rdname predict.fregre.lm
+#' @export 
 predict.fregre.glm<-function(object,newx=NULL,type="response",...){
  if (is.null(object)) stop("No fregre.glm object entered")
  if (is.null(newx)) {
@@ -106,8 +109,7 @@ if (length(vfunc)>0)  {
       }
        if (first) {    XX=Z;              first=FALSE         }
        else XX = cbind(XX, Z)
-           }
-          else stop("Please, enter functional covariate")
+           }#          else stop("Please, enter functional covariate")
        }  }
 
         

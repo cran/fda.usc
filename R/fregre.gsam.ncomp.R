@@ -1,11 +1,11 @@
 ##############################################
-# funcion interna (no tienen predict)
+# Internal function (without predict)
 ##############################################
 fregre.gsam.ncomp<-function(form.ini,data,y,covar,alpha=0.05,
                         type.basis="pc",ncomp=8,
                         par.basis=list(),
                         kbs=-1,#por omision, family=gaussian()
-                        criterio="sp",fac=1.05
+                        criterio="sp",fac=1.01
                         ){
 #print("entra ncomp")  
   pc.opt<-0

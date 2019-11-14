@@ -1,6 +1,76 @@
-rproc2fdata=function(n,t=NULL,mu=rep(0,length(t)),sigma=1,
+#' @title Simulate several random processes.
+#' 
+#' @description Simulate Functional Data from different processes: Ornstein Uhlenbeck,
+#' Brownian, Fractional Brownian, Gaussian or Exponential variogram.
+#' 
+#' @param n Number of functional curves to be generated.
+#' @param t Discretization points.
+#' @param mu \code{vector} which specifies the trend values at the
+#' discretization points, by default \code{mu}=\eqn{\mu(t)=0}.  If \code{mu} is
+#' a \code{fdata} class object, \code{t}\eqn{=}\code{argvals(mu)}.
+#' @param sigma A positive-definite symmetric matrix,
+#' \eqn{\Sigma_{s,t}}{\Sigma}, specifying the covariance matrix among grid
+#' points.  If \code{sigma} is a \code{scalar}, creates a random Gaussian
+#' process with \eqn{\Sigma_{s,t}=}{\Sigma=}\code{sigmaI} (by default
+#' \code{sigma=1}).\cr If \code{sigma} is a \code{vector}, creates a random
+#' Gaussian process with \eqn{\Sigma_{s,t}=}{\Sigma=}\code{diag(sigma)}.\cr If
+#' \code{sigma} is a character: create a random process using the covariance
+#' matrix \eqn{\Sigma_{s,t}}{\Sigma} indicated in the argument, \itemize{ \item
+#' \code{"OU"} or \code{"OrnsteinUhlenbeck"}, creates a random Ornstein
+#' Uhlenbeck process with
+#' \eqn{\Sigma_{s,t}=\frac{\sigma^2}{2\theta}e^{-\theta\left(s+t\right)}
+#' \left(e^{2\theta\left(s+t\right)}-1\right)}{\Sigma(s,t)=\sigma^2/\theta
+#' exp(-\theta(s+t))(exp(2\theta(s+t)-1))}, by default
+#' \eqn{\theta=1/(3range(t))}{\theta=1/(3range(t))},
+#' \eqn{\sigma^2={1}}{\sigma^2=1}.  \item \code{"brownian"} or \code{"wiener"},
+#' creates a random Wiener process with \eqn{\Sigma_{s,t}=\sigma^2
+#' min(s,t)}{\Sigma(s,t)=\sigma^2 min(s,t)}, by default
+#' \eqn{\sigma^2=1}{\sigma^2=1}. \item \code{"fbrownian"}, creates a random
+#' fractional brownian process with
+#' \eqn{\Sigma_{s,t}=\sigma^{2H}/2{|s|^{2H}+|t|^{2H}-|s-t|^{2H}}}{\Sigma(s,t)=\sigma^{2H}/2{|s|^{2H}+|t|^{2H}-|s-t|^{2H}}},
+#' by default \eqn{\sigma^2=1}{\sigma^2=1} and \eqn{H=0.5}{H=0.5} (brownian
+#' process).  \item \code{"vexponential"}, creates a random gaussian process
+#' with exponential variogram \eqn{\Sigma_{s,t}=\sigma^2
+#' e^{\left(-\frac{\left|s-t\right|}{\theta}\right)}}{\Sigma=\sigma^2
+#' exp(-|s-t|/\theta )}, by default \eqn{\theta={0.2
+#' range(t)}}{\theta=.2*range(t)}, \eqn{\sigma^2={1}}{\sigma^2=1}. }
+#' @param par.list List of parameter to process, by default \code{"scale"}
+#' \eqn{\sigma^2=1}{\sigma^2=1}, \code{"theta"} \eqn{\theta=0.2
+#' range(t)}{\theta=0.2 range(t)} and \code{"H"}=0.5.
+#' @param norm If \code{TRUE} the norm of random projection is 1. Default is
+#' \code{FALSE}
+#' @param verbose If \code{TRUE}, information about procedure is printed.
+#' Default is \code{FALSE}.
+#' @param \dots Further arguments passed to or from other methods.
+#' 
+#' @return Return the functional random processes as a \code{fdata} class
+#' object.
+#' 
+#' @author Manuel Febrero-Bande, Manuel Oviedo de la Fuente
+#' \email{manuel.oviedo@@usc.es}
+#' 
+#' @keywords datagen
+#' 
+#' @examples
+#' \dontrun{
+#' par(mfrow=c(3,2))
+#' lent<-30
+#' tt<-seq(0,1,len=lent)
+#' mu<-fdata(rep(0,lent),tt)
+#' plot(rproc2fdata(200,t=tt,sigma="OU",par.list=list("scale"=1)))
+#' plot(rproc2fdata(200,mu=mu,sigma="OU",par.list=list("scale"=1)))
+#' plot(rproc2fdata(200,t=tt,sigma="vexponential"))
+#' plot(rproc2fdata(200,t=tt,sigma=1:lent))
+#' plot(rproc2fdata(200,t=tt,sigma="brownian"))
+#' plot(rproc2fdata(200,t=tt,sigma="wiener"))
+#' #plot(rproc2fdata(200,seq(0,1,len=30),sigma="oo")) # this is an error 
+#' }
+#' 
+#' @rdname rproc2fdata
+#' @export
+rproc2fdata=function(n, t=NULL, mu=rep(0,length(t)), sigma=1,
                      par.list=list("scale"=1,"theta"=.2*diff(rtt),"H"=.5),
-                     norm=FALSE,verbose=FALSE,...) {
+                     norm=FALSE, verbose=FALSE,...) {
 sigma2<-sigma
 if (is.fdata(mu)){   
   if (!is.null(t) & verbose) warnings("The argvals of argument t are ignored, the function uses the argvals(mu)")
@@ -62,38 +132,4 @@ else{
 }
 return(X)
 }
-
-#{#rgenfdata
-rcombfdata=function(n = 10, fdataobj, mu,
-                    sdarg = rep(1,nrow(fdataobj)),
-                    norm = 1){
-  if (class(fdataobj)!="fdata") 
-    stop("Argument fdataobj must be of class fdata")
-  tt <- argvals(fdataobj)
-  if (missing(mu)) 
-    mu=fdata(rep(0,ncol(fdataobj)),argvals=tt)
-  nr=nrow(fdataobj)
-  xx=matrix(rnorm(n*nr),ncol=nr)
-  xx=sweep(xx,1,apply(xx,1,function(v){sqrt(sum(v^2))})/norm,"/")
-  xx=sweep(xx,2,sdarg,"*")
-  res=xx%*%fdataobj[["data"]]
-  res=fdata(sweep(res,2,mu[["data"]],"+"),argvals=tt)
-  return(res)
-}
-#}
-
-#{#gridfdata
-gridfdata=function(coef,fdataobj,mu){
-  if (class(fdataobj)!="fdata") stop("Argument fdataobj must be of class fdata")
-  nr=nrow(fdataobj)
-  tt <- argvals(fdataobj)
-  if (missing(mu)) 
-    mu=fdata(rep(0,ncol(fdataobj)),argvals=tt)  
-  coef=as.matrix(coef)
-  if (ncol(coef)!=nr) stop("Argument coef must be a matrix with ncol(coef)==nrow(fdataobj)")
-  res=coef%*%fdataobj[["data"]]
-  res=fdata(sweep(res,2,mu[["data"]],"+"),argvals=tt)
-  return(res)
-}
-#}
 

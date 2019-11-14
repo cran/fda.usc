@@ -1,3 +1,204 @@
+#' DD-Classifier Based on DD-plot
+#' 
+#' @description Fits Nonparametric Classification Procedure Based on DD--plot
+#' (depth-versus-depth plot) for G dimensions (\eqn{G=g\times h}{G=g x p}, g
+#' levels and p data depth).
+#' 
+#' Make the group classification of a training dataset using DD-classifier
+#' estimation in the following steps.\cr
+#' 
+#' \enumerate{ 
+#' \item The function computes the selected \code{depth} measure of
+#' the points in \code{fdataobj} w.r.t. a subsample of each g level group and p
+#' data dimension (\eqn{G=g \times p}{G=g x p}).  The user can be specify the
+#' parameters for depth function in \code{par.depth}.
+#' 
+#' (i) Type of depth function from functional data, see \code{\link{Depth}}:
+#' \itemize{ 
+#' \item \code{"FM"}: Fraiman and Muniz depth.  
+#' \item \code{"mode"}: h--modal depth. 
+#' \item \code{"RT"}: random Tukey depth. 
+#' \item \code{"RP"}: random project depth.
+#' \item \code{"RPD"}: double random project depth.
+#'   }
+#' (ii) Type of depth function from multivariate functional data, see \code{\link{depth.mfdata}}:
+#' \itemize{ 
+#' \item \code{"FMp"}: Fraiman and Muniz depth with common support.
+#' Suppose that all p--fdata objects have the same support (same rangevals),
+#' see \code{\link{depth.FMp}}.  
+#' \item \code{"modep"}: h--modal depth using a p--dimensional metric, see \code{\link{depth.modep}}.
+#' \item \code{"RPp"}: random project depth using a p--variate depth with the
+#' projections, see \code{\link{depth.RPp}}.  
+#' }
+#' 
+#' If the procedure requires to compute a distance such as in \code{"knn"} or \code{"np"} classifier or
+#' \code{"mode"} depth, the user must use a proper distance function:
+#' \code{\link{metric.lp}} for functional data and \code{\link{metric.dist}}
+#' for multivariate data.
+#' 
+#' (iii) Type of depth function from multivariate data, see
+#' \code{\link{Depth.Multivariate}}: 
+#' \itemize{ 
+#' \item \code{"SD"}: Simplicial depth (for bivariate data).  
+#' \item \code{"HS"}: Half-space depth.  
+#' \item \code{"MhD"}: Mahalanobis depth.
+#' \item \code{"RD"}: random projections depth. 
+#' \item \code{"LD"}: Likelihood depth.  
+#' }
+#' 
+#' \item The function calculates the misclassification rate based on data depth
+#' computed in step (1) using the following classifiers.
+#' 
+#' \itemize{ 
+#' \item \code{"MaxD"}: Maximum depth.  
+#' \item \code{"DD1"}: Search the best separating polynomial of degree 1.  
+#' \item \code{"DD2"}: Search the best separating polynomial of degree 2.
+#' \item \code{"DD3"}: Search the best separating polynomial of degree 3.
+#' \item \code{"glm"}: Logistic regression is computed using Generalized Linear Models
+#'  \code{\link{classif.glm}}.  
+#' \item \code{"gam"}: Logistic regression is computed using Generalized Additive Models
+#'  \code{\link{classif.gsam}}.
+#' \item \code{"lda"}: Linear Discriminant Analysis is computed using
+#' \code{\link{lda}}. 
+#' \item \code{"qda"}: Quadratic Discriminant Analysis is computed using \code{\link{qda}}.  
+#' \item \code{"knn"}: k-Nearest Neighbour classification is computed using \code{\link{classif.knn}}.  
+#' \item \code{"np"}: Non-parametric Kernel classifier is computed using
+#' \code{\link{classif.np}}.  
+#' }
+#' The user can be specify the parameters for classifier function in \code{par.classif} such as the smoothing parameter
+#' \code{par.classif[[``h'']]}, if \code{classif="np"} or the k-Nearest
+#' Neighbour \code{par.classif[[``knn'']]}, if \code{classif="knn"}.
+#' 
+#' In the case of polynomial classifier (\code{"DD1"}, \code{"DD2"} and
+#' \code{"DD3"}) uses the original procedure proposed by Li et al. (2012), by
+#' defalut rotating the DD-plot (to exchange abscise and ordinate) using in
+#' \code{par.classif} argument \code{rotate=TRUE}. Notice that the maximum
+#' depth classifier can be considered as a particular case of DD1, fixing the
+#' slope with a value of 1 (\code{par.classif=list(pol=1)}).
+#' 
+#' The number of possible different polynomials depends on the sample size
+#' \code{n} and increases polynomially with order \eqn{k}. In the case of
+#' \eqn{g} groups, so the procedure applies some multiple-start optimization
+#' scheme to save time:
+#' 
+#' \itemize{
+#' 
+#' \item generate all combinations of the elements of n taken k at a time:
+#' \eqn{g \times combn(N,k)}{g x combs(N, k)} candidate solutions, and, when
+#' this number is larger than \code{nmax=10000}, a random sample of
+#' \code{10000} combinations.
+#' 
+#' \item smooth the empirical loss with the logistic function
+#' \eqn{1/(1+e^{-tx})}{1/(1+e^{- tt x})}. The classification rule is
+#' constructed optimizing the best \code{noptim} combinations in this random
+#' sample (by default \code{noptim=1} and \code{tt=50/range(depth values)}).
+#' Note that Li et al.  found that the optimization results become stable for
+#' \eqn{t \in [50, 200]}{t between [50, 200]} when the depth is standardized
+#' with upper bound 1.  } The original procedure (Li et al. (2012)) not need to
+#' try many initial polynomials (\code{nmax=1000}) and that the procedure
+#' optimize the best (\code{noptim=1}), but we recommended to repeat the last
+#' step for different solutions, as for example \code{nmax=250} and
+#' \code{noptim=25}. User can change the parameters \code{pol}, \code{rotate},
+#' \code{nmax}, \code{noptim} and \code{tt} in the argument \code{par.classif}.
+#' 
+#' The \code{classif.DD} procedure extends to multi-class problems by
+#' incorporating the method of \emph{majority voting} in the case of polynomial
+#' classifier and the method \emph{One vs the Rest} in the logistic case
+#' (\code{"glm"} and \code{"gam"}).
+#' }
+#' 
+#' @param group Factor of length \emph{n} with \emph{g} levels.
+#' @param fdataobj \code{\link{data.frame}}, \code{\link{fdata}} or \code{list}
+#' with the multivariate, functional or both covariates respectively.
+#' @param depth Character vector specifying the type of depth functions to use,
+#' see \code{Details}.
+#' @param classif Character vector specifying the type of classifier method to
+#' use, see \code{Details}.
+#' @param w Optional case weights, weights for each value of \code{depth}
+#' argument, see \code{Details}.
+#' @param par.depth List of parameters for \code{depth} function.
+#' @param par.classif List of parameters for \code{classif} procedure.
+#' @param control List of parameters for controlling the process.
+#' 
+#' If \code{verbose=TRUE}, report extra information on progress.
+#' 
+#' If \code{draw=TRUE} print DD-plot of two samples based on data depth.
+#' 
+#' \code{col}, the colors for points in DD--plot.
+#' 
+#' \code{alpha}, the alpha transparency used in the background of DD--plot, a
+#' number in [0,1].
+#' @return \itemize{
+#' \item \code{group.est} {Estimated vector groups by classified method
+#' selected.}  
+#' \item \code{misclassification} { Probability of misclassification.} 
+#' \item \code{prob.classification} { Probability of correct classification by group level.} 
+#' \item  \code{dep} { Data frame with the depth of the curves for functional data (or points for multivariate data) in
+#' \code{fdataobj} w.r.t. each \code{group} level.} 
+#' \item \code{depth} { Character vector specifying the type of depth functions used.} 
+#' \item \code{par.depth} { List of parameters for \code{depth} function.} 
+#' \item \code{classif} { Type of classifier used.} 
+#' \item \code{par.classif}{ List of parameters for \code{classif} procedure.}
+#' \item \code{w}{ Optional case weights.} 
+#' \item \code{fit}{ Fitted object by \code{classif} method using the depth as covariate.}
+#' }
+#' @author This version was created by Manuel Oviedo de la Fuente and Manuel
+#' Febrero Bande and includes the original version for polynomial classifier
+#' created by Jun Li, Juan A. Cuesta-Albertos and Regina Y. Liu.
+#' 
+#' @seealso See Also as \code{\link{predict.classif.DD}}
+#' @references 
+#' Cuesta-Albertos, J.A., Febrero-Bande, M. and Oviedo de la Fuente, M.
+#' \emph{The DDG-classifier in the functional setting}, (2017). Test, 26(1),
+#' 119-142. DOI: \url{https://doi.org/10.1007/s11749-016-0502-6}.
+#' @keywords classif
+#' @examples
+#' \dontrun{
+#' # DD-classif for functional data
+#' data(tecator)
+#' ab=tecator$absorp.fdata
+#' ab1=fdata.deriv(ab,nderiv=1)
+#' ab2=fdata.deriv(ab,nderiv=2)
+#' gfat=factor(as.numeric(tecator$y$Fat>=15))
+#' 
+#' # DD-classif for p=1 functional  data set
+#' out01=classif.DD(gfat,ab,depth="mode",classif="np")
+#' out02=classif.DD(gfat,ab2,depth="mode",classif="np")
+#' # DD-plot in gray scale
+#' ctrl<-list(draw=T,col=gray(c(0,.5)),alpha=.2)
+#' out02bis=classif.DD(gfat,ab2,depth="mode",classif="np",control=ctrl)
+#' 
+#' # 2 depth functions (same curves) 
+#' out03=classif.DD(gfat,list(ab2,ab2),depth=c("RP","mode"),classif="np")
+#' # DD-classif for p=2 functional data set
+#' ldata<-list("ab"=ab,"ab2"=ab2)
+#' # Weighted version 
+#' out04=classif.DD(gfat,ldata,depth="mode",classif="np",w=c(0.5,0.5))
+#' # Model version
+#' out05=classif.DD(gfat,ldata,depth="mode",classif="np")
+#' # Integrated version (for multivariate functional data)
+#' out06=classif.DD(gfat,ldata,depth="modep",classif="np")
+#' 
+#' # DD-classif for multivariate data
+#' data(iris)
+#' group<-iris[,5]
+#' x<-iris[,1:4]
+#' out10=classif.DD(group,x,depth="LD",classif="lda")
+#' summary(out10)
+#' out11=classif.DD(group,list(x,x),depth=c("MhD","LD"),classif="lda")
+#' summary(out11)
+#' 
+#' # DD-classif for functional data: g levels 
+#' data(phoneme)
+#' mlearn<-phoneme[["learn"]]
+#' glearn<-as.numeric(phoneme[["classlearn"]])-1
+#' out20=classif.DD(glearn,mlearn,depth="FM",classif="glm")
+#' out21=classif.DD(glearn,list(mlearn,mlearn),depth=c("FM","RP"),classif="glm")
+#' summary(out20)
+#' summary(out21)
+#' }
+#' 
+#' @export
 classif.DD <- function(group,fdataobj,depth="FM",classif="glm",w,
                        par.classif=list(),par.depth=list(),
                        control=list(verbose=FALSE,draw=TRUE,col=NULL,alpha=.25)){
@@ -15,6 +216,7 @@ classif.DD <- function(group,fdataobj,depth="FM",classif="glm",w,
   if (is.null(control$draw))  control$draw<-TRUE
   if (is.null(control$fine))  control$fine<-100
   if (is.null(control$alpha))  control$alpha<-0.25
+  if (is.null(control$prob))  control$prob<-0.5
   #  if (is.null(control$bg))  control$bg<-"white"
   # if (is.null(control$gray.scale))  control$gray.scale=FALSE
   classif0<-classif
@@ -65,7 +267,6 @@ classif.DD <- function(group,fdataobj,depth="FM",classif="glm",w,
   if (missing(w)) {
     if (depth[1] %in% c("RPp","FMp","modep"))   {
       model=FALSE
-      ################################################################################
       # integrated version modal
       multi<-TRUE
       depth0<-depth
@@ -77,20 +278,19 @@ classif.DD <- function(group,fdataobj,depth="FM",classif="glm",w,
         #     if (is.null(par.depth$par.metric$dscale)) par.depth$par.metric$dscale=
         if (ismdist)    mdist<-par.depth$metric
         else {#calculo  distancas para pasar el mismo h en todos
-          par.depth$lfdata<-par.depth$lfdataref<-ldata
+          par.depth$mfdata<-par.depth$mfdataref<-ldata
           oo<-do.call("depth.modep",par.depth)
           #           mdist<-oo$mdist
           par.depth$h<-oo$hq 
           #           ismdist<-TRUE
           hq<-rep(oo$hq,len=ng)
         }
-        
         fdataobj<-ldata[[1]]
-        par.depth$lfdata<-ldata
+        par.depth$mfdata<-ldata
         for (i in 1:ng) {       
           ind[,i]<-group==lev[i]
           nam<-c(nam,paste("depth ",lev[i],sep=""))
-          par.depth$lfdataref<-c.ldata(ldata,ind[,i]) 
+          par.depth$mfdataref<-c.ldata(ldata,ind[,i]) 
           if (ismdist)  par.depth$metric<-mdist[,ind[,i],]
           oo<-do.call("depth.modep",par.depth)        
           par.depth$par.metric<-oo$par.metric
@@ -101,14 +301,14 @@ classif.DD <- function(group,fdataobj,depth="FM",classif="glm",w,
         par.depth$h<-hq
       } 
       if (depth[1] %in% c("FMp","RPp")){ 
-        par.depth$lfdata<-ldata
+        par.depth$mfdata<-ldata
         fdataori<-ldata
         nam.depth<-paste("depth.",depth[1],sep="")  
         for (i in 1:ng) {
           ind[,i]<-group==lev[i]
           fdataori<-c.ldata(ldata,ind[,i]) 
           nam<-c(nam,paste("depth ",lev[i],sep=""))
-          par.depth$lfdataref<-fdataori 
+          par.depth$mfdataref<-fdataori 
           oo<-do.call(nam.depth,par.depth)
           Df[,i]<-oo$dep
           if (depth[1]=="RPp")  {par.depth$proj<-oo$proj     }
@@ -126,8 +326,7 @@ classif.DD <- function(group,fdataobj,depth="FM",classif="glm",w,
       w<-rep(1/lenlista,len=lenlista)
       ng2<-ng*lenlista
       model<-TRUE
-    }     
-    
+    }   
   }
   if (!integrated){
     lenpesos<-length(w)
@@ -242,6 +441,8 @@ classif.DD <- function(group,fdataobj,depth="FM",classif="glm",w,
     else {
       rg<-range(Df)
       dff<-diff(rg)*.03
+      # 2019/05/02
+      #dff<-diff(rg)*.1
       minsq<-max(0,rg[1]-dff)
       maxsq<-rg[2]+dff 
       sq<-seq(minsq,maxsq,len=control$fine)
@@ -531,9 +732,6 @@ classif.DD <- function(group,fdataobj,depth="FM",classif="glm",w,
                  for(i in 1:nmax)      combs1<-rbind(combs1,sample(n0,3))
                  if (control$verbose & nmax<nsample) warning("The number of polynomials considered is too large ",nsample,", the function search is a subsample of size, nmax=50000")
                }   
-               
-               
-               
                if (noptim!=nmax) {
                  mcrs <- apply(combs1,1, quad.fit0, dep=Df,ind=ind)    
                  ioptim<-order(mcrs)[1:noptim]
@@ -880,9 +1078,10 @@ classif.DD <- function(group,fdataobj,depth="FM",classif="glm",w,
            group.est<-func.clas$group.est
            mis<-mean(group.est!=group)
            if (draw & ng2<=2) {
-             bb2<-as.numeric(predict.classif(func.clas,vec))}
+             bb2<-as.numeric(predict.classif(func.clas,vec))
+             }
          },
-         tree={
+         rpart={
            dat<-data.frame(group,Df)
            names(dat)<-c("group1",nam2)
            par.classif$formula<-formula(paste("group1~",names(dat)[-1]))
@@ -902,6 +1101,7 @@ classif.DD <- function(group,fdataobj,depth="FM",classif="glm",w,
            par.classif$fdataobj<-dat
            par.classif$group<-group
            func.clas<-do.call("classif.glm2boost",par.classif)
+#print(length(func.clas$fit))           
            group.est<-factor(func.clas$group.est,levels=lev)
            mis<-mean(group.est!=group)
            if (draw & ng2<=2) {
@@ -915,7 +1115,8 @@ classif.DD <- function(group,fdataobj,depth="FM",classif="glm",w,
            nam.classif<-paste("classif.",classif,sep="")
            par.classif$fdataobj<-dat
            par.classif$group<-group                    
-           if (is.null(par.classif$family)) par.classif$family<-binomial()
+           #if (is.null(par.classif$family)) par.classif$family<-binomial()
+           
            func.clas<-do.call("classif.gsam2boost",par.classif)
            group.est<-func.clas$group.est
            incorrect<-group.est!=group
@@ -934,7 +1135,7 @@ classif.DD <- function(group,fdataobj,depth="FM",classif="glm",w,
     }
     else tit<-control$main   
     incorrect<-group!=group.est
-    if (ng2>2) {    
+    if (ng2>2) {
       bg1<-col1[group]
       bg1[!incorrect] <-0
       #       if (!control$gray.scale)               col2<-col1[group]       
@@ -1005,9 +1206,6 @@ classif.DD <- function(group,fdataobj,depth="FM",classif="glm",w,
         }
         else   izona<-izona+1
       }        
-      
-      #xjust=0,yjust=0,      #pt.cex=2,
-      
       legend(xleg2,yleg2, title="Class Rule ",fill=fill1,legend=lev,border=1, pt.bg=col2,
              horiz=FALSE,cex=0.8,title.adj=0.5,xjust=0,yjust=0,box.col=control$box.col,bg=control$bg)             
       #     palette("default")
@@ -1019,8 +1217,11 @@ classif.DD <- function(group,fdataobj,depth="FM",classif="glm",w,
   output<-list("group.est"=group.est,"misclassification"=mis,
                "prob.classification"=prob.classification,"dep"=Df,"depth"=depthl,
                "par.depth"=par.ldata,"classif"=classif,"par.classif"=par.classif,"w"=w,
-               "group"=group,"fdataobj"=fdataobj,C=C,"fit"=func.clas,"model"=model,multi=multi,ldata=ldata)
-  class(output)=c("classif.DD","classif")
+               "group"=group,"fdataobj"=fdataobj,C=C,
+               "model"=model,multi=multi,ldata=ldata
+               ,prob=control$prob)
+
+  output$fit<-func.clas
+  class(output)="classif"
   return(output)
 }
-###########################################################################################################################

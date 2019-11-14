@@ -1,3 +1,5 @@
+#' @rdname predict.fregre.lm
+#' @export 
 predict.fregre.plm<-function(object,newx=NULL,...){
  if (is.null(object)) stop("No fregre.plm object entered")
  if (is.null(newx)) {

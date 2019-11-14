@@ -65,49 +65,48 @@ plot.mdepth<-function(x, trim,  levgray=.9,...){
 #################################################################################
 plot.depth<-function(x,trim, levgray=.9,...){
   dep <- x
-  if (missing(trim)) trim<-dep$trim
+  if (missing(trim)) 
+    trim<-dep$trim
   x <- dep$fdataobj
   y <- dep$fdataori
 
 	if (class(dep)=="depth"){
-	name=dep$name
-	mtrim=dep$mtrim
-	nl=nrow(mtrim)
-	med=dep$median
-	dep=dep$dep
-	} else{
+  	name=dep$name
+  	mtrim=dep$mtrim
+  	nl=nrow(mtrim)
+  	med=dep$median
+  	dep=dep$dep
+  } else{
 	  dep=dep$dep
-	  
-	if (length(dep)!=nrow(x)) stop("The number of rows in x is not of length(dep)")
-	tt=argvals(x)
-	rtt=rangeval(x)
-	rot=x$names
+  	if (length(dep)!=nrow(x)) stop("The number of rows in x is not of length(dep)")
+  	tt=argvals(x)
+  	rtt=rangeval(x)
+  	rot=x$names
     k = which.max(dep)
     med = x[k]
     nl = length(trim)
     mtrim = fdata(matrix(NA, nrow = nl, ncol = ncol(x)),tt,rtt,rot)
     for (j in 1:length(trim)) {
-        lista = which(dep >= quantile(dep, probs = trim[j], na.rm = TRUE))
-        if (length(lista)==1) {
-          mtrim$data[j,]<-x[lista]$data
-          if (draw) {draw=FALSE;warning("Too few curves in mtrim. The plot is not drawn")}
-        }
-        else mtrim$data[j,]=func.mean(x[lista])$data       
-    }
-    rownames(med$data) <- paste0(name,".med")
-    rownames(mtrim$data) <- tr
-    tr <- paste(name,".tr", round(trim * 100,2), "%", sep = "")
-}
-        ans <- dep
-        ind1 <- !is.na(ans)
-		color=colorRampPalette(c("red","blue"))(nrow(mtrim$data)+1)
-        cgray = 1 - (ans - min(ans, na.rm = TRUE))/(max(ans, 
-            na.rm = TRUE) - min(ans, na.rm = TRUE))
-		plot(y,col=gray(levgray),main = paste0(name," Depth"),lty=3,lwd=1,...)
-        lines(x[ind1], col = gray(levgray*cgray[ind1]),lty=1,lwd=1.5)
-        lines(mtrim, lwd = 3, col = color[-1],lty=1)
-        lines(med, col = color[1], lwd = 3)
-        legend("topleft", legend = c(rownames(med$data),rownames(mtrim$data)), lwd = 3,box.col=0, 
-            col = color)
+          lista = which(dep >= quantile(dep, probs = trim[j], na.rm = TRUE))
+          if (length(lista)==1) {
+            mtrim$data[j,]<-x[lista]$data
+            if (draw) {draw=FALSE;warning("Too few curves in mtrim. The plot is not drawn")}
+          }
+          else mtrim$data[j,]=func.mean(x[lista])$data       
+      }
+      rownames(med$data) <- paste0(name,".med")
+      tr <- paste(name,".tr", round(trim * 100,2), "%", sep = "")
+      rownames(mtrim$data) <- tr
+  }
+  ans <- dep
+  ind1 <- !is.na(ans)
+	color = colorRampPalette(c("red","blue"))( nrow(mtrim$data) + 1)
+  cgray = 1 - (ans - min(ans, na.rm = TRUE))/(max(ans, 
+          na.rm = TRUE) - min(ans, na.rm = TRUE))
+	plot(y, col = gray(levgray), main = paste0(name," Depth"), lty=3, lwd=1,...)
+  lines(x[ind1], col = gray(levgray*cgray[ind1]), lty=1,lwd=1.5)
+  lines(mtrim, lwd = 3, col = color[-1],lty=1)
+  lines(med, col = color[1], lwd = 3)
+  legend("topleft", legend = c(rownames(med$data),rownames(mtrim$data)), lwd = 3,box.col=0,col = color)
 
 }

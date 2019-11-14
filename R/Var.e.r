@@ -1,3 +1,4 @@
+#' @export
 Var.e=function(y,S){
   df=fdata.trace(S)
   if (is.vector(y)) {

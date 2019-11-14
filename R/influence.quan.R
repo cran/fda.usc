@@ -1,4 +1,72 @@
-influence.quan<-function(model,out.influ,mue.boot=500,
+#' Quantile for influence measures
+#' 
+#' @description Estimate the quantile of measures of influence for each observation.
+#' 
+#' @details Compute the quantile of measures of influence estimated in
+#' \code{\link{influence.fregre.fd}} for functional regression using principal
+#' components representation (\code{\link{fregre.pc}}) or basis
+#' representation\cr (\code{\link{fregre.basis}} or
+#' \code{\link{fregre.basis.cv}}).
+#' 
+#' A smoothed bootstrap method is used to estimate the quantiles of the influence measures, which allows to point out
+#' which observations have the larger influence on estimation and prediction.
+#' 
+#' @param model \code{fregre.pc}, \code{fregre.basis} or \code{fregre.basis.cv}
+#' object.
+#' @param out.influ \code{inflluence.fd} bject
+#' @param mue.boot Number of bootstrap samples
+#' @param smo Smoothing parameter as a proportion of response variance.
+#' @param smoX Smoothing parameter for \code{fdata} object as a proportion of
+#' variance-covariance matrix of the explanatory functional variable.
+#' @param alpha Significance level.
+#' @param kmax.fix The maximum number of principal comoponents or number of
+#' basis is fixed by \code{model} object.
+#' @param \dots Further arguments passed to or from other methods.
+#' @return Return:
+#' \itemize{ 
+#' \item \code{quan.cook.for}{ Distance Cook Prediction Quantile.}
+#' \item \code{quan.cook.est}{ Distance Cook Estimation Quantile.}
+#' \item \code{quan.cook.Pena}{ Pena Distance Quantile.}
+#' \item \code{mues.est}{ Sample Cook generated.} 
+#' \item \code{mues.pena}{ Sample Pena generated.} 
+#' \item \code{beta.boot}{ Functional beta estimated by bootstrap method.}
+#' }
+#' @author Manuel Febrero-Bande, Manuel Oviedo de la Fuente
+#' \email{manuel.oviedo@@usc.es}
+#' @seealso See Also as: \code{\link{influence.fregre.fd}},
+#' \code{\link{fregre.basis}}, \code{\link{fregre.pc}}.
+#' @references Febrero-Bande, M., Galeano, P. and Gonzalez-Manteiga, W. (2010).
+#' \emph{Measures of influence for the functional linear model with scalar
+#' response}. Journal of Multivariate Analysis 101, 327-339.
+#' @keywords outliers
+#' @rdname influence_quan
+#' @examples 
+#' \dontrun{
+#' data(tecator)
+#' x=tecator$absorp.fdata
+#' y=tecator$y$Fat
+#' res=fregre.pc(x,y,1:6)
+#' 
+#' #time consuming
+#' res.infl=influence.fregre.fd(res)
+#' resquan=influence_quan(res,res.infl,4,0.01,0.05,0.95)
+#' plot(res.infl$betas,type="l",col=2)
+#' lines(res$beta.est,type="l",col=3)
+#' lines(resquan$betas.boot,type="l",col="gray")
+#' 
+#' res=fregre.basis(x,y)
+#' res.infl=influence.fregre.fd(res)
+#' resquan=influence_quan(res,res.infl,mue.boot=4,kmax.fix=T)
+#' plot(resquan$betas.boot,type="l",col=4)
+#' lines(res.infl$betas,type="l",col=2)
+#' lines(resquan$betas.boot,type="l",col="gray")
+#' }
+#' @usage 
+#' influence_quan(model,out.influ,mue.boot=500,
+#' smo=0.1,smoX=0.05,alpha=0.95,kmax.fix=FALSE,...)
+#' 
+#' @export 
+influence_quan<-function(model,out.influ,mue.boot=500,
                  smo=0.1,smoX=0.05,alpha=0.95,kmax.fix=FALSE,...){
 DCP=out.influ$DCP
 DCE=out.influ$DCE
@@ -60,7 +128,7 @@ for (i in 1:mue.boot){
                         knn.fix[[i]]<-fpc$pc.opt
                         funcregpc.mue<-fpc$fregre.pc
                         }
-       inflfun.mue <- influence.fdata(funcregpc.mue) #####
+       inflfun.mue <- influence.fregre.fd(funcregpc.mue) #####
     #  inflfun.mue<-out.influ
        IDCP <- c(IDCP,inflfun.mue$DCP)
        IDCE <- c(IDCE,inflfun.mue$DCE)
@@ -79,7 +147,7 @@ for (i in 1:mue.boot){
               funcregpc.mue <-fregre.basis.cv(fdata.mue,y.mue,model$basis.x.opt,model$basis.b.opt,...)
               knn.fix[[i]]<-c(funcregpc.mue$basis.x.opt$nbasis,funcregpc.mue$basis.b.opt$nbasis)
                         }
-       inflfun.mue <- influence.fdata(funcregpc.mue)
+       inflfun.mue <- influence.fregre.fd(funcregpc.mue)
        IDCP <- c(IDCP,inflfun.mue$DCP)
        IDCE <- c(IDCE,inflfun.mue$DCE)
        IDP <- c(IDP,inflfun.mue$DP)

@@ -18,10 +18,13 @@ r.ou(n, t = seq(0, 1, len = 201), mu = 0, alpha = 1, sigma = 1,
 
 \item{sigma}{diffusion coefficient.}
 
-\item{x0}{a number or a vector of length \code{n} giving the initial value(s) of the Ornstein-Uhlenbeck process. By default, \code{n} points are sampled from the stationary distribution.}
+\item{x0}{a number or a vector of length \code{n} giving the initial
+value(s) of the Ornstein-Uhlenbeck process. By default, \code{n} points are
+sampled from the stationary distribution.}
 }
 \value{
-Functional sample, an \code{\link[fda.usc]{fdata}} object of length \code{n}.
+Functional sample, an \code{\link{fdata}} object of length
+\code{n}.
 }
 \description{
 Sampling of paths of the Ornstein-Uhlenbeck process.
@@ -29,6 +32,7 @@ Sampling of paths of the Ornstein-Uhlenbeck process.
 \examples{
 plot(r.ou(n = 100))
 plot(r.ou(n = 100, alpha = 2, sigma = 4, x0 = 1:100))
+
 }
 \author{
 Eduardo Garcia-Portugues (\email{edgarcia@est-econ.uc3m.es}).

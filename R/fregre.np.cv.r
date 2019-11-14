@@ -1,3 +1,109 @@
+#' Cross-validation functional regression with scalar response using kernel
+#' estimation.
+#' 
+#' @description Computes functional regression between functional explanatory variables and
+#' scalar response using asymmetric kernel estimation by cross-validation
+#' method.
+#' 
+#' @details The non-parametric functional regression model can be written as follows
+#' \deqn{ y_i =r(X_i) + \epsilon_i } where the unknown smooth real function
+#' \eqn{r} is estimated using kernel estimation by means of
+#' \deqn{\hat{r}(X)=\frac{\sum_{i=1}^{n}{K(h^{-1}d(X,X_{i}))y_{i}}}{\sum_{i=1}^{n}{K(h^{-1}d(X,X_{i}))}}}
+#' where \eqn{K} is an kernel function (see \code{Ker} argument), \code{h} is
+#' the smoothing parameter and \eqn{d} is a metric or a semi-metric (see
+#' \code{metric} argument).
+#' 
+#' The function estimates the value of smoothing parameter (also called
+#' bandwidth) \code{h} through Generalized Cross-validation \code{GCV}
+#' criteria, see \code{\link{GCV.S}} or \code{\link{CV.S}}.
+#' 
+#' The function estimates the value of smoothing parameter or the bandwidth
+#' through the cross validation methods: \code{\link{GCV.S}} or
+#' \code{\link{CV.S}}. It computes the distance between curves using the
+#' \code{\link{metric.lp}}, although any other semimetric could be used (see
+#' \code{\link{semimetric.basis}} or \code{\link{semimetric.NPFDA}} functions).
+#' Different asymmetric kernels can be used, see
+#' \code{\link{Kernel.asymmetric}}.\cr
+#' 
+#' @param fdataobj \code{\link{fdata}} class object.
+#' @param y Scalar response with length \code{n}.
+#' @param h Bandwidth, \code{h>0}. Default argument values are provided as the
+#' sequence of length 25 from 2.5\%--quantile to 25\%--quantile of the distance
+#' between \code{fdataobj} curves, see \code{\link{h.default}}.
+#' @param Ker Type of asymmetric kernel used, by default asymmetric normal
+#' kernel.
+#' @param metric Metric function, by default \code{\link{metric.lp}}.
+#' @param type.CV Type of cross-validation. By default generalized
+#' cross-validation \code{\link{GCV.S}} method.
+#' @param type.S Type of smothing matrix \code{S}. By default \code{S} is
+#' calculated by Nadaraya-Watson kernel estimator (\code{S.NW}).
+#' @param par.CV List of parameters for \code{type.CV}: \code{trim}, the alpha
+#' of the trimming\cr and \code{draw=TRUE}.
+#' @param par.S List of parameters for \code{type.S}: \code{w}, the weights.
+#' @param \dots Arguments to be passed for \code{\link{metric.lp}} o other
+#' metric function.
+#' @return Return:
+#' \itemize{
+#' \item \code{call}{ The matched call.} 
+#' \item \code{residuals}{ \code{y} minus \code{fitted values}.} 
+#' \item \code{fitted.values}{ Estimated scalar response.} 
+#' \item \code{df}{ The residual degrees of freedom.} 
+#' \item \code{r2}{ Coefficient of determination.} 
+#' \item \code{sr2}{ Residual variance.} 
+#' \item \code{H}{ Hat matrix.} 
+#' \item \code{y}{ Response.} 
+#' \item \code{fdataobj}{ Functional explanatory data.}
+#' \item \code{mdist}{ Distance matrix between \code{x} and \code{newx}.} 
+#' \item \code{Ker}{ Asymmetric kernel used.} 
+#' \item \code{gcv}{ CV or GCV values.} 
+#' \item \code{h.opt}{ smoothing parameter or bandwidth that minimizes CV or GCV method.} 
+#' \item \code{h}{ Vector of smoothing parameter or bandwidth.} 
+#' \item \code{cv}{ List with the fitted values and residuals estimated by CV, without the same curve.}
+#' }
+#' @author Manuel Febrero-Bande, Manuel Oviedo de la Fuente
+#' \email{manuel.oviedo@@usc.es}
+#' @seealso See Also as: \code{\link{fregre.np}},
+#' \code{\link{summary.fregre.fd}} and \code{\link{predict.fregre.fd}} .\cr
+#' Alternative method: \code{\link{fregre.basis.cv}} and
+#' \code{\link{fregre.np.cv}}.
+#' @references Ferraty, F. and Vieu, P. (2006). \emph{Nonparametric functional
+#' data analysis.} Springer Series in Statistics, New York.
+#' 
+#' Hardle, W. \emph{Applied Nonparametric Regression}. Cambridge University
+#' Press, 1994.
+#' 
+#' Febrero-Bande, M., Oviedo de la Fuente, M. (2012).  \emph{Statistical
+#' Computing in Functional Data Analysis: The R Package fda.usc.} Journal of
+#' Statistical Software, 51(4), 1-28. \url{http://www.jstatsoft.org/v51/i04/}
+#' @keywords regression
+#' @examples 
+#' \dontrun{
+#' data(tecator)
+#' absorp=tecator$absorp.fdata
+#' ind=1:129
+#' x=absorp[ind,]
+#' y=tecator$y$Fat[ind]
+#' Ker=AKer.tri
+#' res.np=fregre.np.cv(x,y,Ker=Ker)
+#' summary(res.np)
+#' res.np2=fregre.np.cv(x,y,type.CV=GCV.S,criteria="Shibata")
+#' summary(res.np2)
+#' 
+#' ## Example with other semimetrics (not run)
+#' res.pca1=fregre.np.cv(x,y,Ker=Ker,metric=semimetric.pca,q=1)
+#' summary(res.pca1)
+#' res.deriv=fregre.np.cv(x,y,Ker=Ker,metric=semimetric.deriv)
+#' summary(res.deriv)
+#' 
+#' x.d2=fdata.deriv(x,nderiv=1,method="fmm",class.out='fdata')
+#' res.deriv2=fregre.np.cv(x.d2,y,Ker=Ker)
+#' summary(res.deriv2)
+#' x.d3=fdata.deriv(x,nderiv=1,method="bspline",class.out='fdata')
+#' res.deriv3=fregre.np.cv(x.d3,y,Ker=Ker)
+#' summary(res.deriv3)
+#' }
+#' 
+#' @export
 fregre.np.cv=function(fdataobj,y,h=NULL,Ker=AKer.norm,metric=metric.lp,
 type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0),par.S=list(w=1),...){
 #print("np.CV")
@@ -14,13 +120,15 @@ nas.g<-is.na(y)
 if (is.null(names(y))) names(y)<-1:length(y)
 if (any(nas) & !any(nas.g)) {
    bb<-!nas
-   if (par.fda.usc$warning) warning(sum(nas)," curves with NA are omited\n")
+   if (ops.fda.usc()$warning)
+    warning(sum(nas)," curves with NA are omited\n")
    fdataobj$data<-fdataobj$data[bb,]
   y<-y[bb]
    }
 else {
 if (!any(nas) & any(nas.g)) {
-   if (par.fda.usc$warning)    warning(sum(nas.g)," values of group with NA are omited \n")
+   if (ops.fda.usc()$warning)   
+     warning(sum(nas.g)," values of group with NA are omited \n")
    bb<-!nas.g
    fdataobj$data<-fdataobj$data[bb,]
    y<-y[bb]
@@ -28,7 +136,8 @@ if (!any(nas) & any(nas.g)) {
 else {
 if (any(nas) & any(nas.g))  {
    bb<-!nas & !nas.g
-      if (par.fda.usc$warning) warning(sum(!bb)," curves  and values of group with NA are omited \n")
+   if (ops.fda.usc()$warning) 
+     warning(sum(!bb)," curves  and values of group with NA are omited \n")
    fdataobj$data<-fdataobj$data[bb,]
    y<-y[bb]
    }
@@ -125,12 +234,15 @@ par.CV$metric<-metric
 #     e2=y-H%*%y
 #     cv.error[i]=sum(e2^2)/(n-fdata.trace(H))
    }
-if (all(is.infinite(gcv)) &   par.fda.usc$warning) warning(" Warning: Invalid range for h")
+if (all(is.infinite(gcv)) & ops.fda.usc()$warning
+    ) warning(" Warning: Invalid range for h")
    l = which.min(gcv)
    h.opt <- h[l] ######################################################### arreglar
-   if (h.opt==min(h)&   par.fda.usc$warning) warning(" Warning: h.opt is the minimum value of bandwidths
+   if (h.opt==min(h) & ops.fda.usc()$warning)
+    warning(" Warning: h.opt is the minimum value of bandwidths
    provided, range(h)=",range(h),"\n")
-   else if (h.opt==max(h)&   par.fda.usc$warning) warning(" Warning: h.opt is the maximum value of bandwidths
+   else if (h.opt==max(h) &    ops.fda.usc()$warning)
+    warning(" Warning: h.opt is the maximum value of bandwidths
    provided, range(h)=",range(h),"\n")
    #H =type.S(mdist,h.opt,Ker,cv=FALSE)
   par.S$tt<-mdist

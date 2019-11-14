@@ -1,4 +1,7 @@
-################################
+# @S3method summary fregre.lm
+
+
+#' @export 
 summary.fregre.lm<-function (object, correlation = FALSE, 
                              symbolic.cor = FALSE, times.influ=3,
                              times.sigma=3,...) {
@@ -44,7 +47,7 @@ if (object$lambda)  {
       }
 }  
 
-################################
+#' @export 
 plot.summary.lm<-function(x,times.influ=3,times.sigma=3,...){
   object<-x
   if (object$lambda)  {
@@ -121,5 +124,4 @@ return(invisible(list("Influence"=influence,"i.influence"=i.influence,
     plot(object)
   }
 }  
-##############################################################################
 

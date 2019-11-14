@@ -1,4 +1,119 @@
- predict.fregre.lm<-function (object, newx = NULL, type = "response", se.fit = FALSE, 
+#' @title Predict method for functional regression model
+#' 
+#' @description 
+#' Computes predictions for regression between functional (and non functional)
+#' explanatory variables and scalar response. 
+#' \itemize{ 
+#' \item \code{predict.fregre.lm}, Predict method for functional linear model of
+#' \code{\link{fregre.lm}} fits object using basis or principal component
+#' representation.
+#' \item \code{predict.fregre.plm}, Predict method for
+#' semi-functional linear regression model of \code{\link{fregre.plm}} fits
+#' object using using asymmetric kernel estimation. 
+#' \item \code{predict.fregre.glm}, Predict method for functional generalized linear
+#' model of \code{\link{fregre.glm}} fits object using basis or principal
+#' component representation. 
+#' \item \code{predict.fregre.gsam}, Predict method for functional generalized 
+#' spectral additive model of \code{\link{fregre.gsam}} fits object using basis 
+#' or principal component representation.
+#' \item \code{predict.fregre.gkam}, Predict method for functional generalized 
+#' kernel additive model of \code{\link{fregre.gkam}} fits object using 
+#' backfitting algorithm. 
+#' }
+#' 
+#' These functions use the model fitting function \code{\link{lm}},
+#' \code{\link{glm}} or \code{\link{gam}} properties.\cr If using functional
+#' data derived, is recommended to use a number of bases to represent beta
+#' lower than the number of bases used to represent the functional data. \cr
+#' The first item in the \code{data} list of \code{newx} argument is called
+#' \emph{"df"} and is a data frame with the response and non functional
+#' explanatory variables, as \code{\link{lm}}, \code{\link{glm}} or
+#' \code{\link{gam}}. Functional variables (\code{fdata} and \code{fd} class)
+#' are introduced in the following items in the \code{data} list of \code{newx}
+#' argument.
+#' 
+#' @aliases predict.fregre.lm predict.fregre.plm predict.fregre.glm
+#' predict.fregre.gsam predict.fregre.gkam
+#' @param object \code{fregre.lm}, \code{fregre.plm}, \code{fregre.glm},
+#' \code{fregre.gsam}\cr or \code{fregre.gkam} object.
+#' @param newx An optional data list in which to look for variables with which
+#' to predict. If omitted, the fitted values are used. List of new explanatory
+#' data.
+#' @param type Type of prediction (response or model term).
+#' @param se.fit =TRUE (not default) standard error estimates are returned for
+#' each prediction.
+#' @param scale Scale parameter for std.err. calculation.
+#' @param df Degrees of freedom for scale.
+#' @param interval Type of interval calculation.
+#' @param level Tolerance/confidence level.
+#' @param pred.var the variance(s) for future observations to be assumed for
+#' prediction intervals. See \code{link{predict.lm}} for more details.
+#' @param weights variance weights for prediction. This can be a numeric vector
+#' or a one-sided model formula. In the latter case, it is interpreted as an
+#' expression evaluated in newdata
+#' @param \dots Further arguments passed to or from other methods.
+#' @return Return the predicted values and optionally:
+#' \itemize{
+#' \item {predict.lm,predict.glm,predict.gam}{ produces a vector of predictions
+#' or a matrix of predictions and bounds with column names fit, lwr, and upr if
+#' interval is set. If se.fit is TRUE, a list with the following components is
+#' returned: fit vector or matrix as above.} 
+#' \item {se.fit}{ standard error of predicted means.} 
+#' \item {residual.scale}{ residual standard deviations.}
+#' \item {df}{ degrees of freedom for residual.}
+#' }
+#' @author Manuel Febrero-Bande, Manuel Oviedo de la Fuente
+#' \email{manuel.oviedo@@usc.es}
+#' 
+#' @seealso See Also as: \code{\link{fregre.lm}}, \code{\link{fregre.plm}},
+#' \code{\link{fregre.glm}}, \code{\link{fregre.gsam}} and
+#' \code{\link{fregre.gkam}}. 
+#' 
+#' @references Febrero-Bande, M., Oviedo de la Fuente, M. (2012).
+#' \emph{Statistical Computing in Functional Data Analysis: The R Package
+#' fda.usc.} Journal of Statistical Software, 51(4), 1-28.
+#' \url{http://www.jstatsoft.org/v51/i04/}
+#' 
+#' @keywords regression
+#' @examples
+#' \dontrun{
+#' data(tecator)
+#' ind<-1:129
+#' x=tecator$absorp.fdata
+#' x.d2<-fdata.deriv(x,nderiv=2)
+#' tt<-x[["argvals"]]
+#' dataf=as.data.frame(tecator$y)
+#' nbasis.x=11;nbasis.b=7
+#' basis1=create.bspline.basis(rangeval=range(tt),nbasis=nbasis.x)
+#' basis2=create.bspline.basis(rangeval=range(tt),nbasis=nbasis.b)
+#' basis.x=list("x.d2"=basis1)
+#' basis.b=list("x.d2"=basis2)
+#' ldata=list("df"=dataf[ind,],"x.d2"=x.d2[ind])
+#' 
+#' res=fregre.gsam(Fat~s(Water,k=3)+s(x.d2,k=3),data=ldata,
+#' family=gaussian(),basis.x=basis.x,basis.b=basis.b)
+#' newldata=list("df"=dataf[-ind,],"x.d2"=x.d2[-ind])
+#' pred<-predict(res,newldata)
+#' plot(pred,tecator$y$Fat[-ind])
+#' 
+#' res.glm=fregre.glm(Fat~Water+x.d2,data=ldata,family=gaussian(),
+#' basis.x=basis.x,basis.b=basis.b)
+#' pred.glm<-predict(res.glm,newldata)
+#' newy<-tecator$y$Fat[-ind]
+#' points(pred.glm,tecator$y$Fat[-ind],col=2)
+#' 
+#' # Time-consuming 
+#' res.gkam=fregre.gkam(Fat~x.d2,data=ldata)
+#' pred.gkam=predict(res.gkam,newldata)
+#' points(pred.gkam,tecator$y$Fat[-ind],col=4)
+#' 
+#' ((1/length(newy))*sum((drop(newy)-pred)^2))/var(newy)
+#' ((1/length(newy))*sum((newy-pred.glm)^2))/var(newy)    
+#' ((1/length(newy))*sum((newy-pred.gkam)^2))/var(newy)    
+#' }                                                                                                              
+#' @rdname predict.fregre.lm
+#' @export 
+predict.fregre.lm<-function (object, newx = NULL, type = "response", se.fit = FALSE, 
           scale = NULL, df = df, interval = "none", level = 0.95, weights = 1, 
           pred.var = res.var/weights, ...) 
 {
@@ -194,3 +309,5 @@
   }
   return(drop(yp))
 }
+
+ 

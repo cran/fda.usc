@@ -1,6 +1,65 @@
-################################################################################
-################################################################################
-classif.depth<-function(group,fdataobj,newfdataobj,depth="RP",par.depth=list(),CV="none"){
+#' @title Classifier from Functional Data
+#' 
+#' @description Classification of functional data using maximum depth.
+#' 
+#' @param group Factor of length \emph{n}
+#' @param fdataobj \code{fdata}, \code{matrix} or \code{data.frame} class
+#' object of train data.
+#' @param newfdataobj \code{fdata}, \code{matrix} or \code{data.frame} class
+#' object of test data.
+#' @param depth Type of depth function from functional data:
+#' \itemize{ 
+#' \item \code{FM}: Fraiman and Muniz depth.  \item \code{mode}: modal depth.  
+#' \item \code{RT}: random Tukey depth.  \item \code{RP}: random project depth.
+#' \item \code{RPD}: double random project depth.  
+#' }
+#' 
+#' @param par.depth List of parameters for \code{depth}.
+#' @param CV =``none'' \code{group.est=group.pred}, =TRUE \code{group.est} is
+#' estimated by cross-validation, =FALSE \code{group.est} is estimated.
+#' 
+#' @return 
+#' \itemize{ 
+#' \item{group.est}{ Vector of classes of train sample data.}
+#' \item{group.pred}{ Vector of classes of test sample data.}
+#' \item{prob.classification}{ Probability of correct classification by group.}
+#' \item{max.prob}{ Highest probability of correct classification.}
+#' \item{fdataobj}{ \code{\link{fdata}} class object.} 
+#' \item{group}{ Factor of length \emph{n}.} 
+#' }
+
+# \item{prob.group}{ Matrix of predicted class probabilities. For each functional 
+# point shows the probability of each possible group membership.}
+
+#' @author Febrero-Bande, M. and Oviedo de la Fuente, M.
+#' 
+#' @references Cuevas, A., Febrero-Bande, M. and Fraiman, R. (2007).
+#' \emph{Robust estimation and classification for functional data via
+#' projection-based depth notions.} Computational Statistics 22, 3, 481-496.
+#' @keywords classif
+#' @examples
+#' \dontrun{
+#' data(phoneme)
+#' mlearn<-phoneme[["learn"]]
+#' mtest<-phoneme[["test"]]
+#' glearn<-phoneme[["classlearn"]]
+#' gtest<-phoneme[["classtest"]]
+#' 
+#' a1<-classif.depth(glearn,mlearn,depth="RP")
+#' table(a1$group.est,glearn)
+#' a2<-classif.depth(glearn,mlearn,depth="RP",CV=TRUE)
+#' a3<-classif.depth(glearn,mlearn,depth="RP",CV=FALSE)
+#' a4<-classif.depth(glearn,mlearn,mtest,"RP")
+#' a5<-classif.depth(glearn,mlearn,mtest,"RP",CV=TRUE)     
+#' table(a5$group.est,glearn)
+#' a6<-classif.depth(glearn,mlearn,mtest,"RP",CV=FALSE)
+#' table(a6$group.est,glearn)
+#' }
+#' 
+#' @rdname classif.depth
+#' @export
+classif.depth<-function(group,fdataobj,newfdataobj,depth="RP",
+                        par.depth=list(),CV="none"){
 #,control=list(trace=FALSE,draw=TRUE)
  C<-match.call()
  if (!is.factor(group)) group<-factor(group)
@@ -200,5 +259,4 @@ else  {   # new data
  }
 ################################################################################
 ################################################################################
-
 

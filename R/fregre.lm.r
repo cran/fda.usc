@@ -1,3 +1,110 @@
+#' Fitting Functional Linear Models
+#' 
+#' @description Computes functional regression between functional (and non functional)
+#' explanatory variables and scalar response using basis representation.
+#' 
+#' @details This section is presented as an extension of the linear regression models:
+#' \code{\link{fregre.pc}}, \code{\link{fregre.pls}} and
+#' \code{\link{fregre.basis}}. Now, the scalar response \eqn{Y} is estimated by
+#' more than one functional covariate \eqn{X^j(t)} and also more than one non
+#' functional covariate \eqn{Z^j}. The regression model is given by:
+#' \deqn{E[Y|X,Z]=\alpha+\sum_{j=1}^{p}\beta_{j}Z^{j}+\sum_{k=1}^{q}\frac{1}{\sqrt{T_k}}\int_{T_k}{X^{k}(t)\beta_{k}(t)dt}
+#' }{E[Y|X,Z]=\alpha+\sum_j \beta_j Z^j + \sum_k <X^k,\beta_k>}
+#' 
+#' where \eqn{Z=\left[ Z^1,\cdots,Z^p \right]}{Z=[Z^1,...,Z^p]} are the non
+#' functional covariates, \eqn{X(t)=\left[ X^{1}(t_1),\cdots,X^{q}(t_q)
+#' \right]}{X(t)=[X^1(t),...,X^q(t)]} are the functional ones and
+#' \eqn{\epsilon} are random errors with mean zero , finite variance
+#' \eqn{\sigma^2} and \eqn{E[X(t)\epsilon]=0}{E[X(t)\epsilon]=0}.  
+#' 
+#' The first item in the \code{data} list is called \emph{"df"} and is a data
+#' frame with the response and non functional explanatory variables, as
+#' \code{\link{lm}}. Functional covariates of class \code{fdata} or \code{fd}
+#' are introduced in the following items in the \code{data} list.\cr
+#' 
+#' \code{basis.x} is a list of basis for represent each functional covariate.
+#' The basis object can be created by the function:
+#' \code{\link{create.pc.basis}}, \code{\link{pca.fd}}
+#' \code{\link{create.pc.basis}}, \code{\link{create.fdata.basis}} or
+#' \code{\link{create.basis}}.\cr \code{basis.b} is a list of basis for
+#' represent each functional \eqn{\beta_k} parameter. If \code{basis.x} is a
+#' list of functional principal components basis (see
+#' \code{\link{create.pc.basis}} or \code{\link{pca.fd}}) the argument
+#' \code{basis.b} \emph{(is unnecessary and)} is ignored.\cr
+#' 
+#' The user can penalty the basis elements by: (i) \code{lambda} is a list of
+#' rough penalty values for the second derivative of each functional covariate,
+#' see \code{\link{fregre.basis}} for more details.\cr (ii) \code{rn} is a list
+#' of Ridge penalty value for each functional covariate, see
+#' \code{\link{fregre.pc}}, \code{\link{fregre.pls}} and
+#' \code{\link{P.penalty}} for more details.\cr Note: For the case of the
+#' Functional Principal Components basis two penalties are allowed (but not the
+#' two together). \cr
+#' 
+#' @param formula an object of class \code{formula} (or one that can be coerced
+#' to that class): a symbolic description of the model to be fitted. The
+#' details of model specification are given under \code{Details}.
+#' @param data List that containing the variables in the model.
+#' @param basis.x List of basis for functional explanatory data estimation.
+#' @param basis.b List of basis for functional beta parameter estimation.
+#' @param rn List of Ridge parameter.
+#' @param lambda List of Roughness penalty parameter.
+#' @param weights weights
+#' @param \dots Further arguments passed to or from other methods.
+#' @return Return \code{lm} object plus:
+#' \itemize{
+#' \item \code{sr2}{ Residual variance.}
+#' \item \code{Vp}{ Estimated covariance matrix for the parameters.} 
+#' \item \code{lambda}{ A roughness penalty.} 
+#' \item \code{basis.x}{ Basis used for \code{fdata} or \code{fd} covariates.} 
+#' \item \code{basis.b}{ Basis used for beta parameter estimation.}
+#' \item \code{beta.l}{ List of estimated beta parameter of functional covariates.}
+#' \item \code{data}{ List that containing the variables in the model.}
+#' \item \code{formula}{ formula.}
+#' }
+#' @author Manuel Febrero-Bande, Manuel Oviedo de la Fuente
+#' \email{manuel.oviedo@@usc.es}
+#' @seealso See Also as: \code{\link{predict.fregre.lm}} and
+#' \code{\link{summary.lm}}.\cr Alternative method: \code{\link{fregre.glm}}.
+#' @references Ramsay, James O., and Silverman, Bernard W. (2006), \emph{
+#' Functional Data Analysis}, 2nd ed., Springer, New York.
+#' 
+#' Febrero-Bande, M., Oviedo de la Fuente, M. (2012).  \emph{Statistical
+#' Computing in Functional Data Analysis: The R Package fda.usc.} Journal of
+#' Statistical Software, 51(4), 1-28. \url{http://www.jstatsoft.org/v51/i04/}
+#' @keywords regression
+#' @examples
+#' data(tecator)
+#' x=tecator$absorp.fdata
+#' y=tecator$y$Fat
+#' tt=x[["argvals"]]
+#' dataf=as.data.frame(tecator$y)
+#' 
+#' nbasis.x=11
+#' nbasis.b=7
+#' basis1=create.bspline.basis(rangeval=range(tt),nbasis=nbasis.x)
+#' basis2=create.bspline.basis(rangeval=range(tt),nbasis=nbasis.b)
+#'  
+#' f=Fat~Protein+x
+#' basis.x=list("x"=basis1)
+#' basis.b=list("x"=basis2)
+#' ldata=list("df"=dataf,"x"=x)
+#' res=fregre.lm(f,ldata,basis.x=basis.x,basis.b=basis.b)
+#' summary(res)
+#' 
+#' f2=Fat~Protein+xd
+#' xd=fdata.deriv(x,nderiv=2,class.out='fdata',nbasis=nbasis.x)
+#' ldata2=list("df"=dataf,"xd"=xd)
+#' basis.x2=list("xd"=basis1)
+#' basis.b2=list("xd"=basis2)
+#' res2=fregre.lm(f2,ldata2,basis.x=basis.x2,basis.b=basis.b2)
+#' summary(res2)
+#' 
+#' par(mfrow=c(2,1))
+#' plot(res$beta.l$x,main="functional beta estimation")
+#' plot(res2$beta.l$xd,col=2)
+#' 
+#' @export
 fregre.lm<-function(formula,data,basis.x=NULL,basis.b=NULL,
 rn,lambda,weights=rep(1,n),...){
  tf <- terms.formula(formula)
@@ -222,7 +329,7 @@ if (!is.data.frame(XX)) XX=data.frame(XX)
     W<-diag(weights)  
     if (!rn0 & !lambda0) {
       if (lenvfunc==0 & length(vnf)==0)      {
-print("aaaaa")        
+#print("aaaaa")        
       z=lm(formula=paste(pf,1,sep=""),data=XX,x=TRUE,...)   
        class(z)<-c("lm","fregre.lm")
       return(z )
@@ -231,13 +338,13 @@ print("aaaaa")
       e<-z$residuals
       
 A0 <-t(scores)%*%W%*%scores
-print(dim(scores));print(dim(A0))
+#print(dim(scores));print(dim(A0))
 A  <- t(scores)%*%sqrt(W)#%*%scores
-print(dim(A))
+#print(dim(A))
 #coefs3<-qr.solve(t(A),matrix(y,nrow=215))
 coefs3<-qr.solve(t(A),y)
 #print((qr3))
-print(A0[1:4,1:5]-A[1:4,1:5])
+#print(A0[1:4,1:5]-A[1:4,1:5])
 #B<-eigen(A)
 #print("aaaa")
 #print(dim(B$vectors))
@@ -254,33 +361,32 @@ coefs<-Cinv%*%XX[,1]
 #print(S2[1:5,1:4])
 S<-diag(coef(summary(z))[,2])
 
-print("QR")
-print(z$qr$qr[1:4,1:5] )
+#print("QR")
+#print(z$qr$qr[1:4,1:5] )
 #print("S")
 ycen = y - mean(y)
 #print(S[1:4,1:5]);print("S2");print(S2[1:4,1:5])
 #print("Cinv");print(t(Cinv[1:4,1:5]))
 #print(dim(S2));print(dim(Cinv))
-print("qr")
+#print("qr")
 qr0<-qr(scores, LAPACK = F)
-print(qr0$qr[1:4,1:5])
-print("qr1")
-print("qr3")
-
-print(dim(qr0$qr))
+# print(qr0$qr[1:4,1:5])
+# print("qr1")
+# print("qr3")
+# print(dim(qr0$qr))
 #qr1<-solve(qr0$qr,matrix(ycen)
-print("peta")
+# print("peta")
 #print(dim(scores))
 coef.qr<-qr.coef(qr0, y)
-print("peta2")
-print(coef.qr)
-print(coef(z))
-print(coefs[,1])
-print(coefs3)
-print(sum(abs(coef.qr-coef(z))))
-print(sum(abs(coef.qr-coefs[,1])))
-print(sum(abs(coefs[,1]-coef(z))))
-print(sum(abs(coef.qr-coefs3)))
+# print("peta2")
+# print(coef.qr)
+# print(coef(z))
+# print(coefs[,1])
+# print(coefs3)
+# print(sum(abs(coef.qr-coef(z))))
+# print(sum(abs(coef.qr-coefs[,1])))
+# print(sum(abs(coefs[,1]-coef(z))))
+# print(sum(abs(coef.qr-coefs3)))
 
 class(z)<-c(class(z),"fregre.lm")
       }      
@@ -393,11 +499,7 @@ for (i in 1:length(vfunc)) {
  z$lambda<-lambda0
  z$vs.list=vs.list   
 ## z$ar<-aa
- class(z)<-c("lm","fregre.lm")
+ class(z)<-c("fregre.lm","lm")
  z
 }     
 
-#aa=svd(res2$P)
-#Xtil2=rbind(cbind(rep(1,nrow(res2$XX)),res2$XX),
-#sqrt(res2$lambda)*diag(sqrt(aa$d))%*%t(aa$v))
-#qr.solve(qr(Xtil2),ytil)
