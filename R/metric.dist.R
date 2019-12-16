@@ -277,29 +277,34 @@ list.select<-function(x,include,exclude){
   var.name <- names(x)
   a<-sapply(x, class,USE.NAMES = T)
   var.name <- var.name[a=="fdata"]
+  clas.ini <- class(x)
+  class(x) <- "list"
   x <- x[var.name]
   if (include[1]=="all"){
-    var.x<-var.name
+    var.x <- var.name
   } else{
-    var.x<-intersect(include,var.name)
+    var.x <- intersect(include,var.name)
   }
   if (exclude[1]!="none"){
-    var.x<-setdiff(var.x,exclude)
+    var.x <- setdiff(var.x,exclude)
   }
   x <- x[var.x]
+  clas.ini -> class(x)
   x
 }
 ################################################################################
 # created 20190614 used in metric.ldata
-df.select<-function(x,include,exclude){
+df.select <- function(x,include,exclude){
   #Internal, used in metric.mfdata
   # character variables are automatically excluded
   #input: x a data.frame
   #output: list with a variables of data.frame included and not excluded
   
-  if (missing(include)) include="all"
-  if (missing(exclude)) exclude="none"
-  
+  if (missing(include)) include = "all"
+  if (missing(exclude)) exclude = "none"
+  if (is.matrix(x)) x <- data.frame(x)
+  #if (is.data.frame(x))  var.name <- names(x)
+  #else var.name <- colnames(x)
   var.name <- names(x)
   a<-sapply(x, class,USE.NAMES = T)
   x <- x[,a!="character",drop=F]
@@ -365,14 +370,8 @@ df.select<-function(x,include,exclude){
 #' dim(mdist) 
 #' }
 #' @export metric.ldata
-metric.ldata=function(ldata1,ldata2=NULL
-                       ,include="all"
-                       ,exclude="none"
-                       ,metric
-                       ,par.metric=NULL
-                       ,w
-                       ,method="none"#"euclidean"
-                      ) {
+metric.ldata=function(ldata1,ldata2=NULL, include="all" ,exclude="none"
+                       ,metric,par.metric=NULL,w, method="none") {
   
   one.mfdata=F
   if (is.null(ldata2)) {
@@ -381,8 +380,8 @@ metric.ldata=function(ldata1,ldata2=NULL
   }
   var.ldata1<-names(ldata1)
    if (!any(var.ldata1=="df")) {
-    #  stop("The object 'df' is not in the list argument 'ldata1' ")
-    lenl<-length(ldata1)
+     #  stop("The object 'df' is not in the list argument 'ldata1' ")
+    lenl <- length(ldata1)
     if (missing(w)) 
       w<-rep(1,length=lenl)
     n<-NROW(ldata1[[1]])
@@ -396,10 +395,9 @@ metric.ldata=function(ldata1,ldata2=NULL
   ldf.ldata1 <- df.select(ldata1[["df"]],include,exclude)
   lendf <-length(ldf.ldata1)
   ldata1 <- c(ldf.ldata1,list.select(ldata1,include,exclude))
-  var.ldata1<-names(ldata1)
-  lenl<-length(ldata1)
-  n<-NROW(ldata1[[1]])
-  
+  var.ldata1 <- names(ldata1)
+  lenl <- length(ldata1)
+  n <- NROW(ldata1[[1]])
   if (missing(w)) 
      w<-rep(1,length=lenl)
   if (one.mfdata){
@@ -414,9 +412,9 @@ metric.ldata=function(ldata1,ldata2=NULL
     m<-NROW(ldata2[[1]]) 
   } 
   
-  if (any(class(ldata1)!="list"))
+  if (!is(ldata1,"list"))
     stop("ldata1 is no a list object")
-  if (any(class(ldata2)!="list"))
+  if (!is(ldata2,"list"))
     stop("ldata2 is no a list object")
   
   mdst2<-matrix(0,n,n)
@@ -474,6 +472,8 @@ metric.ldata=function(ldata1,ldata2=NULL
 }
 
 
+
+
 #' @export metric.mfdata
 metric.mfdata=function(mfdata1,mfdata2=NULL
                       ,include="all"
@@ -505,7 +505,6 @@ metric.mfdata=function(mfdata1,mfdata2=NULL
     lenl2<-length(mfdata2)
     m<-nrow(mfdata2[[1]]) 
   } 
-  
   if (any(class(mfdata1)!="list"))
     stop("mfdata1 is no a list object")
   if (any(class(mfdata2)!="list"))
@@ -639,4 +638,4 @@ else{
  colnames(mdist)<-etiq2
  return(mdist)
 }
-
+#####################

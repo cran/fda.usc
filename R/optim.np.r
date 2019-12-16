@@ -1,5 +1,5 @@
 #' @rdname  optim.np
-#' @aliases optim.np
+#' @aliases optim.np min.np
 #' @title Smoothing of functional data using nonparametric kernel estimation
 #' @note min.np deprecated.
 #' @description Smoothing of functional data using nonparametric kernel

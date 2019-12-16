@@ -72,9 +72,11 @@ correct classification: max.prob=",object$max.prob,"\n")
     "\nwith highest probability of correct classification max.prob= ",
     object$max.prob,"\n")
     }}
-    if (object$C[[1]]=='classif.gkam' | object$C[[1]]=='classif.gkam2boost' |
-     object$C[[1]]=='classif.gsam2boost' | object$C[[1]]=='classif.gsam'
-     | object$C[[1]]=='classif.glm'| object$C[[1]]=='classif.glm2boost'){
+    # if (object$C[[1]]=='classif.gkam' | object$C[[1]]=='classif.gkam2boost' |
+    #  object$C[[1]]=='classif.gsam2boost' | object$C[[1]]=='classif.gsam'
+    #  | object$C[[1]]=='classif.glm'| object$C[[1]]=='classif.glm2boost'
+    #  | object$C[[1]]=='classif.bootstrap')
+  if (!is.null(object$max.prob))  {
    cat("\n-Probability of correct classification: ",round(object$max.prob,4),"\n")
     }
     if (object$C[[1]]=='classif.rpart'|object$C[[1]]=='classif.rpart2boost'){
@@ -100,10 +102,12 @@ print.classif<-function (x, digits = max(3, getOption("digits") - 3), ...)
     cat("\n-Optimal bandwidth: h.opt=",x$h.opt,"with highest probability of
    correct classification: max.prob=",x$max.prob,"\n")
   }
-    else {if  (x$C[[1]]=='classif.gsam' | x$C[[1]]=='classif.gsam2boost'|
-               x$C[[1]]=='classif.glm' |x$C[[1]]== 'classif.glm2boost' |
-               x$C[[1]]=='classif.gkam' | x$C[[1]]=='classif.gkam2boost'|
-               x$C[[1]]=='classif.rpart' |   x$C[[1]]=='classif.rpart2boost'){
+    else {
+      # if  (x$C[[1]]=='classif.gsam' | x$C[[1]]=='classif.gsam2boost'|
+      #          x$C[[1]]=='classif.glm' |x$C[[1]]== 'classif.glm2boost' |
+      #          x$C[[1]]=='classif.gkam' | x$C[[1]]=='classif.gkam2boost'|
+      #          x$C[[1]]=='classif.rpart' |   x$C[[1]]=='classif.rpart2boost')
+      if (!is.null(x$max.prob))  {
       cat("\n-Probability of correct classification: ",round(x$max.prob,4),"\n")
     }
       if (x$C[[1]]=='classif.DD'){

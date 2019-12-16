@@ -12,14 +12,24 @@
 \url{http://www.math.univ-toulouse.fr/staph/npfda/}
 }
 \usage{
-semimetric.deriv(fdata1, fdata2 = fdata1, nderiv = 1,
-  nknot = ifelse(floor(ncol(DATA1)/3) > floor((ncol(DATA1) - nderiv -
-  4)/2), floor((ncol(DATA1) - nderiv - 4)/2), floor(ncol(DATA1)/3)), ...)
+semimetric.deriv(
+  fdata1,
+  fdata2 = fdata1,
+  nderiv = 1,
+  nknot = ifelse(floor(ncol(DATA1)/3) > floor((ncol(DATA1) - nderiv - 4)/2),
+    floor((ncol(DATA1) - nderiv - 4)/2), floor(ncol(DATA1)/3)),
+  ...
+)
 
-semimetric.fourier(fdata1, fdata2 = fdata1, nderiv = 0,
-  nbasis = ifelse(floor(ncol(DATA1)/3) > floor((ncol(DATA1) - nderiv -
-  4)/2), floor((ncol(DATA1) - nderiv - 4)/2), floor(ncol(DATA1)/3)),
-  period = NULL, ...)
+semimetric.fourier(
+  fdata1,
+  fdata2 = fdata1,
+  nderiv = 0,
+  nbasis = ifelse(floor(ncol(DATA1)/3) > floor((ncol(DATA1) - nderiv - 4)/2),
+    floor((ncol(DATA1) - nderiv - 4)/2), floor(ncol(DATA1)/3)),
+  period = NULL,
+  ...
+)
 
 semimetric.hshift(fdata1, fdata2 = fdata1, t = 1:ncol(DATA1), ...)
 

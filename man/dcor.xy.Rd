@@ -7,8 +7,7 @@
 \alias{bcdcor.dist}
 \title{Distance Correlation Statistic and t-Test}
 \usage{
-dcor.xy(x, y, test = TRUE, metric.x, metric.y, par.metric.x,
-  par.metric.y, n)
+dcor.xy(x, y, test = TRUE, metric.x, metric.y, par.metric.x, par.metric.y, n)
 
 dcor.dist(D1, D2)
 

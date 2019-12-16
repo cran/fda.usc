@@ -178,7 +178,7 @@ fdata2pls<-function(fdataobj,y,ncomp = 2,lambda=0,P=c(0,0,1),norm=TRUE,...) {
   #    Yhat = Yhat, coyhat = yhat,efficients = coefficients,intercept = intercept,
   #     RSS = RSS,TT=TT, sigmahat = sigmahat,covariance = covariance,
   #     W2=W2,beta.est=beta.est,
-  class(outlist)<-"fdata.comp"
+  class(outlist) <- "fdata.comp"
   return(outlist)
 }
 

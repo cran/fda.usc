@@ -9,13 +9,11 @@
 \alias{plot.mdepth}
 \title{Plot functional data: fdata class object}
 \usage{
-\method{plot}{fdata}(x, type, main, xlab, ylab, lty = 1, mfrow = c(1,
-  1), time = 1, ...)
+\method{plot}{fdata}(x, type, main, xlab, ylab, lty = 1, mfrow = c(1, 1), time = 1, ...)
 
 \method{lines}{fdata}(x, ...)
 
-title.fdata(x, main = NULL, xlab = NULL, ylab = NULL,
-  rownames = NULL)
+title.fdata(x, main = NULL, xlab = NULL, ylab = NULL, rownames = NULL)
 
 \method{plot}{bifd}(x, argvals.s, argvals.t, ...)
 

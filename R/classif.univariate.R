@@ -101,7 +101,7 @@ output<-list(fdataobj=fdataobj,group=y,group.est=as.factor(yest),
 prob.classification=prob,prob.group=prob.group,C=C,m=m,max.prob=max.prob,
 formula=formula,data=newdata)
 output$fit <- a
-class(output)="classif"
+class(output) <- "classif"
 return(output)
 }
 
@@ -180,7 +180,7 @@ classif.glm2boost=function(group,fdataobj,family=binomial(),basis.x=NULL,
                prob.classification=prob,prob.group=prob.group,C=C,m=m,max.prob=max.prob
                ,formula=formula,data=newdata)
   output$fit<-a  
-  class(output)="classif"
+  class(output) <- "classif"
   return(output)
 }
 #######################
@@ -213,7 +213,7 @@ if (!is.factor(group)) group<-as.factor(group)
   output<-list(fit=fit,formula=formula,fdataobj=dataf,basis.x=basis.x,
   basis.b=basis.b,group=group,C=C,max.prob=fit$max.prob,"prob.group"=fit$prob.group,
   "prob.classification"=fit$prob.classification,"group.est"=fit$group.est)
-class(output)="classif"
+class(output) <- "classif"
 return(output)
 }
 
@@ -286,7 +286,7 @@ max.prob=sum(diag(tab))/sum(tab)
 output<-list(fdataobj=fdataobj,group=y,group.est=yest,
 prob.classification=prob,prob.group=prob.group,C=C,m=m,max.prob=max.prob,fit=a
 ,formula=formula,data=newdata)
-class(output)="classif"
+class(output) <- "classif"
 return(output)
 }
 

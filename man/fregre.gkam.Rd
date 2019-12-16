@@ -4,10 +4,17 @@
 \alias{fregre.gkam}
 \title{Fitting Functional Generalized Kernel Additive Models.}
 \usage{
-fregre.gkam(formula, family = gaussian(), data, weights = rep(1, nobs),
-  par.metric = NULL, par.np = NULL, offset = NULL,
-  control = list(maxit = 100, epsilon = 0.001, trace = FALSE, inverse =
-  "solve"), ...)
+fregre.gkam(
+  formula,
+  family = gaussian(),
+  data,
+  weights = rep(1, nobs),
+  par.metric = NULL,
+  par.np = NULL,
+  offset = NULL,
+  control = list(maxit = 100, epsilon = 0.001, trace = FALSE, inverse = "solve"),
+  ...
+)
 }
 \arguments{
 \item{formula}{an object of class \code{formula} (or one that can be coerced

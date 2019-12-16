@@ -4,9 +4,16 @@
 \alias{semimetric.basis}
 \title{Proximities between functional data}
 \usage{
-semimetric.basis(fdata1, fdata2 = fdata1, nderiv = 0,
-  type.basis1 = NULL, nbasis1 = NULL, type.basis2 = type.basis1,
-  nbasis2 = NULL, ...)
+semimetric.basis(
+  fdata1,
+  fdata2 = fdata1,
+  nderiv = 0,
+  type.basis1 = NULL,
+  nbasis1 = NULL,
+  type.basis2 = type.basis1,
+  nbasis2 = NULL,
+  ...
+)
 }
 \arguments{
 \item{fdata1}{Functional data 1 or curve 1.}

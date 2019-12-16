@@ -2,11 +2,22 @@
 % Please edit documentation in R/optim.np.r
 \name{optim.np}
 \alias{optim.np}
+\alias{min.np}
 \title{Smoothing of functional data using nonparametric kernel estimation}
 \usage{
-optim.np(fdataobj, h = NULL, W = NULL, Ker = Ker.norm,
-  type.CV = GCV.S, type.S = S.NW, par.CV = list(trim = 0, draw =
-  FALSE), par.S = list(), correl = TRUE, verbose = FALSE, ...)
+optim.np(
+  fdataobj,
+  h = NULL,
+  W = NULL,
+  Ker = Ker.norm,
+  type.CV = GCV.S,
+  type.S = S.NW,
+  par.CV = list(trim = 0, draw = FALSE),
+  par.S = list(),
+  correl = TRUE,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{fdataobj}{\code{\link{fdata}} class object.}

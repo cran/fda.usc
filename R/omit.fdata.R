@@ -59,7 +59,7 @@ if (is.list(fdataobj)) {
  for (i in 1:nobj) {
  list.na[[i]]<-NULL
  x<-fdataobj[[i]]
- ind.na2[[i]]<-switch(class(x),
+ ind.na2[[i]]<-switch(class(x)[1],
      "fdata"={     n<-nrow(x); nas<-is.na.fdata(x)},
      "matrix"={    n<-nrow(x); nas<-apply(x,1,isnas)},
    "data.frame"={  n<-nrow(x); nas<-apply(x,1,isnas)},
@@ -76,7 +76,7 @@ if (is.list(fdataobj)) {
   else if (n2!=n) stop("The  elements  of the list have incorrect dimensions")
    }
   for (i in 1:length(fdataobj)) {
-   fdataobj[[i]]<-switch(class(fdataobj[[i]]),
+   fdataobj[[i]]<-switch(class(fdataobj[[i]])[1],
    "fdata"={   fdataobj[[i]][-ind.na3]},
    "matrix"={       fdataobj[[i]][-ind.na3,]},
    "data.frame"={       fdataobj[[i]][-ind.na3,]},

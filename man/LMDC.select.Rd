@@ -6,11 +6,29 @@
 \title{Impact points selection of functional predictor and regression using local
 maxima distance correlation (LMDC)}
 \usage{
-LMDC.select(y, covar, data, tol = 0.06, pvalue = 0.05, plot = FALSE,
-  local.dc = TRUE, smo = FALSE, verbose = FALSE)
+LMDC.select(
+  y,
+  covar,
+  data,
+  tol = 0.06,
+  pvalue = 0.05,
+  plot = FALSE,
+  local.dc = TRUE,
+  smo = FALSE,
+  verbose = FALSE
+)
 
-LMDC.regre(y, covar, data, newdata, pvalue = 0.05, method = "lm",
-  par.method = NULL, plot = FALSE, verbose = FALSE)
+LMDC.regre(
+  y,
+  covar,
+  data,
+  newdata,
+  pvalue = 0.05,
+  method = "lm",
+  par.method = NULL,
+  plot = FALSE,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{y}{name of the response variable.}

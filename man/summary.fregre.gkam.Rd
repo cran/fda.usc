@@ -5,8 +5,7 @@
 \alias{print.fregre.gkam}
 \title{Summarizes information from fregre.gkam objects.}
 \usage{
-\method{summary}{fregre.gkam}(object, draw = TRUE, selec = NULL,
-  times.influ = 3, ...)
+\method{summary}{fregre.gkam}(object, draw = TRUE, selec = NULL, times.influ = 3, ...)
 }
 \arguments{
 \item{object}{Estimated by functional regression, \code{fregre.fd} object.}

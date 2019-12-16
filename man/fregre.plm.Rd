@@ -4,9 +4,18 @@
 \alias{fregre.plm}
 \title{Semi-functional partially linear model with scalar response.}
 \usage{
-fregre.plm(formula, data, h = NULL, Ker = AKer.norm,
-  metric = metric.lp, type.CV = GCV.S, type.S = S.NW,
-  par.CV = list(trim = 0, draw = FALSE), par.S = list(w = 1), ...)
+fregre.plm(
+  formula,
+  data,
+  h = NULL,
+  Ker = AKer.norm,
+  metric = metric.lp,
+  type.CV = GCV.S,
+  type.S = S.NW,
+  par.CV = list(trim = 0, draw = FALSE),
+  par.S = list(w = 1),
+  ...
+)
 }
 \arguments{
 \item{formula}{an object of class \code{formula} (or one that can be coerced

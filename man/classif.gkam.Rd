@@ -4,9 +4,19 @@
 \alias{classif.gkam}
 \title{Classification Fitting Functional Generalized Kernel Additive Models}
 \usage{
-classif.gkam(formula, data, weights = "equal", family = binomial(),
-  par.metric = NULL, par.np = NULL, offset = NULL, prob = 0.5,
-  type = "1vsall", control = NULL, ...)
+classif.gkam(
+  formula,
+  data,
+  weights = "equal",
+  family = binomial(),
+  par.metric = NULL,
+  par.np = NULL,
+  offset = NULL,
+  prob = 0.5,
+  type = "1vsall",
+  control = NULL,
+  ...
+)
 }
 \arguments{
 \item{formula}{an object of class \code{formula} (or one that can be coerced
@@ -39,7 +49,10 @@ included in the linear predictor during fitting.}
 
 \item{prob}{probability value used for binary discriminant.}
 
-\item{type}{1 vs all (by default) or majority voting.}
+\item{type}{If type is\code{"1vsall"}  (by default) 
+a maximum probability scheme is applied: requires G binary classifiers.
+If type is \code{"majority"}  (only for multicalss classification G > 2) 
+a voting scheme is applied: requires  G (G - 1) / 2 binary classifiers.}
 
 \item{control}{a list of parameters for controlling the fitting process, by
 default: maxit, epsilon, trace and inverse.}
@@ -73,19 +86,18 @@ list.
 \dontrun{ 
 ## Time-consuming: selection of 2 levels 
 data(phoneme)
-mlearn<-phoneme[["learn"]][1:100]
-glearn<-as.numeric(phoneme[["classlearn"]][1:100])
+mlearn<-phoneme[["learn"]][1:150]
+glearn<-factor(phoneme[["classlearn"]][1:150])
 dataf<-data.frame(glearn)
 dat=list("df"=dataf,"x"=mlearn)
 a1<-classif.gkam(glearn~x,data=dat)
 summary(a1)
-mtest<-phoneme[["test"]][1:100]
-gtest<-as.numeric(phoneme[["classtest"]][1:100])
+mtest<-phoneme[["test"]][1:150]
+gtest<-factor(phoneme[["classtest"]][1:150])
 newdat<-list("x"=mtest)
 p1<-predict(a1,newdat)
 table(gtest,p1)
-} 
-
+}  
 }
 \references{
 Febrero-Bande M. and Gonzalez-Manteiga W. (2012).

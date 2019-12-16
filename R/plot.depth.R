@@ -4,7 +4,7 @@ plot.mdepth<-function(x, trim,  levgray=.9,...){
   x <- dep$x
   y <- dep$xx
   d<-ncol(x)
-	if (class(dep)=="mdepth"){
+	if (is(dep,"mdepth")){
   	name=dep$name
   	mtrim=dep$mtrim
   	med=dep$median

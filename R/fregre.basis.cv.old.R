@@ -203,7 +203,7 @@ fregre.basis.cv.old <- function(fdataobj,y,basis.x=NULL,basis.b=NULL,
       coefficients<-cbind(b.est,std.error,t.value,p.value)
       colnames(coefficients) <- c("Estimate", "Std. Error", "t value", "Pr(>|t|)")
       rownames(coefficients)<-colnames(Z.opt)
-      class(object.lm)<-"lm"
+      class(object.lm) <- "lm"
   b.est=b.est[-1]
   names(b.est)<-rownames(coefficients)[-1]
   lambda2<-paste("lambda=",lambda,sep="")

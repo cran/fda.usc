@@ -5,10 +5,22 @@
 \title{Goodness-of fit test for the functional linear model using random
 projections}
 \usage{
-rp.flm.test(X.fdata, Y, beta0.fdata = NULL, B = 1000, n.proj = 10,
-  est.method = "pc", p = NULL, p.criterion = "SICc", pmax = 20,
-  type.basis = "bspline", projs = 0.95, verbose = TRUE,
-  same.rwild = FALSE, ...)
+rp.flm.test(
+  X.fdata,
+  Y,
+  beta0.fdata = NULL,
+  B = 1000,
+  n.proj = 10,
+  est.method = "pc",
+  p = NULL,
+  p.criterion = "SICc",
+  pmax = 20,
+  type.basis = "bspline",
+  projs = 0.95,
+  verbose = TRUE,
+  same.rwild = FALSE,
+  ...
+)
 }
 \arguments{
 \item{X.fdata}{functional observations in the class

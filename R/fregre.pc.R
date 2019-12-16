@@ -106,7 +106,7 @@
 #' 
 #' @export fregre.pc
 fregre.pc=function (fdataobj, y, l =NULL,lambda=0,P=c(0,0,1),weights=rep(1,len=n),...){
-  if (class(fdataobj)=="fdata.comp") {
+  if (is(fdataobj,"fdata.comp")) {
     pc<-fdataobj
     fdataobj<-pc$fdataobj
     if (is.null(l))    {
@@ -332,7 +332,7 @@ fregre.pc=function (fdataobj, y, l =NULL,lambda=0,P=c(0,0,1),weights=rep(1,len=n
 #' }
 #' @export fregre.pls
 fregre.pls=function(fdataobj, y=NULL, l = NULL,lambda=0,P=c(0,0,1),...){
-  if (class(fdataobj)=="fdata.comp") {
+  if (is(fdataobj,"fdata.comp")) {
     pc<-fdataobj
     fdataobj<-pc$fdataobj
     if  (is.null(l)) l<-1:nrow(pc$rotation)
@@ -505,7 +505,7 @@ fregre.pls=function(fdataobj, y=NULL, l = NULL,lambda=0,P=c(0,0,1),...){
 #' @export fregre.pls.cv
 fregre.pls.cv=function (fdataobj, y, kmax=8,lambda=0,P=c(0,0,1),
                         criteria = "SIC",...) {
-  if (class(fdataobj)=="fdata.comp") {
+  if (is(fdataobj,"fdata.comp")) {
     pc<-fdataobj
     fdataobj<-pc$fdataobj
     kmax<-nrow(pc$basis)
@@ -716,7 +716,7 @@ fregre.pc.cv = function (fdataobj, y, kmax=8,lambda=0,P=c(0,0,1),criteria = "SIC
     l<-kmax
     kmax<-max(kmax)
   }
-  if (class(fdataobj)=="fdata.comp") {
+  if (is(fdataobj,"fdata.comp")) {
     fdataobj<-fdataobj$fdataobj
     if (min(lambda)!=0 | !is.null(P)) warning("The arguments lambda and P are not used")
   }

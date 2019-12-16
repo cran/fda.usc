@@ -5,8 +5,16 @@
 \title{Functional penalized PC regression with scalar response using selection of
 number of PC components}
 \usage{
-fregre.pc.cv(fdataobj, y, kmax = 8, lambda = 0, P = c(0, 0, 1),
-  criteria = "SIC", weights = rep(1, len = n), ...)
+fregre.pc.cv(
+  fdataobj,
+  y,
+  kmax = 8,
+  lambda = 0,
+  P = c(0, 0, 1),
+  criteria = "SIC",
+  weights = rep(1, len = n),
+  ...
+)
 }
 \arguments{
 \item{fdataobj}{\code{\link{fdata}} class object.}

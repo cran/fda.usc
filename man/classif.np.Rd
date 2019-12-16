@@ -6,14 +6,38 @@
 \alias{classif.knn}
 \title{Kernel Classifier from Functional Data}
 \usage{
-classif.np(group, fdataobj, h = NULL, Ker = AKer.norm, metric,
-  weights = "equal", type.S = S.NW, par.S = list(), ...)
+classif.np(
+  group,
+  fdataobj,
+  h = NULL,
+  Ker = AKer.norm,
+  metric,
+  weights = "equal",
+  type.S = S.NW,
+  par.S = list(),
+  ...
+)
 
-classif.knn(group, fdataobj, knn = NULL, metric, weights = "equal",
-  par.S = list(), ...)
+classif.knn(
+  group,
+  fdataobj,
+  knn = NULL,
+  metric,
+  weights = "equal",
+  par.S = list(),
+  ...
+)
 
-classif.kernel(group, fdataobj, h = NULL, Ker = AKer.norm, metric,
-  weights = "equal", par.S = list(), ...)
+classif.kernel(
+  group,
+  fdataobj,
+  h = NULL,
+  Ker = AKer.norm,
+  metric,
+  weights = "equal",
+  par.S = list(),
+  ...
+)
 }
 \arguments{
 \item{group}{Factor of length \emph{n}}

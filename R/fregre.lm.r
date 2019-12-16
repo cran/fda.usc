@@ -173,7 +173,7 @@ if (lenvfunc>0) {
  mean.list=vs.list=JJ=list()
  bsp1<-bsp2<-TRUE
  for (i in 1:lenvfunc) {
-	if(class(data[[vfunc[i]]])[1]=="fdata"){
+	if(is(data[[vfunc[i]]],"fdata")){
       tt<-data[[vfunc[i]]][["argvals"]]
       rtt<-data[[vfunc[i]]][["rangeval"]]
       np<-length(tt)
@@ -256,10 +256,10 @@ if (lenvfunc>0) {
    }
   }
  	else {
- 		if(class(data[[vfunc[i]]])[1]=="fd"){
+ 		if (is(data[[vfunc[i]]],"fd")){
       fdat<-data[[vfunc[i]]]
       if (is.null(basis.x[[vfunc[i]]]))  basis.x[[vfunc[i]]]<-fdat$basis
-      else   if (class(basis.x[[vfunc[i]]])=="pca.fd") bsp1=FALSE
+      else   if (is(basis.x[[vfunc[i]]],"pca.fd")) bsp1=FALSE
       if (is.null(basis.b[[vfunc[i]]])& bsp1)
          basis.b[[vfunc[i]]]<-create.fdata.basis(fdat,
          l=1:max(5,floor(basis.x[[vfunc[i]]]$nbasis/5)),type.basis=basis.x[[vfunc[i]]]$type,
@@ -334,69 +334,36 @@ if (!is.data.frame(XX)) XX=data.frame(XX)
        class(z)<-c("lm","fregre.lm")
       return(z )
       }
-      else       z=lm(formula=pf,data=XX,x=TRUE,...)
-      e<-z$residuals
+      else       z <- lm(formula=pf,data=XX,x=TRUE,...)
+      e <- z$residuals
       
-A0 <-t(scores)%*%W%*%scores
-#print(dim(scores));print(dim(A0))
+A0 <- t(scores)%*%W%*%scores
 A  <- t(scores)%*%sqrt(W)#%*%scores
-#print(dim(A))
 #coefs3<-qr.solve(t(A),matrix(y,nrow=215))
 coefs3<-qr.solve(t(A),y)
-#print((qr3))
 #print(A0[1:4,1:5]-A[1:4,1:5])
 #B<-eigen(A)
-#print("aaaa")
-#print(dim(B$vectors))
 #S2<-solve(B$vectors   )
 S2<-solve(A0)
 Cinv<-S2%*%t(scores)%*%W      
 coefs<-Cinv%*%XX[,1]
-
 #S3<-solve(A)
 #Cinv3<-S2%*%t(scores)%*%W      
 #coefs3<-Cinv3%*%XX[,1]
-
 #Cinv<-S2%*%t(scores)   
 #print(S2[1:5,1:4])
 S<-diag(coef(summary(z))[,2])
-
-#print("QR")
-#print(z$qr$qr[1:4,1:5] )
-#print("S")
 ycen = y - mean(y)
-#print(S[1:4,1:5]);print("S2");print(S2[1:4,1:5])
-#print("Cinv");print(t(Cinv[1:4,1:5]))
-#print(dim(S2));print(dim(Cinv))
-#print("qr")
 qr0<-qr(scores, LAPACK = F)
-# print(qr0$qr[1:4,1:5])
-# print("qr1")
-# print("qr3")
-# print(dim(qr0$qr))
 #qr1<-solve(qr0$qr,matrix(ycen)
-# print("peta")
-#print(dim(scores))
 coef.qr<-qr.coef(qr0, y)
-# print("peta2")
-# print(coef.qr)
-# print(coef(z))
-# print(coefs[,1])
-# print(coefs3)
-# print(sum(abs(coef.qr-coef(z))))
-# print(sum(abs(coef.qr-coefs[,1])))
-# print(sum(abs(coefs[,1]-coef(z))))
-# print(sum(abs(coef.qr-coefs3)))
-
-class(z)<-c(class(z),"fregre.lm")
+class(z) <- c(class(z),"fregre.lm")
       }      
     else {
       ycen = y - mean(y)
 #      qr0<-solve(qr(t(scores)%*%W%*%scores+mat2, LAPACK = TRUE),ycen)
 #      mat2<-0
        if (lambda0) { S<-solve(t(scores)%*%W%*%scores+mat2)           }             
-#print(qr[1:4:1:5]      )
-#print(S[1:4:1:5])
        if (rn0) {
              mat<-diag(mat)
              S<-solve(t(scores)%*%W%*%scores+mat)       
@@ -413,8 +380,7 @@ class(z)<-c(class(z),"fregre.lm")
       z$fitted.values<-yp<-drop(scores%*%coefs)
       e<-z$residuals<-XX[,1]- z$fitted.values      
 ################################################################################
-################################################################################
-################################################################################           
+          
       H<-scores%*%Cinv
       if  (!hay.pls) df<-fdata.trace(H)  
       z$mean.list<-mean.list
@@ -482,24 +448,23 @@ for (i in 1:length(vfunc)) {
       }
 }
 }
- z$sr2<-sum(e^2)/z$df.residual
- z$Vp=z$sr2*S
- z$beta.l=beta.l
- z$formula=pf
- z$mean=mean.list
- z$formula.ini=formula
- z$basis.x=basis.x
- z$basis.b=basis.b
- z$JJ<-JJ
- z$data=z$data
- z$XX=XX
- z$data<-data
- z$fdataobj<-data[[vfunc[1]]]
- z$rn<-rn0
- z$lambda<-lambda0
- z$vs.list=vs.list   
-## z$ar<-aa
- class(z)<-c("fregre.lm","lm")
+ z$sr2 <- sum(e^2)/z$df.residual
+ z$Vp <- z$sr2*S
+ z$beta.l <- beta.l
+ z$formula <- pf
+ z$mean <- mean.list
+ z$formula.ini <- formula
+ z$basis.x <- basis.x
+ z$basis.b <- basis.b
+ z$JJ <- JJ
+ z$data <- z$data
+ z$XX <- XX
+ z$data <- data
+ z$fdataobj <- data[[vfunc[1]]]
+ z$rn <- rn0
+ z$lambda <- lambda0
+ z$vs.list <- vs.list   
+ class(z) <- c("fregre.lm","lm")
  z
 }     
 

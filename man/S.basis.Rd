@@ -4,8 +4,7 @@
 \alias{S.basis}
 \title{Smoothing matrix with roughness penalties by basis representation.}
 \usage{
-S.basis(tt, basis, lambda = 0, Lfdobj = vec2Lfd(c(0, 0)), w = NULL,
-  ...)
+S.basis(tt, basis, lambda = 0, Lfdobj = vec2Lfd(c(0, 0)), w = NULL, ...)
 }
 \arguments{
 \item{tt}{Discretization points.}

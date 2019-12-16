@@ -4,8 +4,16 @@
 \alias{GCCV.S}
 \title{The generalized correlated cross-validation (GCCV) score.}
 \usage{
-GCCV.S(y, S, criteria = "GCCV1", W = NULL, trim = 0, draw = FALSE,
-  metric = metric.lp, ...)
+GCCV.S(
+  y,
+  S,
+  criteria = "GCCV1",
+  W = NULL,
+  trim = 0,
+  draw = FALSE,
+  metric = metric.lp,
+  ...
+)
 }
 \arguments{
 \item{y}{Response vectorith length \code{n} or Matrix of set cases with

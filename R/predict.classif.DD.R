@@ -177,7 +177,7 @@ predict.classif.DD<-function(object,new.fdataobj=NULL,type="class",...){
     if (length(object$par.classif$pol)==2) object$classif="DD2"
     if (length(object$par.classif$pol)==3) object$classif="DD3"
   }
-#print(object$classif)
+  #print(object$classif)
   group.est<-switch(object$classif,
                     # MD={gest<-apply(Df,1,which.max)},
                     DD1={
@@ -291,8 +291,10 @@ predict.classif.DD<-function(object,new.fdataobj=NULL,type="class",...){
                     qda={group.es<-predict(object$fit,Df)$class},
                     glm={
                       dat<-data.frame(Df)
-                      #group.est<-pred2glm2boost(object$fit,list("df"=dat))
+                      #group.est<-pred2glm2boost(object$fit,list("df"=dat))$gro
+                      # print(group.est)
                       group.est<-predict(object$fit,list("df"=dat),type = "class")
+                      group.est
                       },
                     gam={
                       dat<-data.frame(Df) 

@@ -137,7 +137,9 @@ if   (!intercept) {
      }
 }
 else {
+  # print("peta1");  print(response);  print(names(data))
  XX=data.frame(data[[1]][,response])
+ # print("peta2")
  names(XX)=response
 }
 if (is.null(control$maxit))  control$maxit<-100
@@ -253,14 +255,8 @@ if (family$family=="binomial") {
             offdf = sum(eqrank[-i])
             xfunc = xlist[[namesx[i]]][good]
             mgood<- metric[[namesx[i]]]
-#            class( mgood)<-"matrix"
-#            mgood<- mgood[good,good]
-#            attributes(mgood)<-c(attributes(mgood),attributes(metric[[namesx[i]]])[-1])
             h<-par.np2[[namesx[i]]]$h
              if (control$trace)   cat("Range h:", range(h), length(h), "\n")
-#   res2 = fregre.np.cv(xfunc, z, h = h, type.CV = dev.S,
-#                metric = mgood, par.CV = list(obs = y[good],
-#                  family = family, off = off, offdf = offdf,weights = diag(weights)))
            Ker=par.np2[[namesx[i]]]$Ker
            type.S=par.np2[[namesx[i]]]$type.S
            parS=par.np2[[namesx[i]]]$par.S
@@ -384,3 +380,5 @@ if (family$family=="binomial") {
     class(res) <- "fregre.gkam"
     res
 }
+
+

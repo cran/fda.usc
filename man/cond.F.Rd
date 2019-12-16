@@ -4,9 +4,17 @@
 \alias{cond.F}
 \title{Conditional Distribution Function}
 \usage{
-cond.F(fdata0, y0, fdataobj, y, h = 0.15, g = 0.15,
-  metric = metric.lp, Ker = list(AKer = AKer.epa, IKer = IKer.epa),
-  ...)
+cond.F(
+  fdata0,
+  y0,
+  fdataobj,
+  y,
+  h = 0.15,
+  g = 0.15,
+  metric = metric.lp,
+  Ker = list(AKer = AKer.epa, IKer = IKer.epa),
+  ...
+)
 }
 \arguments{
 \item{fdata0}{Conditional explanatory functional data of \code{\link{fdata}}

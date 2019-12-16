@@ -1,5 +1,5 @@
 #' @rdname fanova.RPm
-#' @aliases fanova.RPm summary.fanova.RPm
+#' @aliases fanova.RPm summary.fanova.RPm anova.RPm
 #' @note anova.RPm deprecated.
 #' @title Functional ANOVA with Random Project.
 #' 
@@ -121,9 +121,8 @@
 fanova.RPm=function(object,formula,data.fac,RP=min(30,ncol(object)),alpha=0.95,
                    zproj=NULL,par.zproj=list(norm=TRUE),hetero=TRUE,
                    pr=FALSE,w=rep(1,ncol(object)),nboot=0,contrast=NULL,...){
-  if (class(object) %in% c("matrix","data.frame")) dataM=as.matrix(object)
+  if (class(object)[1] %in% c("matrix","data.frame")) dataM=as.matrix(object)
   else if (is.fdata(object)) dataM=object[["data"]]
-#  if (class(data.fac)=="data.frame") data.fac=as.matrix(data.fac) #new
   lfac=unlist(lapply(data.fac,is.factor))
   min.data.fac<-min(table(data.fac[,lfac]))
   if (min.data.fac==0)  warning("Contingency table of factor levels (data.fac argument) contains 0 counts  values")
@@ -145,21 +144,21 @@ projMV=function(n,m,w=rep(1,m),norm=TRUE){
 	z=z/modu}
 }
 if ((class(object) %in% c("matrix","data.frame")) & is.null(zproj)) zproj=projMV  
-if ((class(object)=="fdata") & is.null(zproj)) zproj=rproc2fdata  
-  if (class(zproj)=="fdata" & class(object)=="fdata") { 
+if ((is.fdata(object)) & is.null(zproj)) zproj=rproc2fdata  
+  if (is.fdata(zproj) & is.fdata(object)) { 
 	if (nrow(zproj)>=nprRP) { 
 			z=zproj[1:nprRP] 
 			} else {
 			stop(paste("Not enough functions in zproj",length(zproj)," to compute ",nprRP," projections"))  
 			}
-			} else if (class(zproj)=="matrix" & (class(object) %in% c("matrix","data.frame"))){
+			} else if (is.matrix(zproj) & (class(object)[1] %in% c("matrix","data.frame"))){
 	if (nrow(zproj)>=nprRP){
 			z=zproj[1:nprRP,] } else {
 			stop(paste("Not enough rows in zproj",nrow(zproj)," to compute ",nprRP," projections"))
 			}
-			}  else if (class(zproj)=="function"){
-			if (class(object)=="fdata") {z=do.call(zproj,modifyList(list(n=nprRP,t=object$argvals),par.zproj))}
-			 else if (class(object) %in% c("matrix","data.frame")) {z=do.call(zproj,modifyList(list(n=nprRP,m=ncol(object)),par.zproj))}
+			}  else if (is.function(zproj)){
+			if (is.fdata(object)) {z=do.call(zproj,modifyList(list(n=nprRP,t=object$argvals),par.zproj))}
+			 else if (class(object)[1] %in% c("matrix","data.frame")) {z=do.call(zproj,modifyList(list(n=nprRP,m=ncol(object)),par.zproj))}
 			} else {stop("Parameter zproj is neither an fdata object or a function")}
 
   ff=attr(terms.fd,"factors")
@@ -212,9 +211,9 @@ if (pr) {
   }
   for (j in 1:nprRP){
 #    value=data%*%z[j,]
-	if (class(object)=="fdata") {
+	if (is(object,"fdata")) {
 	value=inprod.fdata(object,z[j]) 
-	} else if (class(object)=="data.frame" | class(object)=="matrix") {
+	} else if (is(object,"data.frame") | is(object,"matrix")) {
 	value=dataM%*%z[j,]
 	}
     mdata=as.data.frame(cbind(value,data.fac))
@@ -300,8 +299,8 @@ if (nboot>0) {
    resb[resb>1]=1
    res$test.Boot=(resb<(1-alpha));res$p.Boot=resb
   colnames(res$p.Boot)=colnames(mat);colnames(res$test.Boot)=colnames(mat)}
-if (!is.null(contrast)) res$contrast=contrast
- class(res)="fanova.RPm"
+if (!is.null(contrast)) res$contrast <- contrast
+class(res) <- "fanova.RPm"
 return(res)
 }
 

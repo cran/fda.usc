@@ -14,18 +14,15 @@
 \alias{mdepth.KFSD}
 \title{Provides the depth measure for multivariate data}
 \usage{
-mdepth.LD(x, xx = x, metric = metric.dist, h = NULL, scale = FALSE,
-  ...)
+mdepth.LD(x, xx = x, metric = metric.dist, h = NULL, scale = FALSE, ...)
 
-mdepth.HS(x, xx = x, proj = 50, scale = FALSE, xeps = 1e-15,
-  random = FALSE)
+mdepth.HS(x, xx = x, proj = 50, scale = FALSE, xeps = 1e-15, random = FALSE)
 
 mdepth.RP(x, xx = x, proj = 50, scale = FALSE)
 
 mdepth.MhD(x, xx = x, scale = FALSE)
 
-mdepth.KFSD(x, xx = x, trim = 0.25, h = NULL, scale = FALSE,
-  draw = FALSE)
+mdepth.KFSD(x, xx = x, trim = 0.25, h = NULL, scale = FALSE, draw = FALSE)
 
 mdepth.FSD(x, xx = x, trim = 0.25, scale = FALSE, draw = FALSE)
 

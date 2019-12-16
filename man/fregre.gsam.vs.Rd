@@ -4,9 +4,21 @@
 \alias{fregre.gsam.vs}
 \title{Variable Selection using Functional Additive Models}
 \usage{
-fregre.gsam.vs(data = list(), y, include = "all", exclude = "none",
-  family = gaussian(), weights = NULL, basis.x = NULL, kbs,
-  dcor.min = 0.1, alpha = 0.05, par.model, xydist, trace = FALSE)
+fregre.gsam.vs(
+  data = list(),
+  y,
+  include = "all",
+  exclude = "none",
+  family = gaussian(),
+  weights = NULL,
+  basis.x = NULL,
+  kbs,
+  dcor.min = 0.1,
+  alpha = 0.05,
+  par.model,
+  xydist,
+  trace = FALSE
+)
 }
 \arguments{
 \item{data}{List that containing the variables in the model. 

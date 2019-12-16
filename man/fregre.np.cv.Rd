@@ -5,9 +5,18 @@
 \title{Cross-validation functional regression with scalar response using kernel
 estimation.}
 \usage{
-fregre.np.cv(fdataobj, y, h = NULL, Ker = AKer.norm,
-  metric = metric.lp, type.CV = GCV.S, type.S = S.NW,
-  par.CV = list(trim = 0), par.S = list(w = 1), ...)
+fregre.np.cv(
+  fdataobj,
+  y,
+  h = NULL,
+  Ker = AKer.norm,
+  metric = metric.lp,
+  type.CV = GCV.S,
+  type.S = S.NW,
+  par.CV = list(trim = 0),
+  par.S = list(w = 1),
+  ...
+)
 }
 \arguments{
 \item{fdataobj}{\code{\link{fdata}} class object.}

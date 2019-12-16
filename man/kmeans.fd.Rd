@@ -6,13 +6,31 @@
 \alias{kmeans.centers.update}
 \title{K-Means Clustering for functional data}
 \usage{
-kmeans.center.ini(fdataobj, ncl = 2, metric = metric.lp, draw = TRUE,
-  method = "sample", iter = 100, par.metric = NULL, ...)
+kmeans.center.ini(
+  fdataobj,
+  ncl = 2,
+  metric = metric.lp,
+  draw = TRUE,
+  method = "sample",
+  max.iter = 100,
+  max.comb = 1e+06,
+  par.metric = NULL,
+  ...
+)
 
-kmeans.fd(fdataobj, ncl = 2, metric = metric.lp,
-  dfunc = func.trim.FM, max.iter = 100, par.metric = NULL,
-  par.dfunc = list(trim = 0.05), par.ini = list(method = "sample"),
-  draw = TRUE, ...)
+kmeans.fd(
+  fdataobj,
+  ncl = 2,
+  metric = metric.lp,
+  dfunc = func.trim.FM,
+  max.iter = 100,
+  par.metric = NULL,
+  par.dfunc = list(trim = 0.05),
+  method = "sample",
+  cluster.size = 5,
+  draw = TRUE,
+  ...
+)
 }
 \arguments{
 \item{fdataobj}{\code{\link{fdata}} class object.}
@@ -27,11 +45,13 @@ kmeans.fd(fdataobj, ncl = 2, metric = metric.lp,
 \code{method}=\emph{"Sample"} (by default) takes \code{n} times a random
 selection by the \code{ncl} centers. The \code{ncl} curves with greater
 distance are the initial centers. If \code{method}=\emph{"Exact"} calculated
-all combinations of \code{ncl} centers. The \code{ncl} curves with greater
+all combinations (if < 1e+6) of \code{ncl} centers. The \code{ncl} curves with greater
 distance are the initial centers (this method may be too slow).}
 
-\item{iter}{Maximum number of random samples for the initial selection of
-centers.}
+\item{max.iter}{Maximum number of iterations for the detection of centers.}
+
+\item{max.comb}{Maximum number of initial selection of
+centers (only used when \code{method="exact"}).}
 
 \item{par.metric}{List of arguments to pass to the \code{metric} function.}
 
@@ -39,12 +59,10 @@ centers.}
 
 \item{dfunc}{Type of depth measure, by default FM depth.}
 
-\item{max.iter}{Maximum number of iterations for the detection of centers.}
-
 \item{par.dfunc}{List of arguments to pass to the \code{dfunc} function .}
 
-\item{par.ini}{List of arguments to pass to the \code{kmeans.center.ini}
-function .}
+\item{cluster.size}{Minimum cluster size (by default is 5). If a cluster has fewer curves,
+it is eliminated and the process is continued with a less cluster.}
 }
 \value{
 Return:
@@ -76,7 +94,7 @@ mlearn<-phoneme$learn[c(1:50,101:150,201:250),]
 
 # Unsupervised classification
 out.fd1=kmeans.fd(mlearn,ncl=3,draw=TRUE)
-out.fd2=kmeans.fd(mlearn,ncl=3,draw=TRUE,par.ini=list(method="exact"))
+out.fd2=kmeans.fd(mlearn,ncl=3,draw=TRUE,method="exact")
 # Different Depth function
 ind=c(17,77,126)
 out.fd3=kmeans.fd(mlearn,ncl=mlearn[ind,],draw=FALSE,

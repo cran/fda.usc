@@ -4,9 +4,16 @@
 \alias{rproc2fdata}
 \title{Simulate several random processes.}
 \usage{
-rproc2fdata(n, t = NULL, mu = rep(0, length(t)), sigma = 1,
+rproc2fdata(
+  n,
+  t = NULL,
+  mu = rep(0, length(t)),
+  sigma = 1,
   par.list = list(scale = 1, theta = 0.2 * diff(rtt), H = 0.5),
-  norm = FALSE, verbose = FALSE, ...)
+  norm = FALSE,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{n}{Number of functional curves to be generated.}

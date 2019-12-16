@@ -9,18 +9,25 @@
 \alias{predict.fregre.plm}
 \title{Predict method for functional regression model}
 \usage{
-\method{predict}{fregre.gkam}(object, newx = NULL, type = "response",
-  ...)
+\method{predict}{fregre.gkam}(object, newx = NULL, type = "response", ...)
 
-\method{predict}{fregre.glm}(object, newx = NULL, type = "response",
-  ...)
+\method{predict}{fregre.glm}(object, newx = NULL, type = "response", ...)
 
-\method{predict}{fregre.gsam}(object, newx = NULL, type = "response",
-  ...)
+\method{predict}{fregre.gsam}(object, newx = NULL, type = "response", ...)
 
-\method{predict}{fregre.lm}(object, newx = NULL, type = "response",
-  se.fit = FALSE, scale = NULL, df = df, interval = "none",
-  level = 0.95, weights = 1, pred.var = res.var/weights, ...)
+\method{predict}{fregre.lm}(
+  object,
+  newx = NULL,
+  type = "response",
+  se.fit = FALSE,
+  scale = NULL,
+  df = df,
+  interval = "none",
+  level = 0.95,
+  weights = 1,
+  pred.var = res.var/weights,
+  ...
+)
 
 \method{predict}{fregre.plm}(object, newx = NULL, ...)
 }

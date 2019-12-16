@@ -149,7 +149,7 @@ outliers.depth.trim<-function(fdataobj,nb=200,smo=0.05,trim=0.01,quan=0.5,
     else {
       if (modal) {
         mdist<-dd$dist[-elim,-elim]
-        class(mdist)<-c("matrix","fdist")        
+        class(mdist) <- c("matrix","fdist")        
         dd<-dfunc(curvasgood,trim=trim,metric=mdist,scale=FALSE)
       }
       else dd<-dfunc(curvasgood,trim=trim,...)

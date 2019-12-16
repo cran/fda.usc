@@ -4,8 +4,17 @@
 \alias{classif.gsam}
 \title{Classification Fitting Functional Generalized Additive Models}
 \usage{
-classif.gsam(formula, data, family = binomial(), weights = "equal",
-  basis.x = NULL, CV = FALSE, prob = 0.5, type = "1vsall", ...)
+classif.gsam(
+  formula,
+  data,
+  family = binomial(),
+  weights = "equal",
+  basis.x = NULL,
+  CV = FALSE,
+  prob = 0.5,
+  type = "1vsall",
+  ...
+)
 }
 \arguments{
 \item{formula}{an object of class \code{formula} (or one that can be coerced
@@ -32,7 +41,10 @@ function, a family function or the result of a call to a family function.
 
 \item{prob}{probability value used for binari discriminant.}
 
-\item{type}{1 vs all (by default) or majority voting.}
+\item{type}{If type is\code{"1vsall"}  (by default) 
+a maximum probability scheme is applied: requires G binary classifiers.
+If type is \code{"majority"}  (only for multicalss classification G > 2) 
+a voting scheme is applied: requires  G (G - 1) / 2 binary classifiers.}
 
 \item{\dots}{Further arguments passed to or from other methods.}
 }

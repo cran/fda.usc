@@ -5,8 +5,15 @@
 \title{Functional Regression with scalar response using Principal Components
 Analysis}
 \usage{
-fregre.pc(fdataobj, y, l = NULL, lambda = 0, P = c(0, 0, 1),
-  weights = rep(1, len = n), ...)
+fregre.pc(
+  fdataobj,
+  y,
+  l = NULL,
+  lambda = 0,
+  P = c(0, 0, 1),
+  weights = rep(1, len = n),
+  ...
+)
 }
 \arguments{
 \item{fdataobj}{\code{\link{fdata}} class object or \code{fdata.comp} class

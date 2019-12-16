@@ -13,25 +13,54 @@
 \alias{classif.multinom}
 \title{Functional classification using ML algotithms}
 \usage{
-classif.nnet(formula, data, basis.x = NULL, weights = "equal", size,
-  ...)
+classif.nnet(formula, data, basis.x = NULL, weights = "equal", size, ...)
 
-classif.rpart(formula, data, basis.x = NULL, weights = "equal",
-  type = "1vsall", ...)
+classif.rpart(
+  formula,
+  data,
+  basis.x = NULL,
+  weights = "equal",
+  type = "1vsall",
+  ...
+)
 
-classif.svm(formula, data, basis.x = NULL, weights = "equal",
-  type = "1vsall", ...)
+classif.svm(
+  formula,
+  data,
+  basis.x = NULL,
+  weights = "equal",
+  type = "1vsall",
+  ...
+)
 
 classif.ksvm(formula, data, basis.x = NULL, weights = "equal", ...)
 
-classif.randomForest(formula, data, basis.x = NULL, weights = "equal",
-  type = "1vsall", ...)
+classif.randomForest(
+  formula,
+  data,
+  basis.x = NULL,
+  weights = "equal",
+  type = "1vsall",
+  ...
+)
 
-classif.lda(formula, data, basis.x = NULL, weights = "equal",
-  type = "1vsall", ...)
+classif.lda(
+  formula,
+  data,
+  basis.x = NULL,
+  weights = "equal",
+  type = "1vsall",
+  ...
+)
 
-classif.qda(formula, data, basis.x = NULL, weights = "equal",
-  type = "1vsall", ...)
+classif.qda(
+  formula,
+  data,
+  basis.x = NULL,
+  weights = "equal",
+  type = "1vsall",
+  ...
+)
 
 classif.naiveBayes(formula, data, basis.x = NULL, laplace = 0, ...)
 }
@@ -55,7 +84,10 @@ details of model specification are given under \code{Details}.}
 
 \item{\dots}{Further arguments passed to or from other methods.}
 
-\item{type}{1 vs all (by default) or majority voting.}
+\item{type}{If type is\code{"1vsall"}  (by default) 
+a maximum probability scheme is applied: requires G binary classifiers.
+If type is \code{"majority"}  (only for multicalss classification G > 2) 
+a voting scheme is applied: requires  G (G - 1) / 2 binary classifiers.}
 
 \item{laplace}{value used for Laplace smoothing (additive smoothing). Defaults to 0 (no Laplace smoothing).}
 }

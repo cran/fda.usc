@@ -175,7 +175,7 @@ if (length(vfunc)>0) {
  mean.list=vs.list=JJ=list()
  bsp1<-bsp2<-TRUE
  for (i in 1:length(vfunc)) {
-	if(class(data[[vfunc[i]]])[1]=="fdata"){
+	if(is(data[[vfunc[i]]],"fdata")){
       tt<-data[[vfunc[i]]][["argvals"]]
       rtt<-data[[vfunc[i]]][["rangeval"]]
       np<-length(tt)
@@ -428,7 +428,7 @@ if (length(vfunc)>0) {
         if  (basis.x[[vfunc[1]]]$type=="pc")  z$call[[1]] = "fregre.pc"
         if  (basis.x[[vfunc[1]]]$type=="pls")  z$call[[1]] = "fregre.pls"        
         }             
-    class(z)<-c("fregre.fd","fregre.lm")
+    class(z) <- c("fregre.fd","fregre.lm")
 #   print("penalizado")
         z$gcv<-GCCV.S(y,z$H,criteria=criteria,W)   
 # print(z$gcv)        

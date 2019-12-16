@@ -4,8 +4,7 @@
 \alias{fdata2pls}
 \title{Partial least squares components for functional data.}
 \usage{
-fdata2pls(fdataobj, y, ncomp = 2, lambda = 0, P = c(0, 0, 1),
-  norm = TRUE, ...)
+fdata2pls(fdataobj, y, ncomp = 2, lambda = 0, P = c(0, 0, 1), norm = TRUE, ...)
 }
 \arguments{
 \item{fdataobj}{\code{\link{fdata}} class object.}

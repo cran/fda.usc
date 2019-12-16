@@ -4,8 +4,7 @@
 \alias{CV.S}
 \title{The cross-validation (CV) score}
 \usage{
-CV.S(y, S, W = NULL, trim = 0, draw = FALSE, metric = metric.lp,
-  ...)
+CV.S(y, S, W = NULL, trim = 0, draw = FALSE, metric = metric.lp, ...)
 }
 \arguments{
 \item{y}{Matrix of set cases with dimension (\code{n} x \code{m}), where

@@ -4,8 +4,14 @@
 \alias{classif.depth}
 \title{Classifier from Functional Data}
 \usage{
-classif.depth(group, fdataobj, newfdataobj, depth = "RP",
-  par.depth = list(), CV = "none")
+classif.depth(
+  group,
+  fdataobj,
+  newfdataobj,
+  depth = "RP",
+  par.depth = list(),
+  CV = "none"
+)
 }
 \arguments{
 \item{group}{Factor of length \emph{n}}

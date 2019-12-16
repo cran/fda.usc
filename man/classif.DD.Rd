@@ -4,9 +4,16 @@
 \alias{classif.DD}
 \title{DD-Classifier Based on DD-plot}
 \usage{
-classif.DD(group, fdataobj, depth = "FM", classif = "glm", w,
-  par.classif = list(), par.depth = list(), control = list(verbose =
-  FALSE, draw = TRUE, col = NULL, alpha = 0.25))
+classif.DD(
+  group,
+  fdataobj,
+  depth = "FM",
+  classif = "glm",
+  w,
+  par.classif = list(),
+  par.depth = list(),
+  control = list(verbose = FALSE, draw = TRUE, col = NULL, alpha = 0.25)
+)
 }
 \arguments{
 \item{group}{Factor of length \emph{n} with \emph{g} levels.}
@@ -58,7 +65,8 @@ selected.}
 Fits Nonparametric Classification Procedure Based on DD--plot
 (depth-versus-depth plot) for G dimensions (\eqn{G=g\times h}{G=g x p}, g
 levels and p data depth).
-
+}
+\details{
 Make the group classification of a training dataset using DD-classifier
 estimation in the following steps.\cr
 
@@ -121,8 +129,8 @@ computed in step (1) using the following classifiers.
 \code{\link{classif.np}}.  
 }
 The user can be specify the parameters for classifier function in \code{par.classif} such as the smoothing parameter
-\code{par.classif[[``h'']]}, if \code{classif="np"} or the k-Nearest
-Neighbour \code{par.classif[[``knn'']]}, if \code{classif="knn"}.
+\code{par.classif[["h"]]}, if \code{classif="np"} or the k-Nearest
+Neighbour \code{par.classif[["knn"]]}, if \code{classif="knn"}.
 
 In the case of polynomial classifier (\code{"DD1"}, \code{"DD2"} and
 \code{"DD3"}) uses the original procedure proposed by Li et al. (2012), by
@@ -207,7 +215,6 @@ out21=classif.DD(glearn,list(mlearn,mlearn),depth=c("FM","RP"),classif="glm")
 summary(out20)
 summary(out21)
 }
-
 }
 \references{
 Cuesta-Albertos, J.A., Febrero-Bande, M. and Oviedo de la Fuente, M.

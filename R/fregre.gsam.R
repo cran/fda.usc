@@ -280,7 +280,7 @@ fregre.gsam <- function (formula, family = gaussian(), data = list(), weights = 
     mean.list = vs.list = JJ = list()
     bsp1 <- bsp2 <- TRUE
     for (i in 1:length(vfunc)) {
-      if (class(data[[vfunc[i]]])[1] == "fdata") {
+      if (is(data[[vfunc[i]]], "fdata")) {
         tt <- data[[vfunc[i]]][["argvals"]]
         rtt <- data[[vfunc[i]]][["rangeval"]]
         fdat <- data[[vfunc[i]]]
@@ -377,7 +377,7 @@ fregre.gsam <- function (formula, family = gaussian(), data = list(), weights = 
                                                       l = 1:max(5, floor(basis.x[[vfunc[i]]]$nbasis/5)), 
                                                       type.basis = basis.x[[vfunc[i]]]$type, 
                                                       rangeval = fdat$basis$rangeval)
-          else if (class(basis.x[[vfunc[i]]]) == "pca.fd") 
+          else if (is(basis.x[[vfunc[i]]],"pca.fd")) 
             bsp2 = FALSE
           if (bsp1 & bsp2) {
             r = fdat[[2]][[3]]

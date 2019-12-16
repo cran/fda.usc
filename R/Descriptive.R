@@ -16,6 +16,7 @@
 #' @param drop logical indicating if levels that do not occur should be dropped
 #' (if f is a factor or a list).
 #' @param fdataobj \code{\link{fdata}} class object.
+#' @param x \code{\link{fdata}} or \code{\link{ldata}}  class object.
 #' @param \dots Further arguments passed to or from other methods.  If the
 #' argument \code{p} is passed, it used \code{\link{metric.lp}} function, by
 #' default \code{p=2}.\cr If the argument \code{trim} (alpha of the trimming)
@@ -104,22 +105,56 @@
 #' 
 #' @rdname Descriptive
 #' @export
-func.mean <- function(fdataobj){
-  if (!is.fdata(fdataobj)) fdataobj<-fdata(fdataobj)
-  fdataobj[["data"]] <- matrix(colMeans(fdataobj[["data"]],na.rm=TRUE),nrow=1)
-  fdataobj$names$main<-"mean"
-  fdataobj
+func.mean<-function (x) {
+  #if (!is.fdata(x)) 
+  #  x <- fdata(x)
+#print("func.mean")  
+  if (is.fdata(x)) {
+    x[["data"]] <- matrix(colMeans(x[["data"]], 
+                                   na.rm = TRUE), nrow = 1)
+    x$names$main <- "mean"
+    xnew<-x
+  } 
+  if (is.data.frame(x)) {
+    #p <- ncol(x)
+    xnew <- x[1,,drop=F]
+    nam <-names(x)
+    clases <- sapply(x,class)
+    iclases <- (clases %in% c("numeric","integer","double"))
+    #x <- as.data.frame(t(colMeans(x[,iclases,drop=F],na.rm = TRUE)))
+    x <- colMeans(---------------------x[,iclases,drop=F],na.rm = TRUE)
+    names(x) <- nam[iclases]
+    #attributes(x)$df.class <- iclases
+    xnew[!iclases] <- NA
+    xnew[iclases] <- x
+    rownames(xnew)<-"mean"
+  }
+  if (is.matrix(x)) {
+    nam <-colnames(x)
+    x <- colMeans(x,na.rm = TRUE)
+    xnew[!iclases] <- NA
+    xnew[iclases] <- x
+  }
+  xnew
 }
+
+
+# func.mean <- function(fdataobj){
+#   if (!is.fdata(fdataobj)) fdataobj<-fdata(fdataobj)
+#   fdataobj[["data"]] <- matrix(colMeans(fdataobj[["data"]],na.rm=TRUE),nrow=1)
+#   fdataobj$names$main<-"mean"
+#   fdataobj
+# }
 
 #' @rdname Descriptive
 #' @export
 func.var<-function(fdataobj){
-if (!is.fdata(fdataobj)) fdataobj<-fdata(fdataobj)
-n<-dim(fdataobj)[1]
-fdataobj[["data"]]<-(n-1)*apply(fdataobj[["data"]],2,var)/n
-fdataobj[["data"]]<-matrix(fdataobj[["data"]],nrow=1)
-fdataobj$names$main<-"var"
-fdataobj
+  if (!is.fdata(fdataobj)) fdataobj<-fdata(fdataobj)
+  n<-dim(fdataobj)[1]
+  fdataobj[["data"]]<-(n-1)*apply(fdataobj[["data"]],2,var)/n
+  fdataobj[["data"]]<-matrix(fdataobj[["data"]],nrow=1)
+  fdataobj$names$main<-"var"
+  fdataobj
 }
 
 #' @rdname Descriptive

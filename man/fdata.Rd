@@ -4,8 +4,7 @@
 \alias{fdata}
 \title{Converts raw data or other functional data classes into fdata class.}
 \usage{
-fdata(mdata, argvals = NULL, rangeval = NULL, names = NULL,
-  fdata2d = FALSE)
+fdata(mdata, argvals = NULL, rangeval = NULL, names = NULL, fdata2d = FALSE)
 }
 \arguments{
 \item{mdata}{Matrix of set cases with dimension (\code{n} x \code{m}), where

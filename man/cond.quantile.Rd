@@ -4,9 +4,18 @@
 \alias{cond.quantile}
 \title{Conditional quantile}
 \usage{
-cond.quantile(qua = 0.5, fdata0, fdataobj, y, fn, a = min(y),
-  b = max(y), tol = 10^floor(log10(max(y) - min(y)) - 3),
-  iter.max = 100, ...)
+cond.quantile(
+  qua = 0.5,
+  fdata0,
+  fdataobj,
+  y,
+  fn,
+  a = min(y),
+  b = max(y),
+  tol = 10^floor(log10(max(y) - min(y)) - 3),
+  iter.max = 100,
+  ...
+)
 }
 \arguments{
 \item{qua}{Quantile value, by default the median (\code{qua}=0.5).}

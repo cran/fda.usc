@@ -5,10 +5,20 @@
 \title{Cross-validation Functional Regression with scalar response using basis
 representation.}
 \usage{
-fregre.basis.cv(fdataobj, y, basis.x = NULL, basis.b = NULL,
-  type.basis = NULL, lambda = 0, Lfdobj = vec2Lfd(c(0, 0), rtt),
-  type.CV = GCV.S, par.CV = list(trim = 0), weights = rep(1, n),
-  verbose = FALSE, ...)
+fregre.basis.cv(
+  fdataobj,
+  y,
+  basis.x = NULL,
+  basis.b = NULL,
+  type.basis = NULL,
+  lambda = 0,
+  Lfdobj = vec2Lfd(c(0, 0), rtt),
+  type.CV = GCV.S,
+  par.CV = list(trim = 0),
+  weights = rep(1, n),
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{fdataobj}{\code{\link{fdata}} class object.}

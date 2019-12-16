@@ -4,8 +4,14 @@
 \alias{fdata.deriv}
 \title{Computes the derivative of functional data object.}
 \usage{
-fdata.deriv(fdataobj, nderiv = 1, method = "bspline",
-  class.out = "fdata", nbasis = NULL, ...)
+fdata.deriv(
+  fdataobj,
+  nderiv = 1,
+  method = "bspline",
+  class.out = "fdata",
+  nbasis = NULL,
+  ...
+)
 }
 \arguments{
 \item{fdataobj}{\code{\link{fdata}} class object.}

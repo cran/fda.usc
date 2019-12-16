@@ -197,7 +197,7 @@ if (is.null(n) && is.null(m)) stop("ERROR IN THE DATA DIMENSIONS")
 if (is.null(m) && is.null(m2)) stop("ERROR IN THE DATA DIMENSIONS")
 if (is.matrix(metric)) mdist=metric                    
 else  mdist=metric(fdataori,fdataori,...)
-class(mdist)<-"matrix"
+class(mdist) <- "matrix"
 
 if (n==n2 & m==m2) {
   equal<-all(fdataobj$data==fdataori$data)
@@ -212,7 +212,7 @@ else {
   if (is.numeric(h))    hq2<-h  
   else hq2=quantile(mdist,probs=as.numeric(h),na.rm=TRUE)
 }
-class(mdist)<-class(mdist2)<-c("matrix","fdist")
+class(mdist) <- class(mdist2) <- c("matrix","fdist")
 dep<-Ker.norm(mdist2/hq2)    ####
 dep<-apply(dep,1,sum,na.rm=TRUE)                                    
 if (scale)   {
@@ -250,9 +250,9 @@ med=fdataobj[k]
 if (scale) out$dscale=mx
    out$trim <- trim
    out$name <- "mode"
-   out$fdataobj=fdataobj
-   out$fdataori=fdataori
-  class(out)="depth"
+   out$fdataobj <- fdataobj
+   out$fdataori <- fdataori
+  class(out) <- "depth"
   if (draw){
 		plot.depth(out)
   }
@@ -358,9 +358,9 @@ depth.RP<-function(fdataobj,fdataori=fdataobj,trim=0.25,nproj=50,proj="vexponent
   out=list("median"=med,"lmed"=k,"mtrim"=mtrim,"ltrim"=if (nl==1) unlist(lista) else lista, "dep"=dep,"proj"=z,dfunc=dfunc,par.dfunc=par.dfunc)
   out$trim <- trim
   out$name <- "RP"
-  out$fdataobj=fdataobj
-  out$fdataori=fdataori
-  class(out)="depth"
+  out$fdataobj <- fdataobj
+  out$fdataori <- fdataori
+  class(out) <- "depth"
   if (draw){
     plot.depth(out)
   }
@@ -463,8 +463,8 @@ depth.RPD<-function (fdataobj,fdataori=fdataobj, nproj = 20, proj=1,deriv = c(0,
            ltrim = if (nl==1) unlist(lista) else lista, dep = dep,deriv=deriv,proj = z,name="RPD")
   out$trim <- trim
   out$name <- "RPD"
-  out$fdataobj=fdataobj
-  out$fdataori=fdataori
+  out$fdataobj <- fdataobj
+  out$fdataori <- fdataori
   class(out)="depth"
   if (draw) {
     plot.depth(out)

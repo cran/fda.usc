@@ -316,9 +316,7 @@ fregre.gsam.vs  <- function(data = list(), y,
           basisx[[xentra]] <- basis1
           basisb[[xentra]] <- basis2
         }
-      }
-      #     print(xentra)
-      #     print(class(ldata0[[xentra]]))          
+      }       
       if (!parar) {
         xentran <- c(xentran,xentra)
         ind.xentra2 <- which(xentra==names(ldist0))

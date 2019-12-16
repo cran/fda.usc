@@ -141,7 +141,7 @@ depth.modep=function(mfdata,mfdataref=mfdata,h=NULL,metric,
                      scale=FALSE,trim=0.25,draw=FALSE,ask=FALSE) 
 {
   equal<-identical(mfdata,mfdataref)
-  if (class(mfdata)=="list"){
+  if (class(mfdata) == "list"){
     lenl <- length(mfdata)
     lenl2 <- length(mfdataref)
     m0 <- nrow(mfdata[[1]])
@@ -183,13 +183,9 @@ depth.modep=function(mfdata,mfdataref=mfdata,h=NULL,metric,
     else hq2=quantile(mdist,probs=as.numeric(h),na.rm=TRUE)
   }
   #print(hq2)
-  class(mdist2)<-class(mdist)<-c("matrix","fdist")
-  dep<-Ker.norm(mdist2/hq2)    #### en (nxm) matrix (new X ref)
-  #print(ans)
-  dep<-apply(dep,1,sum,na.rm=TRUE)                                    
-  #print(ans)
-  #print(ans[1:3])
-  
+  class(mdist2) <- class(mdist)<-c("matrix","fdist")
+  dep <- Ker.norm(mdist2/hq2)    #### en (nxm) matrix (new X ref)
+  dep <- apply(dep,1,sum,na.rm=TRUE)                                      
   if (scale)   {
     dep2<-Ker.norm(mdist/hq2)
     dep2<-apply(dep2,1,sum,na.rm=TRUE)
@@ -268,17 +264,17 @@ depth.modep=function(mfdata,mfdataref=mfdata,h=NULL,metric,
 depth.RPp<-function (mfdata,mfdataref=mfdata, nproj = 50, proj="vexponential",trim = 0.25,
 dfunc="mdepth.TD",par.dfunc=list(scale=TRUE),draw = FALSE,ask=FALSE){  
 verbose<-TRUE
-if (class(mfdata)!="list") stop("mfdata input must be a list of fdata objects")
-if (class(mfdataref)!="list") stop("mfdataref input must be a list of fdata objects")
- lenl<-length(mfdata)
- lenl2<-length(mfdataref)
- n<-nrow(mfdata[[1]])
- m<-nrow(mfdataref[[1]]) 
- mdist2<-matrix(0,n,n)
- amdist<-array(NA,dim=c(n,m,lenl))
- mdist<-list()
- nam1<-names(mfdata)
- nam2<-names(mfdataref) 
+if (!is(mfdata,"list"))     stop("mfdata input must be a list of fdata objects")
+if (!is(mfdataref,"list")) stop("mfdataref input must be a list of fdata objects")
+ lenl <- length(mfdata)
+ lenl2 <- length(mfdataref)
+ n <- nrow(mfdata[[1]])
+ m <- nrow(mfdataref[[1]]) 
+ mdist2 <- matrix(0,n,n)
+ amdist <- array(NA,dim=c(n,m,lenl))
+ mdist <- list()
+ nam1 <- names(mfdata)
+ nam2 <- names(mfdataref) 
  if (is.null(nam1)) {names(mfdata)<-nam1<-paste("var",1:lenl,sep="")}
  if (is.null(nam2)) {names(mfdataref)<-nam2<-paste("var",1:lenl2,sep="")} 
 # depth<-paste("mdepth.",dfunc,sep="")
@@ -295,8 +291,8 @@ if (class(mfdataref)!="list") stop("mfdataref input must be a list of fdata obje
   names2$main <- paste("RPD trim ", trim * 100, "%", sep = "")
   n <- nrow(data)
   m <- ncol(data)
-  m2<-ncol(data2)
-  n2<-nrow(data2) 
+  m2 <- ncol(data2)
+  n2 <- nrow(data2) 
   if (is.null(m) && is.null(m2)) stop("ERROR IN THE DATA DIMENSIONS")
   modulo = function(z) {        sqrt(sum(z^2))    }
   if (is.null(n) || is.null(m))       stop("Input must be a matrix")
@@ -515,7 +511,6 @@ depth.FMp=function(mfdata,mfdataref=mfdata,trim=0.25,dfunc="mdepth.MhD",
     }
   }
   out <- list("lmed"=k,"ltrim"=lista,"dep"=ans,"par.dfunc"=par.dfunc)
-  class(out)="depth"
-  # print("sale FMp")
+  class(out) <- "depth"
   return(invisible(out))
 }

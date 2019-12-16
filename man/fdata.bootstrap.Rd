@@ -4,8 +4,16 @@
 \alias{fdata.bootstrap}
 \title{Bootstrap samples of a functional statistic}
 \usage{
-fdata.bootstrap(fdataobj, statistic = func.mean, alpha = 0.05,
-  nb = 200, smo = 0, draw = FALSE, draw.control = NULL, ...)
+fdata.bootstrap(
+  fdataobj,
+  statistic = func.mean,
+  alpha = 0.05,
+  nb = 200,
+  smo = 0,
+  draw = FALSE,
+  draw.control = NULL,
+  ...
+)
 }
 \arguments{
 \item{fdataobj}{\code{fdata} class object.}

@@ -4,8 +4,7 @@
 \alias{summary.fdata.comp}
 \title{Correlation for functional data by Principal Component Analysis}
 \usage{
-\method{summary}{fdata.comp}(object, y = NULL, biplot = TRUE,
-  corplot = FALSE, ...)
+\method{summary}{fdata.comp}(object, y = NULL, biplot = TRUE, corplot = FALSE, ...)
 }
 \arguments{
 \item{object}{fdata.comp class object calculated by: \code{fdata2pc},

@@ -4,8 +4,7 @@
 \alias{predict.classif.DD}
 \title{Predicts from a fitted classif.DD object.}
 \usage{
-\method{predict}{classif.DD}(object, new.fdataobj = NULL,
-  type = "class", ...)
+\method{predict}{classif.DD}(object, new.fdataobj = NULL, type = "class", ...)
 }
 \arguments{
 \item{object}{Object \code{object} estimated by \code{classif.DD}.}

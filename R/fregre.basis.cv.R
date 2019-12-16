@@ -338,9 +338,9 @@ fregre.basis.cv <- function(fdataobj,y,basis.x=NULL,basis.b=NULL,
   model<-fregre.basis(fdataobj = fdataobj, y =y, basis.x=basis.x.opt,
                     basis.b= basis.b.opt, lambda=lambda.opt, 
                     Lfdobj= Lfdobj, weights=weights,...)
-  model$coefficients=coefficients
-  class(model)="fregre.fd"
-  out<-list("fregre.basis"=model,    
+  model$coefficients <- coefficients
+  class(model) <- "fregre.fd"
+  out <- list("fregre.basis"=model,    
             basis.x.opt=basis.x.opt$nbasis,
             basis.b.opt=basis.b.opt$nbasis,
            "lambda.opt"=lambda.opt,

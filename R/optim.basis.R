@@ -1,5 +1,5 @@
 #' @rdname  optim.basis
-#' @aliases optim.basis
+#' @aliases optim.basis min.basis
 #' @title Select the number of basis using GCV method.
 #' @note min.basis deprecated.
 #' @description Functional data estimation via basis representation using cross-validation

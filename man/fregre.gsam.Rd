@@ -4,8 +4,16 @@
 \alias{fregre.gsam}
 \title{Fitting Functional Generalized Spectral Additive Models}
 \usage{
-fregre.gsam(formula, family = gaussian(), data = list(),
-  weights = NULL, basis.x = NULL, basis.b = NULL, CV = FALSE, ...)
+fregre.gsam(
+  formula,
+  family = gaussian(),
+  data = list(),
+  weights = NULL,
+  basis.x = NULL,
+  basis.b = NULL,
+  CV = FALSE,
+  ...
+)
 }
 \arguments{
 \item{formula}{an object of class \code{formula} (or one that can be coerced

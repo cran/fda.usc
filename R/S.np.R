@@ -46,16 +46,16 @@
 #'   S2=S.LLR(tt,h=10,Ker=Ker.tri)
 #'   S3=S.NW(tt,h=10,Ker=Ker.tri)
 #'   S4=S.KNN(tt,h=5,Ker=Ker.tri)
-#'   par(mfrow=c(2,2))
+#'   par(mfrow=c(2,3))
 #'   image(S)
 #'   image(S2)
 #'   image(S3)
 #'   image(S4)
-#'   S5=S.LPR(tt,p=1, Ker=Ker.tri)
-#'   S6=S.LCR(tt,p=1, Ker=Ker.tri)
-#'   image(S4)
+#'   S5=S.LPR(tt,h=10,p=1, Ker=Ker.tri)
+#'   S6=S.LCR(tt,h=10,Ker=Ker.tri)
+#'   image(S5)
+#'   image(S6)
 #' }
-#' 
 #' @rdname S.np
 #' @export 
 S.LLR<-function (tt, h, Ker = Ker.norm,w=NULL,cv=FALSE)
@@ -86,7 +86,7 @@ return(res)}
 
 #' @rdname S.np
 #' @export 
-S.LPR<-function (tt, h, p=1, Ker = Ker.norm, w = NULL, cv = FALSE) 
+S.LPR <- function (tt, h, p=1, Ker = Ker.norm, w = NULL, cv = FALSE) 
 {
   if (is.matrix(tt)) {
     if (ncol(tt) != nrow(tt)) {
@@ -103,7 +103,8 @@ S.LPR<-function (tt, h, p=1, Ker = Ker.norm, w = NULL, cv = FALSE)
     w <- rep(1, nrow(tt))
   k = Ker(tt/h)/h	
   if (cv) diag(k) = 0
-  xx=outer(tt/h,0:p,function(a,b) a^b)
+  xx=outer(tt,0:p,function(a,b) a^b)
+  # xx=outer(tt/h,0:p,function(a,b) a^b)
   e=matrix(c(1,rep(0,dim(xx)[3]-1)),ncol=1)
   S=matrix(NA,nrow=nrow(tt),ncol=ncol(tt))
   for (i in 1:nrow(tt)){
@@ -118,6 +119,7 @@ S.LPR<-function (tt, h, p=1, Ker = Ker.norm, w = NULL, cv = FALSE)
   res = S/rowSums(S, na.rm = TRUE)
   return(res)
 }
+
 
 #' @rdname S.np
 #' @export 

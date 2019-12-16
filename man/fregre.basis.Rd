@@ -4,8 +4,16 @@
 \alias{fregre.basis}
 \title{Functional Regression with scalar response using basis representation.}
 \usage{
-fregre.basis(fdataobj, y, basis.x = NULL, basis.b = NULL, lambda = 0,
-  Lfdobj = vec2Lfd(c(0, 0), rtt), weights = rep(1, n), ...)
+fregre.basis(
+  fdataobj,
+  y,
+  basis.x = NULL,
+  basis.b = NULL,
+  lambda = 0,
+  Lfdobj = vec2Lfd(c(0, 0), rtt),
+  weights = rep(1, n),
+  ...
+)
 }
 \arguments{
 \item{fdataobj}{\code{\link{fdata}} class object.}

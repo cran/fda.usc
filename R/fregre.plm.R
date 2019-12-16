@@ -168,21 +168,17 @@ type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),par.S=list(w=1),...){
   x.fd<-fdataobj[["data"]]
   tt<-fdataobj[["argvals"]]
   rtt<-fdataobj[["rangeval"]]
-#  if (class(data[[vfunc[1]]])[1]=="fd")   	 x.fd=t(data[[vfunc[1]]]$coefs)
-#  else    	 x.fd=data[[vfunc[1]]]
-#  if (is.data.frame(x.fd))  x.fd=as.matrix(x.fd)
-#  cat(" ",class(data[[vfunc[1]]])[1]," object: ",vfunc[1],"\n")
-   mdist=metric(fdataobj,fdataobj,...)
-   if (is.null(h))  h<-h.default(data[[vfunc[1]]],type.S=ty,metric=mdist,Ker=ke)
-   lenh <- length(h)
-   df=gcv<- array(NA, dim = c(lenh))
-   yph <- array(NA, dim = c(nrow(y),lenh))
-   H <- array(NA, dim = c(nrow(yph),nrow(y),lenh))
-   I=diag(1,ncol=nrow(x.fd),nrow=nrow(x.fd))
-   pb=txtProgressBar(min=0,max=lenh,style=3)
-   XX=as.matrix(data[[1]][,vnf])
-   colnames(XX)=vnf
-   for (i in 1:lenh) {
+  mdist=metric(fdataobj,fdataobj,...)
+  if (is.null(h))  h<-h.default(data[[vfunc[1]]],type.S=ty,metric=mdist,Ker=ke)
+  lenh <- length(h)
+  df=gcv<- array(NA, dim = c(lenh))
+  yph <- array(NA, dim = c(nrow(y),lenh))
+  H <- array(NA, dim = c(nrow(yph),nrow(y),lenh))
+  I=diag(1,ncol=nrow(x.fd),nrow=nrow(x.fd))
+  pb=txtProgressBar(min=0,max=lenh,style=3)
+  XX=as.matrix(data[[1]][,vnf])
+  colnames(XX)=vnf
+  for (i in 1:lenh) {
         setTxtProgressBar(pb,i-0.5)
 ####  antes:
 ##    kmdist=Ker(mdist/h[i])
@@ -262,7 +258,7 @@ else {
  z$formula=formula
  z$data=data
 }
- class(z)<-"fregre.plm"
+class(z)<-c("fregre.plm","fregre.fd")
 z
 }
 

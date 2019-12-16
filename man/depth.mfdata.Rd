@@ -7,17 +7,41 @@
 \alias{depth.RPp}
 \title{Provides the depth measure for a list of p--functional data objects}
 \usage{
-depth.modep(mfdata, mfdataref = mfdata, h = NULL, metric,
-  par.metric = list(), method = "euclidean", scale = FALSE,
-  trim = 0.25, draw = FALSE, ask = FALSE)
+depth.modep(
+  mfdata,
+  mfdataref = mfdata,
+  h = NULL,
+  metric,
+  par.metric = list(),
+  method = "euclidean",
+  scale = FALSE,
+  trim = 0.25,
+  draw = FALSE,
+  ask = FALSE
+)
 
-depth.RPp(mfdata, mfdataref = mfdata, nproj = 50,
-  proj = "vexponential", trim = 0.25, dfunc = "mdepth.TD",
-  par.dfunc = list(scale = TRUE), draw = FALSE, ask = FALSE)
+depth.RPp(
+  mfdata,
+  mfdataref = mfdata,
+  nproj = 50,
+  proj = "vexponential",
+  trim = 0.25,
+  dfunc = "mdepth.TD",
+  par.dfunc = list(scale = TRUE),
+  draw = FALSE,
+  ask = FALSE
+)
 
-depth.FMp(mfdata, mfdataref = mfdata, trim = 0.25,
-  dfunc = "mdepth.MhD", par.dfunc = list(scale = FALSE),
-  draw = FALSE, ask = FALSE, ...)
+depth.FMp(
+  mfdata,
+  mfdataref = mfdata,
+  trim = 0.25,
+  dfunc = "mdepth.MhD",
+  par.dfunc = list(scale = FALSE),
+  draw = FALSE,
+  ask = FALSE,
+  ...
+)
 }
 \arguments{
 \item{mfdata}{A list of new curves (list of fdata ojects) to evaluate the

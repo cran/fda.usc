@@ -8,15 +8,25 @@
 \alias{[.ldata}
 \alias{plot.ldata}
 \alias{subset.ldata}
+\alias{ldata.cen}
+\alias{mean.ldata}
+\alias{mean.fdata}
+\alias{NCOL.ldata}
+\alias{NROW.ldata}
+\alias{ncol.ldata}
+\alias{nrow.ldata}
+\alias{Ops.ldata}
+\alias{Math.ldata}
+\alias{Summary.ldata}
 \title{ldata class definition and utilities}
 \usage{
-ldata(df, ...)
+ldata(df, ..., mfdata)
 
 \method{names}{ldata}(x)
 
 is.ldata(x)
 
-\method{[}{ldata}(ldata, i)
+\method{[}{ldata}(x, i, row = FALSE)
 
 \method{subset}{ldata}(x, subset, ...)
 
@@ -27,9 +37,12 @@ is.ldata(x)
 
 \item{\dots}{Further arguments passed to methods.}
 
-\item{ldata, x}{object of class \code{ldata}}
+\item{mfdata}{list of fdata objects}
 
 \item{i}{index}
+
+\item{row}{logical If \code{FALSE}  (by default), \code{i} index selects 
+the variables. If \code{TRUE},  \code{i} index selects the observations.}
 
 \item{subset}{subset}
 
@@ -38,9 +51,11 @@ is.ldata(x)
 \item{color}{colors to interpolate; must be a valid argument to  \code{colorRampPalette}.}
 
 \item{var.name}{name of continuous univariate variable used in \code{color} argument}
+
+\item{ldata, x}{object of class \code{ldata}}
 }
 \description{
-ldata is a listt with two type of objects:
+ldata is a list with two type of objects:
 \itemize{
 \item \code{df} is a data frame with the multivariate data with n rows.
 \item \code{...}  fdata objects of class \code{fdata} with n rows.
@@ -51,12 +66,11 @@ data(tecator)
 ab0 <- tecator$absorp.fdata
 ab1 <- fdata.deriv(ab0)
 ab2 <- fdata.deriv(ab0,nderiv=2)
-ldat<-ldata(tecator$y,ab1,ab2)
+ldat<-ldata(tecator$y,ab1=ab1,ab2=ab2)
 is.ldata(ldat)
 class(ldat)
 plot(ldat[[1]])
 plot(ldat[[2]]) 
 # plot(ldat)
 # plot(ldat,var.name="Fat")
-
 }

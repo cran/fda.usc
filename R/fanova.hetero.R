@@ -1,5 +1,5 @@
 #' @rdname fanova.hetero
-#' @aliases fanova.hetero
+#' @aliases fanova.hetero anova.hetero
 #' @title ANOVA for heteroscedastic data
 #' @note anova.hetero deprecated
 #' @description Univariate ANOVA for heteroscedastic data.
@@ -199,7 +199,7 @@ for (jj in 1:ncol(vvf)) {
 res=list("ans"=ans)
 if (!is.null(contrast)) res$contrast=contrast
 if (pr) print(res)
-class(res)="fanova.hetero"
+class(res) <- "fanova.hetero"
 return(res)
 }
 

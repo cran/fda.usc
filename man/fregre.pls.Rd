@@ -4,8 +4,7 @@
 \alias{fregre.pls}
 \title{Functional Penalized PLS regression with scalar response}
 \usage{
-fregre.pls(fdataobj, y = NULL, l = NULL, lambda = 0, P = c(0, 0,
-  1), ...)
+fregre.pls(fdataobj, y = NULL, l = NULL, lambda = 0, P = c(0, 0, 1), ...)
 }
 \arguments{
 \item{fdataobj}{\code{\link{fdata}} class object.}

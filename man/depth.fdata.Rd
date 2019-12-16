@@ -12,28 +12,80 @@
 \alias{depth.KFSD}
 \title{Computation of depth measures for functional data}
 \usage{
-depth.mode(fdataobj, fdataori = fdataobj, trim = 0.25,
-  metric = metric.lp, h = NULL, scale = FALSE, draw = FALSE, ...)
+depth.mode(
+  fdataobj,
+  fdataori = fdataobj,
+  trim = 0.25,
+  metric = metric.lp,
+  h = NULL,
+  scale = FALSE,
+  draw = FALSE,
+  ...
+)
 
-depth.RP(fdataobj, fdataori = fdataobj, trim = 0.25, nproj = 50,
-  proj = "vexponential", dfunc = "TD1", par.dfunc = list(),
-  scale = FALSE, draw = FALSE, ...)
+depth.RP(
+  fdataobj,
+  fdataori = fdataobj,
+  trim = 0.25,
+  nproj = 50,
+  proj = "vexponential",
+  dfunc = "TD1",
+  par.dfunc = list(),
+  scale = FALSE,
+  draw = FALSE,
+  ...
+)
 
-depth.RPD(fdataobj, fdataori = fdataobj, nproj = 20, proj = 1,
-  deriv = c(0, 1), trim = 0.25, dfunc2 = mdepth.LD, method = "fmm",
-  draw = FALSE, ...)
+depth.RPD(
+  fdataobj,
+  fdataori = fdataobj,
+  nproj = 20,
+  proj = 1,
+  deriv = c(0, 1),
+  trim = 0.25,
+  dfunc2 = mdepth.LD,
+  method = "fmm",
+  draw = FALSE,
+  ...
+)
 
-depth.RT(fdataobj, fdataori = fdataobj, trim = 0.25, nproj = 10,
-  proj = 1, xeps = 1e-07, draw = FALSE, ...)
+depth.RT(
+  fdataobj,
+  fdataori = fdataobj,
+  trim = 0.25,
+  nproj = 10,
+  proj = 1,
+  xeps = 1e-07,
+  draw = FALSE,
+  ...
+)
 
-depth.KFSD(fdataobj, fdataori = fdataobj, trim = 0.25, h = NULL,
-  scale = FALSE, draw = FALSE)
+depth.KFSD(
+  fdataobj,
+  fdataori = fdataobj,
+  trim = 0.25,
+  h = NULL,
+  scale = FALSE,
+  draw = FALSE
+)
 
-depth.FSD(fdataobj, fdataori = fdataobj, trim = 0.25, scale = FALSE,
-  draw = FALSE)
+depth.FSD(
+  fdataobj,
+  fdataori = fdataobj,
+  trim = 0.25,
+  scale = FALSE,
+  draw = FALSE
+)
 
-depth.FM(fdataobj, fdataori = fdataobj, trim = 0.25, scale = FALSE,
-  dfunc = "FM1", par.dfunc = list(scale = TRUE), draw = FALSE)
+depth.FM(
+  fdataobj,
+  fdataori = fdataobj,
+  trim = 0.25,
+  scale = FALSE,
+  dfunc = "FM1",
+  par.dfunc = list(scale = TRUE),
+  draw = FALSE
+)
 }
 \arguments{
 \item{fdataobj}{The set of new curves to evaluate the depth.

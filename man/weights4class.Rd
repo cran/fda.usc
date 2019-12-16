@@ -15,6 +15,7 @@ weights4class(x, type = c("equal", "inverse"))
 computes inverse probability weighting.
 }
 \seealso{
-Other performance: \code{\link{accuracy}}
+Other performance: 
+\code{\link{accuracy}}
 }
 \concept{performance}

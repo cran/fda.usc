@@ -2,12 +2,20 @@
 % Please edit documentation in R/optim.basis.R
 \name{optim.basis}
 \alias{optim.basis}
+\alias{min.basis}
 \title{Select the number of basis using GCV method.}
 \usage{
-optim.basis(fdataobj, type.CV = GCV.S, W = NULL, lambda = 0,
+optim.basis(
+  fdataobj,
+  type.CV = GCV.S,
+  W = NULL,
+  lambda = 0,
   numbasis = floor(seq(ncol(fdataobj)/16, ncol(fdataobj)/2, len = 10)),
-  type.basis = "bspline", par.CV = list(trim = 0, draw = FALSE),
-  verbose = FALSE, ...)
+  type.basis = "bspline",
+  par.CV = list(trim = 0, draw = FALSE),
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{fdataobj}{\code{\link{fdata}} class object.}

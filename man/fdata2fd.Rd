@@ -4,8 +4,14 @@
 \alias{fdata2fd}
 \title{Converts fdata class object into fd class object}
 \usage{
-fdata2fd(fdataobj, type.basis = NULL, nbasis = NULL, nderiv = 0,
-  lambda = NULL, ...)
+fdata2fd(
+  fdataobj,
+  type.basis = NULL,
+  nbasis = NULL,
+  nderiv = 0,
+  lambda = NULL,
+  ...
+)
 }
 \arguments{
 \item{fdataobj}{\code{\link{fdata}} class object.}

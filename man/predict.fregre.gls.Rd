@@ -5,11 +5,27 @@
 \alias{predict.fregre.igls}
 \title{Predictions from a functional gls object}
 \usage{
-\method{predict}{fregre.gls}(object, newx = NULL, type = "response",
-  se.fit = FALSE, scale = NULL, df, interval = "none", ...)
+\method{predict}{fregre.gls}(
+  object,
+  newx = NULL,
+  type = "response",
+  se.fit = FALSE,
+  scale = NULL,
+  df,
+  interval = "none",
+  ...
+)
 
-\method{predict}{fregre.igls}(object, newx = NULL, data, df = df,
-  weights = 1, pred.var, n.ahead = 1L, ...)
+\method{predict}{fregre.igls}(
+  object,
+  newx = NULL,
+  data,
+  df = df,
+  weights = 1,
+  pred.var,
+  n.ahead = 1L,
+  ...
+)
 }
 \arguments{
 \item{object}{\code{fregre.gls} object.}

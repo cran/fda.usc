@@ -67,7 +67,7 @@
 #' @export 
 predict.fregre.gls<-function(object, newx = NULL, type = "response",se.fit= FALSE, scale = NULL,df , interval = "none", ...){
   level=.95
-  class(object)<-c("gls","lm","fregre.lm")
+  class(object) <- c("gls","lm","fregre.lm")
  if (is.null(object)) stop("No fregre.lm object entered")
  if (is.null(newx)) {
     yp=predict(object,type=type,se.fit=se.fit,interval=interval,...)    
@@ -971,4 +971,5 @@ predict.fregre.igls<-function (object, newx = NULL, data, df = df
   }
   return(predictor)
 }
+
 

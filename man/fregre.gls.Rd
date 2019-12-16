@@ -4,10 +4,22 @@
 \alias{fregre.gls}
 \title{Fit Functional Linear Model Using Generalized Least Squares}
 \usage{
-fregre.gls(formula, data, correlation = NULL, basis.x = NULL,
-  basis.b = NULL, rn, lambda, weights = NULL, subset,
-  method = c("REML", "ML"), control = list(), verbose = FALSE,
-  criteria = "GCCV1", ...)
+fregre.gls(
+  formula,
+  data,
+  correlation = NULL,
+  basis.x = NULL,
+  basis.b = NULL,
+  rn,
+  lambda,
+  weights = NULL,
+  subset,
+  method = c("REML", "ML"),
+  control = list(),
+  verbose = FALSE,
+  criteria = "GCCV1",
+  ...
+)
 }
 \arguments{
 \item{formula}{a two-sided linear formula object describing the model, with

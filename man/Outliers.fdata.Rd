@@ -10,11 +10,24 @@
 \alias{quantile.outliers.pond}
 \title{outliers for functional dataset}
 \usage{
-outliers.depth.pond(fdataobj, nb = 200, smo = 0.05, quan = 0.5,
-  dfunc = depth.mode, ...)
+outliers.depth.pond(
+  fdataobj,
+  nb = 200,
+  smo = 0.05,
+  quan = 0.5,
+  dfunc = depth.mode,
+  ...
+)
 
-outliers.depth.trim(fdataobj, nb = 200, smo = 0.05, trim = 0.01,
-  quan = 0.5, dfunc = depth.mode, ...)
+outliers.depth.trim(
+  fdataobj,
+  nb = 200,
+  smo = 0.05,
+  trim = 0.01,
+  quan = 0.5,
+  dfunc = depth.mode,
+  ...
+)
 
 outliers.lrt(fdataobj, nb = 200, smo = 0.05, trim = 0.1, ...)
 

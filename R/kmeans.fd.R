@@ -24,16 +24,17 @@
 #' @param max.iter Maximum number of iterations for the detection of centers.
 #' @param draw =TRUE, draw the curves in the color of the centers.
 #' @param par.dfunc List of arguments to pass to the \code{dfunc} function .
-#' @param par.ini List of arguments to pass to the \code{kmeans.center.ini}
-#' function .
+# @param par.ini List of arguments to pass to the \code{kmeans.center.ini} function .
 #' @param method Method for selecting initial centers. If
 #' \code{method}=\emph{"Sample"} (by default) takes \code{n} times a random
 #' selection by the \code{ncl} centers. The \code{ncl} curves with greater
 #' distance are the initial centers. If \code{method}=\emph{"Exact"} calculated
-#' all combinations of \code{ncl} centers. The \code{ncl} curves with greater
+#' all combinations (if < 1e+6) of \code{ncl} centers. The \code{ncl} curves with greater
 #' distance are the initial centers (this method may be too slow).
-#' @param iter Maximum number of random samples for the initial selection of
-#' centers.
+#' @param cluster.size Minimum cluster size (by default is 5). If a cluster has fewer curves,
+#' it is eliminated and the process is continued with a less cluster.
+#' @param max.comb Maximum number of initial selection of
+#' centers (only used when \code{method="exact"}).
 #' @param par.metric List of arguments to pass to the \code{metric} function.
 # @param group groups or classes
 #' @param \dots Further arguments passed to or from other methods.
@@ -61,7 +62,7 @@
 #' 
 #' # Unsupervised classification
 #' out.fd1=kmeans.fd(mlearn,ncl=3,draw=TRUE)
-#' out.fd2=kmeans.fd(mlearn,ncl=3,draw=TRUE,par.ini=list(method="exact"))
+#' out.fd2=kmeans.fd(mlearn,ncl=3,draw=TRUE,method="exact")
 #' # Different Depth function
 #' ind=c(17,77,126)
 #' out.fd3=kmeans.fd(mlearn,ncl=mlearn[ind,],draw=FALSE,
@@ -74,12 +75,15 @@
 #' 
 #' @rdname kmeans.fd
 #' @export
-kmeans.fd=function(fdataobj,ncl=2,metric=metric.lp,dfunc=func.trim.FM,max.iter=100,par.metric=NULL,par.dfunc=list(trim=0.05),
-par.ini=list(method="sample"),draw=TRUE,...) {
+kmeans.fd=function(fdataobj,ncl=2,metric=metric.lp
+                   ,dfunc=func.trim.FM,max.iter=100
+                   ,par.metric=NULL,par.dfunc=list(trim=0.05)
+                   ,method="sample", cluster.size=5,draw=TRUE,...) {
 #if (is.data.frame(z)) z=as.matrix(z)
 #else if (is.vector(z))     z <- as.matrix(t(z))
 if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
- nas1<-is.na.fdata(fdataobj)
+ # nas1<-is.na.fdata(fdataobj)
+nas1<-is.na(fdataobj)
  if (any(nas1))  stop("fdataobj contain ",sum(nas1)," curves with some NA value \n")
 z<-fdataobj[["data"]]
 tt<-fdataobj[["argvals"]]
@@ -89,60 +93,56 @@ nc=ncol(z)
 if (is.vector(ncl)) {
   len.ncl=length(ncl)
   if (len.ncl==1) {
-     par.ini$fdataobj=fdataobj
-#      extras2 <- match.call(expand.dots = FALSE)$...
-     if (is.null(par.ini$method)) par.ini$method="sample"
-     if (is.null(par.ini$ncl))  par.ini$ncl=ncl
-     if (is.null(par.ini$metric)) par.ini$metric=metric
-     if (is.null(par.ini$draw)) par.ini$draw=draw
-     if (is.null(par.ini$iter)) par.ini$iter=100
-     if (!is.null(par.metric)) par.ini$par.metric<-par.metric
-#      par.ini$...<-extras2
-      par.ini$...<-par.metric
-#     (fdataobj,ncl=2,metric=metric.lp,draw=TRUE,method="sample",iter=100,...){
-     out1=do.call(kmeans.center.ini,par.ini)
-#      out1=kmeans.center.ini(fdataobj=fdataobj,ncl=ncl,metric=metric,draw=draw,...)
-     lxm<-out1$lcenters
-     out1$d=rbind(out1$z.dist,out1$z.dist[lxm,])
-     }
-else {
-     ngroups=length(ncl)
-     lxm=ncl
-     xm=z[lxm,]
-     out1=list()
-     out1$fdataobj<-fdataobj
-     out1$ncl=len.ncl
-#     mdist=metric(fdataobj,...)   #hacer do.call
-if (is.null(par.metric)) par.metric=list("p"=2,"w"=1)
-par.metric$fdata1<-fdataobj
-#mdist=metric(fdataobj,...)
-mdist=do.call(metric,par.metric)
-     out1$z.dist<-mdist
-     out1$d=rbind(mdist,mdist[lxm,])
-     out1$centers<-fdataobj[ncl,]
-     out1$lcenters<-ncl
-     class(out1)="kmeans.fd"
-     }}
- else if (is.fdata(ncl)) {   # fdata centers
+    par.ini<- list()
+    par.ini$fdataobj=fdataobj
+    par.ini$method=method
+    par.ini$ncl=ncl
+    par.ini$metric=metric
+    par.ini$draw=draw
+    par.ini$max.comb = 1e6
+    par.ini$max.iter = max.iter
+    if (!is.null(par.metric)) 
+       par.ini$par.metric<-par.metric
+    par.ini$... <- par.metric
+    out1=do.call(kmeans.center.ini,par.ini)
+    lxm<-out1$lcenters
+    out1$d=rbind(out1$z.dist,out1$z.dist[lxm,])
+    }  else {
+     ngroups <- length(ncl)
+     lxm <- ncl
+     xm <- z[lxm,]
+     out1 <- list()
+     out1$fdataobj <- fdataobj
+     out1$ncl <- len.ncl
+     if (is.null(par.metric)) 
+       par.metric <- list("p"=2,"w"=1)
+     par.metric$fdata1 <- fdataobj
+     mdist <- do.call(metric,par.metric)
+     out1$z.dist <- mdist
+     out1$d <- rbind(mdist,mdist[lxm,])
+     out1$centers <- fdataobj[ncl,]
+     out1$lcenters <- ncl
+     class(out1) <- "kmeans.fd"
+    }
+  } else if (is.fdata(ncl)) {   # fdata centers
    lxm=NULL
    xm=ncl[["data"]]
-if (is.null(par.metric)) par.metric=list("p"=2,"w"=1)
-par.metric$fdata1<-fdataobj
-#mdist=metric(fdataobj,...)
-mdist=do.call(metric,par.metric)
-par.metric2<-par.metric
-par.metric2$fdata2<-ncl
-mdist2=do.call(metric,par.metric2)
-#   mdist=metric(fdataobj,...)
-#   mdist2=metric(fdataobj,ncl,...)    ##### metric
-   out1=list()
+   if (is.null(par.metric)
+   ) par.metric=list("p"=2,"w"=1)
+   par.metric$fdata1<-fdataobj
+   #mdist=metric(fdataobj,...)
+   mdist=do.call(metric,par.metric)
+   par.metric2<-par.metric
+   par.metric2$fdata2<-ncl
+   mdist2=do.call(metric,par.metric2)
+   out1 = list()
    out1$fdataobj<-fdataobj
-   out1$centers=ncl
-   out1$lcenters<-NULL
+   out1$centers = ncl
+   out1$lcenters <- NULL
    ngroups=nrow(ncl)
-   ncl=nrow(ncl)
-   out1$d=rbind(mdist,t(mdist2))
-   class(out1)="kmeans.fd"
+   ncl = nrow(ncl)
+   out1$d = rbind(mdist,t(mdist2))
+   class(out1) = "kmeans.fd"
 }
  ngroups=nrow(out1$centers[["data"]])
  a=0;aa<-i<-1
@@ -150,16 +150,93 @@ mdist2=do.call(metric,par.metric2)
 # mf <- match.call(expand.dots = FALSE)
  same_centers=FALSE
 #while ((i<max.iter) && (a!=aa)) {
+if (is.null(colnames(out1$d))) 
+  cnames<-colnames(out1$d)<-1:NCOL(out1$d)
 while ((i<max.iter) && (!same_centers)) {
+  iterar<-FALSE
+# print(i)
+# print("1. assign")
   out3=kmeans.assig.groups(out1,draw=draw)
-  out2=kmeans.centers.update(out1,group=out3$cluster,dfunc=dfunc,draw=draw,par.dfunc=par.dfunc,...)
-  a=out2$cluster
-  aa=out3$cluster
-  same_centers<-out2$centers$data==out3$centers$data
-  out1$centers<-out2$centers
-  i=i+1
-     }
-#cat("iterations: ",i)
+  names(out3$cluster) <- cnames
+  # print("tala out 3")
+  # print(table(out3$cluster))
+  # print("tala out 4")
+  tab <- table(out3$cluster)
+  imin <- which.min(tab)[1]
+# print(tab)  
+# print(imin)
+  if (cluster.size > tab[imin] ) {
+# print("entra tab")
+    # ngroups <- ngroups-1
+    warning(paste0(" One of the clusters only has ",tab[imin]
+    , " curves and the minimum cluster size is ", cluster.size
+    ,".\n The cluster is completed with the closest curves of the other clusters."))
+    # names(sort(aa)[1:5])
+    iclust <- out3$cluster == imin
+    dist.aux <- out1$d[imin,]
+## print(dist.aux)
+    # print(sum(iclust))
+    #dist.aux[iclust] <- Inf
+    
+#    # print(dist.aux)
+    # print(which(iclust))
+    icambios <- as.numeric(names(sort( out1$d[imin,])[1:cluster.size]))
+    #icambios <- which.min(dist.aux[-iclust])
+    
+# print(icambios)    
+# print("a ver oho 1")
+# print(table(out3$cluster))
+# print("a ver oho 2")
+# print(out3$cluster[icambios] )
+    #out1$d[imin,iclust]<- 0
+    out1$d[imin,icambios]<- 0
+    #out1$d[icambios,icambios]<- 0
+    out1$z.dist<-out1$d
+# print("a ver oho 3")
+# print(tab[imin])
+# print("a ver oho 4")
+out3$cluster[icambios] <- imin
+# print("a ver oho 5")
+# print(table(out3$cluster))
+# print("a ver oho 6")
+# print(out3$cluster[icambios] )
+    #out3$cluster <- out1$cluster
+    # act
+    #grupo <- apply(d[(nr+1):(nr+ngroups),],2,which.min)
+    
+    #out1$centers <- out1$centers[-imin]
+    #grupo <- apply(d[(nr+1):(nr+ngroups),],2,which.min)
+    out2<-out3
+    #out2$cluster<-
+     out1$cluster <- out3$cluster
+# print("0000000000000000000")    
+# print(c(icambios,which(iclust)))
+    #par.dfunc$fdataobj<-fdataobj[c(icambios,which(iclust))]
+    par.dfunc$fdataobj<-fdataobj[c(icambios)]
+# print("1111111111111111111")    
+# print(out1$centers[imin]$data[1:3])
+    out1$centers[imin]=do.call(dfunc,par.dfunc)
+    # print(out1$centers[imin]$data[1:3])
+    iterar <-TRUE
+    i=i+1
+    
+ }
+#else{
+#     # print("2. update")
+     out2=kmeans.centers.update(out1, group=out3$cluster
+                             , dfunc=dfunc, draw=draw
+                             , par.dfunc=par.dfunc
+                             #,cluster.size=cluster.size
+                             ,...)
+    if (!iterar){
+    same_centers <- out2$centers$data == out3$centers$data
+    out1$centers <- out2$centers
+    i=i+1
+    }
+  #}
+    #cat("iterations: ",i)
+  }
+
 out<-list("cluster"=out2$cluster,"centers"=out2$centers)
 return(out)
 }

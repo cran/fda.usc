@@ -2,7 +2,7 @@
 #' @export
 summary.fanova.RPm<-function (object, ndec=NULL,...) {
  if (is.null(ndec)) ndec=5
- if (class(object)=="fanova.RPm") {
+ if (is(object,"fanova.RPm")) {
     cat("     - SUMMARY fanova.RPm - \n")
     cat("\n p-value for Bonferroni method \n" )
     print(round(object$p.Bonf,ndec))

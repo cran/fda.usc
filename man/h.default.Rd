@@ -4,8 +4,14 @@
 \alias{h.default}
 \title{Calculation of the smoothing parameter (h) for a functional data}
 \usage{
-h.default(fdataobj, prob = c(0.025, 0.25), len = 51,
-  metric = metric.lp, type.S = "S.NW", ...)
+h.default(
+  fdataobj,
+  prob = c(0.025, 0.25),
+  len = 51,
+  metric = metric.lp,
+  type.S = "S.NW",
+  ...
+)
 }
 \arguments{
 \item{fdataobj}{\code{\link{fdata}} class object.}

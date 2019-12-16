@@ -180,8 +180,8 @@ if (missing(type)) type="l"
 if (missing(main)) main=x[["names"]][["main"]]
 if (missing(xlab)) xlab=x[["names"]][["xlab"]]
 if (missing(ylab)) ylab=x[["names"]][["ylab"]]
-if (is.vector(x[["data"]])) matplot.default(x[["argvals"]],(x[["data"]]),type=type,lty=lty,main=main,ylab=ylab,xlab=xlab,...)
-else matplot.default(x[["argvals"]],t(x[["data"]]),type=type,lty=lty,main=main,ylab=ylab,xlab=xlab,...)
+if (is.vector(x[["data"]])) fda::matplot(x[["argvals"]],(x[["data"]]),type=type,lty=lty,main=main,ylab=ylab,xlab=xlab,...)
+else fda::matplot(x[["argvals"]],t(x[["data"]]),type=type,lty=lty,main=main,ylab=ylab,xlab=xlab,...)
 }
 }
 
@@ -232,7 +232,7 @@ plot.mdepth<-function(x, trim,  levgray=.9,...){
   x <- dep$x
   y <- dep$xx
   d<-ncol(x)
-  if (class(dep)=="mdepth"){
+  if (is(dep,"mdepth")){
     name=dep$name
     mtrim=dep$mtrim
     med=dep$median

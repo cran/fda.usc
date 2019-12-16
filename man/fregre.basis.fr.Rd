@@ -4,9 +4,18 @@
 \alias{fregre.basis.fr}
 \title{Functional Regression with functional response using basis representation.}
 \usage{
-fregre.basis.fr(x, y, basis.s = NULL, basis.t = NULL, lambda.s = 0,
-  lambda.t = 0, Lfdobj.s = vec2Lfd(c(0, 0), range.s),
-  Lfdobj.t = vec2Lfd(c(0, 0), range.t), weights = NULL, ...)
+fregre.basis.fr(
+  x,
+  y,
+  basis.s = NULL,
+  basis.t = NULL,
+  lambda.s = 0,
+  lambda.t = 0,
+  Lfdobj.s = vec2Lfd(c(0, 0), range.s),
+  Lfdobj.t = vec2Lfd(c(0, 0), range.t),
+  weights = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{Functional explanatory variable.}

@@ -152,7 +152,7 @@ fregre.igls<-function (formula, data, basis.x = NULL, basis.b = NULL, correlatio
     mean.list = vs.list = JJ = list()
     bsp1 <- bsp2 <- TRUE
     for (i in 1:length(vfunc)) {
-      if (class(data[[vfunc[i]]])[1] == "fdata") {
+      if (is(data[[vfunc[i]]],"fdata")) {
         tt <- data[[vfunc[i]]][["argvals"]]
         rtt <- data[[vfunc[i]]][["rangeval"]]
         np <- length(tt)
@@ -266,7 +266,7 @@ fregre.igls<-function (formula, data, basis.x = NULL, basis.b = NULL, correlatio
         }
       }
       else {
-        if (class(data[[vfunc[i]]])[1] == "fd") {
+        if (is(data[[vfunc[i]]],"fd")) {
           fdat <- data[[vfunc[i]]]
           if (is.null(basis.x[[vfunc[i]]])) 
             basis.x[[vfunc[i]]] <- fdat$basis
@@ -597,14 +597,14 @@ fregre.igls<-function (formula, data, basis.x = NULL, basis.b = NULL, correlatio
       W0 <- wei0
       W <- try(solve(W0), silent = TRUE)
 #     print(class(W) )
-      if (class(W) == "try-error") {
+      if (is(W,"try-error")) {
         sv <- svd(W0)
         W <- drop((sv$v %*% diag(1/sv$d) %*% t(sv$u)))
       }
       mat0[1, 1] <- 0
       W2 <- t(scores) %*% W %*% scores + mat0
       S <- try(solve(W2), silent = TRUE)
-      if (class(S) == "try-error") {
+      if (is(S,"try-error")) {
         sv <- svd(W2)
         S <- drop((sv$v %*% diag(1/sv$d) %*% t(sv$u)))
       }
@@ -632,7 +632,7 @@ fregre.igls<-function (formula, data, basis.x = NULL, basis.b = NULL, correlatio
     z$df.residual <- n - df
     z$H <- H
     z$r2 <- 1 - sum(z$residuals^2)/sum(ycen^2)
-    if (class(basis.x[[vfunc[1]]]) == "basisfd") {
+    if (is(basis.x[[vfunc[1]]],"basisfd")) {
       z$call[[1]] = "fregre.basis"
     }
     else {

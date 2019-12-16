@@ -5,14 +5,26 @@
 \alias{dfv.statistic}
 \title{Delsol, Ferraty and Vieu test for no functional-scalar interaction}
 \usage{
-dfv.statistic(X.fdata, Y, h = quantile(x = metric.lp(X.fdata), probs =
-  c(0.05, 0.1, 0.15, 0.25, 0.5)), K = function(x) 2 * dnorm(abs(x)),
-  weights = rep(1, dim(X.fdata$data)[1]), d = metric.lp, dist = NULL)
+dfv.statistic(
+  X.fdata,
+  Y,
+  h = quantile(x = metric.lp(X.fdata), probs = c(0.05, 0.1, 0.15, 0.25, 0.5)),
+  K = function(x) 2 * dnorm(abs(x)),
+  weights = rep(1, dim(X.fdata$data)[1]),
+  d = metric.lp,
+  dist = NULL
+)
 
-dfv.test(X.fdata, Y, B = 5000, h = quantile(x = metric.lp(X.fdata),
-  probs = c(0.05, 0.1, 0.15, 0.25, 0.5)), K = function(x) 2 *
-  dnorm(abs(x)), weights = rep(1, dim(X.fdata$data)[1]), d = metric.lp,
-  verbose = TRUE)
+dfv.test(
+  X.fdata,
+  Y,
+  B = 5000,
+  h = quantile(x = metric.lp(X.fdata), probs = c(0.05, 0.1, 0.15, 0.25, 0.5)),
+  K = function(x) 2 * dnorm(abs(x)),
+  weights = rep(1, dim(X.fdata$data)[1]),
+  d = metric.lp,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{X.fdata}{Functional covariate. The object must be in the class \code{\link{fdata}}.}

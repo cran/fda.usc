@@ -4,9 +4,20 @@
 \alias{flm.test}
 \title{Goodness-of-fit test for the Functional Linear Model with scalar response}
 \usage{
-flm.test(X.fdata, Y, beta0.fdata = NULL, B = 5000,
-  est.method = "pls", p = NULL, type.basis = "bspline",
-  verbose = TRUE, plot.it = TRUE, B.plot = 100, G = 200, ...)
+flm.test(
+  X.fdata,
+  Y,
+  beta0.fdata = NULL,
+  B = 5000,
+  est.method = "pls",
+  p = NULL,
+  type.basis = "bspline",
+  verbose = TRUE,
+  plot.it = TRUE,
+  B.plot = 100,
+  G = 200,
+  ...
+)
 }
 \arguments{
 \item{X.fdata}{Functional covariate for the FLM. The object must be in the class 
@@ -158,7 +169,7 @@ flm.test(X,Y,beta0.fdata=beta0,B=5000)
 
 # AEMET dataset #
 data(aemet)
-# Remove the 5\\\% of the curves with less depth (i.e. 4 curves)
+# Remove the 5\\% of the curves with less depth (i.e. 4 curves)
 dev.new()
 res.FM=depth.FM(aemet$temp,draw=TRUE)
 qu=quantile(res.FM$dep,prob=0.05)

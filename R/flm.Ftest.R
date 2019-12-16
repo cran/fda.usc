@@ -111,7 +111,7 @@ flm.Ftest=function(X.fdata,Y,B=5000,verbose=TRUE){
 	# Result: class htest
 	names(Tn)="F-test"
 	result=structure(list(statistic=Tn,boot.statistics=Tn.star,p.value=pvalue,method="Functional Linear Model F-test",B=B,data.name="Y=<X,0>+e"))
-	class(result)="htest"
+	class(result) <- "htest"
 	return(result)
 	
 }

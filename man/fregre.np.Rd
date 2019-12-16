@@ -5,8 +5,16 @@
 \title{Functional regression with scalar response using non-parametric kernel
 estimation}
 \usage{
-fregre.np(fdataobj, y, h = NULL, Ker = AKer.norm, metric = metric.lp,
-  type.S = S.NW, par.S = list(w = 1), ...)
+fregre.np(
+  fdataobj,
+  y,
+  h = NULL,
+  Ker = AKer.norm,
+  metric = metric.lp,
+  type.S = S.NW,
+  par.S = list(w = 1),
+  ...
+)
 }
 \arguments{
 \item{fdataobj}{\code{\link{fdata}} class object.}

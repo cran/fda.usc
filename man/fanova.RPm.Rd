@@ -3,12 +3,24 @@
 \name{fanova.RPm}
 \alias{fanova.RPm}
 \alias{summary.fanova.RPm}
+\alias{anova.RPm}
 \title{Functional ANOVA with Random Project.}
 \usage{
-fanova.RPm(object, formula, data.fac, RP = min(30, ncol(object)),
-  alpha = 0.95, zproj = NULL, par.zproj = list(norm = TRUE),
-  hetero = TRUE, pr = FALSE, w = rep(1, ncol(object)), nboot = 0,
-  contrast = NULL, ...)
+fanova.RPm(
+  object,
+  formula,
+  data.fac,
+  RP = min(30, ncol(object)),
+  alpha = 0.95,
+  zproj = NULL,
+  par.zproj = list(norm = TRUE),
+  hetero = TRUE,
+  pr = FALSE,
+  w = rep(1, ncol(object)),
+  nboot = 0,
+  contrast = NULL,
+  ...
+)
 
 \method{summary}{fanova.RPm}(object, ndec = NULL, ...)
 }

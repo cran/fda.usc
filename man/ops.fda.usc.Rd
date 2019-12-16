@@ -4,9 +4,14 @@
 \alias{ops.fda.usc}
 \title{ops.fda.usc  Options Settings}
 \usage{
-ops.fda.usc(verbose = FALSE, trace = FALSE, warning = FALSE,
-  ncores = NULL, int.method = "TRAPZ", eps = as.double(.Machine[[1]]
-  * 10))
+ops.fda.usc(
+  verbose = FALSE,
+  trace = FALSE,
+  warning = FALSE,
+  ncores = NULL,
+  int.method = "TRAPZ",
+  eps = as.double(.Machine[[1]] * 10)
+)
 }
 \arguments{
 \item{verbose}{\code{logical}. Should R report extra information on progress? Set to \code{TRUE} by the command-line option --verbose.}

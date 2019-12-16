@@ -80,12 +80,10 @@
 #' y=tecator$y$Fat
 #' tt=x[["argvals"]]
 #' dataf=as.data.frame(tecator$y)
-#' 
 #' nbasis.x=11
 #' nbasis.b=7
 #' basis1=create.bspline.basis(rangeval=range(tt),nbasis=nbasis.x)
 #' basis2=create.bspline.basis(rangeval=range(tt),nbasis=nbasis.b)
-#'  
 #' f=Fat~Protein+x
 #' basis.x=list("x"=basis1)
 #' basis.b=list("x"=basis2)
@@ -141,7 +139,7 @@ else {
  if (lenfunc) {
   mean.list=vs.list=JJ=list()
   for (i in 1:length(vfunc)) {
-    if (class(data[[vfunc[i]]])[1]=="fdata"){
+    if (is(data[[vfunc[i]]],"fdata")){
       tt<-data[[vfunc[i]]][["argvals"]]
       rtt<-data[[vfunc[i]]][["rangeval"]]
       fdat<-data[[vfunc[i]]];      dat<-data[[vfunc[i]]]$data
@@ -199,15 +197,15 @@ else {
           }
     }
  else {
- if(class(data[[vfunc[i]]])[1]=="fd"){
-      fdat<-data[[vfunc[i]]]
+ if(is(data[[vfunc[i]]],"fd")){
+      fdat <- data[[vfunc[i]]]
       if (is.null(basis.x[[vfunc[i]]]))  basis.x[[vfunc[i]]]<-fdat$basis
-      else   if (class(basis.x[[vfunc[i]]])=="pca.fd") bsp1=FALSE
+      else   if (is(basis.x[[vfunc[i]]],"pca.fd")) bsp1=FALSE
       if (is.null(basis.b[[vfunc[i]]])& bsp1)
          basis.b[[vfunc[i]]]<-create.fdata.basis(fdat,
          l=1:max(5,floor(basis.x[[vfunc[i]]]$nbasis/5)),type.basis=basis.x[[vfunc[i]]]$type,
          rangeval=fdat$basis$rangeval)
-      else           if (class(basis.x[[vfunc[i]]])=="pca.fd") bsp2=FALSE
+      else           if (is(basis.x[[vfunc[i]]],"pca.fd")) bsp2=FALSE
       if (bsp1 & bsp2) {
           r=fdat[[2]][[3]]
           if (!is.null( basis.x[[vfunc[i]]]$dropind)) {
@@ -268,7 +266,7 @@ else {
 
       if (bsp1) beta.est=fdata(fd(z[[1]][name.coef[[vfunc[i]]]],basis.b[[vfunc[i]]]),tt)
       else{
-       if (class(data[[vfunc[i]]])[1]=="fdata"){
+       if (is(data[[vfunc[i]]],"fdata")){
             beta.est<-z$coefficients[name.coef[[vfunc[i]]]]*vs.list[[vfunc[i]]]
 #            beta.est$data<-apply(beta.est$data,2,sum)
             beta.est$data<-colSums(beta.est$data)
@@ -314,7 +312,7 @@ if (lenfunc) {
     for (i in 1:length(vfunc)) {
       if (bsp1) beta.l[[vfunc[i]]]=fd(z[[1]][name.coef[[vfunc[i]]]],basis.b[[vfunc[i]]])
        else{
-       if (class(data[[vfunc[i]]])[1]=="fdata"){
+       if (is(data[[vfunc[i]]],"fdata")){
             beta.est<-z$coefficients[name.coef[[vfunc[i]]]]*vs.list[[vfunc[i]]]
 #            beta.est$data<-apply(beta.est$data,2,sum)
             beta.est$data<-colSums(beta.est$data)
@@ -348,7 +346,7 @@ if (lenfunc) {
  z$formula.ini=formula
  z$data=z$data
  z$XX=XX
- class(z)<-c("fregre.glm",class(z))
+ class(z) <- c("fregre.glm",class(z))
  z
 }
 #' @export
@@ -503,15 +501,15 @@ if (lenvfunc>0) {
    }
   }
  	else {
- 		if(class(data[[vfunc[i]]])[1]=="fd"){
-      fdat<-data[[vfunc[i]]]
+ 		if (is(data[[vfunc[i]]],"fd")){
+      fdat <- data[[vfunc[i]]]
       if (is.null(basis.x[[vfunc[i]]]))  basis.x[[vfunc[i]]]<-fdat$basis
-      else   if (class(basis.x[[vfunc[i]]])=="pca.fd") bsp1=FALSE
+      else   if (is(basis.x[[vfunc[i]]],"pca.fd")) bsp1=FALSE
       if (is.null(basis.b[[vfunc[i]]])& bsp1)
          basis.b[[vfunc[i]]]<-create.fdata.basis(fdat,
          l=1:max(5,floor(basis.x[[vfunc[i]]]$nbasis/5)),type.basis=basis.x[[vfunc[i]]]$type,
          rangeval=fdat$basis$rangeval)
-      else           if (class(basis.x[[vfunc[i]]])=="pca.fd") bsp2=FALSE
+      else           if (is(basis.x[[vfunc[i]]],"pca.fd")) bsp2=FALSE
       if (bsp1 & bsp2) {
           r=fdat[[2]][[3]]
 #          tt = seq(r[1], r[2], len = length(fdat[[3]]$time))
@@ -580,10 +578,10 @@ if (!is.data.frame(XX)) XX=data.frame(XX)
       return(z )
       }
       else       z=lm(formula=pf,data=XX,x=TRUE,...)
-      e<-z$residuals
+      e <- z$residuals
 #      S<-solve(t(scores)%*%W%*%scores)          
-       S<-diag(coef(summary(z))[,2])
-      class(z)<-c(class(z),"fregre.lm")
+       S< - diag(coef(summary(z))[,2])
+      class(z) <- c(class(z),"fregre.lm")
       }      
     else {
        if (lambda0) { S<-solve(t(scores)%*%W%*%scores+mat2)           }             

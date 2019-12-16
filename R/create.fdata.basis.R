@@ -72,8 +72,9 @@ create.fdata.basis <-function(fdataobj, l = 1:5, maxl = max(l), type.basis = "bs
     as <- list()
     as$rangeval <- rangeval
     as$nbasis <- maxl
-    as$dropind <- setdiff(1:maxl, l)
     basis = do.call(aa1, as)
+    #basis$params <- diff(rangeval)
+    basis$dropind <- setdiff(1:maxl, l)
     if (class.out == "fdata") {
       nam <- basis$names[intersect(1:maxl, l)]
       basis = fdata(t(eval.basis(fdataobj$argvals, basis)), 
@@ -86,6 +87,7 @@ create.fdata.basis <-function(fdataobj, l = 1:5, maxl = max(l), type.basis = "bs
   }
   basis
 }
+
 
 scores.basis <-function(fdataobj,l=1:5,maxl=max(l),type.basis="bspline", lambda ){
       aa1 <- paste("create.",type.basis,".basis", sep = "")
@@ -195,7 +197,7 @@ if (lambda>0) pls<-fdata2pls(fdataobj,y,norm=norm,ncomp=max(l),lambda=lambda,P=P
 out<-list("basis"=basis,"x"=pls$x,"mean"=pls$mean,"df"=pls$df,
 "fdataobj.cen"=pls$fdataobj.cen,"fdataobj"=fdataobj,norm=norm,
 "l"=l,"type"="pls","y"=y)
-class(out)<-"fdata.comp"
+class(out) <- "fdata.comp"
 return(out)
 } 
 
@@ -262,19 +264,3 @@ create.ldata.basis <- function(ldata, l = 1:5
              type.basis = type.basis, class.out = "fd") 
   return(basis.x)
 }  
-
-# data(tecator)
-# mdat<-list("x0"=tecator$absorp.fdata)
-# mdat$x1<-fdata.deriv(mdat$x0)
-# mdat$x2<-fdata.deriv(mdat$x0,2)
-# basis.x <- create.mfdata.basis(mdat)
-# names(basis.x)
-# class(basis.x[[3]])
-# ldat<-c(list("df"=tecator$y),mdat)
-# basis.x <- create.mfdata.basis(mdat,l=1,type.basis="pc")
-# basis.2 <- create.ldata.basis(ldat,l=1,type.basis="pc")
-# names(basis.x)
-# class(basis.x[[3]])
-# names(basis.x[[3]])
-# plot(mdat[[3]],col=1)
-# lines(basis.x[[3]]$fdataobj.pc,col=2)

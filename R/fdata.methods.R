@@ -153,7 +153,7 @@ order.fdata<-function(y, fdataobj, na.last = TRUE,
 is.fdata<-function(fdataobj){
   if (!inherits(fdataobj, "fdata"))     return(FALSE)
   else {
-    type<-switch(class(fdataobj),
+    type<-switch(is(fdataobj,)[1],
                  matrix={if (ncol(fdataobj[["data"]])!=length(fdataobj[["argvals"]])) return(FALSE)},
                  data.frame={if (ncol(fdataobj[["data"]])!=length(fdataobj[["argvals"]])) return(FALSE)},
                  numeric={if (length(fdataobj[["data"]])!=length(fdataobj[["argvals"]])) return(FALSE)},

@@ -5,8 +5,7 @@
 \alias{gridfdata}
 \title{Utils for generate functional data}
 \usage{
-rcombfdata(n = 10, fdataobj, mu, sdarg = rep(1, nrow(fdataobj)),
-  norm = 1)
+rcombfdata(n = 10, fdataobj, mu, sdarg = rep(1, nrow(fdataobj)), norm = 1)
 
 gridfdata(coef, fdataobj, mu)
 }

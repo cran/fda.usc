@@ -2,27 +2,26 @@ fanova.RPm.boot=function(object,formula,data.fac,RP=min(30,ncol(object)),
 alpha=0.95,zproj=NULL,par.zproj=list(norm=TRUE),nboot=500,hetero=FALSE,contrast=NULL,pr=FALSE,...){
   if (is.data.frame(object)) object=as.matrix(object)
   else if (is.fdata(object)) object=object[["data"]]
-#  if (class(data.fac)=="data.frame") data.fac=as.matrix(data.fac) #new
-  min.data.fac<-min(table(data.fac))
+  min.data.fac <- min(table(data.fac))
   if (min.data.fac==0)  warning("Contingency table of factor levels (data.fac argument) contains 0 counts  values")
   nrow=nrow(object);ncol=ncol(object)
  nprRP=max(RP)
 # if (!is.null(zproj)) nprRP=nrow(zproj)
  if (!is.null(zproj)) {
-   if (class(zproj)=="fdata") { 
+   if (is.fdata(zproj)) { 
 	if (nrow(zproj)>=nprRP) { 
 			z=zproj[1:nprRP] 
 			} else {
 			stop(paste("Not enough functions in zproj",length(zproj)," to compute ",nprRP," projections"))  
 			}
-			} else if (class(zproj)=="matrix"){
+			} else if (is.matrix(zproj)){
 	if (nrow(zproj)>=nprRP){
 			z=zproj[1:nprRP,] } else {
 			stop(paste("Not enough rows in zproj",nrow(zproj)," to compute ",nprRP," projections"))
 			}
-			}  else if (class(zproj)=="function"){
-			if (class(object)=="fdata") z=do.call(zproj,modifyList(list(n=nprRP,t=object$argvals),par.zproj))
-			if (class(object)=="matrix") z=do.call(zproj,modifyList(list(n=nprRP),par.zproj))
+			}  else if (is.function(zproj)){
+			if (is.fdata(object)) z=do.call(zproj,modifyList(list(n=nprRP,t=object$argvals),par.zproj))
+			if (is.matrix(object)) z=do.call(zproj,modifyList(list(n=nprRP),par.zproj))
 			} else {stop("Parameter zproj is neither an fdata object or a function")}
 
 #        modulo=function(z){sqrt(sum(z^2))}
@@ -103,8 +102,8 @@ alpha=0.95,zproj=NULL,par.zproj=list(norm=TRUE),nboot=500,hetero=FALSE,contrast=
         l=sample(1:nrow(fit$residuals),replace=TRUE)        }
     funcboot=fit$residuals[l,]
     for (j in 1:nprRP){
-		if (class(z)=="fdata") value=funcboot%*%z$data[j,]
-		if (class(z)=="matrix") value=funcboot%*%z[j,]
+		if (is.fdata(z)) value=funcboot%*%z$data[j,]
+		if (is.matrix(z)) value=funcboot%*%z[j,]
 #       value=funcboot%*%z[j,]
        if (hetero){
            mdata=as.data.frame(cbind(value,datafac2)) #####################

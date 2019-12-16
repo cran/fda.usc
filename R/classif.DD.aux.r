@@ -1,7 +1,7 @@
 ##############################
 solve.ab <- function(a, b, tol = sqrt(.Machine$double.eps), LINPACK = FALSE, ...){
 inv <- try(solve(a,b,tol, LINPACK,...),silent=TRUE)
-if (class(inv)=="try-error") {   
+if (is(inv,"try-error")) {   
   sv <-svd(a)
   inv <- drop((sv$v %*% diag(1/sv$d) %*% t(sv$u)) %*% b)
   #if (control$verbose) 
@@ -90,7 +90,7 @@ quad.fit0 <- function(index,dep,ind){
     A <- matrix(c(Df[index[1]],(Df[index[1]])^2, Df[index[2]],(Df[index[2]])^2),byrow=TRUE,2,2)
     w <- c(Dg[index[1]],Dg[index[2]])
     a <- try(solve(A,w),silent=TRUE)
-    if (class(a)=="try-error") {
+    if (is(a,"try-error")) {
      sv<-svd(A)
      a<-drop((sv$v%*%diag(1/sv$d)%*%t(sv$u))%*%w)
 #    warning("Inverse of sigma computed by SVD")
@@ -108,7 +108,7 @@ cubic.fit0 <- function(index,dep,ind){
     w <- c(Dg[index[1]],Dg[index[2]],Dg[index[3]])
     a <- try(solve(A,w),silent=TRUE)
 
-    if (class(a)=="try-error") {
+    if (is(a,"try-error")) {
      sv<-svd(A)
      a<-drop((sv$v%*%diag(1/sv$d)%*%t(sv$u))%*%w)
  #    warning("Inverse of sigma computed by SVD")

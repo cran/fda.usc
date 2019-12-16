@@ -22,7 +22,7 @@
 \alias{func.trimvar.RPD}
 \title{Descriptive measures for functional data.}
 \usage{
-func.mean(fdataobj)
+func.mean(x)
 
 func.var(fdataobj)
 
@@ -63,6 +63,8 @@ func.trimvar.RT(fdataobj, ...)
 func.mean.formula(formula, data = NULL, ..., drop = FALSE)
 }
 \arguments{
+\item{x}{\code{\link{fdata}} or \code{\link{ldata}}  class object.}
+
 \item{fdataobj}{\code{\link{fdata}} class object.}
 
 \item{\dots}{Further arguments passed to or from other methods.  If the

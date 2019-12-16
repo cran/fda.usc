@@ -152,22 +152,22 @@ classif.depth<-function(group,fdataobj,newfdataobj,depth="RP",
      depth.mband=do.call(depth,par.depth)$dep,      
      depth.RT=do.call(depth,par.depth)$dep)
    } 
-  group.est[j]<-factor(lev[which.max(Df[j,])],levels=lev) # Maximum depth }
+  group.est[j] <- factor(lev[which.max(Df[j,])],levels=lev) # Maximum depth }
   }  
   }
-  prob.classification<-diag(table(group,group.est))/table(group) 
-  mis<-mean(group.est!=group)
-  output<-list("group.est"=group.est,"group.pred"=group.pred,"dep"=Df,"depth"=depth, "par.depth"=par.depth,
+  prob.classification <- diag(table(group,group.est))/table(group) 
+  mis <- mean(group.est!=group)
+  output <- list("group.est"=group.est,"group.pred"=group.pred,"dep"=Df,"depth"=depth, "par.depth"=par.depth,
   "group"=group,"fdataobj"=fdataobj,"C"=C,"prob.classification"=prob.classification,"max.prob"=1-mis)
-  class(output)=c("classif")
+ class(output) <- "classif"
  return(output) 
 }
 else  {   # new data
- n<-nrow(newfdataobj)
- n0<-nrow(fdataobj)
- x<-array(NA,dim=c(n,nc,ng))
- Df<-matrix(NA,ncol=ng,nrow=n)
- ind<-matrix(NA,nrow=n0,ncol=ng)
+ n <- nrow(newfdataobj)
+ n0 <- nrow(fdataobj)
+ x <- array(NA,dim=c(n,nc,ng))
+ Df <- matrix(NA,ncol=ng,nrow=n)
+ ind <- matrix(NA,nrow=n0,ncol=ng)
  for (i in 1:ng) {
    ind[,i]<-group==lev[i]
    nam<-c(paste("depth ",lev[i],sep=""),paste("depth ",paste(lev[-i],collapse=",")))

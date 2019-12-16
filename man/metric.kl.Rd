@@ -4,8 +4,7 @@
 \alias{metric.kl}
 \title{Kullback--Leibler distance}
 \usage{
-metric.kl(fdata1, fdata2 = NULL, symm = TRUE, base = exp(1),
-  eps = 1e-10, ...)
+metric.kl(fdata1, fdata2 = NULL, symm = TRUE, base = exp(1), eps = 1e-10, ...)
 }
 \arguments{
 \item{fdata1}{Functional data 1 (\code{fdata} class) with the densities. The

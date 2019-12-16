@@ -6,11 +6,16 @@
 \alias{metric.TWED}
 \title{DTW: Dynamic time warping}
 \usage{
-metric.DTW(fdata1, fdata2 = NULL, p = 2, w = min(ncol(fdata1),
-  ncol(fdata2)))
+metric.DTW(fdata1, fdata2 = NULL, p = 2, w = min(ncol(fdata1), ncol(fdata2)))
 
-metric.WDTW(fdata1, fdata2 = NULL, p = 2, w = min(ncol(fdata1),
-  ncol(fdata2)), wmax = 1, g = 0.05)
+metric.WDTW(
+  fdata1,
+  fdata2 = NULL,
+  p = 2,
+  w = min(ncol(fdata1), ncol(fdata2)),
+  wmax = 1,
+  g = 0.05
+)
 
 metric.TWED(fdata1, fdata2 = NULL, p = 2, lambda = 1, nu = 0.05)
 }

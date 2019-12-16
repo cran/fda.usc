@@ -203,6 +203,6 @@ else {
 "sr2"=sr2,"y"=drop(y),"fdataobj"=fdataobj,"mdist"=mdist,"Ker"=Ker,
 "metric"=metric,"type.S"=type.S,"par.S"=par.S,"h.opt"=h,"m"=m,var.y=yp2)
   }
-class(out)="fregre.fd"
+class(out) <- "fregre.fd"
 return(out)
 }

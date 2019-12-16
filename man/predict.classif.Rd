@@ -4,8 +4,7 @@
 \alias{predict.classif}
 \title{Predicts from a fitted classif object.}
 \usage{
-\method{predict}{classif}(object, new.fdataobj = NULL, type = "class",
-  ...)
+\method{predict}{classif}(object, new.fdataobj = NULL, type = "class", ...)
 }
 \arguments{
 \item{object}{Object \code{object} estimated by: k nearest neighbors method

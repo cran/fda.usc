@@ -4,7 +4,7 @@ corSigma<-function(par.gls,fixed=FALSE){
  ff<-as.formula("e~1") 
 #print("entra corSigma")
 # viene del optim.np 
- isfdata<-class(par.gls$data)=="list"
+ isfdata<- class(par.gls$data)=="list"
  if (isfdata) { 
 #  print("si es fdata")
   grupos<-TRUE
@@ -72,7 +72,7 @@ if (grupos ) {
  W <- try(solve(W0),silent=TRUE)
 # print(dim(W))
 # print(dim(W0)) 
-     if (class(W)=="try-error") {
+     if (is(W,"try-error")) {
       sv<-svd(W0)
       W<-drop((sv$v%*%diag(1/sv$d)%*%t(sv$u)))
       warning("Inverse of sigma computed by SVD")
@@ -94,7 +94,7 @@ if (grupos ) {
 else{ 
  W0<-Sigma
  W <- try(solve(W0),silent=TRUE)
-     if (class(W)=="try-error") {
+     if (is(W,"try-error")) {
       sv<-svd(W0)
       W<-drop((sv$v%*%diag(1/sv$d)%*%t(sv$u)))
       warning("Inverse of sigma computed by SVD")

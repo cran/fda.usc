@@ -32,7 +32,10 @@
 #' @param control a list of parameters for controlling the fitting process, by
 #' default: maxit, epsilon, trace and inverse.
 #' @param prob probability value used for binary discriminant.
-#' @param type 1 vs all (by default) or majority voting.
+#' @param type If type is\code{"1vsall"}  (by default) 
+#' a maximum probability scheme is applied: requires G binary classifiers.
+#' If type is \code{"majority"}  (only for multicalss classification G > 2) 
+#' a voting scheme is applied: requires  G (G - 1) / 2 binary classifiers.
 #' @param \dots Further arguments passed to or from other methods.
 #' @return Return \code{gam} object plus:
 #' \itemize{
@@ -63,19 +66,18 @@
 #' \dontrun{ 
 #' ## Time-consuming: selection of 2 levels 
 #' data(phoneme)
-#' mlearn<-phoneme[["learn"]][1:100]
-#' glearn<-as.numeric(phoneme[["classlearn"]][1:100])
+#' mlearn<-phoneme[["learn"]][1:150]
+#' glearn<-factor(phoneme[["classlearn"]][1:150])
 #' dataf<-data.frame(glearn)
 #' dat=list("df"=dataf,"x"=mlearn)
 #' a1<-classif.gkam(glearn~x,data=dat)
 #' summary(a1)
-#' mtest<-phoneme[["test"]][1:100]
-#' gtest<-as.numeric(phoneme[["classtest"]][1:100])
+#' mtest<-phoneme[["test"]][1:150]
+#' gtest<-factor(phoneme[["classtest"]][1:150])
 #' newdat<-list("x"=mtest)
 #' p1<-predict(a1,newdat)
 #' table(gtest,p1)
-#' } 
-#' 
+#' }  
 #' @export
 classif.gkam=function(formula,data, weights = "equal", family = binomial(),
  par.metric = NULL,par.np=NULL, offset=NULL,prob=0.5,type= "1vsall",
@@ -128,16 +130,19 @@ classif.gkam=function(formula,data, weights = "equal", family = binomial(),
     for (ivot in 1:nvot) {  
       ind1 <- y==ny[cvot[1,ivot]]
       ind2 <- y==ny[cvot[2,ivot]] 
-      i2a2<-which(ind1 | ind2)
+      #i2a2<-which(ind1 | ind2)
+      i2a2 <- ind1 | ind2
       newy<-rep(NA,n)   
       newy[ind1 ]<- 1
       newy[ind2 ]<- 0
       newdata<-data
       newdata$df[response] <- newy
-      newdata <- newdata[i2a2]
+      #newdata <- newdata[i2a2,row=TRUE]
+      newdata<-subset(newdata,i2a2)
       class(newdata)<-c("list")
-      a[[ivot]]<-fregre.gkam(formula,family=family,data=newdata, weigths=weights[i2a2],
-                             par.metric=par.metric,par.np=par.np,offset=offset,control=control,...)
+      a[[ivot]]<-fregre.gkam(formula,family=family,data=newdata
+                , weigths=weights[i2a2], par.metric=par.metric
+                ,par.np=par.np,offset=offset,control=control,...)
       prob.log <- a[[ivot]]$fitted.values  > prob
       votos[i2a2, cvot[1,ivot]] <- votos[i2a2, cvot[1,ivot]] + as.numeric(prob.log)
       votos[i2a2, cvot[2,ivot]] <- votos[i2a2, cvot[2,ivot]] + as.numeric(!prob.log)
@@ -151,12 +156,10 @@ classif.gkam=function(formula,data, weights = "equal", family = binomial(),
       igroup  <- y==ny[i]
       newy<-ifelse(igroup, 1, 0)
       weights0 <- weights
-#      weights0[igroup] <- weights0[igroup]/ sum(weights0[igroup])
-#      weights0[!igroup] <- weights0[!igroup]/sum(weights0[!igroup])
-      
       newdata$df[response]<-newy
-      a[[i]]<-fregre.gkam(formula,family=family,data=newdata,weigths=weights0,
-                          par.metric=par.metric,par.np=par.np,offset=offset,control=control,...)
+      a[[i]]<-fregre.gkam(formula,family=family,data=newdata,weigths=weights0
+                      ,par.metric=par.metric,par.np=par.np
+                      ,offset=offset,control=control,...)
       prob.group[,i]<-a[[i]]$fitted.values
     }
     out2glm<-classifKgroups(y,prob.group,ny)
@@ -169,6 +172,6 @@ classif.gkam=function(formula,data, weights = "equal", family = binomial(),
   output<-list(formula=formula,data=data,group=y,group.est=yest,
                prob.classification=out2glm$prob1,prob.group=prob.group,C=C,
                m=m,max.prob=max.prob,fit=a,prob = prob,type=type)
-  class(output)="classif"
+  class(output) <- "classif"
   return(output)
 }

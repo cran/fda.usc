@@ -5,8 +5,16 @@
 \alias{metric.mfdata}
 \title{Distance Matrix Computation for ldata and mfdata class object}
 \usage{
-metric.ldata(ldata1, ldata2 = NULL, include = "all",
-  exclude = "none", metric, par.metric = NULL, w, method = "none")
+metric.ldata(
+  ldata1,
+  ldata2 = NULL,
+  include = "all",
+  exclude = "none",
+  metric,
+  par.metric = NULL,
+  w,
+  method = "none"
+)
 }
 \arguments{
 \item{ldata1}{List with  of fdata objects and a data.frame object calle 'df'.}

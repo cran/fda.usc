@@ -477,7 +477,7 @@ mdepth.KFSD=function (x, xx = x, trim = 0.25,
               dep = dep, h = h, hq=hq2,name="KFSD")
   if (scale) 
     out$dscale = mx
-  class(out)="mdepth"
+  class(out) <- "mdepth"
   if (draw) {
     plot.mdepth(x,xx,out)
   }
@@ -575,8 +575,8 @@ mdepth.FSD=function (x, xx = x,
   out <- list(median = med, lmed = k, mtrim = mtrim, ltrim = if (nl==1) unlist(lista) else lista, 
               dep = dep,name="FSD")
   if (scale) 
-    out$dscale = mx
-  class(out)="mdepth"
+    out$dscale <- mx
+  class(out) <- "mdepth"
   
   if (draw) {
     plot.mdepth(out)

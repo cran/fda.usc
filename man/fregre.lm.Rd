@@ -4,8 +4,16 @@
 \alias{fregre.lm}
 \title{Fitting Functional Linear Models}
 \usage{
-fregre.lm(formula, data, basis.x = NULL, basis.b = NULL, rn, lambda,
-  weights = rep(1, n), ...)
+fregre.lm(
+  formula,
+  data,
+  basis.x = NULL,
+  basis.b = NULL,
+  rn,
+  lambda,
+  weights = rep(1, n),
+  ...
+)
 }
 \arguments{
 \item{formula}{an object of class \code{formula} (or one that can be coerced

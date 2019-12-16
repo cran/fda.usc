@@ -4,9 +4,19 @@
 \alias{dev.S}
 \title{The deviance score}
 \usage{
-dev.S(y, S, obs, family = gaussian(), off, offdf, criteria = "GCV",
-  W = diag(1, ncol = ncol(S), nrow = nrow(S)), trim = 0,
-  draw = FALSE, ...)
+dev.S(
+  y,
+  S,
+  obs,
+  family = gaussian(),
+  off,
+  offdf,
+  criteria = "GCV",
+  W = diag(1, ncol = ncol(S), nrow = nrow(S)),
+  trim = 0,
+  draw = FALSE,
+  ...
+)
 }
 \arguments{
 \item{y}{Matrix of set cases with dimension (\code{n} x \code{m}), where

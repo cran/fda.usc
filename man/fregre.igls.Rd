@@ -4,8 +4,19 @@
 \alias{fregre.igls}
 \title{Fit of  Functional Generalized Least Squares Model Iteratively}
 \usage{
-fregre.igls(formula, data, basis.x = NULL, basis.b = NULL, correlation,
-  maxit = 100, rn, lambda, weights = rep(1, n), control, ...)
+fregre.igls(
+  formula,
+  data,
+  basis.x = NULL,
+  basis.b = NULL,
+  correlation,
+  maxit = 100,
+  rn,
+  lambda,
+  weights = rep(1, n),
+  control,
+  ...
+)
 }
 \arguments{
 \item{formula}{A two-sided linear formula object describing the

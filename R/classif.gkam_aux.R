@@ -22,7 +22,7 @@ kgam.H <-function (object, inverse = "svd") {
     D1 <- abs(DD - 1)
     SS <- MM1 * D1 + diag(n * lenH)
     slv <- try(solve(SS), silent = TRUE)
-    if (class(slv) == "try-error") {
+    if (is(slv,"try-error")) {
       sv <- svd(SS)
       slv <- drop((sv$v %*% diag(1/sv$d) %*% t(sv$u)))
       warning("Inverse of sigma computed by SVD")

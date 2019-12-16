@@ -9,8 +9,7 @@
 \alias{print.fregre.igls}
 \title{Summarizes information from fregre.fd objects.}
 \usage{
-\method{summary}{fregre.fd}(object, times.influ = 3, times.sigma = 3,
-  draw = TRUE, ...)
+\method{summary}{fregre.fd}(object, times.influ = 3, times.sigma = 3, draw = TRUE, ...)
 }
 \arguments{
 \item{object}{Estimated by functional regression, \code{fregre.fd} object.}

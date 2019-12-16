@@ -2,10 +2,17 @@
 % Please edit documentation in R/fanova.onefactor.R
 \name{fanova.onefactor}
 \alias{fanova.onefactor}
+\alias{anova.onefactor}
 \title{One--way anova model for functional data}
 \usage{
-fanova.onefactor(object, group, nboot = 100, plot = FALSE,
-  verbose = FALSE, ...)
+fanova.onefactor(
+  object,
+  group,
+  nboot = 100,
+  plot = FALSE,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{object}{functional response data.  fdata class object with \code{n} curves.}

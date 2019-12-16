@@ -42,7 +42,10 @@
 #' \code{='inverse'} for inverse-probability of weighting.   
 #' \item if \code{numeric} vector of length \code{n}, Weight values of each observation.
 #' }
-#' @param type 1 vs all (by default) or majority voting.
+#' @param type If type is\code{"1vsall"}  (by default) 
+#' a maximum probability scheme is applied: requires G binary classifiers.
+#' If type is \code{"majority"}  (only for multicalss classification G > 2) 
+#' a voting scheme is applied: requires  G (G - 1) / 2 binary classifiers.
 #' @param size number of units in the hidden layer. Can be zero if there are skip-layer units.
 #' @param laplace value used for Laplace smoothing (additive smoothing). Defaults to 0 (no Laplace smoothing).
 #' @param \dots Further arguments passed to or from other methods.
@@ -220,9 +223,8 @@ classif.nnet=function(formula, data, basis.x=NULL
   names(prob1) <- z$levels
   colnames(prob.group) <- z$levels
   out$prob.classification <- prob1
-  #out$group.pred <- out$group.est
   #class(out)<-c("classif",class(z))
-  class(out)<-"classif"
+  class(out) <- "classif"
   out
 }
 
@@ -452,9 +454,9 @@ classif.rpart=function(formula, data, basis.x=NULL ,weights="equal",type="1vsall
   colnames(prob.group) <- z$levels
   out$prob.classification <- prob1
   out$type <- type
-  #out$group.pred <- out$group.est
-  class(out)<-c("classif",class(z))
-  class(out)<-c("classif")
+  # out$group.pred <- out$group.est
+  # class(out)<-c("classif",class(z))
+  class(out) <- c("classif")
   out
 }
 
@@ -625,7 +627,7 @@ classif.svm=function(formula, data, basis.x=NULL
   #out$prob.group<-prob.group
   #out$group.pred <- out$group.est
   #class(out)<-c("classif",class(z))
-  class(out)<-"classif"
+  class(out) <- "classif"
   out
 }
 
@@ -769,7 +771,7 @@ classif.ksvm=function(formula, data, basis.x=NULL ,weights = "equal",...){
   out$prob.classification <- prob1
   #out$group.pred <- out$group.est
   #class(out)<-c("classif",class(z))
-  class(out)<-"classif"
+  class(out) <- "classif"
   out
 }
 
@@ -908,7 +910,7 @@ classif.randomForest=function(formula, data, basis.x=NULL,
   
   #out$group.pred <- out$group.est
   #class(out)<-c("classif",class(z))
-  class(out)<-"classif"
+  class(out) <- "classif"
   out
 }
 
@@ -1064,7 +1066,7 @@ classif.lda=function(formula, data, basis.x=NULL
   #out$prob.group<-prob.group
   #out$group.pred <- out$group.est
   #class(out)<-c("classif",class(z))
-  class(out)<-"classif"
+  class(out) <- "classif"
   out
 }
 
@@ -1219,7 +1221,7 @@ classif.qda=function(formula, data, basis.x=NULL
   #out$prob.group<-prob.group
   #out$group.pred <- out$group.est
   #class(out)<-c("classif",class(z))
-  class(out)<-"classif"
+  class(out) <- "classif"
   out
 }
 
@@ -1335,6 +1337,6 @@ classif.naiveBayes=function(formula, data, basis.x=NULL, laplace = 0,...)
   out$prob.classification <- prob1
   #out$group.pred <- out$group.est
   #class(out)<-c("classif",class(z))
-  class(out)<-"classif"
+  class(out) <- "classif"
   out
 }

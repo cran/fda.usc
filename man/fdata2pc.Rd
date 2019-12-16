@@ -4,8 +4,7 @@
 \alias{fdata2pc}
 \title{Principal components for functional data}
 \usage{
-fdata2pc(fdataobj, ncomp = 2, norm = TRUE, lambda = 0, P = c(0, 0,
-  1), ...)
+fdata2pc(fdataobj, ncomp = 2, norm = TRUE, lambda = 0, P = c(0, 0, 1), ...)
 }
 \arguments{
 \item{fdataobj}{\code{\link{fdata}} class object.}

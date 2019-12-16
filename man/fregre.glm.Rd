@@ -4,8 +4,16 @@
 \alias{fregre.glm}
 \title{Fitting Functional Generalized Linear Models}
 \usage{
-fregre.glm(formula, family = gaussian(), data, basis.x = NULL,
-  basis.b = NULL, CV = FALSE, subset = NULL, ...)
+fregre.glm(
+  formula,
+  family = gaussian(),
+  data,
+  basis.x = NULL,
+  basis.b = NULL,
+  CV = FALSE,
+  subset = NULL,
+  ...
+)
 }
 \arguments{
 \item{formula}{an object of class \code{formula} (or one that can be coerced
@@ -88,12 +96,10 @@ x=tecator$absorp.fdata
 y=tecator$y$Fat
 tt=x[["argvals"]]
 dataf=as.data.frame(tecator$y)
-
 nbasis.x=11
 nbasis.b=7
 basis1=create.bspline.basis(rangeval=range(tt),nbasis=nbasis.x)
 basis2=create.bspline.basis(rangeval=range(tt),nbasis=nbasis.b)
- 
 f=Fat~Protein+x
 basis.x=list("x"=basis1)
 basis.b=list("x"=basis2)

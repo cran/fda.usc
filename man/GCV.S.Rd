@@ -4,8 +4,16 @@
 \alias{GCV.S}
 \title{The generalized correlated cross-validation (GCCV) score}
 \usage{
-GCV.S(y, S, criteria = "GCV", W = NULL, trim = 0, draw = FALSE,
-  metric = metric.lp, ...)
+GCV.S(
+  y,
+  S,
+  criteria = "GCV",
+  W = NULL,
+  trim = 0,
+  draw = FALSE,
+  metric = metric.lp,
+  ...
+)
 }
 \arguments{
 \item{y}{Matrix of set cases with dimension (\code{n} x \code{m}), where

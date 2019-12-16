@@ -5,9 +5,15 @@
 \title{Data-driven sampling of random directions guided by sample of functional
 data}
 \usage{
-rdir.pc(n, X.fdata, ncomp = 0.95, fdata2pc.obj = fdata2pc(X.fdata,
-  ncomp = min(length(X.fdata$argvals), nrow(X.fdata))), sd = 0,
-  zero.mean = TRUE, norm = FALSE)
+rdir.pc(
+  n,
+  X.fdata,
+  ncomp = 0.95,
+  fdata2pc.obj = fdata2pc(X.fdata, ncomp = min(length(X.fdata$argvals), nrow(X.fdata))),
+  sd = 0,
+  zero.mean = TRUE,
+  norm = FALSE
+)
 }
 \arguments{
 \item{n}{number of curves to be generated.}

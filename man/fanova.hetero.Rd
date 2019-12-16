@@ -2,10 +2,10 @@
 % Please edit documentation in R/fanova.hetero.R
 \name{fanova.hetero}
 \alias{fanova.hetero}
+\alias{anova.hetero}
 \title{ANOVA for heteroscedastic data}
 \usage{
-fanova.hetero(object = NULL, formula, pr = FALSE, contrast = NULL,
-  ...)
+fanova.hetero(object = NULL, formula, pr = FALSE, contrast = NULL, ...)
 }
 \arguments{
 \item{object}{A data frame with dimension (\code{n} x \code{p+1}).  In the

@@ -5,8 +5,15 @@
 \title{Functional penalized PLS regression with scalar response using selection of
 number of PLS components}
 \usage{
-fregre.pls.cv(fdataobj, y, kmax = 8, lambda = 0, P = c(0, 0, 1),
-  criteria = "SIC", ...)
+fregre.pls.cv(
+  fdataobj,
+  y,
+  kmax = 8,
+  lambda = 0,
+  P = c(0, 0, 1),
+  criteria = "SIC",
+  ...
+)
 }
 \arguments{
 \item{fdataobj}{\code{\link{fdata}} class object.}

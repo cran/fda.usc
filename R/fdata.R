@@ -89,8 +89,8 @@ if (is.list(rangeval)) fdata2d=TRUE
 
 if (fdata2d){
 out=list("data"=NULL)
-if (length(class(mdata))>1) class(mdata)<-class(mdata)[1]
-out<-switch(class(mdata),
+#if (length(class(mdata))>1) class(mdata)<-class(mdata)[1]
+out<-switch(is(mdata,)[1],
 matrix={
         out[["data"]]<-array(NA,dim=c(1,dm[1],dm[2]))
         out[["data"]][1,,]<-mdata
@@ -104,6 +104,15 @@ array={
         out[["data"]]=mdata
         out}
 )
+# if ( inherits(mdata,"matrix") | inherits(mdata,"data.frame") ){
+#   out[["data"]]<-array(NA,dim=c(1,dm[1],dm[2]))
+#   out[["data"]][1,,]<-mdata
+# }else{
+#   if (inherits(mdata,"fdata")) 
+#     {stop("The data is a fdata class object")}  else {
+#       if ( inherits(mdata,"array"))  out[["data"]]=mdata}
+# }
+
 dm<-dim(out[["data"]] )
 len.dm<-length(dm)
 if (is.null(argvals)) {
@@ -179,13 +188,13 @@ else stop("The argument names must be a list")
  out[["names"]]<-names
 }
 if (is.null(dimnames(out$data))) dimnames(out$data)<-list("data"=1:dm[1],"argvals.x"=argvals[[1]],"argvals.y"=argvals[[2]])
-class(out)=c("fdata","fdata2d")
+class(out) <- c("fdata","fdata2d")
 return(out)
 }   #### fdata1d
 else{
 out=list("data"=NULL)
-if (length(class(mdata))>1) class(mdata)<-class(mdata)[1]
-out<-switch(class(mdata),
+# if (length(class(mdata))>1) class(mdata)<-class(mdata)[1]
+out<-switch(is(mdata,)[1],
 matrix={
         out[["data"]]=mdata
         out},

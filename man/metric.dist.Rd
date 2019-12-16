@@ -4,8 +4,7 @@
 \alias{metric.dist}
 \title{Distance Matrix Computation}
 \usage{
-metric.dist(x, y = NULL, method = "euclidean", p = 2, dscale = 1,
-  ...)
+metric.dist(x, y = NULL, method = "euclidean", p = 2, dscale = 1, ...)
 }
 \arguments{
 \item{x}{Data frame 1. The dimension is (\code{n1} x \code{m}).}

@@ -543,7 +543,7 @@ kgam.H<-function(object,inverse="svd") {
 #  cat("kappa=",kappa(SS),"\n")    
     slv <- try(solve(SS),silent=TRUE)
 #    print(slv)
-    if (class(slv)=="try-error") {
+    if (is(slv,"try-error")) {
      sv<-svd(SS)
      slv<-drop((sv$v%*%diag(1/sv$d)%*%t(sv$u)))
     warning("Inverse of sigma computed by SVD")

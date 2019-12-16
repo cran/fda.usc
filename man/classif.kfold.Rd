@@ -4,9 +4,18 @@
 \alias{classif.kfold}
 \title{Functional Classification usign k-fold CV}
 \usage{
-classif.kfold(formula, data, classif = "classif.glm", par.classif,
-  kfold = 10, param.kfold = NULL, measure = "accuracy", cost,
-  models = FALSE, verbose = FALSE)
+classif.kfold(
+  formula,
+  data,
+  classif = "classif.glm",
+  par.classif,
+  kfold = 10,
+  param.kfold = NULL,
+  measure = "accuracy",
+  cost,
+  models = FALSE,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{formula}{an object of class \code{formula} (or one that can be coerced to that class):
