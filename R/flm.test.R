@@ -628,8 +628,6 @@ flm.test=function(X.fdata,Y,beta0.fdata=NULL,B=5000,est.method="pls",
 		
 	}
 	if(verbose) cat("Done.\n")
-
-	
 	# Result: class htest
 	names(pcvm)="PCvM statistic"
 	result=structure(list(statistic=pcvm,boot.statistics=pcvm.star,p.value=pvalue,method=meth,B=B,type.basis=type.basis,beta.est=beta.est,p=p.opt,ord=ord.opt,data.name="Y=<X,b>+e"))

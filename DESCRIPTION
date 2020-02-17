@@ -1,8 +1,8 @@
 Package: fda.usc
 Type: Package
 Title: Functional Data Analysis and Utilities for Statistical Computing
-Version: 2.0.1
-Date: 2019-12-13
+Version: 2.0.2
+Date: 2020-02-17
 Authors@R: c(person("Manuel Febrero Bande",role="aut", email = "manuel.febrero@usc.es"), person("Manuel Oviedo de la Fuente",role=c("aut","cre"), email="manuel.oviedo@usc.es"),
              person("Pedro Galeano",role="ctb"),
              person("Alicia Nieto",role="ctb"),
@@ -27,5 +27,5 @@ NeedsCompilation: yes
 Repository: CRAN
 Encoding: UTF-8
 RoxygenNote: 7.0.2
-Packaged: 2019-12-16 13:48:08 UTC; moviedo
-Date/Publication: 2019-12-16 16:00:08 UTC
+Packaged: 2020-02-17 17:32:08 UTC; moviedo
+Date/Publication: 2020-02-17 19:00:34 UTC
