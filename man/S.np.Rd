@@ -15,9 +15,9 @@ S.LPR(tt, h, p = 1, Ker = Ker.norm, w = NULL, cv = FALSE)
 
 S.LCR(tt, h, Ker = Ker.norm, w = NULL, cv = FALSE)
 
-S.NW(tt, h = NULL, Ker = Ker.norm, w = NULL, cv = FALSE)
-
 S.KNN(tt, h = NULL, Ker = Ker.unif, w = NULL, cv = FALSE)
+
+S.NW(tt, h = NULL, Ker = Ker.norm, w = NULL, cv = FALSE)
 }
 \arguments{
 \item{tt}{Vector of discretization points or distance matrix \code{mdist}}
@@ -85,6 +85,6 @@ Opsomer, J. D., and Ruppert, D. (1997). Fitting a bivariate additive model by lo
 See Also as \code{\link{S.basis}}
 }
 \author{
-Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@usc.es}
+Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@udc.es}
 }
 \keyword{smooth}

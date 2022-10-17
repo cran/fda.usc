@@ -45,7 +45,7 @@
 #' \item \code{residuals}{ \code{y}-\code{fitted values}.} 
 #' \item \code{fitted.values}{ Estimated scalar response.} 
 #' \item \code{beta.est}{ beta coefficient estimated of class \code{fdata}}
-#' \item \code{df}{ The residual degrees of freedom. In ridge regression, \code{df(rn)} is the effective degrees of freedom.} 
+#' \item \code{df.residual}{ The residual degrees of freedom. In ridge regression, \code{df(rn)} is the effective degrees of freedom.} 
 #' \item \code{r2}{ Coefficient of determination.}
 #' \item \code{sr2}{ Residual variance.} 
 #' \item \code{Vp}{ Estimated covariance matrix for the parameters.} 
@@ -59,7 +59,7 @@
 #' \item \code{y}{ Scalar response.}
 #' }
 #' @author Manuel Febrero-Bande, Manuel Oviedo de la Fuente
-#' \email{manuel.oviedo@@usc.es}
+#' \email{manuel.oviedo@@udc.es}
 #' @seealso See Also as: \code{\link{fregre.pc.cv}},
 #' \code{\link{summary.fregre.fd}} and \code{\link{predict.fregre.fd}}.
 #' 
@@ -76,117 +76,121 @@
 #' 
 #' Febrero-Bande, M., Oviedo de la Fuente, M. (2012).  \emph{Statistical
 #' Computing in Functional Data Analysis: The R Package fda.usc.} Journal of
-#' Statistical Software, 51(4), 1-28. \url{http://www.jstatsoft.org/v51/i04/}
+#' Statistical Software, 51(4), 1-28. \url{https://www.jstatsoft.org/v51/i04/}
 #' 
 #' N. Kraemer, A.-L. Boulsteix, and G. Tutz (2008). \emph{Penalized Partial
 #' Least Squares with Applications to B-Spline Transformations and Functional
 #' Data}. Chemometrics and Intelligent Laboratory Systems, 94, 60 - 69.
-#' \url{http://dx.doi.org/10.1016/j.chemolab.2008.06.009}
+#' \doi{10.1016/j.chemolab.2008.06.009}
 #' @keywords regression
 #' @examples
 #' \dontrun{
 #' data(tecator)
-#' absorp=tecator$absorp.fdata
-#' ind=1:129
-#' x=absorp[ind,]
-#' y=tecator$y$Fat[ind]
-#' res=fregre.pc(x,y)
+#' absorp <- tecator$absorp.fdata
+#' ind <- 1:129
+#' x <- absorp[ind,]
+#' y <- tecator$y$Fat[ind]
+#' res <- fregre.pc(x,y)
 #' summary(res)
-#' res2=fregre.pc(x,y,l=c(1,3,4))
+#' res2 <- fregre.pc(x,y,l=c(1,3,4))
 #' summary(res2)
 #' # Functional Ridge Regression
-#' res3=fregre.pc(x,y,l=c(1,3,4),lambda=1,P=1)
+#' res3 <- fregre.pc(x,y,l=c(1,3,4),lambda=1,P=1)
 #' summary(res3)
 #' # Functional Regression with 2nd derivative penalization
-#' res4=fregre.pc(x,y,l=c(1,3,4),lambda=1,P=c(0,0,1))
+#' res4 <- fregre.pc(x,y,l=c(1,3,4),lambda=1,P=c(0,0,1))
 #' summary(res4)
-#' betas<-c(res$beta.est,res2$beta.est,res3$beta.est,res4$beta.est)
+#' betas <- c(res$beta.est,res2$beta.est,
+#'            res3$beta.est,res4$beta.est)
 #' plot(betas)
 #' } 
 #' 
 #' @export fregre.pc
-fregre.pc=function (fdataobj, y, l =NULL,lambda=0,P=c(0,0,1),weights=rep(1,len=n),...){
+fregre.pc=function (fdataobj, y, l =NULL,lambda=0,P=c(0,0,1),
+                    weights=rep(1,len=n),...){
   if (is(fdataobj,"fdata.comp")) {
-    pc<-fdataobj
-    fdataobj<-pc$fdataobj
+    pc <- fdataobj
+    fdataobj <- pc$fdataobj
     if (is.null(l))    {
-      l<-pc$l
+      l <- pc$l
     }
-    else if (length(l)>nrow(pc$rotation)) stop("Incorrect value for  argument l")
+    else if (length(l)>nrow(pc$basis)) stop("Incorrect value for  argument l")
     x <- fdataobj[["data"]]
     tt <- fdataobj[["argvals"]]                                                    
   }
   else {
-    if (is.null(l)) l<- 1:3
-    if (!is.fdata(fdataobj))    fdataobj = fdata(fdataobj)
+    if (is.null(l)) l <- 1:3
+    if (!is.fdata(fdataobj))    fdataobj <- fdata(fdataobj)
     #  omit<-omit.fdata(fdataobj,y)
     #  fdataobj<-omit[[1]]
     #  y<-omit[[2]]
-    tt<-fdataobj[["argvals"]]
-    x<-fdataobj[["data"]]
-    pc<-fdata2pc(fdataobj,ncomp=max(l),lambda=lambda,P=P)
+    tt <- fdataobj[["argvals"]]
+    x <- fdataobj[["data"]]
+    pc <- fdata2pc(fdataobj,ncomp=max(l),lambda=lambda,P=P)
   }  
   rtt <- fdataobj[["rangeval"]]
   names <- fdataobj[["names"]]
-  n = nrow(x); np <- ncol(x);lenl = length(l)
+  n <- nrow(x)
+  np <- ncol(x)
+  lenl = length(l)
   if (is.null(rownames(x)))        rownames(x) <- 1:n
-  X <-xcen<-pc$fdataobj.cen
+  X <- xcen <- pc$fdataobj.cen
   if (n != (length(y)))   stop("ERROR IN THE DATA DIMENSIONS")
   C <- match.call()
-  ycen = y - mean(y)
-  vs<-t(pc$rotation$data[l,,drop=F])
-  scores<-Z<-(pc$x[,l,drop=F])
-  cnames<-colnames(pc$x)[l]
-  df<-lenl+1
-  J<-min(np,lenl)
-  ymean<-mean(y)
-  ycen<- y - ymean
-  W<-diag(weights) 
+  ycen <- y - mean(y)
+  vs <-t (pc$basis$data[l,,drop=F])
+  scores <- Z <- (pc$coefs[,l,drop=F])
+  cnames <- colnames(pc$coefs)[l]
+  df <- lenl+1
+  J <- min(np,lenl)
+  ymean <- mean(y)
+  ycen <-  y - ymean
+  W <- diag(weights) 
   if (is.logical(lambda)) {
-    #   val<-log(.25*(pc$d[1]^2),base=2)
-    lambda<-.25*(pc$d[1]^2)#lambda<-c(0,2^seq(0,val,len=10))
+    #   val <- log(.25*(pc$d[1]^2),base=2)
+    lambda <- .25*(pc$d[1]^2)#lambda <- c(0,2^seq(0,val,len=10))
   }
   if (lambda>0) {
-    xmean<-pc$mean
-    d<-pc$newd[l]
-    D<-diag(d)
-    diagJ<-diag(J)
-    #    lenrn<-length(rn)
-    scores<-cbind(rep(1,n),pc$x[,l])
-    order.deriv<-0     
+    xmean <- pc$mean
+    d <- pc$newd[l]
+    D <- diag(d)
+    diagJ <- diag(J)
+    #    lenrn <- length(rn)
+    scores <- cbind(rep(1,n),pc$coefs[,l])
+    order.deriv <- 0     
     if (!is.matrix(P)){
       if (is.vector(P)) {
-        for (i in 1:length(P))   {      if (P[i]!=0)         order.deriv<-i}
-        P<-P.penalty(tt,P)
+        for (i in 1:length(P))   {      if (P[i]!=0)         order.deriv <- i}
+        P <- P.penalty(tt,P)
         
-        P<-t(vs)%*%P%*%vs 
-        P<-P*(diff(rtt)/(np -1))^(order.deriv*2-1)
+        P <- t(vs)%*%P%*%vs 
+        P <- P*(diff(rtt)/(np -1))^(order.deriv*2-1)
       }         }
-    mat<-diag(J+1)
-    mat[-1,-1]<-lambda*P
-    mat[1,1]<-0
-    Sb<-t(scores)%*%W%*%scores+mat
-    # S<-solve(Sb)       
+    mat <- diag(J+1)
+    mat[-1,-1] <- lambda*P
+    mat[1,1] <- 0
+    Sb <- t(scores)%*%W%*%scores + mat
+    # S <- solve(Sb)       
     #    S=solve(t(Z)%*%W%*%Z)    
-    S<-Minverse(Sb) 
-    Cinv<-S%*%t(scores)%*%W         
-    coefs<-Cinv%*%y
-    yp<-drop(scores%*%coefs)
-    H<-scores%*%Cinv
-    df<-fdata.trace(H)
-    coefs<-drop(coefs)
-    names(coefs)<-c("Intercept",cnames)
-    beta.est<-coefs[-1]*pc$rotation[l]
-    beta.est$data<-colSums(beta.est$data)
-    beta.est$names$main<-"beta.est"
-    beta.est$data <- matrix(as.numeric(beta.est$data),nrow=1)
-    e<-y-yp
-    rdf<-n-df
+    S <- Minverse(Sb) 
+    Cinv <- S%*%t(scores)%*%W         
+    coefs <- Cinv%*%y
+    yp <- drop(scores%*%coefs)
+    H <- scores%*%Cinv
+    df <- fdata.trace(H)
+    coefs <- drop(coefs)
+    names(coefs) <- c("Intercept",cnames)
+    beta.est <- coefs[-1]*pc$basis[l]
+    beta.est$data <- colSums(beta.est$data)
+    beta.est$names$main <- "beta.est"
+    beta.est$data  <-  matrix(as.numeric(beta.est$data),nrow=1)
+    e <- y-yp
+    rdf <- n-df
     sr2 <- sum(e^2)/ rdf
     r2 <- 1 - sum(e^2)/sum(ycen^2)
     r2.adj<- 1 - (1 - r2) * ((n -    1)/ rdf)
     #    GCV <- sum(e^2)/(n - df)^2
-    object.lm = list()
+    object.lm <- list()
     object.lm$coefficients <- coefs
     object.lm$residuals <- drop(e)
     object.lm$fitted.values <- yp
@@ -194,49 +198,50 @@ fregre.pc=function (fdataobj, y, l =NULL,lambda=0,P=c(0,0,1),weights=rep(1,len=n
     object.lm$y <- y
     object.lm$rank <- df
     object.lm$df.residual <-  rdf
-    Z=cbind(rep(1,len=n),Z)
-    colnames(Z)[1] = "(Intercept)"
-    std.error = sqrt(diag(S) *sr2)
-    Vp<-sr2*S 
-    t.value = coefs/std.error
-    p.value = 2 * pt(abs(t.value), n - df, lower.tail = FALSE)
+    Z <- cbind(rep(1,len=n),Z)
+    colnames(Z)[1] <- "(Intercept)"
+    std.error <- sqrt(diag(S) *sr2)
+    Vp <- sr2*S 
+    t.value <- coefs/std.error
+    p.value <- 2 * pt(abs(t.value), rdf, lower.tail = FALSE)
     coefficients <- cbind(coefs, std.error, t.value, p.value)
     colnames(coefficients) <- c("Estimate", "Std. Error",
                                 "t value", "Pr(>|t|)")
     class(object.lm) <- "lm"
     out <- list(call = C, beta.est = beta.est,coefficients=coefs,
-                fitted.values =yp,residuals = e,H=H,df = df,r2=r2,#GCV=GCV,
+                fitted.values =yp,residuals = e,H=H,df.residual = rdf,r2=r2,#GCV=GCV,
                 sr2 = sr2,Vp=Vp,l = l,lambda=lambda,fdata.comp=pc,lm=object.lm,
-                coefs=coefficients,fdataobj = fdataobj,y = y)
+                scoefs=coefficients,fdataobj = fdataobj,y = y)
     ##################################
   }
   else {
     #print("no rn")
-    response = "y"
-    dataf<-data.frame(y,Z,weights)
-    colnames(dataf)<-c("y",cnames,"weights")
+    response <- "y"
+    dataf <- data.frame(y,Z,weights)
+    colnames(dataf) <- c("y",cnames,"weights")
     pf <- paste(response, "~", sep = "")
-    for (i in 1:length(cnames)) pf <- paste(pf,"+",cnames[i],sep="")
-    object.lm = lm(formula = pf,data=data.frame(dataf),weights=weights,x=TRUE, y=TRUE)
-    beta.est<-object.lm$coefficients[2:(lenl+1)]*pc$rotation[l]
-    beta.est$data<-colSums(beta.est$data)
+    for (i in 1:length(cnames)) 
+      pf <- paste(pf,"+",cnames[i],sep="")
+    object.lm <- lm(formula = pf,data=data.frame(dataf),weights=weights,x=TRUE, y=TRUE)
+    beta.est <- object.lm$coefficients[2:(lenl+1)]*pc$basis[l]
+    beta.est$data <- colSums(beta.est$data)
     beta.est$names$main<-"beta.est"
     beta.est$data <- matrix(as.numeric(beta.est$data),nrow=1)
     Z=cbind(rep(1,len=n),Z)
     #    S=solve(t(Z)%*%W%*%Z)    
-    S<-t(Z)%*%W%*%Z
-    S<-Minverse(S) 
-    H<-Z%*%S%*%t(Z)
-    e<-object.lm$residuals
-    df<-fdata.trace(df)#n- object.lm$df
+    S <- t(Z)%*%W%*%Z
+    S <- Minverse(S) 
+    H <- Z%*%S%*%t(Z)
+    e <- object.lm$residuals
+    df <- fdata.trace(df)#n- object.lm$df
     sr2 <- sum(e^2)/(n - df)
-    Vp<-sr2*S 
+    Vp <- sr2*S 
     r2 <- 1 - sum(e^2)/sum(ycen^2)
     #     r2.adj<- 1 - (1 - r2) * ((n -    1)/(n-df))
     #     GCV <- sum(e^2)/(n - df)^2
     out <- list(call = C, coefficients=object.lm$coefficients,residuals = e,
                 fitted.values =object.lm$fitted.values,weights=weights,beta.est = beta.est,
-                df = df,r2=r2,sr2 = sr2,Vp=Vp,H=H, l = l,lambda=lambda,P=P,fdata.comp=pc,
+                df.residual = n-df,r2=r2,sr2 = sr2,Vp=Vp,H=H, l = l,lambda=lambda,P=P,fdata.comp=pc,
                 lm=object.lm,XX=Z, fdataobj = fdataobj,y = y)
   }
   class(out) = "fregre.fd"
@@ -288,7 +293,7 @@ fregre.pc=function (fdataobj, y, l =NULL,lambda=0,P=c(0,0,1),weights=rep(1,len=n
 #' \item \code{fitted.values}{ Estimated scalar response.} 
 #' \item \code{residuals}{\code{y}-\code{fitted values}.} 
 #' \item \code{H}{ Hat matrix.} 
-#' \item \code{df}{ The residual degrees of freedom.} 
+#' \item \code{df.residual}{ The residual degrees of freedom.} 
 #' \item \code{r2}{ Coefficient of determination.}
 #' \item \code{GCV}{ GCV criterion.} 
 #' \item \code{sr2}{ Residual variance.} 
@@ -300,7 +305,7 @@ fregre.pc=function (fdataobj, y, l =NULL,lambda=0,P=c(0,0,1),weights=rep(1,len=n
 #' \item \code{y}{ Scalar response.}
 #' }
 #' @author Manuel Febrero-Bande, Manuel Oviedo de la Fuente
-#' \email{manuel.oviedo@@usc.es}
+#' \email{manuel.oviedo@@udc.es}
 #' @seealso See Also as: \code{\link{P.penalty}} and
 #' \code{\link{fregre.pls.cv}}.\cr Alternative method: \code{\link{fregre.pc}}.
 #' @references Preda C. and Saporta G. \emph{PLS regression on a stochastic
@@ -309,7 +314,7 @@ fregre.pc=function (fdataobj, y, l =NULL,lambda=0,P=c(0,0,1),weights=rep(1,len=n
 #' N. Kraemer, A.-L. Boulsteix, and G. Tutz (2008). \emph{Penalized Partial
 #' Least Squares with Applications to B-Spline Transformations and Functional
 #' Data}. Chemometrics and Intelligent Laboratory Systems, 94, 60 - 69.
-#' \url{http://dx.doi.org/10.1016/j.chemolab.2008.06.009}
+#' \doi{10.1016/j.chemolab.2008.06.009}
 #' 
 #' Martens, H., Naes, T. (1989) \emph{Multivariate calibration.} Chichester:
 #' Wiley.
@@ -320,23 +325,30 @@ fregre.pc=function (fdataobj, y, l =NULL,lambda=0,P=c(0,0,1),weights=rep(1,len=n
 #' 
 #' Febrero-Bande, M., Oviedo de la Fuente, M. (2012).  \emph{Statistical
 #' Computing in Functional Data Analysis: The R Package fda.usc.} Journal of
-#' Statistical Software, 51(4), 1-28. \url{http://www.jstatsoft.org/v51/i04/}
+#' Statistical Software, 51(4), 1-28. \url{https://www.jstatsoft.org/v51/i04/}
 #' @keywords regression
 #' @examples
 #' \dontrun{
 #' data(tecator)
-#' x<-tecator$absorp.fdata
-#' y<-tecator$y$Fat
-#' res=fregre.pls(x,y,c(1:8),lambda=10)
+#' x <- tecator$absorp.fdata
+#' y <- tecator$y$Fat
+#' res <- fregre.pls(x,y,c(1:4))
 #' summary(res)
+#' res1 <- fregre.pls(x,y,l=1:4,lambda=100,P=c(1))
+#' res4 <- fregre.pls(x,y,l=1:4,lambda=1,P=c(0,0,1))
+#' summary(res4)#' plot(res$beta.est)
+#' lines(res1$beta.est,col=4)
+#' lines(res4$beta.est,col=2)
+
 #' }
 #' @export fregre.pls
-fregre.pls=function(fdataobj, y=NULL, l = NULL,lambda=0,P=c(0,0,1),...){
+fregre.pls=function(fdataobj, y=NULL, l = NULL,
+                    lambda=0,P=c(0,0,1),...){
   if (is(fdataobj,"fdata.comp")) {
-    pc<-fdataobj
-    fdataobj<-pc$fdataobj
-    if  (is.null(l)) l<-1:nrow(pc$rotation)
-    if  (is.null(y)) y<-pc$y
+    pc <- fdataobj
+    fdataobj <- pc$fdataobj
+    if  (is.null(l)) l<-1:nrow(pc$basis)
+    if  (is.null(y)) y <- pc$y
     else if (all(y!=pc$y)) warning("y is different from that calculated on the pls basis")
   }
   else {
@@ -352,24 +364,28 @@ fregre.pls=function(fdataobj, y=NULL, l = NULL,lambda=0,P=c(0,0,1),...){
   tt <- fdataobj[["argvals"]]
   rtt <- fdataobj[["rangeval"]]
   names <- fdataobj[["names"]]
-  n = nrow(x); np <- ncol(x);lenl = length(l)
-  if (n != (length(y)))   stop("ERROR IN THE DATA DIMENSIONS")
+  n <- nrow(x)
+  np <- ncol(x)
+  lenl <- length(l)
+  if (n != (length(y)))   
+    stop("ERROR IN THE DATA DIMENSIONS")
   C <- match.call()
   if (is.null(rownames(x)))        rownames(x) <- 1:n
-  ycen = y - mean(y)
-  vs <- pc$rotation$data[,,drop=FALSE]
-  Z<-pc$x[,l,drop=F]
-  xcen<-pc$fdataobj.cen
-  cnames<-colnames(pc$x)[l]
-  response = "y"
-  df<-data.frame(y,Z)
-  colnames(df)<-c("y",cnames)
+  ycen <- y - mean(y)
+  vs <- pc$basis$data[,,drop=FALSE]
+  Z <- pc$coefs[,l,drop=F]
+  xcen <- pc$fdataobj.cen
+  cnames <- colnames(pc$coefs)[l]
+  response <- "y"
+  df <- data.frame(y,Z)
+  colnames(df) <- c("y",cnames)
   pf <- paste(response, "~", sep = "")
-  for (i in 1:length(cnames)) pf <- paste(pf,"+",cnames[i],sep="")
-  object.lm = lm(formula = pf, data =df , x = TRUE,y = TRUE)
-  beta.est<-object.lm$coefficients[2:(lenl+1)]*pc$rotation[l]
-  beta.est$data<-apply(beta.est$data,2,sum)
-  beta.est$names$main<-"beta.est"
+  for (i in 1:length(cnames)) 
+    pf <- paste(pf,"+",cnames[i],sep="")
+  object.lm <- lm(formula = pf, data =df , x = TRUE,y = TRUE)
+  beta.est <- object.lm$coefficients[2:(lenl+1)]*pc$basis[l]
+  beta.est$data <- apply(beta.est$data,2,sum)
+  beta.est$names$main <- "beta.est"
   beta.est$data <- matrix(as.numeric(beta.est$data),nrow=1)
   #            if  (pc$type=="pls") {
   if (pc$norm)  {
@@ -380,42 +396,59 @@ fregre.pls=function(fdataobj, y=NULL, l = NULL,lambda=0,P=c(0,0,1),...){
   #    H<-diag(hat(Z, intercept = TRUE),ncol=n)
   # H2<-lm.influence(object.lm, do.coef = T)$hat# o bien
   #    I <- diag(1/(n*pc$lambdas[l]), ncol = lenl) #1/n
-  Z=cbind(rep(1,len=n),Z)
-  order.deriv<-0 
+  Z <- cbind(rep(1,len=n),Z)
+  order.deriv <- 0 
   if (lambda==0) mat<-0
   else {      
     if (!is.matrix(P)){
       if (is.vector(P)) {
-        for (i in 1:length(P))   {      if (P[i]!=0)         order.deriv<-i}
-        P<-P.penalty(tt,P)                
-        P<-vs%*%P%*%t(vs) 
-        P<-P*(diff(rtt)/(np -1))^(order.deriv*2-1)
+        for (i in 1:length(P))   {
+          if (P[i]!=0)         order.deriv<-i
+          }
+        P <- P.penalty(tt,P)                
+        P <- vs%*%P%*%t(vs) 
+        P <- P*(diff(rtt)/(np -1))^(order.deriv*2-1)
       }         }
     mat<-diag(lenl+1)
-    mat[-1,-1]<-lambda*P
-    mat[1,1]<-0   
+    mat[-1,-1] <- lambda*P
+    mat[1,1] <- 0   
   }
-  S<-t(Z)%*%Z+mat
-  S<-Minverse(S)
-  H<-Z%*%S%*%t(Z)
-  e<-object.lm$residuals
-  df = max(fdata.trace(H),pc$df[lenl]+1)
-  rdf<-n-df
+  S <- t(Z)%*%Z+mat
+  S <- Minverse(S)
+#  H <- Z%*%S%*%t(Z)
+  
+#Sb <- t(scores)%*%W%*%scores + mat
+# S <- Minverse(Sb) 
+ Cinv <- S%*%t(Z)         
+ coefs <- Cinv%*%y
+ yp <- drop(Z%*%coefs)
+ H <- Z%*%Cinv
+
+ 
+ coefs <- drop(coefs)
+ names(coefs) <- c("Intercept",cnames)
+ beta.est <- coefs[-1]*pc$basis[l]
+ beta.est$data <- colSums(beta.est$data)
+ beta.est$names$main <- "beta.est"
+ beta.est$data  <-  matrix(as.numeric(beta.est$data),nrow=1)
+ 
+  e <- y - yp
+  df <- max(fdata.trace(H),pc$df[lenl]+1)
+  rdf <- n-df
   sr2 <- sum(e^2)/rdf
-  Vp<-sr2*S 
+  Vp <- sr2*S 
   r2 <- 1 - sum(e^2)/sum(ycen^2)
   #    r2.adj<- 1 - (1 - r2) * ((n -    1)/ rdf)
   #    GCV <- sum(e^2)/rdf^2             #GCV=GCV,
-  
-  std.error = sqrt(diag(S) *sr2)
-  t.value =object.lm$coefficients/std.error
-  p.value = 2 * pt(abs(t.value), n - df, lower.tail = FALSE)
-  coefficients <- cbind(object.lm$coefficients, std.error, t.value, p.value)
+  std.error <- sqrt(diag(S) *sr2)
+  t.value  <- coefs/std.error
+  p.value <- 2 * pt(abs(t.value), rdf, lower.tail = FALSE)
+  coefficients <- cbind(coefs, std.error, t.value, p.value)
   colnames(coefficients) <- c("Estimate", "Std. Error","t value", "Pr(>|t|)")
   
-  out <- list(call = C,coefficients=object.lm$coefficients, residuals = object.lm$residuals,
-              fitted.values =object.lm$fitted.values, beta.est = beta.est,coefs=coefficients,
-              H=H,df = df,r2=r2, sr2 = sr2, Vp=Vp,l = l,lambda=lambda,P=P, fdata.comp=pc,
+  out <- list(call = C,coefficients=coefs, residuals = e,
+              fitted.values =yp, beta.est = beta.est, scoefs=coefficients,
+              H=H,df.residual = rdf,r2=r2, sr2 = sr2, Vp=Vp,l = l,lambda=lambda,P=P, fdata.comp=pc,
               lm=object.lm,fdataobj = fdataobj,y = y)
   class(out) = "fregre.fd"
   return(out)
@@ -482,14 +515,14 @@ fregre.pls=function(fdataobj, y=NULL, l = NULL,lambda=0,P=c(0,0,1),...){
 #' }
 #' @note \code{criteria=``CV''} is not recommended: time-consuming.
 #' @author Manuel Febrero-Bande, Manuel Oviedo de la Fuente
-#' \email{manuel.oviedo@@usc.es}
+#' \email{manuel.oviedo@@udc.es}
 #' @seealso See also as:\code{\link{fregre.pc}} .
 #' @references Preda C. and Saporta G. \emph{PLS regression on a stochastic
 #' process}. Comput. Statist. Data Anal. 48 (2005): 149-158.
 #' 
 #' Febrero-Bande, M., Oviedo de la Fuente, M. (2012).  \emph{Statistical
 #' Computing in Functional Data Analysis: The R Package fda.usc.} Journal of
-#' Statistical Software, 51(4), 1-28. \url{http://www.jstatsoft.org/v51/i04/}
+#' Statistical Software, 51(4), 1-28. \url{https://www.jstatsoft.org/v51/i04/}
 #' @keywords regression
 #' @examples
 #' \dontrun{
@@ -549,9 +582,9 @@ fregre.pls.cv=function (fdataobj, y, kmax=8,lambda=0,P=c(0,0,1),
         pls<-fdata2pls(fdataobj,y,ncomp=kmax,lambda=lambda[r],P=P,...)
         for (j in 1:kmax) {
           pls2<-pls
-          pls2$rotation<-pls$rotation[1:j]
+          pls2$basis<-pls$basis[1:j]
           out = fregre.pls(pls2,y,lambda=lambda[r],P=P,...)
-          ck<-out$df
+          ck<-n-out$df.residual
           s2 <- sum(out$residuals^2)/n  #(n-ck)
           cv.AIC[r,j]<-switch(criteria,
                               "AIC"=log(s2) + 2 * (ck)/n,
@@ -578,7 +611,7 @@ fregre.pls.cv=function (fdataobj, y, kmax=8,lambda=0,P=c(0,0,1),
         for (r in 1:lenrn) {
           for (i in 1:n){
             out = fregre.pls(fdataobj[-i], y[-i],lambda=lambda[r],P=P,...)
-            ck<-out$df
+            ck<-n-out$df.residual
             a1<-out$coefficients[1]
             out$beta.est$data<-matrix(out$beta.est$data,nrow=1)
             b1<-inprod.fdata(fdata.cen(fdataobj[i],out$fdata.comp$mean)[[1]],out$beta.est)
@@ -598,13 +631,12 @@ fregre.pls.cv=function (fdataobj, y, kmax=8,lambda=0,P=c(0,0,1),
     }   }
   colnames(cv.AIC) = paste("PLS",1:kmax , sep = "")
   rownames(cv.AIC) = paste("lambda=",signif(lambda,4) , sep = "")
-  #    pc2$basis<-pc$rotation[1:pc.opt]
+  #    pc2$basis<-pc$basis[1:pc.opt]
   fregre=fregre.pls(fdataobj,y,l=1:pc.opt,lambda=lambda[rn.opt],P=P,...) #B.B bug detected
   MSC.min = cv.AIC[rn.opt,pc.opt]
   return(list("fregre.pls"=fregre,pls.opt = 1:pc.opt,lambda.opt=lambda[rn.opt],
               MSC.min = MSC.min,MSC = cv.AIC))
 }
-
 
 #' Functional penalized PC regression with scalar response using selection of
 #' number of PC components
@@ -688,12 +720,12 @@ fregre.pls.cv=function (fdataobj, y, kmax=8,lambda=0,P=c(0,0,1),
 #' }
 #' @note \code{criteria=``CV''} is not recommended: time-consuming.
 #' @author Manuel Febrero-Bande, Manuel Oviedo de la Fuente
-#' \email{manuel.oviedo@@usc.es}
+#' \email{manuel.oviedo@@udc.es}
 #' @seealso See also as:\code{\link{fregre.pc}} .
 #' @references Febrero-Bande, M., Oviedo de la Fuente, M. (2012).
 #' \emph{Statistical Computing in Functional Data Analysis: The R Package
 #' fda.usc.} Journal of Statistical Software, 51(4), 1-28.
-#' \url{http://www.jstatsoft.org/v51/i04/}
+#' \url{https://www.jstatsoft.org/v51/i04/}
 #' @keywords regression
 #' @examples
 #' \dontrun{
@@ -787,10 +819,10 @@ fregre.pc.cv = function (fdataobj, y, kmax=8,lambda=0,P=c(0,0,1),criteria = "SIC
             c1<-matrix(pc$l[1:k],ncol=1)
           }
           for (j in 1:max.c) {
-            pc2$rotation <- pc$rotation#[c1[, j]]
+            pc2$basis <- pc$basis#[c1[, j]]
             pc2$l <- pc$l[c1[, j]]
             out = fregre.pc(pc2, y,l=c1[, j],lambda=lambda[r],P=P,weights=weights,...)
-            ck<-out$df
+            ck<-n-out$df.residual
             s2 <- sum(out$residuals^2)/n
             cv.AIC[j]<-switch(criteria,
                               "AIC"=log(s2) + 2 * (ck)/n,
@@ -857,10 +889,10 @@ fregre.pc.cv = function (fdataobj, y, kmax=8,lambda=0,P=c(0,0,1),criteria = "SIC
             maxk<-max(c1[, j])
             for (i in 1:n){
               pc2<-pcl[[i]]
-              pc2$rotation<-pcl[[i]]$rotation#[c1[,j]]
+              pc2$basis<-pcl[[i]]$basis#[c1[,j]]
               pc2$l<-pcl[[i]]$l[c1[,j]]
               out = fregre.pc(pc2,y[-i],l=c1[,j],weights=weights[-i],...) #####
-              ck<-out$df
+              ck<-n-out$df.residual
               residuals2[i] <- ((y[i] - predict(out,fdataobj[i,]))/(n-ck))^2
             }
             cv.AIC[j] <-sum(residuals2)/n

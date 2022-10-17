@@ -135,7 +135,7 @@ Y <- inprod.fdata(X, beta0) + rnorm(n, sd = 0.1)
 rp.flm.test(X.fdata = X, Y = Y, est.method = "pc")
 rp.flm.test(X.fdata = X, Y = Y, est.method = "pls")
 rp.flm.test(X.fdata = X, Y = Y, est.method = "basis", 
-            p.criterion = fda.usc::GCV.S)
+            p.criterion = fda.usc.devel::GCV.S)
 rp.flm.test(X.fdata = X, Y = Y, est.method = "pc", p = 5)
 rp.flm.test(X.fdata = X, Y = Y, est.method = "pls", p = 5)
 rp.flm.test(X.fdata = X, Y = Y, est.method = "basis", p = 5)
@@ -236,7 +236,7 @@ arXiv:1701.08363. \url{https://arxiv.org/abs/1701.08363}
 Garcia-Portugues, E., Gonzalez-Manteiga, W. and Febrero-Bande, M. (2014). A
 goodness-of-fit test for the functional linear model with scalar response.
 Journal of Computational and Graphical Statistics, 23(3), 761--778.
-\url{http://dx.doi.org/10.1080/10618600.2013.812519}
+\doi{10.1080/10618600.2013.812519}
 }
 \author{
 Eduardo Garcia-Portugues (\email{edgarcia@est-econ.uc3m.es}) and

@@ -51,7 +51,7 @@ of the trimming\cr and \code{draw=TRUE}.}
 \item \code{call}{ The matched call.} 
 \item \code{fitted.values}{ Estimated scalar response.} 
 \item \code{residuals}{ \code{y} minus \code{fitted values}.}
-\item \code{df}{ The residual degrees of freedom.} 
+\item \code{df.residual}{ The residual degrees of freedom.} 
 \item \code{H}{ Hat matrix.}
 \item \code{r2}{ Coefficient of determination.} 
 \item \code{sr2}{ Residual variance.}
@@ -83,7 +83,7 @@ in \code{\link{fregre.np}}. The output \eqn{y} is scalar. A functional
 covariate \eqn{X} and a multivariate non functional covariate \eqn{Z} are
 considered.
 
-\deqn{y =\emph{r(X)}+\sum_{j=1}^{p}{Z_j\beta_j}+\epsilon}{y =
+\deqn{y =r(X)+\sum_{j=1}^{p}{Z_j\beta_j}+\epsilon}{y =
 r(X)+\sum_(j=1:p) Z_j \beta_j+\epsilon}
 
 The unknown smooth real function \eqn{r} is estimated by means of
@@ -151,7 +151,7 @@ Press, 1994.
 
 Febrero-Bande, M., Oviedo de la Fuente, M. (2012).  \emph{Statistical
 Computing in Functional Data Analysis: The R Package fda.usc.} Journal of
-Statistical Software, 51(4), 1-28. \url{http://www.jstatsoft.org/v51/i04/}
+Statistical Software, 51(4), 1-28. \url{https://www.jstatsoft.org/v51/i04/}
 }
 \seealso{
 See Also as: \code{\link{predict.fregre.plm}} and
@@ -161,6 +161,6 @@ See Also as: \code{\link{predict.fregre.plm}} and
 }
 \author{
 Manuel Febrero-Bande, Manuel Oviedo de la Fuente
-\email{manuel.oviedo@usc.es}
+\email{manuel.oviedo@udc.es}
 }
 \keyword{regression}

@@ -12,6 +12,8 @@
 #' \item \code{classif.svm},\code{classif.naiveBayes}: uses \code{svm} and  \code{naiveBayes} functions and requires \code{e1071} package.
 #' \item \code{classif.ksvm}: uses \code{weighted.ksvm } function and requires \code{personalized} package.
 #' \item \code{classif.randomForest}: uses \code{randomForest} function and requires \code{randomForest} package.
+#' \item \code{classif.cv.glmnet}: uses \code{cv.glmnet} function and requires \code{glmnet} package.
+#' \item \code{classif.gbm}: uses \code{gbm} function and requires \code{gbm} package.
 #' }
 #' 
 #' @details 
@@ -29,7 +31,7 @@
 #' functional principal components basis (see \code{\link{create.pc.basis}} or
 #' \code{\link{pca.fd}}) the argument \code{basis.b} is ignored.
 #' 
-#' @aliases classif.rpart classif.nnet classif.randomForest 
+#' @aliases classif.rpart classif.nnet classif.randomForest classif.cv.glmnet
 #' classif.svm classif.ksvm classif.naiveBayes classif.lda classif.qda classif.multinom
 #' @param formula an object of class \code{formula} (or one that can be coerced
 #' to that class): a symbolic description of the model to be fitted. The
@@ -75,7 +77,7 @@
 #' with S}, New York: Springer.  %Wood (2001) mgcv:GAMs and Generalized Ridge
 #' Regression for R. R News 1(2):20-25
 #' @keywords classif
-#' @examples
+#' @examples 
 #' \dontrun{
 #' data(phoneme)
 #' mlearn<-phoneme[["learn"]]
@@ -83,13 +85,20 @@
 #' mtest<-phoneme[["test"]]
 #' gtest<-phoneme[["classtest"]]
 #' dataf<-data.frame(glearn)
-#' dat=list("df"=dataf,"x"=mlearn)
+#' dat=ldata("df"=dataf,"x"=mlearn)
 #' a1<-classif.rpart(glearn~x,data=dat)
-#' summary(a1)
+#' a2<-classif.nnet(glearn~x,data=dat)
+#' a3<-classif.gbm(glearn~x,data=dat)
+#' a4<-classif.randomForest(glearn~x,data=dat)
+#' a5<-classif.cv.glmnet(glearn~x,data=dat)
 #' newdat<-list("x"=mtest)
 #' p1<-predict(a1,newdat,type="class")
-#' table(gtest,p1)
-#' sum(p1==gtest)/250
+#' p2<-predict(a2,newdat,type="class")
+#' p3<-predict(a3,newdat,type="class")
+#' p4<-predict(a4,newdat,type="class")
+#' p5<-predict(a5,newdat,type="class")
+#' mean(p1==gtest);mean(p2==gtest);mean(p3==gtest)
+#' mean(p4==gtest);mean(p5==gtest)
 #' }
 #' 
 #' @rdname classif.ML
@@ -137,11 +146,11 @@ classif.nnet=function(formula, data, basis.x=NULL
   group <- y <- data$df[[response]]
   
   # 2019/04/24
-  out.func <- fdata2model(vfunc,vnf,response, data, basis.x,pf,tf)  
+  out.func <- fdata2model(vfunc,vnf,response, data, basis.x = basis.x ,pf = pf ,tf = tf)  
   pf <- out.func$pf          
   basis.x <- out.func$basis.x
   XX <- out.func$XX
-  vs.list <- out.func$vs.list
+  basis.list <- out.func$vs.list #basis.list
   mean.list=out.func$mean.list
   rm(out.func)
   n<- ndatos <-NROW(XX)
@@ -201,7 +210,7 @@ classif.nnet=function(formula, data, basis.x=NULL
   #  if (method=="rpart")
   #    out$group.est <- predict(object = z, type = "class")
   #  if (method=="nnet"){
-  out$group.est <- predict(object = z,type = "class")
+  out$group.est <- suppressWarnings(predict(object = z,type = "class"))
   out$group.est <- factor(out$group.est ,levels=levels(group))
   #  }
   out$max.prob <- mean(group==out$group.est) 
@@ -209,7 +218,7 @@ classif.nnet=function(formula, data, basis.x=NULL
   out$basis.x=basis.x
   out$mean=mean.list
   out$formula=pf
-  out$vs.list=vs.list
+  out$basis.list=basis.list
   #out$method <- method
   #out$par.method <- par.method
   tab <- table(out$group.est,group)
@@ -273,11 +282,11 @@ classif.multinom=function(formula, data, basis.x=NULL
   group <- y <- data$df[[response]]
   
   # 2019/04/24
-  out.func <- fdata2model(vfunc,vnf,response, data, basis.x,pf,tf)  
+  out.func <- fdata2model(vfunc,vnf,response, data, basis.x = basis.x ,pf = pf ,tf = tf)  
   pf <- out.func$pf          
   basis.x <- out.func$basis.x
   XX <- out.func$XX
-  vs.list <- out.func$vs.list
+  basis.list <- out.func$basis.list
   mean.list=out.func$mean.list
   rm(out.func)
   n <- ndatos <- NROW(XX)
@@ -315,7 +324,7 @@ classif.multinom=function(formula, data, basis.x=NULL
   out$basis.x=basis.x
   out$mean=mean.list
   out$formula=pf
-  out$vs.list=vs.list
+  out$basis.list=basis.list
   #out$method <- method
   #out$par.method <- par.method
   tab <- table(out$group.est,group)
@@ -381,11 +390,11 @@ classif.rpart=function(formula, data, basis.x=NULL ,weights="equal",type="1vsall
   lev <- levels(y)
   prob2<-prob1 <- ny <- length(lev)
   # 2019/04/24
-  out.func <- fdata2model(vfunc,vnf,response, data, basis.x,pf,tf)  
+  out.func <- fdata2model(vfunc,vnf,response, data, basis.x = basis.x ,pf = pf ,tf = tf)  
   pf <- out.func$pf          
   basis.x <- out.func$basis.x
   XX <- out.func$XX
-  vs.list <- out.func$vs.list
+  basis.list <- out.func$vs.list
   mean.list=out.func$mean.list
   rm(out.func)
   
@@ -443,7 +452,7 @@ classif.rpart=function(formula, data, basis.x=NULL ,weights="equal",type="1vsall
   out$basis.x=basis.x
   out$mean=mean.list
   out$formula=pf
-  out$vs.list=vs.list
+  out$basis.list=basis.list
   tab <- table(out$group.est,out$group)
   prob.group <- array(NA, dim = c(n, ny))
   prob.group <- prob.group/apply(prob.group, 1, sum)
@@ -465,6 +474,8 @@ classif.rpart=function(formula, data, basis.x=NULL ,weights="equal",type="1vsall
 classif.svm=function(formula, data, basis.x=NULL 
                      , weights="equal",type="1vsall",...)
 {
+  
+  
   rqr <- "e1071"
   if (!(rqr %in% rownames(installed.packages()))) {
     stop("Please install package 'e1071'") }
@@ -502,11 +513,11 @@ classif.svm=function(formula, data, basis.x=NULL
   lev <- levels(y)
   ny <- nlevels(y)
   # 2019/04/24
-  out.func <- fdata2model(vfunc,vnf,response, data, basis.x,pf,tf)  
+  out.func <- fdata2model(vfunc,vnf,response, data, basis.x = basis.x ,pf = pf ,tf = tf)  
   pf <- out.func$pf          
   basis.x <- out.func$basis.x
   XX <- out.func$XX
-  vs.list <- out.func$vs.list
+  basis.list <- out.func$vs.list
   mean.list=out.func$mean.list
   rm(out.func)
   n <- ndatos <- NROW(XX)
@@ -546,6 +557,7 @@ classif.svm=function(formula, data, basis.x=NULL
     z=do.call("svm",par.method)
     out$fit<-z
     out$group.est = z$fitted
+    out$prob.group<-    attributes(predict(z,XX,desicion.values=T,  probability=T))$probabilities
     #  out$fit$call<-z$call[1:2]
     #z= svm(formula=pf, data=XX 
     #       , subset, na.action = na.action
@@ -612,7 +624,7 @@ classif.svm=function(formula, data, basis.x=NULL
   out$basis.x=basis.x
   out$mean=mean.list
   out$formula=pf
-  out$vs.list=vs.list
+  out$basis.list=basis.list
   tab <- table(out$group.est,group)
   prob2<-prob1 <- ngroup <- nlevels(y)
   prob.group <- array(NA, dim = c(ndatos, ngroup))
@@ -628,8 +640,11 @@ classif.svm=function(formula, data, basis.x=NULL
   #out$group.pred <- out$group.est
   #class(out)<-c("classif",class(z))
   class(out) <- "classif"
+ # out$prob.group <-  predict(out ,type="response")
+  
   out
 }
+
 
 #' @rdname classif.ML
 #' @export classif.ksvm
@@ -671,11 +686,11 @@ classif.ksvm=function(formula, data, basis.x=NULL ,weights = "equal",...){
   if (!is.factor(y)) y <-factor(y)
   lev <- levels(y)
   # 2019/04/24
-  out.func <- fdata2model(vfunc,vnf,response, data, basis.x,pf,tf)  
+  out.func <- fdata2model(vfunc,vnf,response, data, basis.x = basis.x ,pf = pf ,tf = tf)  
   pf <- out.func$pf          
   basis.x <- out.func$basis.x
   XX <- out.func$XX
-  vs.list <- out.func$vs.list
+  basis.list <- out.func$vs.list
   mean.list=out.func$mean.list
   rm(out.func)
   par.method <- as.list(substitute(list(...)))[-1L]
@@ -760,7 +775,7 @@ classif.ksvm=function(formula, data, basis.x=NULL ,weights = "equal",...){
   out$basis.x=basis.x
   out$mean=mean.list
   out$formula=pf
-  out$vs.list=vs.list
+  out$basis.list=basis.list
   #out$type=type
   tab <- table(out$group.est,group)
   prob2<-prob1 <- ngroup <- nlevels(y)
@@ -820,11 +835,11 @@ classif.randomForest=function(formula, data, basis.x=NULL,
   prob2<-prob1 <- ny <- nlevels(y)
   
   # 2019/04/24
-  out.func <- fdata2model(vfunc,vnf,response, data, basis.x,pf,tf)  
+  out.func <- fdata2model(vfunc,vnf,response, data, basis.x = basis.x ,pf = pf ,tf = tf)  
   pf <- out.func$pf          
   basis.x <- out.func$basis.x
   XX <- out.func$XX
-  vs.list <- out.func$vs.list
+  basis.list <- out.func$vs.list
   mean.list=out.func$mean.list
   rm(out.func)
   n <- NROW(XX)
@@ -892,7 +907,7 @@ classif.randomForest=function(formula, data, basis.x=NULL,
   out$basis.x=basis.x
   out$mean=mean.list
   out$formula=pf
-  out$vs.list=vs.list
+  out$basis.list=basis.list
   #out$method <- method
   #out$par.method <- par.method
   
@@ -957,11 +972,11 @@ classif.lda=function(formula, data, basis.x=NULL
   lev <- levels(y)
   prob2<-prob1 <- ny <- nlevels(y)
   # 2019/04/24
-  out.func <- fdata2model(vfunc,vnf,response, data, basis.x,pf,tf)  
+  out.func <- fdata2model(vfunc,vnf,response, data, basis.x = basis.x ,pf = pf ,tf = tf)  
   pf <- out.func$pf          
   basis.x <- out.func$basis.x
   XX <- out.func$XX
-  vs.list <- out.func$vs.list
+  basis.list <- out.func$vs.list
   mean.list=out.func$mean.list
   rm(out.func)
   n <- ndatos <- NROW(XX)
@@ -1051,7 +1066,7 @@ classif.lda=function(formula, data, basis.x=NULL
   out$basis.x=basis.x
   out$mean=mean.list
   out$formula=pf
-  out$vs.list=vs.list
+  out$basis.list=basis.list
   tab <- table(out$group.est,y)
 
   prob.group <- array(NA, dim = c(n, ny))
@@ -1112,11 +1127,11 @@ classif.qda=function(formula, data, basis.x=NULL
   lev <- levels(y)
   prob2<-prob1 <- ny <- nlevels(y)
   # 2019/04/24
-  out.func <- fdata2model(vfunc,vnf,response, data, basis.x,pf,tf)  
+  out.func <- fdata2model(vfunc,vnf,response, data, basis.x = basis.x ,pf = pf ,tf = tf)  
   pf <- out.func$pf          
   basis.x <- out.func$basis.x
   XX <- out.func$XX
-  vs.list <- out.func$vs.list
+  basis.list <- out.func$vs.list
   mean.list=out.func$mean.list
   rm(out.func)
   n <- ndatos <- NROW(XX)
@@ -1206,7 +1221,7 @@ classif.qda=function(formula, data, basis.x=NULL
   out$basis.x=basis.x
   out$mean=mean.list
   out$formula=pf
-  out$vs.list=vs.list
+  out$basis.list=basis.list
   tab <- table(out$group.est,y)
   
   prob.group <- array(NA, dim = c(n, ny))
@@ -1265,11 +1280,11 @@ classif.naiveBayes=function(formula, data, basis.x=NULL, laplace = 0,...)
   group <- y <- data$df[[response]]
   lev <- levels(y)
   # 2019/04/24
-  out.func <- fdata2model(vfunc,vnf,response, data, basis.x,pf,tf)  
+  out.func <- fdata2model(vfunc,vnf,response, data, basis.x = basis.x ,pf = pf ,tf = tf)  
   pf <- out.func$pf          
   basis.x <- out.func$basis.x
   XX <- out.func$XX
-  vs.list <- out.func$vs.list
+  basis.list <- out.func$vs.list
   mean.list=out.func$mean.list
   rm(out.func)
   ndatos <- nrow(XX)
@@ -1318,7 +1333,7 @@ classif.naiveBayes=function(formula, data, basis.x=NULL, laplace = 0,...)
   out$basis.x=basis.x
   out$mean=mean.list
   out$formula=pf
-  out$vs.list=vs.list
+  out$basis.list=basis.list
   #out$method <- method
   #out$par.method <- par.method
   #print(out$group.est)
@@ -1340,3 +1355,256 @@ classif.naiveBayes=function(formula, data, basis.x=NULL, laplace = 0,...)
   class(out) <- "classif"
   out
 }
+
+
+
+# library(glmnet)
+# NFOLDS = 4;
+# res.glmnet = cv.glmnet( x= as.matrix(train[,-101]), y = as.factor(train[,101]),
+#                         family = 'multinomial',
+#                         alpha = 1,
+#                         #                        grouped = TRUE,
+#                         type.measure = "class",
+#                         nfolds = NFOLDS,
+#                         thresh = 1e-3,
+#                         maxit = 1e3)   
+
+#' @rdname classif.ML
+#' @export classif.cv.glmnet
+classif.cv.glmnet=function(formula, data, basis.x=NULL 
+                      ,weights = "equal"
+                      # subset, na.action =na.omit, scale = TRUE
+                      ,...) 
+{
+  # data <- dat
+  # formula <- formula(glearn~x)
+  # basis.x=NULL 
+  
+  rqr <- "glmnet"
+  if (!(rqr %in% rownames(installed.packages()))) {
+    stop("Please install package 'glmnet'") }
+  
+  #require(eval(rqr)[1], quietly = TRUE, warn.conflicts = FALSE)
+  suppressWarnings(rqr2<-require(eval(rqr), 
+                                 character.only = TRUE,quietly = TRUE, 
+                                 warn.conflicts = FALSE))
+  if (!rqr2) 
+    stop("Please, load the namespace of the package for  method")
+  
+  prob=0.5
+  C <- match.call()  
+  mf <- match.call(expand.dots = FALSE)
+  m <- match(c("formula","data","basis.x","weights","size"), names(mf), 0L)
+  mf <- mf[c(1L, m)]
+  mf$drop.unused.levels <- TRUE
+ 
+  tf <- terms.formula(formula)
+  terms <- attr(tf, "term.labels")
+  nt <- length(terms)
+  if (attr(tf, "response") > 0) {
+    response <- as.character(attr(tf, "variables")[2])
+    pf <- rf <- paste(response, "~", sep = "")
+  } else pf <- rf <- "~"
+  vtab<-rownames(attr(tf,"factors"))
+  vnf=intersect(terms,names(data$df))
+  # vnf2=intersect(vtab[-1],names(data$df)[-1])
+  vfunc2=setdiff(terms,vnf)
+  vint=setdiff(terms,vtab)
+  vfunc=setdiff(vfunc2,vint)
+  off<-attr(tf,"offset")
+  name.coef=nam=beta.l=list()
+  group <- y <- data$df[[response]]
+  
+  # 2019/04/24
+  out.func <- fdata2model(vfunc,vnf,response, data, basis.x = basis.x ,pf = pf ,tf = tf)  
+  pf <- out.func$pf          
+  basis.x <- out.func$basis.x
+  XX <- out.func$XX
+  basis.list <- out.func$vs.list
+  mean.list=out.func$mean.list
+  rm(out.func)
+  n <- ndatos <-NROW(XX)
+  
+  # if (!is.numeric(weights))      stop("'weights' must be a numeric vector")
+  if (is.character(weights)) {
+    weights<-weights4class(y,type=weights)
+  } else {
+    if (length(weights)!=n) 
+      stop("length weights != length response")
+  }
+  if (any(weights < 0)) 
+    stop("negative weights not allowed")
+  
+  #  if (length(method)>1) method=method[1]
+  #  if (missing(par.method))      par.method=list()
+  #  par.method<-c(list(formula=pf, data=XX),par.method)
+  #  if (length(vfunc)==0 & length(vnf)==0)      {
+  #   par.method$pf<-as.formula(paste(pf,1,sep=""))
+  #   z=do.call(method,par.method)
+  #   class(z)<-c(class(z),"classif")
+  #   z$formula.ini=pf
+  #   z$XX=XX
+  #   z$data<-data
+  #   return(z)
+  # }  
+  
+  #   par.method$size <- 4
+  #   par.method$trace<- FALSE  }
+  #par.method=list()
+  #par.method<-c(list(formula=pf, data=XX),par.method)
+  #par.method$weights= wt
+  par.method <- as.list(substitute(list(...)))[-1L]
+
+  #par.method<-c(list(x=XX, y=y, family = "multinomial",weights=weights),par.method)
+  par.method<-c(list(x=as.matrix(XX[,-1,drop=F]), y = y, family = "multinomial",weights=weights),par.method)
+   
+#  X no puede ser de dimensión 1!!
+#  print("ML M;L")
+if (NCOL(par.method$x)==1) par.method$x<-cbind(rep(1,len=n),par.method$x)
+  # print(dim(par.method$x))
+  z= suppressWarnings(do.call("cv.glmnet",par.method))
+  out<-list()
+  out$formula.ini=formula
+  out$data=data
+  out$XX=XX
+  out$C <- C[1:2]
+  out$prob <- prob
+  out$group <- group
+  out$prob.group <- predict(object = z, par.method$x,type = "response")[,,1]
+  out$group.est <- predict(object = z, par.method$x, type = "class")
+  out$group.est <- factor(out$group.est ,levels=levels(group))
+  out$max.prob <- mean(group==out$group.est) 
+  out$fit <- z
+  out$basis.x=basis.x
+  out$mean=mean.list
+  out$formula=pf
+  out$basis.list=basis.list
+  out$weights = weights
+  tab <- table(out$group.est,group)
+  ny <- levels(y)
+  prob2<-prob1 <- ngroup <- nlevels(y)
+  #prob.group <- array(NA, dim = c(ndatos, ngroup))
+  # prob.group <- prob.group/apply(prob.group, 1, sum)
+  
+  
+  
+  for (i in 1:ngroup) {
+    prob1[i] = tab[i, i]/sum(tab[, i])
+  }
+  names(prob1) <- z$levels
+  colnames(out$prob.group) <- z$levels
+  out$prob.classification <- prob1
+  out$fit$call<-  out$fit$call[1]
+  #class(out)<-c("classif",class(z))
+  class(out) <- "classif"
+  return(out)
+}
+
+#' @rdname classif.ML
+#' @export classif.gbm
+classif.gbm=function(formula, data, basis.x=NULL 
+                      ,weights = "equal",...) 
+{
+  rqr <- "gbm"
+  if (!(rqr %in% rownames(installed.packages()))) {
+    stop("Please install package 'gbm'") }
+  
+  #require(eval(rqr)[1], quietly = TRUE, warn.conflicts = FALSE)
+  suppressWarnings(rqr2<-require(eval(rqr), 
+                                 character.only = TRUE,quietly = TRUE, 
+                                 warn.conflicts = FALSE))
+  if (!rqr2) 
+    stop("Please, load the namespace of the package for  method")
+  
+  prob=0.5
+  C <- match.call()  
+  mf <- match.call(expand.dots = FALSE)
+  m <- match(c("formula","data","basis.x","weights"), names(mf), 0L)
+  mf <- mf[c(1L, m)]
+  mf$drop.unused.levels <- TRUE
+  #mf[[1L]] <- quote(stats::model.frame)
+  #mf <- eval(mf, parent.frame())
+  #if (method == "model.frame")     return(mf)
+  tf <- terms.formula(formula)
+  terms <- attr(tf, "term.labels")
+  nt <- length(terms)
+  if (attr(tf, "response") > 0) {
+    response <- as.character(attr(tf, "variables")[2])
+    pf <- rf <- paste(response, "~", sep = "")
+  } else pf <- rf <- "~"
+  vtab<-rownames(attr(tf,"factors"))
+  vnf=intersect(terms,names(data$df))
+  # vnf2=intersect(vtab[-1],names(data$df)[-1])
+  vfunc2=setdiff(terms,vnf)
+  vint=setdiff(terms,vtab)
+  vfunc=setdiff(vfunc2,vint)
+  off<-attr(tf,"offset")
+  name.coef=nam=beta.l=list()
+  group <- y <- data$df[[response]]
+  
+  # 2019/04/24
+  out.func <- fdata2model(vfunc,vnf,response, data, basis.x = basis.x ,pf = pf ,tf = tf)  
+  pf <- out.func$pf          
+  basis.x <- out.func$basis.x
+  XX <- out.func$XX
+  basis.list <- out.func$vs.list
+  mean.list=out.func$mean.list
+  rm(out.func)
+  n<- ndatos <-NROW(XX)
+  
+  # if (!is.numeric(weights))      stop("'weights' must be a numeric vector")
+  if (is.character(weights)) {
+    weights<-weights4class(y,type=weights)
+  } else {
+    if (length(weights)!=n) 
+      stop("length weights != length response")
+  }
+  if (any(weights < 0)) 
+    stop("negative weights not allowed")
+  
+  par.method <- as.list(substitute(list(...)))[-1L]
+  par.method<-c(list(formula=pf, data=XX,weights=weights,
+                     distribution = "multinomial"),par.method)
+  z= suppressWarnings(do.call(rqr,par.method))
+  lev <- levels(group)  
+  out<-list()
+  out$formula.ini=formula
+  out$data=data
+  out$XX=XX
+  out$C <- C[1:2]
+  out$prob <- prob
+  out$group <- group
+
+  out$group.est <- suppressWarnings(predict(z, newdata = XX,type="response"))
+  out$group.est <- apply(out$group.est,1,which.max)
+  out$group.est <- factor(out$group.est ,levels=lev)
+  
+  out$max.prob <- mean(group==out$group.est) 
+  out$fit <- z
+  out$basis.x=basis.x
+  out$mean=mean.list
+  out$formula=pf
+  out$basis.list=basis.list
+  #out$method <- method
+  #out$par.method <- par.method
+  tab <- table(out$group.est,group)
+  ny <- levels(y)
+  prob2<-prob1 <- ngroup <- nlevels(y)
+  prob.group <- array(NA, dim = c(ndatos, ngroup))
+  prob.group <- prob.group/apply(prob.group, 1, sum)
+  for (i in 1:ngroup) {
+    prob1[i] = tab[i, i]/sum(tab[, i])
+  }
+  names(prob1) <- z$levels
+  colnames(prob.group) <- z$levels
+  out$prob.classification <- prob1
+  out$type="majority"
+  #class(out)<-c("classif",class(z))
+  class(out) <- "classif"
+  out
+}
+# Hacer gbm usando majority voting
+
+
+
+

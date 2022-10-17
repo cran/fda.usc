@@ -4,7 +4,7 @@
 #' period 1980-2009.  The dataset contains geographic information of each
 #' station and the average for the period 1980-2009 of daily temperature, daily
 #' precipitation and daily wind speed.
-#' @details  Meteorological State Agency of Spain (AEMET), \url{http://www.aemet.es/}. Government of Spain.\cr
+#' @details  Meteorological State Agency of Spain (AEMET), \url{https://www.aemet.es/es/portada}. Government of Spain.\cr
 #' It marks 36 UTF-8 string of names of stations and 3 UTF-8 string names of provinces through the function \code{\link{iconv}}.\cr 
 #' 
 #' @name aemet
@@ -34,7 +34,7 @@
 #' (0.0 mm) is replaced by \code{0.01}.  Then the logarithm is applied.
 #' }
 #' @author Manuel Febrero Bande, Manuel Oviedo de la Fuente
-#' \email{manuel.oviedo@@usc.es}
+#' \email{manuel.oviedo@@udc.es}
 #' @source The data were obtained from the FTP of AEMET in 2009.
 #' @keywords datasets
 #' @examples
@@ -42,10 +42,9 @@
 #' data(aemet)
 #' names(aemet)
 #' names(aemet$df)
-#' par(mfrow=c(3,1))
-#' plot(aemet$temp)
-#' plot(aemet$wind.speed)
-#' plot(aemet$logprec)
+#' class(aemet)<-c("ldata","list") # ldata object
+#' lat <- ifelse(aemet$df$latitude<31,"red","blue")
+#' plot(aemet,col=lat)
 #' }
 NULL
 
@@ -69,7 +68,7 @@ NULL
 #' "Wavelength (mm)" and \code{ylab} title for \code{y} axis "Absorbances". }
 #' \code{..$y}: the percentages of Fat, Water and Protein.  The three contents
 #' are determined by analytic chemistry.\cr
-#' @author Manuel Febrero-Bande and Manuel Oviedo de la Fuente \email{manuel.oviedo@@usc.es}
+#' @author Manuel Febrero-Bande and Manuel Oviedo de la Fuente \email{manuel.oviedo@@udc.es}
 #' @keywords datasets
 #' @examples
 #' data(tecator)
@@ -111,7 +110,7 @@ NULL
 #' @references Febrero-Bande, M., Galeano, P., and Gonzalez-Manteiga, W.
 #' (2008).  \emph{Outlier detection in functional data by depth measures with
 #' application to identify abnormal NOx levels}. Environmetrics 19, 4, 331-345.
-#' @source \url{http://mediambient.gencat.cat}
+#' @source \url{https://mediambient.gencat.cat/ca/inici}
 #' @keywords datasets
 #' @examples
 #' 
@@ -132,7 +131,7 @@ NULL
 #' Phoneme curves
 #' 
 #' The following instructions have been used file: \cr
-#' \url{http://www.math.univ-toulouse.fr/staph/npfda/npfda-phondiscRS.txt}\cr
+#' \url{https://www.math.univ-toulouse.fr/~ferraty/SOFTWARES/NPFDA/npfda-phondiscRS.txt}\cr
 #' of \code{Phoneme dataset} file.
 #' 
 #' @name phoneme
@@ -155,11 +154,11 @@ NULL
 #' \code{..$classtest}: testing class numbers (as factor). Factor levels: "sh"
 #' 1, "iy" 2, "dcl" 3, "aa" 4 and "ao" 5.\cr
 #' @author Manuel Febrero-Bande and Manuel Oviedo de la Fuente
-#' <manuel.oviedo@@usc.es>
+#' <manuel.oviedo@@udc.es>
 #' @references Ferraty, F. and Vieu, P. (2006). \emph{NPFDA in practice}. Free
-#' access on line at \url{http://www.lsp.ups-tlse.fr/staph/npfda/}
+#' access on line at \url{https://www.math.univ-toulouse.fr/~ferraty/SOFTWARES/NPFDA/}
 #' @source
-#' \url{http://www.math.univ-toulouse.fr/staph/npfda/npfda-datasets.html}
+#' \url{https://www.math.univ-toulouse.fr/~ferraty/SOFTWARES/NPFDA/npfda-datasets.html}
 #' @keywords datasets
 #' @examples
 #' 

@@ -110,7 +110,7 @@
 #' \item {dist}{ Distance matrix between curves or functional data.}
 #' }
 #' @author Manuel Febrero-Bande, Manuel Oviedo de la Fuente
-#' \email{manuel.oviedo@@usc.es}
+#' \email{manuel.oviedo@@udc.es}
 #' @seealso See Also as \code{\link{Descriptive}}.
 #' @references Cuevas, A., Febrero-Bande, M., Fraiman, R. (2007). Robust
 #' estimation and classification for functional data via projection-based depth
@@ -125,7 +125,7 @@
 #' 
 #' Febrero-Bande, M, Oviedo de la Fuente, M. (2012).  Statistical Computing in
 #' Functional Data Analysis: The R Package fda.usc. \emph{Journal of
-#' Statistical Software}, 51(4), 1-28. \url{http://www.jstatsoft.org/v51/i04/}
+#' Statistical Software}, 51(4), 1-28. \url{https://www.jstatsoft.org/v51/i04/}
 #' 
 #' Sguera C, Galeano P, Lillo R (2014). Spatial depth based classification for
 #' functional data. \emph{TEST} 23(4):725--750.
@@ -621,7 +621,7 @@ depth.KFSD=function (fdataobj, fdataori = fdataobj, trim = 0.25,
   if (same.dim)
     if (all(fdataobj$data==fdataori$data)) {
       M2=M1
-    } else {sam.dim <- FALSE}
+    } else {same.dim <- FALSE}
   if (!same.dim){	
     for (i in 1:n){for (j in 1:n2){
       if (all(fdataobj[i]$data == fdataori[j]$data)) M2[i,j]=K02[i] else M2[i,j]=kern(fdataobj[i],fdataori[j],h=hq2)
@@ -709,8 +709,7 @@ depth.FSD=function (fdataobj, fdataori = fdataobj,
                          "%", sep = "")
     tt = fdataobj[["argvals"]]
     rtt <- fdataobj[["rangeval"]]
-  }
-  else {
+  } else {
     stop("no fdata class object")
   }
   if (is.null(n) && is.null(m)) 
@@ -723,7 +722,7 @@ depth.FSD=function (fdataobj, fdataori = fdataobj,
   M1=matrix(NA,nrow=n2,ncol=n2)
   M2=matrix(NA,nrow=n,ncol=n2)
   M=array(NA,dim=c(n,n2,n2))
-  if (scale) MO=array(NA,dim=c(n2,n2,n2))
+#  if (scale) MO=array(NA,dim=c(n2,n2,n2))
   for (i in 1:n2){
     for (j in i:n2){
       if (i==j) 
@@ -735,7 +734,7 @@ depth.FSD=function (fdataobj, fdataori = fdataobj,
   if (same.dim)
     if (all(fdataobj$data==fdataori$data)) {
       M2=M1
-    } else {sam.dim <- FALSE}
+    } else {same.dim <- FALSE}
   if (!same.dim){
   #  print("entra")
     for (i in 1:n){

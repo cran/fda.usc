@@ -29,7 +29,7 @@
 #' @return a vector with the predicted values.
 #' 
 #' @author Manuel Febrero-Bande, Manuel Oviedo de la Fuente
-#' \email{manuel.oviedo@@usc.es}
+#' \email{manuel.oviedo@@udc.es}
 #' @seealso \code{\link{fregre.gls}}
 #' @references Oviedo de la Fuente, M., Febrero-Bande, M., Pilar Munoz, and
 #' Dominguez, A. Predicting seasonal influenza transmission using Functional
@@ -142,7 +142,7 @@ if (length(vnf)>0) {
 #  print(dim(XX))
   spm<-matrix(object$coefficients[names(XX)],ncol=1)
 #  print(spm )
- yp<-as.matrix(XX)%*%spm
+ yp<-data.matrix(XX)%*%spm
  }
 else yp<-object$coefficients[1]*rep(1,len=nrow(newx[[vfunc[1]]])) # yp es el intercept
 #print(yp)
@@ -154,7 +154,7 @@ if (length(vfunc)>0)  {
 # print(object$basis.x[[vfunc[i]]])
 # print(object$basis.x[[vfunc[i]]]$type)
 #print(vfunc)
-   if(class(data[[vfunc[i]]])[1]=="fdata")  {
+   if(inherits(data[[vfunc[i]]],"fdata"))  {
      fdataobj<-data[[vfunc[i]]]
       x.fd<-fdataobj[["data"]]
       tt<-fdataobj[["argvals"]]
@@ -193,8 +193,8 @@ if (length(vfunc)>0)  {
        else XX = cbind(XX, Z)
       }
       else {
-          if(class(data[[vfunc[i]]])[1]=="fd")  {
-             if (class(object$basis.x[[vfunc[i]]])!="pca.fd") {
+          if(inherits(data[[vfunc[i]]],"fd"))  {
+             if (!inherits(object$basis.x[[vfunc[i]]],"pca.fd")) {
              x.fd<-fdataobj<-data[[vfunc[i]]]
  	    	     r=x.fd[[2]][[3]]
              J<-object$JJ[[vfunc[i]]]
@@ -510,30 +510,30 @@ sig21<-sig1[1:n1,(n1+1):n]
 sig11<-sig1[(n1+1):n,(n1+1):n]
  #print(sigmasq)
  # print(rango)
-#mu1_2<-   t(sig21)%*%solve(sig22)%*%as.matrix(coo)#valta incluir la parte(X2-mu2)
+#mu1_2<-   t(sig21)%*%solve(sig22)%*%data.matrix(coo)#valta incluir la parte(X2-mu2)
 # print("muuuuuuuuuuuuuuuu000000000")
 #  print(dim(sig12))
 #  print(dim(sig22))
 W0<-sig22
     W <- try(solve(W0),silent=TRUE)
-    if (class(W)=="try-error") {
+    if (inherits(W,"try-error")) {
       sv<-svd(W0)
       W<-drop((sv$v%*%diag(1/sv$d)%*%t(sv$u)))
       warning("Inverse of sigma computed by SVD")
       }
 # print(dim(W))
-#ype<- drop(t(sig21)%*%W%*%as.matrix(object$residuals-mean(object$residuals)))
+#ype<- drop(t(sig21)%*%W%*%data.matrix(object$residuals-mean(object$residuals)))
 # print("ok1")
-bb<-as.matrix(object$residuals[ii])
+bb<-data.matrix(object$residuals[ii])
 # print(dim(bb))
-aaa<-drop(t(sig21)%*%W%*%as.matrix(object$residuals[ii]))
+aaa<-drop(t(sig21)%*%W%*%data.matrix(object$residuals[ii]))
 # print("ok2")
 # print(aaa)
 # print(sum(ii))
 # print(sum(ii2))
-ype[ii2]<- drop(t(sig21)%*%W%*%as.matrix(object$residuals[ii]))
+ype[ii2]<- drop(t(sig21)%*%W%*%data.matrix(object$residuals[ii]))
 }
-#ype<- drop(t(sig21)%*%solve(sig22)%*%as.matrix(object$residuals))
+#ype<- drop(t(sig21)%*%solve(sig22)%*%data.matrix(object$residuals))
 #print("muuuuuuuuuuuuuuuu12")
 #sig1_2<-diag(sig11-sig12%*%solve(sig22)%*%sig21)
 #print("sigmaaaaaaaaaaaaaaa12")
@@ -562,7 +562,7 @@ pred.var = res.var/weights
 # print("7")
 
 if (se.fit || interval != "none") {    
-  XX2<-as.matrix(XX[,colnames(object$Vp),drop=FALSE])
+  XX2<-data.matrix(XX[,colnames(object$Vp),drop=FALSE])
     #print("peeeetaaa1")    
   #   #print((XX2))
   # #print(object$Vp)  
@@ -662,8 +662,8 @@ if (se.fit || interval != "none") {
     yp<-yp+b1  
    }
   } 
-  #XX2<-as.matrix(cbind(rep(1,len=nn),XX) )
-                        XX2<-as.matrix(XX) #ojo si viene sin intercept hay que descomentar la linea anterior
+  #XX2<-data.matrix(cbind(rep(1,len=nn),XX) )
+                        XX2<-data.matrix(XX) #ojo si viene sin intercept hay que descomentar la linea anterior
 #   if (se.fit and pc) {
 #     se.fit<-sqrt(rowSums((XX2 %*%object$Vp*XX2)))
 #     return(list("fit"=yp,"se.fit"=se.fit))
@@ -671,7 +671,7 @@ if (se.fit || interval != "none") {
   predictor<-drop(yp)
   res.var<-object$sr2 
   if (se.fit || interval != "none") {    
-XX2<-as.matrix(XX)
+XX2<-data.matrix(XX)
 # print("peeeetaaa")    
 # print((XX2))
 # print(object$Vp)
@@ -694,7 +694,8 @@ if (!is.null(object$corStruct)) {
 # print("entra corSTruct")             
 if (names(object$correlation)=="cor.AR"|names(object$correlation)=="cor.ARMA")  {
 # print("entra cor.AR cor.ARMA") 
-if ((class(object$corStruct[[1]])[1]=="Arima" | class(object$corStruct[[1]])[1]=="ar") & length(object$corStruct)>1)  {
+#if ((class(object$corStruct[[1]])[1]=="Arima" | class(object$corStruct[[1]])[1]=="ar") & length(object$corStruct)>1)  {
+if (inherits(object$corStruct[[1]],c("Arima","ar"))  & length(object$corStruct)>1)  {
     ype<-NULL
 # print("para cada grupo")
 #print(object[["correlation"]][[1]][["group"]])
@@ -708,7 +709,7 @@ if ((class(object$corStruct[[1]])[1]=="Arima" | class(object$corStruct[[1]])[1]=
 #     ind<-gr==lev[j]
       if (lennn!=0) {
 #        ype[ind]=predict(object$corStruct[[lev[i]]],object$residuals[ind],se.fit=se.fit,n.ahead=lennn)  
-if (class(object$corStruct[[1]])[1]=="Arima")    ype[ind]=predict(object$corStruct[[lev[j]]],se.fit=se.fit,n.ahead=lennn)
+if (inherits(object$corStruct[[1]],"Arima"))    ype[ind]=predict(object$corStruct[[lev[j]]],se.fit=se.fit,n.ahead=lennn)
 #####if (class(object$corStruct[[1]])[1]=="ar")       ype[ind]<-0 # si es diferente viene del arima y no del ar
 #print(ype[ind])
 #print(object$corStruct[[lev[j]]])
@@ -718,13 +719,13 @@ if (class(object$corStruct[[1]])[1]=="Arima")    ype[ind]=predict(object$corStru
     }    
 # print(names(object$corStruc))              
 # print(class(object$corStruc$ar))
-if (class(object$corStruct$ar)=="Arima")  ype=predict(object$corStruct$ar,se.fit=se.fit,n.ahead=nn)
-if (class(object$corStruct$ar)=="ar")      ype=predict(object$corStruct$ar,object$residuals,se.fit=se.fit,n.ahead=nn)
+if (inherits(object$corStruct$ar,"Arima"))  ype=predict(object$corStruct$ar,se.fit=se.fit,n.ahead=nn)
+if (inherits(object$corStruct$ar,"ar"))      ype=predict(object$corStruct$ar,object$residuals,se.fit=se.fit,n.ahead=nn)
 #ype=NULL# PQ DEBE SER 0predict(object$corStruct$ar,se.fit=se.fit,n.ahead=nn)
 #print(ype);print("ype3")
 #    ype=predict(object$corStruct$ar,object$residuals,se.fit=se.fit,n.ahead=nn)
 #print("ype")    ;print(ype)
-if (class(object$corStruct[[1]])[1]=="lm")  {
+if (inherits(object$corStruct[[1]],"lm"))  {
 #    print("cor Struct lm")
     coef.lm<-coef(object$corStruct$lm)
     p<-length(coef.lm)
@@ -917,8 +918,7 @@ predict.fregre.igls<-function (object, newx = NULL, data, df = df
     if (!is.null(object$corStruct)) {
       if (names(object$correlation) == "cor.AR" | names(object$correlation) == 
           "cor.ARMA") {
-        if ((class(object$corStruct[[1]])[1] == "Arima" | 
-             class(object$corStruct[[1]])[1] == "ar") & 
+        if (inherits(object$corStruct[[1]],c("Arima","ar")) & 
             length(object$corStruct) > 1) {
           ype <- NULL
           gr <- data[, object[["correlation"]][[1]][["group"]]]
@@ -929,8 +929,7 @@ predict.fregre.igls<-function (object, newx = NULL, data, df = df
             previousone <- object$corStruct[[lev[j]]]
             ind <- gr == lev[j]
             if (lennn != 0) {
-              if (class(object$corStruct[[1]])[1] == 
-                  "Arima") 
+              if (inherits(object$corStruct[[1]],"Arima")) 
                 out = predict(object$corStruct[[lev[j]]], 
                               se.fit = se.fit, n.ahead = lennn)
               if (se.fit)
@@ -939,15 +938,15 @@ predict.fregre.igls<-function (object, newx = NULL, data, df = df
             }
           }
         }
-        if (class(object$corStruct$ar) == "Arima") {
+        if (inherits(object$corStruct$ar, "Arima")) {
           ype = predict(object$corStruct$ar, se.fit = se.fit, 
                         n.ahead = nn)
         }
-        if (class(object$corStruct$ar) == "ar") {
+        if (inherits(object$corStruct$ar, "ar")) {
           ype = predict(object$corStruct$ar, object$residuals, 
                         se.fit = se.fit, n.ahead = nn)
         }          
-        if (class(object$corStruct[[1]])[1] == "lm") {
+        if (inherits(object$corStruct[[1]], "lm")) {
           coef.lm <- coef(object$corStruct$lm)
           p <- length(coef.lm)
           lenp <- length(p)

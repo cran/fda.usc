@@ -3,7 +3,7 @@ predict.gls<-function (object, newdata, na.action = na.fail, ...)
   if (missing(newdata)) {
     return(fitted(object))
   }
-  if (class(object$formula) == "formula")    form <- getCovariateFormula(object$formula)  
+  if (inherits(object$formula, "formula"))    form <- getCovariateFormula(object$formula)  
   else   form <- getCovariateFormula(object)  
   mfArgs <- list(formula = form, data = newdata, na.action = na.action)
   mfArgs$drop.unused.levels <- TRUE
@@ -205,7 +205,7 @@ predictSE.gls <- function(mod, newdata, se.fit = TRUE, ...){
       ##extract vc matrix
       vcmat <- vcov(mod)
       
-      mat_partialdevs<-as.matrix(part.devs.solved) #create matrix from vector of 2 rows by 1 column
+      mat_partialdevs<-data.matrix(part.devs.solved) #create matrix from vector of 2 rows by 1 column
       mat_tpartialdevs<-t(part.devs.solved)        #transpose of partial derivatives to have 2 columns by 1 row
       
       #####5)

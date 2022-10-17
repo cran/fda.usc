@@ -60,6 +60,9 @@ beta = tt*sin(2*pi*tt)^2
 fbeta = fdata(beta,tt)
 y<-inprod.fdata(x,fbeta)+rnorm(n,sd=0.1)
 pls1=fdata2pls(x,y)
+pls1$call
+summary(pls1)
+pls1$l
 norm.fdata(pls1$rotation)
 }
 }
@@ -70,7 +73,7 @@ Association. Volume 106, 697-705.
 
 Febrero-Bande, M., Oviedo de la Fuente, M. (2012).  \emph{Statistical
 Computing in Functional Data Analysis: The R Package fda.usc.} Journal of
-Statistical Software, 51(4), 1-28. \url{http://www.jstatsoft.org/v51/i04/}
+Statistical Software, 51(4), 1-28. \url{https://www.jstatsoft.org/v51/i04/}
 
 Martens, H., Naes, T. (1989) \emph{Multivariate calibration.} Chichester:
 Wiley.

@@ -10,8 +10,8 @@ fregre.glm(
   data,
   basis.x = NULL,
   basis.b = NULL,
-  CV = FALSE,
   subset = NULL,
+  weights = NULL,
   ...
 )
 }
@@ -31,10 +31,10 @@ function, a family function or the result of a call to a family function.
 
 \item{basis.b}{List of basis for \eqn{\beta(t)} parameter estimation.}
 
-\item{CV}{=TRUE, Cross-validation (CV) is done .}
-
 \item{subset}{an optional vector specifying a subset of observations to be
 used in the fitting process.}
+
+\item{weights}{weights}
 
 \item{\dots}{Further arguments passed to or from other methods.}
 }
@@ -46,7 +46,6 @@ Return \code{glm} object plus:
 \item \code{beta.l}{ List of estimated beta parameter of functional covariates.} 
 \item \code{data}{ List that containing the variables in the model.} 
 \item \code{formula}{ formula.} 
-\item \code{CV}{ predicted response by cross-validation.}
 }
 }
 \description{
@@ -126,6 +125,6 @@ See Also as: \code{\link{predict.fregre.glm}} and
 }
 \author{
 Manuel Febrero-Bande, Manuel Oviedo de la Fuente
-\email{manuel.oviedo@usc.es}
+\email{manuel.oviedo@udc.es}
 }
 \keyword{regression}

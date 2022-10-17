@@ -60,7 +60,7 @@
 #' \code{bcdcor.dist} returns the bias corrected distance correlation
 #' statistic.
 #' 
-#' @author Manuel Oviedo de la Fuente \email{manuel.oviedo@@usc.es} and Manuel
+#' @author Manuel Oviedo de la Fuente \email{manuel.oviedo@@udc.es} and Manuel
 #' Febrero Bande
 #' 
 #' @seealso \code{\link{metric.lp}} amd \code{\link{metric.dist}}.
@@ -90,14 +90,26 @@
 #' @export 
 dcor.xy<-function (x, y,test=TRUE,metric.x,metric.y,par.metric.x,par.metric.y,n)
 {
+  # print("entra dcor.xy")
   dname <- paste(deparse(substitute(x)), "and", deparse(substitute(y)))
-  if (is.numeric(x)) x<-matrix(x,ncol=1)
-  if (is.numeric(y)) y<-matrix(y,ncol=1)
+  if (is.vector(x)) x<-matrix(x,ncol=1)
+  if (is.vector(y)) y<-matrix(y,ncol=1)
   if (is.factor(y)) y<-model.matrix(~y-1)
   if (is.factor(x)) x<-model.matrix(~x-1)
-  if (is.factor(y[,1])) y<-model.matrix(~y[,1]-1)
-  if (is.factor(x[,1])) x<-model.matrix(~x[,1]-1)
-  
+
+  #   if (anyNA(x)) {
+  #   nas <- !apply(x,1,is.na)
+  #   x<-x[nas,,drop=F]
+  #   y<-y[nas,,drop=F]
+  #   warning("NA's in x data")
+  # }
+  # if (anyNA(y)) {
+  #   nas <- !apply(y,1,is.na)
+  #   x<-x[nas,,drop=F]
+  #   y<-y[nas,,drop=F]
+  #   warning("NA's in y data")
+  # }
+
   if (missing(n)) n <- nrow(x)
   isfdata1<-is.fdata(x)
   true.dist<-FALSE
@@ -132,6 +144,8 @@ dcor.xy<-function (x, y,test=TRUE,metric.x,metric.y,par.metric.x,par.metric.y,n)
    }
   return(rval)
 } 
+
+
 
 #' @rdname dcor.xy
 #' @export 
@@ -170,16 +184,18 @@ bcdcor.dist=function(D1,D2,n){
   # D2: distances of 2nd sample 
   # n:  sample dimension, by default nrow(D1)
   # Returns the bias corrected dcor statistic
-  
-  m1row=rowMeans(D1)
-  m1col=colMeans(D2)
-  if (missing(n)) n<-nrow(D1)
+  # print("entra bcdcor.dist")
+  # print(n)
+  # print(dim(D1))
+  # print(dim(D2))
+  if (missing(n)) n <- nrow(D1)
   AA <- Astar2(D1,n)
   BB <- Astar2(D2,n)
   res <- sum(AA * BB) - (n/(n - 2)) * sum(diag(AA * BB))
   res1<- sum(AA * AA) - (n/(n - 2)) * sum(diag(AA * AA))
   res2<- sum(BB * BB) - (n/(n - 2)) * sum(diag(BB * BB))
   out<-res/sqrt(res1*res2)          
+  #print("sale bcdcor.dist")
   return(out)
 }
 

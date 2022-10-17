@@ -17,7 +17,7 @@
 #' \item \code{prob.group} the matrix of predicted probability by factor level. 
 #' }
 #' 
-#' @author Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@@usc.es}
+#' @author Manuel Febrero-Bande, Manuel Oviedo de la Fuente \email{manuel.oviedo@@udc.es}
 #' 
 #' @seealso See also \code{\link{classif.np}} \code{\link{classif.glm}},
 #' \code{\link{classif.gsam}} and \code{\link{classif.gkam}} .
@@ -33,26 +33,26 @@
 #' @examples
 #' \dontrun{
 #' data(phoneme)
-#' mlearn<-phoneme[["learn"]][1:100]
-#' glearn<-phoneme[["classlearn"]][1:100]
+#' mlearn <- phoneme[["learn"]][1:100]
+#' glearn <- phoneme[["classlearn"]][1:100]
 #' 
 #' #	ESTIMATION knn
-#' out1=classif.knn(glearn,mlearn,knn=3)
+#' out1 <- classif.knn(glearn, mlearn, knn = 3)
 #' summary(out1)
 #' 
 #' #	PREDICTION knn
-#' mtest<-phoneme[["test"]][1:100]
-#' gtest<-phoneme[["classtest"]][1:100]
-#' pred1=predict(out1,mtest)
-#' table(pred1,gtest)
-#' 
+#' mtest <- phoneme[["test"]][1:100]
+#' gtest <- phoneme[["classtest"]][1:100]
+#' pred1 <- predict(out1, mtest)
+#' table(pred1, gtest)
+#'  
 #' #	ESTIMATION kernel 
-#' h=2^(0:5)
+#' h <- 2^(0:5)
 #' # using metric distances computed in classif.knn
-#' out2=classif.kernel(glearn,mlearn,h=h,metric=out1$mdist)
+#' out2 <- classif.kernel(glearn, mlearn, h = h, metric = out1$mdist)
 #' summary(out2)
 #' #	PREDICTION kernel
-#' pred2=predict(out2,mtest)
+#' pred2 <- predict(out2,mtest)
 #' table(pred2,gtest)
 #' }
 #' 
@@ -66,7 +66,7 @@ predict.classif <- function (object, new.fdataobj = NULL,
     stop("No classif object entered")
   if (is.null(new.fdataobj)) 
     return(object$group.est)
-  if (is.null(object$prob)) object$prob<-0.5
+  if (is.null(object$prob)) object$prob <- 0.5
   isfdata <- is.fdata(new.fdataobj)
   #object$group <- factor(object$group, levels = levels(object$group)[which(table(object$group) >    0)])
   if (is.null(object$levels)) object$levels <-  levels(object$group)
@@ -92,52 +92,73 @@ predict.classif <- function (object, new.fdataobj = NULL,
                    classif.gkam={ 
                      pred2gkam(object, new.fdataobj = new.fdataobj,...)},                 
                    classif.rpart={
-                     object$JJ <- object$vs.list
+                     object$JJ <- object$basis.list
                      pred2ML(object, new.fdataobj = new.fdataobj)},
                    classif.svm={
-                     object$JJ <- object$vs.list
+                     object$JJ <- object$basis.list
                      pred2ML(object, new.fdataobj = new.fdataobj, ...)},
                    classif.nnet={
-                     object$JJ <- object$vs.list
+                     object$JJ <- object$basis.list
+                     pred2ML(object, new.fdataobj = new.fdataobj, ...)},
+                   classif.gbm={
+                     object$JJ <- object$basis.list
                      pred2ML(object, new.fdataobj = new.fdataobj, ...)},
                    classif.multinom={
-                     object$JJ <- object$vs.list
+                     object$JJ <- object$basis.list
                      pred2ML(object, new.fdataobj = new.fdataobj, ...)},
                    classif.randomForest={
-                     object$JJ <- object$vs.list
+                     object$JJ <- object$basis.list
                      pred2ML(object, new.fdataobj = new.fdataobj, ...)},                   
                    classif.naiveBayes={
-                     object$JJ <- object$vs.list
+                     object$JJ <- object$basis.list
                      pred2ML(object, new.fdataobj = new.fdataobj, ...)},                   
                    classif.ksvm={
-                     object$JJ <- object$vs.list
+                     object$JJ <- object$basis.list
                      pred2ML(object, new.fdataobj = new.fdataobj, ...)},   
                    classif.lda={
-                     object$JJ <- object$vs.list
+                     object$JJ <- object$basis.list
                      pred2ML(object, new.fdataobj = new.fdataobj, ...)},   
                    classif.qda={
-                     object$JJ <- object$vs.list
+                     object$JJ <- object$basis.list
                      pred2ML(object, new.fdataobj = new.fdataobj, ...)},   
+                   
+                   classif.cv.glmnet={# 20201214 
+                     object$JJ <- object$basis.list
+                     pred2ML(object, new.fdataobj = new.fdataobj, ...)}, 
+                   
                    classif.np={
                      pred2np(object, new.fdataobj = new.fdataobj,...)},
-                   #  classif.adaboost={
-                   #   pr<-predict.classif.adaboost(object, newdata = new.fdataobj, type = "probs", ...)
-                   #   pr
-                   #   },
-                   # classif.bootstrap={
-                   #   pr<-pred2boot(object,
-                   #                             newdata = new.fdataobj
-                   #                             , type = "probs", ...)
-                   #   pr
-                   #   },
+   #                  classif.adaboost={
+   #                    
+   #                   pr<-predict.classif.adaboost(object, newdata = new.fdataobj, type = "probs", ...)
+   #                   pr
+   #                   },
+   # #                 classif.bootstrap={
+   # # #                  print("aaa")
+   # #                   #pr<-predict.classif.bootstrap(object,
+   # #                   pr<-pred2boot(object,
+   # #                                             newdata = new.fdataobj
+   # #                                             , type = "probs", ...)
+   # #                   #print("si predice bootstap")
+   # #                   pr
+   # #                   },
                    classif.DD={
+                     #print("si predice DD")
                      pr<-predict.classif.DD(object,  new.fdataobj,  type, ...)
+                     #print(length(pr))
                      if (!is.list(pr)) pr <-list("group.pred"=pr)
                      pr
                      }
   )
-  if (type == "class") {    return(output$group.pred)}
+  #print(output)
+  #print("sale predict.classif")
+ # print(names(output))
+
+  #print(type)
+        if (type == "class") {    return(output$group.pred)}
   else return(output) 
+#  if (type == "probs") {    return(output)  }
+#  else stop("Type argument should be one of 'class' or 'probs'")
 }
 
 
@@ -541,15 +562,20 @@ pred2gkam <- function(object, new.fdataobj = NULL,  ...) {
 
 ####################################
 pred2gsam <- function(object, new.fdataobj = NULL, ...) {
+  
+ #  object <- a1;  new.fdataobj <- newldat
+  
   lev <- object$levels
-  if (is.null(object$type)) object$type ="1vsall"
+  if (is.null(object$type)) 
+    object$type ="1vsall"
   prob <- ngroup <- length(lev)
-  prob.group <- array(NA, dim = c(nrow(new.fdataobj[[1]]), 
-                                  ngroup))
+  prob.group <- array(NA, 
+                      dim = c(nrow(new.fdataobj[[1]]), ngroup)
+                      )
   colnames(prob.group) <- lev
   if (ngroup == 2) {
-    probs <- predict.fregre.gsam(object$fit[[1]], newx = new.fdataobj, 
-                                 ...)
+    probs <- predict.fregre.gsam(object$fit[[1]], 
+                                 newx = new.fdataobj,...)
     yest <- ifelse(probs > object$prob, lev[2], lev[1])
     prob.group[, 1] <- 1- probs
     prob.group[, 2] <- probs
@@ -572,25 +598,28 @@ pred2gsam <- function(object, new.fdataobj = NULL, ...) {
           votos[,cvot[1, ivot]] <- votos[,cvot[1, ivot]] + as.numeric(group.log)
           votos[,cvot[2, ivot]] <- votos[,cvot[2, ivot]] + as.numeric(!group.log)
         }
-        cat(cvot[, ivot])
+       # cat(cvot[, ivot])
         maj.voto <- apply(votos, 1, which.max)
         group.pred <- factor(lev[maj.voto], levels = lev)
         prob.grup<-pvotos
       }
     }    else{
-      for (i in 1:ngroup) {
-        prob.group[, i] <- predict.fregre.gsam(object$fit[[i]], 
-                                               newx = new.fdataobj, ...)
+    for (i in 1:ngroup) {
+      prob.group[,i] <- predict.fregre.gsam(object$fit[[i]], 
+                                            newx = new.fdataobj,...)
       }
       group.pred <- factor(lev[apply(prob.group, 1, which.max)], levels = lev)
     }
   }
   return(list("group.pred"=group.pred,"prob.group"=prob.group))
 }
+##################################
+
+
 
 
 ####################################
-pred2gsam2boost<- function(object, new.fdataobj = NULL, ...) {
+pred2gsam2boost <- function(object, new.fdataobj = NULL, ...) {
   lev <- object$levels
   if (is.null(object$type)) object$type ="1vsall"
   prob <- ngroup <- length(lev)
@@ -622,7 +651,7 @@ pred2gsam2boost<- function(object, new.fdataobj = NULL, ...) {
           votos[,cvot[1, ivot]] <- votos[,cvot[1, ivot]] + as.numeric(group.log)
           votos[,cvot[2, ivot]] <- votos[,cvot[2, ivot]] + as.numeric(!group.log)
         }
-        cat(cvot[, ivot])
+       # cat(cvot[, ivot])
         maj.voto <- apply(votos, 1, which.max)
         group.pred <- factor(lev[maj.voto], levels = lev)
         prob.grup<-pvotos
@@ -639,8 +668,9 @@ pred2gsam2boost<- function(object, new.fdataobj = NULL, ...) {
 }
 #############################
 
-pred2pc <- function(object,XX,lev){
-print("pred2pc")
+#pred2pc <- function(object,XX,lev){
+pred2pc <- function(object,XX){
+# print("pred2pc")
   lev <- levels(object$group)
   # if (object$C[[1]]=="classif.svm"){
   #   yest = predict(object = object$fit, newdata = XX,    probability = TRUE)  
@@ -664,7 +694,13 @@ print("pred2pc")
     prob.group = predict(object = object$fit, newdata = XX,    type = "prob") 
     return(list(group.pred =group.pred,prob.group=prob.group ))
   }
-  
+  if (object$C[[1]]=="classif.cv.glmnet"){
+    #print(names(XX))
+    group.pred = predict(object = object$fit, newx = as.matrix(XX),    type = "class")
+    prob.group = predict(object = object$fit, newx = as.matrix(XX), type="response" ) 
+    group.pred <- factor(group.pred, levels = lev)
+    return(list(group.pred =group.pred,prob.group=prob.group ))
+  }
   yest = predict(object = object$fit, XX)
   if (!is.factor(yest)) group.pred <- factor(yest, levels = lev)
   else group.pred <- yest
@@ -752,9 +788,37 @@ pred2randomForest <- function(object, XX = NULL, ...) {
   return(list("group.pred"=group.pred,"prob.group"=prob.group))
 }
 
+
+##########################################
+pred2gbm <- function(object, XX = NULL, ...) {
+#  print("pred2gbm")  
+  lev <- levels(object$group)
+  prob <- ngroup <- length(lev)
+  ngroup <- length(lev)
+  nn <- NROW(XX)
+  prob.group <- matrix(NA, nn,  ngroup)
+  colnames(prob.group) <- lev								  
+  if (ngroup == 2 | object$type=="majority") {
+   #    print("entra maj")
+    prob.group = predict(object = object$fit, newdata = XX, type="response")  
+    yest <- apply(prob.group,1,which.max)
+    yest <- factor(yest ,levels=lev)                # level o label???
+    return(list(group.pred =yest,prob.group=prob.group))
+  }  else {
+    #print( "nlev >2 and type='1vsAll'")
+    for (i in 1:ngroup) {
+      aux =  suppressWarnings(predict(object = object$fit[[i]], newdata = XX, type="response"))
+      prob.group[,i]<-aux[,1]
+    }
+    yest <- apply(prob.group, 1, which.max)
+    group.pred <- factor(lev[yest], levels = lev) # level o label???
+  }
+  return(list("group.pred"=group.pred,"prob.group"=prob.group))
+}
+
 ##########################################
 pred2ML <- function(object, new.fdataobj = NULL, ...) {
-  #print("pred2ML")  
+#print("pred2ML")  
   newx = data = new.fdataobj
   basis.x = object$basis.x
   formula = object$formula.ini
@@ -767,20 +831,23 @@ pred2ML <- function(object, new.fdataobj = NULL, ...) {
     pf <- rf <- paste(response, "~", sep = "")
   }      else pf <- rf <- "~"
   if (attr(tf, "intercept") == 0) {
-    print("No intecept")
+ #   print("No intecept")
     pf <- paste(pf, -1, sep = "")                   }
   vtab <- rownames(attr(tf, "factors"))
   vnf = intersect(terms, names(data$df))
   vnf2 = intersect(vtab[-1], names(data$df))
-  #print(vnf)  ;  print(vnf2)   
+#print(vnf)  ;  print(vnf2)   
+
+
   vfunc2 = setdiff(terms, vnf)
   vint = setdiff(terms, vtab)
   vfunc = setdiff(vfunc2, vint)
+#print(vfunc)
   vnf = c(vnf2, vint)
   off <- attr(tf, "offset")
   kterms = 1
   if (length(vnf) > 0) {
-    #print("entra vnf")    
+  #  print("entra vnf")    
     #print(vnf2)
     first = FALSE
     XX = data.frame(data$df[, c(vnf2)])
@@ -799,7 +866,7 @@ pred2ML <- function(object, new.fdataobj = NULL, ...) {
   if (length(vfunc) > 0) {
     for (i in 1:length(vfunc)) {
       #print("vfunc");      print(vfunc[i])
-      if (class(data[[vfunc[i]]])[1] == "fdata") {
+      if (inherits(data[[vfunc[i]]], "fdata")) {
         fdataobj <- data[[vfunc[i]]]
         dat <- fdataobj$data
         tt <- fdataobj[["argvals"]]
@@ -812,17 +879,20 @@ pred2ML <- function(object, new.fdataobj = NULL, ...) {
         rtt <- fdataobj[["rangeval"]]
         if (object$basis.x[[vfunc[i]]]$type != "pc" & 
             object$basis.x[[vfunc[i]]]$type != "pls") {
-          #     print("basiss")
+ # print("basiss")
           x.fd = Data2fd(argvals = tt, y = t(fdata.cen(fdataobj, 
                                                        object$mean[[vfunc[i]]])[[1]]$data), 
                          basisobj = object$basis.x[[vfunc[i]]], 
                          fdnames = fdnames)
           r = x.fd[[2]][[3]]
-          J <- object$JJ[[vfunc[i]]]
+         # J <- object$JJ[[vfunc[i]]]
+          J <- object$basis.list[[vfunc[i]]]
           Z = t(x.fd$coefs) %*% J
-          colnames(Z) = colnames(J)
+          name2 <- paste(vfunc[i], ".",colnames(J), sep = "")
+          colnames(Z) <- name2
+          
         } else {
-          #  print("eeeeeeeeeeeeeeeeeeellllllllllllllllllllllllllssssssssssssssssssssssssssssssssseeeeeeeeeeee")
+        #  print("eeeeeeeeeeeeeeeeeeellllllllllllllllllllllllllssssssssssssssssssssssssssssssssseeeeeeeeeeee")
           # return(pred2pc(object,vfunc,fdataobj,lev=lev))
           name.coef <- paste(vfunc[i], ".", 
                              rownames(object$basis.x[[vfunc[i]]]$basis$data),
@@ -834,19 +904,19 @@ pred2ML <- function(object, new.fdataobj = NULL, ...) {
               newXcen$data <- newXcen$data/(rep(1,nrow(newXcen)) %*% t(sd.X))
             }
           }
-          Z <- inprod.fdata(newXcen, object$vs.list[[vfunc[i]]])
+          Z <- inprod.fdata(newXcen, object$basis.list[[vfunc[i]]])
           colnames(Z) <- name.coef
           Z <- data.frame(Z)
+          
         }
-        #print(first)
+    #print(first)
         if (first) {
           XX = Z
           first = FALSE
         }   else XX = cbind(XX, Z)
       }    else {# fd clas
-        if (class(data[[vfunc[i]]])[1] == "fd") {
-          if (class(object$basis.x[[vfunc[i]]]) != 
-              "pca.fd") {
+        if (inherits(data[[vfunc[i]]], "fd")) {
+          if (!inherits(object$basis.x[[vfunc[i]]],"pca.fd")) {
             x.fd <- fdataobj <- data[[vfunc[i]]]
             r = x.fd[[2]][[3]]
             J <- object$JJ[[vfunc[i]]]
@@ -873,17 +943,17 @@ pred2ML <- function(object, new.fdataobj = NULL, ...) {
       }
     }
   }
-  
   if (!is.data.frame(XX)) 
     XX = data.frame(XX)
+if (object$C[[1]]=="classif.cv.glmnet" & NCOL(XX)==1)
+  XX <- cbind(rep(1,len=NROW(XX)),XX)
   if (object$C[[1]]=="classif.ksvm")   out = pred2ksvm(object = object, XX)
   else if (object$C[[1]]=="classif.svm")    out = pred2svm(object = object, XX)
   else if (object$C[[1]]=="classif.randomForest")    out = pred2randomForest(object = object, XX)
   else if (object$C[[1]]=="classif.rpart")    out = pred2rpart(object = object, XX)
   else if (object$C[[1]]=="classif.lda" | object$C[[1]]=="classif.qda")    out = pred2lda(object = object, XX)
+  else if (object$C[[1]]=="classif.gbm" )    out = pred2gbm(object = object, XX)  
   else  out = pred2pc(object , XX)
   #print("sale ML")#;print(out)  
   return(out)
 }
-##################################################
-

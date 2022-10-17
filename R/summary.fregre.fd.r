@@ -32,7 +32,7 @@
 #' \item {i.influence}{ Index of possible influence curves.} 
 #' \item {i.atypical}{ Index of possible atypical curves or possible outliers.}
 #' }
-#' @author Manuel Febrero-Bande and Manuel Oviedo de la Fuente \email{manuel.oviedo@@usc.es}
+#' @author Manuel Febrero-Bande and Manuel Oviedo de la Fuente \email{manuel.oviedo@@udc.es}
 #' @seealso Summary function for \code{\link{fregre.pc}},
 #' \code{\link{fregre.basis}}, \code{\link{fregre.pls}}, \cr
 #' \code{\link{fregre.np}} and \code{\link{fregre.plm}}.
@@ -89,7 +89,7 @@ summary.fregre.fd<-function(object,times.influ=3,times.sigma=3,draw=TRUE,...){
             cat("\n-R squared: ",object$r2)
 #            cat("\n-Residual variance: ",object$sr2,"\n")
      cat("\n-Residual variance: ",
-            object$sr2,"on ",n-object$df," degrees of freedom\n")
+            object$sr2,"on ",n-object$df.residual," degrees of freedom\n")
        cat("-Penalization parameter (lambda): ",object$lambda,"\n")
             }
             
@@ -108,7 +108,7 @@ summary.fregre.fd<-function(object,times.influ=3,times.sigma=3,draw=TRUE,...){
       print(summary(object$lm))
 #            cat("\n-R squared: ",object$r2)
 #      cat("\n-Residual variance: ",
-#            object$sr2,"on ",n-object$df," degrees of freedom\n")
+#            object$sr2,"on ",n-object$df.residual," degrees of freedom\n")
        cat("-Lambda penalty: ",object$lambda)
        #     object$lm$call<-object$call
 #     print(summary(object$lm))
@@ -125,11 +125,11 @@ summary.fregre.fd<-function(object,times.influ=3,times.sigma=3,draw=TRUE,...){
      cat(" *** Summary Functional Regression with Partial Least Squares*** \n\n")
             cat("-Call: ");    print(object$call)
             cat("\n")
-            print(object$coefs)
-            cat("\n-R squared: ",object$r2)
+            print(object$coefficients)
+              cat("\n-R squared: ",object$r2)
 #            cat("\n-Residual variance: ",object$sr2,"\n")
               cat("\n-Residual variance: ",
-            object$sr2,"on ",n-object$df," degrees of freedom\n")
+            object$sr2,"on ",n-object$df.residual," degrees of freedom\n")
 
 #     object$lm$call<-object$call
 #     print(summary(object$lm))
@@ -148,7 +148,7 @@ summary.fregre.fd<-function(object,times.influ=3,times.sigma=3,draw=TRUE,...){
             cat("\n-R squared: ",object$r2)
 #            cat("\n-Residual variance: ",object$sr2,"\n")
               cat("\n-Residual variance: ",
-            object$sr2,"on ",n-object$df," degrees of freedom\n")
+            object$sr2,"on ",n-object$df.residual," degrees of freedom\n")
        cat("-Lambda penalty: ",object$lambda)
       #     object$lm$call<-object$call
 #     print(summary(object$lm))
@@ -168,7 +168,7 @@ summary.fregre.fd<-function(object,times.influ=3,times.sigma=3,draw=TRUE,...){
             print(object$coefs)
             cat("\n-R squared: ",object$r2)
             cat("\n-Residual variance: ",
-            object$sr2,"on ",n-object$df," degrees of freedom\n")
+            object$sr2,"on ",n-object$df.residual," degrees of freedom\n")
             }
     }
      if (object$call[[1]]=="fregre.basis.cv") {
@@ -179,7 +179,7 @@ summary.fregre.fd<-function(object,times.influ=3,times.sigma=3,draw=TRUE,...){
             cat("\n-R squared: ",object$r2)
 #            cat("\n-Residual variance: ",object$sr2,"\n")
 cat("\n-Residual variance: ",
-            object$sr2,"on ",n-object$df," degrees of freedom\n")
+            object$sr2,"on ",n-object$df.residual," degrees of freedom\n")
       cat("-Optimal Beta Basis: \n")
       print(object$basis.b.opt)
       cat("\n-Optimal lambda penalty=",object$lambda.opt,"\n")
@@ -192,7 +192,7 @@ cat("\n-Residual variance: ",
        cat("\n-R squared: ",object$r2)
    #   cat("\n-Residual variance: ",object$sr2,"\n")
        cat("\n-Residual variance: ",
-              object$sr2,"on ",n-object$df," degrees of freedom\n")
+              object$sr2,"on ",n-object$df.residual," degrees of freedom\n")
       }
      if (object$call[[1]]=="fregre.np.cv") {
       cat(" *** Summary Functional Non-linear Model *** \n\n")
@@ -201,7 +201,7 @@ cat("\n-Residual variance: ",
       cat("\n-R squared: ",object$r2)
     #    cat("\n-Residual variance: ",object$sr2,"\n")
       cat("\n-Residual variance: ",
-            object$sr2,"on ",n-object$df," degrees of freedom\n")
+            object$sr2,"on ",n-object$df.residual," degrees of freedom\n")
     }
      if (object$call[[1]]=="fregre.plm") {
        cat(" *** Summary Functional Semi-linear Model *** \n\n")
@@ -212,7 +212,7 @@ cat("\n-Residual variance: ",
        cat("\n-R squared: ",object$r2)
       #    cat("\n-Residual variance: ",object$sr2,"\n")
        cat("\n-Residual variance: ",
-              object$sr2,"on ",n-object$df," degrees of freedom\n")
+              object$sr2,"on ",n-object$df.residual," degrees of freedom\n")
        }
     if (!isfdata) {
      cat("-Names of possible atypical curves: ");

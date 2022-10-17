@@ -1,124 +1,214 @@
-#####################################################
-fdata2model <- function(vfunc, vnf, response, data, basis.x=NULL,pf,tf){
-  #print("fdata2model")
-  kterms = 1
-  vs.list=mean.list=name.coef=nam=beta.l=list()
-  bsp1=TRUE
-  if (length(vnf)>0) {
+# Internal functions
+inprodbasis <- function(basis1,basis2){
+if (inherits(basis1,"pca.fd")) basis1$type="pca.fd"
+if (inherits(basis2,"pca.fd")) basis2$type="pca.fd"
+if (is.null(basis1$type) | is.null(basis2$type)) stop("Basis type not recognized")
+if (basis1$type == "pc" | basis1$type == "pls"){
+	nms1=rownames(basis1$basis$data)
+	if (basis2$type == "pc" | basis2$type == "pls"){
+	nms2=rownames(basis2$basis$data)
+	J=inprod.fdata(basis1$basis,basis2$basis)
+	}else{
+	if (inherits(basis2,"pca.fd")) {
+	baux2=fdata(t(eval.fd(basis1$basis$argvals,basis2$harmonics)),argvals=basis1$basis$argvals,rangeval=basis1$basis$rangeval)
+	nms2=basis2$harmonics$fdnames[[2]]
+		} else { 
+	baux2=fdata(t(eval.basis(basis1$basis$argvals,basis2)),argvals=basis1$basis$argvals,rangeval=basis1$basis$rangeval)
+	nms2=basis2$names
+		}
+	J=inprod.fdata(basis1$basis,baux2)
+	}
+} else if (basis2$type == "pc" | basis2$type == "pls"){
+	nms2=rownames(basis2$basis$data)
+	if (inherits(basis1,"pca.fd")) {
+	baux1=fdata(t(eval.fd(basis2$basis$argvals,basis1$harmonics)),argvals=basis2$basis$argvals,rangeval=basis2$basis$rangeval)
+	nms1=basis1$harmonics$fdnames[[2]]
+		} else { 
+	baux1=fdata(t(eval.basis(basis2$basis$argvals,basis1)),argvals=basis2$basis$argvals,rangeval=basis2$basis$rangeval)
+	nms1=basis1$names
+	}
+	J=inprod.fdata(baux1,basis2$basis)
+} else {
+	if (inherits(basis1,"pca.fd")) {baux1=basis1$harmonics;nms1=basis1$harmonics$fdnames[[2]]} else {baux1=basis1;nms1=basis1$names}
+	if (inherits(basis2,"pca.fd")) {baux2=basis2$harmonics;nms2=basis2$harmonics$fdnames[[2]]} else {baux2=basis2;nms2=basis2$names}
+	J=inprod(baux1,baux2)
+}
+rownames(J)=nms1
+colnames(J)=nms2
+return(J)
+}
+
+
+fdata2model.penalty <- function(vfunc, vnf, response, data,
+                        basis.x = NULL, basis.b = NULL, pf,tf,
+                        lambda=NULL, P=NULL){
+  kterms <- 1
+  vs.list <- name.coef <- nam <- beta.l <- list()
+  mean.list <- basis.list <- list()
+  if (is.null(basis.x)) {
+    basis.x <- vector("list",length(vfunc))
+    names(basis.x) <- vfunc
+    }
+  if (length(vnf) > 0) {
     XX=data[["df"]][,c(response,vnf)] #data.frame el 1er elemento de la lista
     for ( i in 1:length(vnf)){
       #     print(paste("Non functional covariate:",vnf[i]))
-      if (kterms > 1)   pf <- paste(pf, "+", vnf[i], sep = "")
-      else pf <- paste(pf, vnf[i], sep = "")
+      if (kterms > 1)   
+        pf <- paste(pf, "+", vnf[i], sep = "")      else
+          pf <- paste(pf, vnf[i], sep = "")
       kterms <- kterms + 1
     }
-    if   (attr(tf,"intercept")==0) {
+    if   (attr(tf,"intercept") == 0) {
       pf<- paste(pf,-1,sep="")
     }
   } else {
-    XX=data$df[response]
-    names(XX)=response
+    XX <- data$df[,response,drop=F]
+    names(XX) <- response
   }
-  lenfunc<-length(vfunc)>0
-  if (lenfunc) {
-    for (i in 1:length(vfunc)) {
-      if (class(data[[vfunc[i]]])[1]=="fdata"){
-        tt<-data[[vfunc[i]]][["argvals"]]
-        rtt<-data[[vfunc[i]]][["rangeval"]]
-        fdat<-data[[vfunc[i]]];      dat<-data[[vfunc[i]]]$data
-        if (is.null(basis.x[[vfunc[i]]]))  basis.x[[vfunc[i]]]<-create.fdata.basis(fdat,l=1:7)
-        else   if (basis.x[[vfunc[i]]]$type=="pc" | basis.x[[vfunc[i]]]$type=="pls") bsp1=FALSE
-        if (bsp1) {
-          if (is.null(rownames(dat)))    rownames(fdat$data)<-1:nrow(dat)
-          fdnames=list("time"=tt,"reps"=rownames(fdat[["data"]]),"values"="values")
-          xcc<-fdata.cen(data[[vfunc[i]]])
-          mean.list[[vfunc[i]]]=xcc[[2]]
-          if (!is.null( basis.x[[vfunc[i]]]$dropind)) {
-            int<-setdiff(1:basis.x[[vfunc[i]]]$nbasis,basis.x[[vfunc[i]]]$dropind)
-            basis.x[[vfunc[i]]]$nbasis<-length(int)
-            basis.x[[vfunc[i]]]$dropind<-NULL
-            basis.x[[vfunc[i]]]$names<-basis.x[[vfunc[i]]]$names[int]
-          }
-          x.fd = Data2fd(argvals = tt, y = t(xcc[[1]]$data),basisobj = basis.x[[vfunc[i]]],fdnames=fdnames)
-          r=x.fd[[2]][[3]]
-          J=inprod(basis.x[[vfunc[i]]],basis.x[[vfunc[i]]])
-          J12=inprod(basis.x[[vfunc[i]]])
-# print(J[1:2,1:3]); print(J12[1:2,1:3])          
-          Z =t(x.fd$coefs) %*% J
-          colnames(J)=colnames(Z) = name.coef[[vfunc[i]]]=paste(vfunc[i],".",basis.x[[vfunc[i]]]$names,sep="")
-          XX = cbind(XX,Z)
-          for ( j in 1:length(colnames(Z))){
-            if (kterms >= 1)  pf <- paste(pf, "+", colnames(Z)[j], sep = "")
-            else pf <- paste(pf, colnames(Z)[j], sep = "")
-            kterms <- kterms + 1
-          }
-          vs.list[[vfunc[i]]]<-J
-        }        else {    #PC o PLS
-          l<-basis.x[[vfunc[i]]]$l
-          lenl<-length(l)
-          vs <- t(basis.x[[vfunc[i]]]$basis$data)
-          Z<-basis.x[[vfunc[i]]]$x[,l,drop=FALSE]     
-          response = "y"
-          colnames(Z) = name.coef[[vfunc[i]]]=paste(vfunc[i], ".",colnames(Z),sep ="")      
-          name.coef[[vfunc[i]]]<-colnames(Z)
-          XX = cbind(XX,Z)
-          vs.list[[vfunc[i]]]=basis.x[[vfunc[i]]]$basis
-          mean.list[[vfunc[i]]]=basis.x[[vfunc[i]]]$mean
-          for ( j in 1:length(colnames(Z))){
-            if (kterms >= 1)  pf <- paste(pf, "+", name.coef[[vfunc[i]]][j], sep = "")
-            else pf <- paste(pf, name.coef[[vfunc[i]]][j], sep = "")
-            kterms <- kterms + 1
-          }       
+  lpenalty <- ipenalty <- list()
+  if (is.null(lambda)) {
+    lambda0 <- FALSE}  else {
+    lambda0 <- TRUE    
+  }
+  if (is.null(P)) {
+    lambda0 <- FALSE}  else {
+      lambda0 <- TRUE    
+  }
+  nfunc <- length(vfunc)
+  lenfunc <- nfunc > 0
+  ipenal <- NCOL(XX)
+  
+  
+    if (lenfunc) {
+    for (i in 1:nfunc) {
+      # print(2)
+	    fdat <- data[[vfunc[i]]]
+      if (inherits(fdat, "fdata")) {
+	  	  if (is.null(basis.x[[vfunc[i]]])) {
+          if (is.null(basis.b[[vfunc[i]]])) { 
+		        basis.b[[vfunc[i]]] <-  create.fdata.basis(fdat, l = 1:7)
+          } 
+	  	    basis.x[[vfunc[i]]] <-  basis.b[[vfunc[i]]]
+        } else {
+		  if (is.null(basis.b[[vfunc[i]]])) 
+		    basis.b[[vfunc[i]]] <- basis.x[[vfunc[i]]] 
+		}
+	  nms <- fdat$names
+		xaux <- fdata2basis(fdat,basis.x[[vfunc[i]]])
+    Z <- xaux$coefs
+		if ((basis.x[[vfunc[i]]]$type == "pc" | basis.x[[vfunc[i]]]$type == "pls") 
+		    & identical(basis.b[[vfunc[i]]],basis.x[[vfunc[i]]])){
+		    J <- diag(ncol(Z))
+		    colnames(J) <- colnames(xaux$coefs)
+		} else { 
+		    J <- inprodbasis(basis.x[[vfunc[i]]],basis.b[[vfunc[i]]])
+		}
+		Z <- Z %*% J
+		colnames(Z) <- paste0(vfunc[i],".",colnames(J))
+    name.coef[[vfunc[i]]] <- paste(vfunc[i],".",colnames(J),sep="")
+    lencoef <- length(colnames(Z))
+    XX <- cbind(XX, Z)
+    for (j in 1:lencoef) {
+        pf <- paste(pf, "+", name.coef[[vfunc[i]]][j], sep = "")
+        kterms <- kterms + 1
+    }       
+    basis.list[[vfunc[i]]] <- xaux$basis
+    vs.list[[vfunc[i]]] <- J
+		mean.list[[vfunc[i]]] <- xaux$mean
+    if (lambda0) {
+        #lpenalty[[vfunc[i]]] <- createMatrixPenalty(tt,lambda[[vfunc[i]]],P[[vfunc[i]]],vs=NULL)
+        lpenalty[[vfunc[i]]] <- createMatrixPenalty(1:lencoef,lambda[[vfunc[i]]],
+                                                    P[[vfunc[i]]],vs=NULL)
+        ipenalty[[vfunc[i]]] <- (ipenal+1):(ipenal+lencoef)
+        # print(lpenalty[[vfunc[i]]])
         }
+    } 
+    else {
+	    if (inherits(fdat,"fd")){
+        if (is.null(basis.x[[vfunc[i]]]))  basis.x[[vfunc[i]]] <- fdat$basis
+		    if (is.null(basis.b[[vfunc[i]]]))  basis.b[[vfunc[i]]] <- basis.x[[vfunc[i]]] 
+        if (inherits(basis.x[[vfunc[i]]],"basisfd")) {
+          r <- fdat[["basis"]][["rangeval"]]
+          if (!is.null( basis.x[[vfunc[i]]]$dropind)) {
+            int <- setdiff(1:basis.x[[vfunc[i]]]$nbasis, basis.x[[vfunc[i]]]$dropind)
+            basis.x[[vfunc[i]]]$nbasis <- length(int)
+            basis.x[[vfunc[i]]]$dropind <- NULL
+            basis.x[[vfunc[i]]]$names <- basis.x[[vfunc[i]]]$names[int]
+          }
+          J <- inprodbasis(basis.x[[vfunc[i]]],basis.b[[vfunc[i]]]) 
+          mean.list[[vfunc[i]]] <- mean.fd(fdat)
+          x.fd <- center.fd(fdat)
+          Z <- t(fdat$coefs) %*% J
+          name.coef[[vfunc[i]]] <- paste(vfunc[i],".",basis.x[[vfunc[i]]]$names,sep="")
+          colnames(J) <- colnames(Z) <- name.coef[[vfunc[i]]]
+          XX <- cbind(XX,Z)
+          for ( j in 1:length(colnames(Z))){
+              if (kterms >= 1)  
+                pf <- paste(pf, "+", colnames(Z)[j], sep = "")    else 
+                  pf <- paste(pf, colnames(Z)[j], sep = "")
+            kterms <- kterms + 1
+          }
+          vs.list[[vfunc[i]]]<- J
+          
+        } else {  # basis.x is a pca.fd object
+          l <- ncol(basis.x[[vfunc[i]]]$scores)
+          vs <- diag(l) # Now matrix J is diagonal because basis.b is ignored.
+          Z <- basis.x[[vfunc[i]]]$scores
+          name.coef[[vfunc[i]]] <- paste(vfunc[i], ".",
+                                         colnames(basis.x[[vfunc[i]]]$harmonics$coefs),sep ="")
+          colnames(vs) <- colnames(Z) <- name.coef[[vfunc[i]]] 
+          XX <- cbind(XX,Z)
+          vs.list[[vfunc[i]]] <- vs
+          mean.list[[vfunc[i]]] <- basis.x[[vfunc[i]]]$meanfd
+            for ( j in 1:length(colnames(Z))){
+              if (kterms >= 1)  pf <- paste(pf, "+", name.coef[[vfunc[i]]][j], sep = "")
+              else pf <- paste(pf, name.coef[[vfunc[i]]][j], sep = "")
+              kterms <- kterms + 1
+            }
+        }
+		    lencoef <- length(colnames(Z))
+		    # 220712 Controlar que se usa la longitud de basis.b y no basis.x
+		    if (lambda0) {
+#		      lpenalty[[vfunc[i]]] <- lambda[[vfunc[i]]] * PP
+		      lpenalty[[vfunc[i]]] <- lambda[[vfunc[i]]] * P
+		      ipenalty[[vfunc[i]]] <- (ipenal+1):(ipenal+lencoef)
+		    }  
       }
-      # else {
-      #   if(class(data[[vfunc[i]]])[1]=="fd"){
-      #     fdat<-data[[vfunc[i]]]
-      #     if (is.null(basis.x[[vfunc[i]]]))  basis.x[[vfunc[i]]]<-fdat$basis
-      #     else   if (class(basis.x[[vfunc[i]]])=="pca.fd") bsp1=FALSE
-      #     if (bsp1) {
-      #       r=fdat[[2]][[3]]
-      #       if (!is.null( basis.x[[vfunc[i]]]$dropind)) {
-      #         int<-setdiff(1:basis.x[[vfunc[i]]]$nbasis,basis.x[[vfunc[i]]]$dropind)
-      #         basis.x[[vfunc[i]]]$nbasis<-length(int)
-      #         basis.x[[vfunc[i]]]$dropind<-NULL
-      #         basis.x[[vfunc[i]]]$names<-basis.x[[vfunc[i]]]$names[int]
-      #       }
-      #       J=inprod(basis.x[[vfunc[i]]],basis.x[[vfunc[i]]])
-      #       mean.list[[vfunc[i]]]<-mean.fd(x.fd)
-      #       x.fd<-center.fd(x.fd)
-      #       Z =t(x.fd$coefs) %*% J
-      #       colnames(J)=colnames(Z) = name.coef[[vfunc[i]]]=paste(vfunc[i],".",basis.x[[vfunc[i]]]$names,sep="")
-      #       XX = cbind(XX,Z)
-      #       for ( j in 1:length(colnames(Z))){
-      #         if (kterms >= 1)  pf <- paste(pf, "+", colnames(Z)[j], sep = "")
-      #         else pf <- paste(pf, colnames(Z)[j], sep = "")
-      #         kterms <- kterms + 1
-      #       }
-      #       vs.list[[vfunc[i]]]<-J
-      #     }          else {
-      #       l<-ncol(basis.x[[vfunc[i]]]$scores)
-      #       vs <- basis.x[[vfunc[i]]]$harmonics$coefs
-      #       Z<-basis.x[[vfunc[i]]]$scores
-      #       response = "y"
-      #       colnames(Z) = name.coef[[vfunc[i]]]=paste(vfunc[i], ".",colnames(basis.x[[vfunc[i]]]$harmonics$coefs),sep ="")
-      #       XX = cbind(XX,Z)
-      #       vs.list[[vfunc[i]]]=vs
-      #       mean.list[[vfunc[i]]]=basis.x[[vfunc[i]]]$meanfd
-      #       for ( j in 1:length(colnames(Z))){
-      #         if (kterms >= 1)  pf <- paste(pf, "+", name.coef[[vfunc[i]]][j], sep = "")
-      #         else pf <- paste(pf, name.coef[[vfunc[i]]][j], sep = "")
-      #         kterms <- kterms + 1
-      #       }
-      #     }
-      #   }
-      #   else stop("Please, enter functional covariate")
-      # }
-    }  }
-   else pf <- tf
-  pf<-as.formula(pf)
-  if (!is.data.frame(XX)) XX=data.frame(XX)
-#  print("sale fdata2model")  
-  return(list(pf=pf,vs.list=vs.list,mean.list=mean.list,XX=XX,basis.x=basis.x))
+       else stop(paste(vfunc[i],"seems not to be a functional covariate"))
+    } 
+   }
+      }   else pf <- tf
+  
+  
+  
+  pf <- as.formula(pf)
+  if (!is.data.frame(XX)) 
+    XX <- data.frame(XX)
+  return(list(pf = pf, mean.list = mean.list, basis.list = basis.list,
+              XX = XX, basis.x = basis.x, basis.b = basis.b, 
+              vs.list = vs.list, name.coef = name.coef, lpenalty = lpenalty, 
+              ipenalty = ipenalty, penalty = lambda0))
 }
 #####################################################
+fdata2model <- function(vfunc, vnf, response, data,
+                        basis.x=NULL, basis.b = NULL, pf,tf){
+  out <- fdata2model.penalty(vfunc, vnf, response, data,
+                                  basis.x , basis.b, pf,tf)
+  return(out)
+}
+#####################################################
+createMatrixPenalty <- function(tt,lambda,P,vs=NULL){
+  np <- length(tt)
+  # x <- Z
+  for (i in 1:length(P))   {      if (P[i]!=0)         order.deriv<-i}
+  P <- P.penalty(tt,P)
+  if (!is.null(vs)){
+     # Se escala para cuando son PCs
+     P<-t(vs) %*% P %*% vs  # see fregre.pc
+     rtt <- range(tt)
+     P<-P*(diff(rtt) / (np -1))^(order.deriv*2-1)
+     }
+  #P <- P.penalty(1:3,c(1))
+  return(lambda*P)
+}
+

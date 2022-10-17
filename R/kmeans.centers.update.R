@@ -3,7 +3,7 @@ kmeans.centers.update=function(out,group
                                ,dfunc=func.trim.FM,draw=TRUE
                                ,par.dfunc=list(trim=0.05)
                                ,...){
-  if (class(out)!="kmeans.fd") 
+  if (!inherits(out,"kmeans.fd")) 
     stop("Error: incorrect input data")
   z = out$fdataobj[["data"]]
   tt = out$fdataobj[["argvals"]]
@@ -29,9 +29,10 @@ kmeans.centers.update=function(out,group
             par.dfunc$fdataobj<-centers
             par.dfunc$fdataobj$data<-dm
             stat=do.call(dfunc,par.dfunc)
-         }
-         if (is.fdata(stat)) xm[j,]=stat[["data"]]
-         else  xm[j,]=stat
+            if (is.fdata(stat)) xm[j,]=stat[["data"]]
+            else  xm[j,]=stat
+            }
+     
      #} 
  }
 centers$data=xm

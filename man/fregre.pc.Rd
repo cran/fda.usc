@@ -43,7 +43,7 @@ Return:
 \item \code{residuals}{ \code{y}-\code{fitted values}.} 
 \item \code{fitted.values}{ Estimated scalar response.} 
 \item \code{beta.est}{ beta coefficient estimated of class \code{fdata}}
-\item \code{df}{ The residual degrees of freedom. In ridge regression, \code{df(rn)} is the effective degrees of freedom.} 
+\item \code{df.residual}{ The residual degrees of freedom. In ridge regression, \code{df(rn)} is the effective degrees of freedom.} 
 \item \code{r2}{ Coefficient of determination.}
 \item \code{sr2}{ Residual variance.} 
 \item \code{Vp}{ Estimated covariance matrix for the parameters.} 
@@ -87,21 +87,22 @@ The response can be fitted by:
 \examples{
 \dontrun{
 data(tecator)
-absorp=tecator$absorp.fdata
-ind=1:129
-x=absorp[ind,]
-y=tecator$y$Fat[ind]
-res=fregre.pc(x,y)
+absorp <- tecator$absorp.fdata
+ind <- 1:129
+x <- absorp[ind,]
+y <- tecator$y$Fat[ind]
+res <- fregre.pc(x,y)
 summary(res)
-res2=fregre.pc(x,y,l=c(1,3,4))
+res2 <- fregre.pc(x,y,l=c(1,3,4))
 summary(res2)
 # Functional Ridge Regression
-res3=fregre.pc(x,y,l=c(1,3,4),lambda=1,P=1)
+res3 <- fregre.pc(x,y,l=c(1,3,4),lambda=1,P=1)
 summary(res3)
 # Functional Regression with 2nd derivative penalization
-res4=fregre.pc(x,y,l=c(1,3,4),lambda=1,P=c(0,0,1))
+res4 <- fregre.pc(x,y,l=c(1,3,4),lambda=1,P=c(0,0,1))
 summary(res4)
-betas<-c(res$beta.est,res2$beta.est,res3$beta.est,res4$beta.est)
+betas <- c(res$beta.est,res2$beta.est,
+           res3$beta.est,res4$beta.est)
 plot(betas)
 } 
 
@@ -119,12 +120,12 @@ components analysis}. Journal of the Royal Statistical Society B 68:
 
 Febrero-Bande, M., Oviedo de la Fuente, M. (2012).  \emph{Statistical
 Computing in Functional Data Analysis: The R Package fda.usc.} Journal of
-Statistical Software, 51(4), 1-28. \url{http://www.jstatsoft.org/v51/i04/}
+Statistical Software, 51(4), 1-28. \url{https://www.jstatsoft.org/v51/i04/}
 
 N. Kraemer, A.-L. Boulsteix, and G. Tutz (2008). \emph{Penalized Partial
 Least Squares with Applications to B-Spline Transformations and Functional
 Data}. Chemometrics and Intelligent Laboratory Systems, 94, 60 - 69.
-\url{http://dx.doi.org/10.1016/j.chemolab.2008.06.009}
+\doi{10.1016/j.chemolab.2008.06.009}
 }
 \seealso{
 See Also as: \code{\link{fregre.pc.cv}},
@@ -134,6 +135,6 @@ Alternative method: \code{\link{fregre.basis}} and \code{\link{fregre.np}}.
 }
 \author{
 Manuel Febrero-Bande, Manuel Oviedo de la Fuente
-\email{manuel.oviedo@usc.es}
+\email{manuel.oviedo@udc.es}
 }
 \keyword{regression}

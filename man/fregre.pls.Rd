@@ -32,7 +32,7 @@ Return:
 \item \code{fitted.values}{ Estimated scalar response.} 
 \item \code{residuals}{\code{y}-\code{fitted values}.} 
 \item \code{H}{ Hat matrix.} 
-\item \code{df}{ The residual degrees of freedom.} 
+\item \code{df.residual}{ The residual degrees of freedom.} 
 \item \code{r2}{ Coefficient of determination.}
 \item \code{GCV}{ GCV criterion.} 
 \item \code{sr2}{ Residual variance.} 
@@ -71,10 +71,15 @@ second derivative (curvature) by \code{P=P.penalty(fdataobj["argvals"],P)},
 \examples{
 \dontrun{
 data(tecator)
-x<-tecator$absorp.fdata
-y<-tecator$y$Fat
-res=fregre.pls(x,y,c(1:8),lambda=10)
+x <- tecator$absorp.fdata
+y <- tecator$y$Fat
+res <- fregre.pls(x,y,c(1:4))
 summary(res)
+res1 <- fregre.pls(x,y,l=1:4,lambda=100,P=c(1))
+res4 <- fregre.pls(x,y,l=1:4,lambda=1,P=c(0,0,1))
+summary(res4)#' plot(res$beta.est)
+lines(res1$beta.est,col=4)
+lines(res4$beta.est,col=2)
 }
 }
 \references{
@@ -84,7 +89,7 @@ process}. Comput. Statist. Data Anal. 48 (2005): 149-158.
 N. Kraemer, A.-L. Boulsteix, and G. Tutz (2008). \emph{Penalized Partial
 Least Squares with Applications to B-Spline Transformations and Functional
 Data}. Chemometrics and Intelligent Laboratory Systems, 94, 60 - 69.
-\url{http://dx.doi.org/10.1016/j.chemolab.2008.06.009}
+\doi{10.1016/j.chemolab.2008.06.009}
 
 Martens, H., Naes, T. (1989) \emph{Multivariate calibration.} Chichester:
 Wiley.
@@ -95,7 +100,7 @@ Volume 106, 697-705.
 
 Febrero-Bande, M., Oviedo de la Fuente, M. (2012).  \emph{Statistical
 Computing in Functional Data Analysis: The R Package fda.usc.} Journal of
-Statistical Software, 51(4), 1-28. \url{http://www.jstatsoft.org/v51/i04/}
+Statistical Software, 51(4), 1-28. \url{https://www.jstatsoft.org/v51/i04/}
 }
 \seealso{
 See Also as: \code{\link{P.penalty}} and
@@ -103,6 +108,6 @@ See Also as: \code{\link{P.penalty}} and
 }
 \author{
 Manuel Febrero-Bande, Manuel Oviedo de la Fuente
-\email{manuel.oviedo@usc.es}
+\email{manuel.oviedo@udc.es}
 }
 \keyword{regression}

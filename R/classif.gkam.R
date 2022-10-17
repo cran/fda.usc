@@ -49,12 +49,12 @@
 #' \item \code{max.prob}{ Highest probability of correct classification.}
 #' }
 #' @author Manuel Febrero-Bande, Manuel Oviedo de la Fuente
-#' \email{manuel.oviedo@@usc.es}
+#' \email{manuel.oviedo@@udc.es}
 #' @seealso See Also as: \code{\link{fregre.gkam}}.\cr Alternative method:
 #' \code{\link{classif.glm}}.
 #' @references Febrero-Bande M. and Gonzalez-Manteiga W. (2012).
 #' \emph{Generalized Additive Models for Functional Data}. TEST.
-#' Springer-Velag.  \url{http://dx.doi.org/10.1007/s11749-012-0308-0}
+#' Springer-Velag.  \doi{10.1007/s11749-012-0308-0}
 #' 
 #' McCullagh and Nelder (1989), \emph{Generalized Linear Models} 2nd ed.
 #' Chapman and Hall.

@@ -12,6 +12,7 @@ fregre.gsam.vs(
   family = gaussian(),
   weights = NULL,
   basis.x = NULL,
+  numbasis.opt = FALSE,
   kbs,
   dcor.min = 0.1,
   alpha = 0.05,
@@ -39,9 +40,24 @@ function, a family function or the result of a call to a family function.
 
 \item{weights}{weights}
 
-\item{basis.x}{List of basis for functional covariates, see same argument 
-in \code{\link{fregre.gsam}}. By default, the function uses a basis of 4 PC
-to represent the functional covariate.}
+\item{basis.x}{Basis parameter options
+\itemize{
+\item{\code{list}} (recomended)  List of basis for functional covariates,
+see same argument in \code{\link{fregre.glm}}. By default, 
+the function uses a basis of 3 PC to represent each functional covariate. 
+\item{\code{vector}} (by default) Vector with two parameters:
+\enumerate{
+ \item Type of basis. By default \code{basis.x[1]="pc"}, principal
+  component basis is used  for each functional covariate included in the model.
+  Other options \code{"pls"} and \code{"bspline"}.  
+ \item Maximum number of  basis elements \code{numbasis}  to be used.
+By default, \code{basis.x[2]=3}. 
+}
+  }}
+
+\item{numbasis.opt}{Logical, if \code{FALSE} by default, for each functional 
+covariate included in the model, the function uses all basis elements. 
+Otherwise, the function selects the significant coefficients.}
 
 \item{kbs}{The dimension of the basis used to represent the smooth term. The default 
 depends on the number of variables that the smooth is a function of.}
@@ -100,16 +116,21 @@ x=tecator$absorp.fdata
 x1 <- fdata.deriv(x)
 x2 <- fdata.deriv(x,nderiv=2)
 y=tecator$y$Fat
-xcat0 <- cut(rnorm(length(y)),4)
+xcat0 <- cut(rnorm(length(y)),4) 
 xcat1 <- cut(tecator$y$Protein,4)
 xcat2 <- cut(tecator$y$Water,4)
-ind <- 1:129
-dat    <- data.frame("Fat"=y, x1$data, xcat1, xcat2)
-ldat <- list("df"=dat[ind,],"x"=x[ind,],"x1"=x1[ind,],"x2"=x2[ind,])
+ind <- 1:165
+dat <- data.frame("Fat"=y, x1$data, xcat1, xcat2)
+ldat <- ldata("df"=dat[ind,],"x"=x[ind,],"x1"=x1[ind,],"x2"=x2[ind,])
 # 3 functionals (x,x1,x2), 3 factors (xcat0, xcat1, xcat2)
 # and 100 scalars (impact poitns of x1) 
 
 # Time consuming
+res.gam0 <- fregre.gsam.vs(data=ldat,y="Fat"
+            ,exclude="x2",numbasis.opt=T) # All the covariates
+summary(res.gam0)
+res.gam0$ipredictors
+
 res.gam1 <- fregre.gsam.vs(data=ldat,y="Fat") # All the covariates
 summary(res.gam1)
 res.gam1$ipredictors
@@ -118,22 +139,58 @@ covar <- c("xcat0","xcat1","xcat2","x","x1","x2")
 res.gam2 <- fregre.gsam.vs(data=ldat, y="Fat", include=covar)
 summary(res.gam2)
 res.gam2$ipredictors 
+res.gam2$i.predictor
 
+res.gam3 <- fregre.gsam.vs(data=ldat,y="Fat",
+            basis.x=c("type.basis"="pc","numbasis"=10))
+summary(res.gam3)
+res.gam3$ipredictors
+
+res.gam4 <- fregre.gsam.vs(data=ldat,y="Fat",include=c("x","x1","x2"),
+basis.x=c("type.basis"="pc","numbasis"=5),numbasis.opt=T)
+summary(res.gam4)
+res.gam4$ipredictors
+lpc <- list("x"=create.pc.basis(ldat$x,1:4)
+           ,"x1"=create.pc.basis(ldat$x1,1:3)
+           ,"x2"=create.pc.basis(ldat$x2,1:12))
+res.gam5 <- fregre.gsam.vs(data=ldat,y="Fat",basis.x=lpc)
+summary(res.gam5)
+res.gam6 <- fregre.gsam.vs(data=ldat,y="Fat",basis.x=lpc,numbasis.opt=T)
+summary(res.gam6)
+bsp <- create.fourier.basis(ldat$x$rangeval,7)
+lbsp <- list("x"=bsp,"x1"=bsp,"x2"=bsp)
+res.gam7 <- fregre.gsam.vs(data=ldat,y="Fat",basis.x=lbsp,kbs=4)
+summary(res.gam7)
 # Prediction like fregre.gsam() 
-newldat <- list("df"=dat[-ind,],"x"=x[-ind,],"x1"=x1[-ind,],
+newldat <- ldata("df"=dat[-ind,],"x"=x[-ind,],"x1"=x1[-ind,],
                 "x2"=x2[-ind,])
 pred.gam1 <- predict(res.gam1,newldat)
 pred.gam2 <- predict(res.gam2,newldat)
+pred.gam3 <- predict(res.gam3,newldat)
+pred.gam4 <- predict(res.gam4,newldat)
+pred.gam5 <- predict(res.gam5,newldat)
+pred.gam6 <- predict(res.gam6,newldat)
+pred.gam7 <- predict(res.gam7,newldat)
 plot(dat[-ind,"Fat"],pred.gam1)
 points(dat[-ind,"Fat"],pred.gam2,col=2)
+points(dat[-ind,"Fat"],pred.gam3,col=3)
+points(dat[-ind,"Fat"],pred.gam4,col=4)
+points(dat[-ind,"Fat"],pred.gam5,col=5)
+points(dat[-ind,"Fat"],pred.gam6,col=6)
+points(dat[-ind,"Fat"],pred.gam7,col=7)
+pred2meas(newldat$df$Fat,pred.gam1)
+pred2meas(newldat$df$Fat,pred.gam2)
+pred2meas(newldat$df$Fat,pred.gam3)
+pred2meas(newldat$df$Fat,pred.gam4)
+pred2meas(newldat$df$Fat,pred.gam5)
+pred2meas(newldat$df$Fat,pred.gam6)
+pred2meas(newldat$df$Fat,pred.gam7)
 }
-
 }
 \references{
 Febrero-Bande, M., Gonz\'alez-Manteiga, W. and Oviedo de la
 Fuente, M. Variable selection in functional additive regression models,
-(2018).  Computational Statistics, 1-19. DOI:
-\url{https://doi.org/10.1007/s00180-018-0844-5}
+(2018).  Computational Statistics, 1-19. DOI: \doi{10.1007/s00180-018-0844-5}
 }
 \seealso{
 See Also as:  \code{\link{predict.fregre.gsam}} and \code{\link{summary.gam}}.
@@ -142,6 +199,6 @@ Alternative methods: \code{\link{fregre.glm}}, \code{\link{fregre.gsam}}
 }
 \author{
 Manuel Feb-Bande, Manuel Oviedo de la Fuente
-\email{manuel.oviedo@usc.es}
+\email{manuel.oviedo@udc.es}
 }
 \keyword{regression}

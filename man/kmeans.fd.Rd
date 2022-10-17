@@ -88,6 +88,7 @@ a vector of integers, indicating the position of the initial centers with
 }
 \examples{
 \dontrun{
+library(fda.usc)
 data(phoneme)
 mlearn<-phoneme$learn[c(1:50,101:150,201:250),]
 # Unsupervised classification
@@ -113,6 +114,6 @@ See Also generic \link[stats]{kmeans} function.
 }
 \author{
 Manuel Febrero-Bande, Manuel Oviedo de la Fuente
-\email{manuel.oviedo@usc.es}
+\email{manuel.oviedo@udc.es}
 }
 \keyword{cluster}

@@ -5,7 +5,7 @@ wlda2<-function (x, grouping, weights = rep(1, nrow(x)),
 {
   if (is.null(dim(x))) 
     stop("'x' is not a matrix")
-  x <- as.matrix(x)
+  x <- data.matrix(x)
   if (any(!is.finite(x))) 
     stop("infinite, NA or NaN values in 'x'")
   n <- nrow(x)
@@ -79,11 +79,11 @@ train <- sample(nrow(PimaIndiansDiabetes), 500)
 ws <- as.numeric(1/table(PimaIndiansDiabetes$diabetes)
                  [PimaIndiansDiabetes$diabetes])
 sum(ws[train])
-fit <- locClass:::wlda.default(as.matrix(PimaIndiansDiabetes[train,-9]),
+fit <- locClass:::wlda.default(data.matrix(PimaIndiansDiabetes[train,-9]),
                                PimaIndiansDiabetes[train,"diabetes"],
             , weights = ws[train])
 
-fit2 <- wlda2(as.matrix(PimaIndiansDiabetes[train,-9]),
+fit2 <- wlda2(data.matrix(PimaIndiansDiabetes[train,-9]),
               PimaIndiansDiabetes[train,"diabetes"],
               , weights = rev(ws[train]))
 pred <- predict(fit, newdata = PimaIndiansDiabetes[-train,-9])
@@ -96,7 +96,7 @@ pred$posterior[1:11,]-pred2$posterior[1:11,]
 
 
 install.packages("flexmix")
-install.packages("locClass", repos="http://R-Forge.R-project.org")
+install.packages("locClass", repos="https://R-Forge.R-project.org")
 library(locClass)
 ?wlda
 # Hand, D. J., Vinciotti, V. (2003), Local versus global models for classification problems: Fitting models where it matters, The American Statistician, 57(2) 124–130.
@@ -146,7 +146,7 @@ classif.gbm=function(formula, data, basis.x=NULL,
   prob2<-prob1 <- ny <- nlevels(y)
   
   # 2019/04/24
-  out.func <- fdata2model(vfunc,vnf,response, data, basis.x,pf,tf)  
+  out.func <- fdata2model(vfunc,vnf,response, data, basis.x,pf=pf,tf=tf)  
   pf <- out.func$pf          
   basis.x <- out.func$basis.x
   XX <- out.func$XX
@@ -337,8 +337,8 @@ a<- predict(a3$fit[[1]], newx = ,a3$fit[[1]]$x,type ='linear.predictor')
 a<- predict(a3$fit[[1]], newx = a3$fit[[1]]$x,type ='votes')
 a
 ####################################
-fdata2model<-fda.usc:::fdata2model
-weights4class<-fda.usc:::weights4class
+#fdata2model<-fda.usc:::fdata2model
+#weights4class<-fda.usc:::weights4class
 
  require(fda.usc)
 data(phoneme)
@@ -450,7 +450,7 @@ library(xgboost)
 
 install.packages("h2o")
 library(h2o)
-#http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+#https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
 #cuenta de usuario (como aemet!)
 h2o.init()
 #For H2O package documentation, ask for help:

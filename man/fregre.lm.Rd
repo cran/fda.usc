@@ -9,8 +9,8 @@ fregre.lm(
   data,
   basis.x = NULL,
   basis.b = NULL,
-  rn,
-  lambda,
+  lambda = NULL,
+  P = NULL,
   weights = rep(1, n),
   ...
 )
@@ -20,15 +20,18 @@ fregre.lm(
 to that class): a symbolic description of the model to be fitted. The
 details of model specification are given under \code{Details}.}
 
-\item{data}{List that containing the variables in the model.}
+\item{data}{List that containing the variables in the model. 
+Functional covariates are recommended to be of class fdata. 
+Objects of class "fd" can be used at the user's own risk.}
 
 \item{basis.x}{List of basis for functional explanatory data estimation.}
 
 \item{basis.b}{List of basis for functional beta parameter estimation.}
 
-\item{rn}{List of Ridge parameter.}
+\item{lambda}{List, indexed by the names of the functional covariates, 
+which contains the Roughness penalty parameter.}
 
-\item{lambda}{List of Roughness penalty parameter.}
+\item{P}{List, indexed by the names of the functional covariates, which contains the parameters for the creation of the penalty matrix.}
 
 \item{weights}{weights}
 
@@ -81,46 +84,42 @@ list of functional principal components basis (see
 \code{\link{create.pc.basis}} or \code{\link{pca.fd}}) the argument
 \code{basis.b} \emph{(is unnecessary and)} is ignored.\cr
 
+Penalty options are under development, not guaranteed to work properly.
 The user can penalty the basis elements by: (i) \code{lambda} is a list of
-rough penalty values for the second derivative of each functional covariate,
-see \code{\link{fregre.basis}} for more details.\cr (ii) \code{rn} is a list
-of Ridge penalty value for each functional covariate, see
-\code{\link{fregre.pc}}, \code{\link{fregre.pls}} and
-\code{\link{P.penalty}} for more details.\cr Note: For the case of the
-Functional Principal Components basis two penalties are allowed (but not the
-two together). \cr
+rough penalty values of each functional covariate, see
+ \code{\link{P.penalty}} for more details.
 }
 \examples{
+\dontrun{
 data(tecator)
-x=tecator$absorp.fdata
-y=tecator$y$Fat
-tt=x[["argvals"]]
-dataf=as.data.frame(tecator$y)
+x <- tecator$absorp.fdata
+y <- tecator$y$Fat
+tt <- x[["argvals"]]
+dataf <- as.data.frame(tecator$y)
 
-nbasis.x=11
-nbasis.b=7
-basis1=create.bspline.basis(rangeval=range(tt),nbasis=nbasis.x)
-basis2=create.bspline.basis(rangeval=range(tt),nbasis=nbasis.b)
- 
-f=Fat~Protein+x
-basis.x=list("x"=basis1)
-basis.b=list("x"=basis2)
-ldata=list("df"=dataf,"x"=x)
-res=fregre.lm(f,ldata,basis.x=basis.x,basis.b=basis.b)
+nbasis.x <- 11
+nbasis.b <- 5
+basis1 <- create.bspline.basis(rangeval=range(tt),nbasis=nbasis.x)
+basis2 <- create.bspline.basis(rangeval=range(tt),nbasis=nbasis.b)
+basis.x <- list("x"=basis1)
+basis.b <- list("x"=basis2)
+f <- Fat ~ Protein + x
+ldat <- ldata("df"=dataf,"x"=x)
+res  fregre.lm(f,ldat,  basis.b=basis.b)
 summary(res)
-
-f2=Fat~Protein+xd
-xd=fdata.deriv(x,nderiv=2,class.out='fdata',nbasis=nbasis.x)
-ldata2=list("df"=dataf,"xd"=xd)
-basis.x2=list("xd"=basis1)
-basis.b2=list("xd"=basis2)
-res2=fregre.lm(f2,ldata2,basis.x=basis.x2,basis.b=basis.b2)
+f2 <- Fat ~ Protein + xd +xd2
+xd <- fdata.deriv(x,nderiv=1,class.out='fdata', nbasis=nbasis.x)
+xd2 <- fdata.deriv(x,nderiv=2,class.out='fdata', nbasis=nbasis.x)
+ldat2 <- list("df"=dataf,"xd"=xd,"x"=x,"xd2"=xd2)
+basis.x2 <- NULL#list("xd"=basis1)
+basis.b2 <- NULL#list("xd"=basis2)
+basis.b2 <- list("xd"=basis2,"xd2"=basis2,"x"=basis2)
+res2 <- fregre.lm(f2, ldat2,basis.b=basis.b2)
 summary(res2)
-
 par(mfrow=c(2,1))
 plot(res$beta.l$x,main="functional beta estimation")
 plot(res2$beta.l$xd,col=2)
-
+}
 }
 \references{
 Ramsay, James O., and Silverman, Bernard W. (2006), \emph{
@@ -128,7 +127,7 @@ Functional Data Analysis}, 2nd ed., Springer, New York.
 
 Febrero-Bande, M., Oviedo de la Fuente, M. (2012).  \emph{Statistical
 Computing in Functional Data Analysis: The R Package fda.usc.} Journal of
-Statistical Software, 51(4), 1-28. \url{http://www.jstatsoft.org/v51/i04/}
+Statistical Software, 51(4), 1-28. \url{https://www.jstatsoft.org/v51/i04/}
 }
 \seealso{
 See Also as: \code{\link{predict.fregre.lm}} and

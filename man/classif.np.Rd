@@ -96,13 +96,12 @@ compute the distances between the rows of a data matrix (as
 \examples{
 \dontrun{
 data(phoneme)
-mlearn<-phoneme[["learn"]]
-glearn<-phoneme[["classlearn"]]
-
-h=9:19
-out=classif.np(glearn,mlearn,h=h)
+mlearn <- phoneme[["learn"]]
+glearn <- phoneme[["classlearn"]]
+h <- 9:19
+out <- classif.np(glearn,mlearn,h=h)
 summary(out)
-# round(out$prob.group,4)
+head(round(out$prob.group,4))
 }
 
 }
@@ -111,13 +110,13 @@ Ferraty, F. and Vieu, P. (2006). \emph{Nonparametric functional
 data analysis.} Springer Series in Statistics, New York.
 
 Ferraty, F. and Vieu, P. (2006). \emph{NPFDA in practice}. Free access on
-line at \url{http://www.lsp.ups-tlse.fr/staph/npfda/}
+line at \url{https://www.math.univ-toulouse.fr/~ferraty/SOFTWARES/NPFDA/}
 }
 \seealso{
 See Also as \code{\link{predict.classif}}
 }
 \author{
 Manuel Febrero-Bande, Manuel Oviedo de la Fuente
-\email{manuel.oviedo@usc.es}
+\email{manuel.oviedo@udc.es}
 }
 \keyword{classif}

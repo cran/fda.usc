@@ -91,7 +91,7 @@
 #' \item {dist} { Distance matrix between curves or functional data.}
 #' }
 #' @author Manuel Febrero-Bande, Manuel Oviedo de la Fuente
-#' \email{manuel.oviedo@@usc.es}
+#' \email{manuel.oviedo@@udc.es}
 #' @seealso See Also as \code{\link{Descriptive}}.
 #' @references Cuevas, A., Febrero-Bande, M. and Fraiman, R. (2007).
 #' \emph{Robust estimation and classification for functional data via
@@ -100,7 +100,7 @@
 #' 10: 419{-}440. %Febrero-Bande, M., Oviedo de la Fuente, M. (2012).
 #' \emph{Statistical Computing in Functional Data Analysis: The R Package
 #' fda.usc.}Journal of Statistical Software, 51(4), 1-28.
-#' \url{http://www.jstatsoft.org/v51/i04/}
+#' \url{https://www.jstatsoft.org/v51/i04/}
 #' @keywords descriptive
 #' @examples
 #' \dontrun{
@@ -141,7 +141,7 @@ depth.modep=function(mfdata,mfdataref=mfdata,h=NULL,metric,
                      scale=FALSE,trim=0.25,draw=FALSE,ask=FALSE) 
 {
   equal<-identical(mfdata,mfdataref)
-  if (class(mfdata) == "list"){
+  if (inherits(mfdata,"list")){
     lenl <- length(mfdata)
     lenl2 <- length(mfdataref)
     m0 <- nrow(mfdata[[1]])

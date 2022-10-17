@@ -3,9 +3,9 @@ Minverse<-function (X, tol = sqrt(.Machine$double.eps))
   if (length(dim(X)) > 2L || !(is.numeric(X) || is.complex(X))) 
     stop("'X' must be a numeric or complex matrix")
   if (!is.matrix(X)) 
-    X <- as.matrix(X)
+    X <- data.matrix(X)
   Minv <-try(solve(X),silent=TRUE)  
-  if (class(Minv)!="try-error") {   
+  if (!is(Minv,"try-error")) {   
     Minv
   }
   else{ 

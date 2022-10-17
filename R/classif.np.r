@@ -39,30 +39,32 @@
 #' compute the distances between the rows of a data matrix (as
 #' \code{\link{dist}} function.
 #' @author Manuel Febrero-Bande, Manuel Oviedo de la Fuente
-#' \email{manuel.oviedo@@usc.es}
+#' \email{manuel.oviedo@@udc.es}
 #' @seealso See Also as \code{\link{predict.classif}}
 #' @references Ferraty, F. and Vieu, P. (2006). \emph{Nonparametric functional
 #' data analysis.} Springer Series in Statistics, New York.
 #' 
 #' Ferraty, F. and Vieu, P. (2006). \emph{NPFDA in practice}. Free access on
-#' line at \url{http://www.lsp.ups-tlse.fr/staph/npfda/}
+#' line at \url{https://www.math.univ-toulouse.fr/~ferraty/SOFTWARES/NPFDA/}
 #' @keywords classif
 #' @examples
 #' \dontrun{
 #' data(phoneme)
-#' mlearn<-phoneme[["learn"]]
-#' glearn<-phoneme[["classlearn"]]
-#' 
-#' h=9:19
-#' out=classif.np(glearn,mlearn,h=h)
+#' mlearn <- phoneme[["learn"]]
+#' glearn <- phoneme[["classlearn"]]
+#' h <- 9:19
+#' out <- classif.np(glearn,mlearn,h=h)
 #' summary(out)
-#' # round(out$prob.group,4)
+#' head(round(out$prob.group,4))
 #' }
 #' 
 #' @rdname classif.np
 #' @export 
 classif.np <- function  (group, fdataobj, h = NULL, Ker = AKer.norm, metric, 
-                         weights = "equal", type.S = S.NW, par.S = list(), ...) 
+                         weights = "equal", type.S = S.NW,
+                         par.S = list()
+                         #, measure = "accuracy"
+                         , ...) 
 {
 #  print("entra np2")
   y <- group
@@ -192,8 +194,12 @@ classif.np <- function  (group, fdataobj, h = NULL, Ker = AKer.norm, metric,
       group.est[i, ] <- ny[as.vector(apply(pgrup[, , i], 
                                            2, which.max))]
     }
+    ###################### 
     lo <- y != group.est[i, ]
+    #ypred <- factor(group.est[i,],levels=ny)
+    #lo <- cat2meas(y,ypred,measure=measure)
     gcv[i] = weighted.mean(lo, par.S$w, na.rm = TRUE)
+    #gcv[i] = 1-cat2meas(y,ypred,measure=measure)
     if (pr > gcv[i]) {
       pr = gcv[i]
       iknn = i

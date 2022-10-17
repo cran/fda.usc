@@ -37,7 +37,7 @@ considered.}
 
 \item{RP}{Vector of number of random projections.}
 
-\item{alpha}{Alpha value, by defalult \code{alpha}=0.95.}
+\item{alpha}{Confidence level, by default \code{alpha}=0.95.}
 
 \item{zproj}{Function for generating the projections or an object that
 contains that projections.}
@@ -164,6 +164,6 @@ See Also as: \code{\link{fanova.onefactor}}
 }
 \author{
 Juan A. Cuesta-Albertos, Manuel Febrero-Bande, Manuel Oviedo de la
-Fuente\cr \email{manuel.oviedo@usc.es}
+Fuente\cr \email{manuel.oviedo@udc.es}
 }
 \keyword{anova}

@@ -52,22 +52,23 @@
 #' Beside, the class(z) is "gls", "lm" and "fregre.lm" with the following
 #' objects: 
 #' \itemize{
-#' \item \code{sr2}{ Residual variance.} 
-#' \item \code{Vp}{ Estimated covariance matrix for the parameters.} 
-#' \item \code{lambda}{ A roughness penalty.}
-#' \item \code{basis.x}{ Basis used for \code{fdata} or \code{fd} covariates.}
-#' \item \code{basis.b}{ Basis used for beta parameter estimation.} 
-#' \item \code{beta.l}{ List of estimated beta parameter of functional covariates.} 
-#' \item \code{data}{ List that containing the variables in the model.} 
-#' \item \code{formula}{ formula used in ajusted model.} 
-#' \item \code{formula.ini}{ formula in call.}
-#' \item \code{W}{ inverse of covariance matrix} 
-#' \item \code{correlation}{ See glsObject for the components of the fit. }
+#' \item \code{sr2:}{ Residual variance.} 
+#' \item \code{Vp:}{ Estimated covariance matrix for the parameters.} 
+#' \item \code{lambda:}{ A roughness penalty.}
+#' \item \code{basis.x:}{ Basis used for \code{fdata} or \code{fd} covariates.}
+#' \item \code{basis.b:}{ Basis used for beta parameter estimation.} 
+#' \item \code{beta.l:}{ List of estimated beta parameter of functional covariates.} 
+#' \item \code{data:}{ List that containing the variables in the model.} 
+#' \item \code{formula:}{ formula used in ajusted model.} 
+#' \item \code{formula.ini:}{ formula in call.}
+#' \item \code{W:}{ inverse of covariance matrix} 
+#' \item \code{correlation:}{ See glsObject for the components of the fit. }
 #' }
 #' @references Oviedo de la Fuente, M., Febrero-Bande, M., Pilar Munoz, and
-#' Dominguez, A. Predicting seasonal influenza transmission using Functional
-#' Regression Models with Temporal Dependence. arXiv:1610.08718.
-#' \url{https://arxiv.org/abs/1610.08718}
+#' Dominguez, A.  (2018). Predicting seasonal influenza transmission using 
+#' functional regression models with temporal dependence. PloS one, 13(4), e0194250.
+#' \doi{10.1371/journal.pone.0194250}
+
 #' @keywords regression models
 #' @examples
 #' \dontrun{ 
@@ -258,15 +259,15 @@ if (length(vfunc)>0) {
    }
   }
  	else {
- 		if(class(data[[vfunc[i]]])[1]=="fd"){
+ 		if(inherits(data[[vfunc[i]]],"fd")){
       fdat<-data[[vfunc[i]]]
       if (is.null(basis.x[[vfunc[i]]]))  basis.x[[vfunc[i]]]<-fdat$basis
-      else   if (class(basis.x[[vfunc[i]]])=="pca.fd") bsp1=FALSE
+      else   if (inherits(basis.x[[vfunc[i]]],"pca.fd")) bsp1=FALSE
       if (is.null(basis.b[[vfunc[i]]])& bsp1)
          basis.b[[vfunc[i]]]<-create.fdata.basis(fdat,
          l=1:max(5,floor(basis.x[[vfunc[i]]]$nbasis/5)),type.basis=basis.x[[vfunc[i]]]$type,
          rangeval=fdat$basis$rangeval)
-      else           if (class(basis.x[[vfunc[i]]])=="pca.fd") bsp2=FALSE
+      else           if (inherits(basis.x[[vfunc[i]]],"pca.fd")) bsp2=FALSE
       if (bsp1 & bsp2) {
           r=fdat[[2]][[3]]
 #          tt = seq(r[1], r[2], len = length(fdat[[3]]$time))
@@ -421,7 +422,7 @@ if (length(vfunc)>0) {
  #      df<-n-z$df.residual
 #      z$H<-H
       z$r2 <- 1 - sum(z$residuals^2)/sum(ycen^2)       
-      if  (class(basis.x[[vfunc[1]]])=="basisfd") {
+      if  (inherits(basis.x[[vfunc[1]]],"basisfd")) {
         z$call[[1]] = "fregre.basis"
         }
        else {
@@ -463,7 +464,7 @@ for (i in 1:length(vfunc)) {
  beta.l[[vfunc[i]]]=fd(z[["coefficients"]][name.coef[[vfunc[i]]]],basis.b[[vfunc[i]]])
  }
  else{
-	if(class(data[[vfunc[i]]])[1]=="fdata"){
+	if(inherits(data[[vfunc[i]]],"fdata")){
 #     beta.est<-z$coefficients[name.coef[[vfunc[i]]]]*vs.list[[vfunc[i]]]
      beta.est<-z$coefficients[name.coef[[vfunc[i]]]]*vs.list[[vfunc[i]]]
      beta.est$data<-colSums(beta.est$data)

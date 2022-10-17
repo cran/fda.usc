@@ -4,7 +4,8 @@
 \name{aemet}
 \alias{aemet}
 \title{aemet data}
-\format{Elements of aemet:\cr \code{..$df:} Data frame with information of
+\format{
+Elements of aemet:\cr \code{..$df:} Data frame with information of
 each wheather station:
 \itemize{
 \item \code{ind:} Indicated weather station.
@@ -27,7 +28,8 @@ period 1980-2009 (in m/s).
 the period 1980-2009 (in log mm). Negligible precipitation 
 (less than 1 tenth of mm) is replaced by \code{0.05} and no precipitation
 (0.0 mm) is replaced by \code{0.01}.  Then the logarithm is applied.
-}}
+}
+}
 \source{
 The data were obtained from the FTP of AEMET in 2009.
 }
@@ -38,7 +40,7 @@ station and the average for the period 1980-2009 of daily temperature, daily
 precipitation and daily wind speed.
 }
 \details{
-Meteorological State Agency of Spain (AEMET), \url{http://www.aemet.es/}. Government of Spain.\cr
+Meteorological State Agency of Spain (AEMET), \url{https://www.aemet.es/es/portada}. Government of Spain.\cr
 It marks 36 UTF-8 string of names of stations and 3 UTF-8 string names of provinces through the function \code{\link{iconv}}.\cr
 }
 \examples{
@@ -46,14 +48,13 @@ It marks 36 UTF-8 string of names of stations and 3 UTF-8 string names of provin
 data(aemet)
 names(aemet)
 names(aemet$df)
-par(mfrow=c(3,1))
-plot(aemet$temp)
-plot(aemet$wind.speed)
-plot(aemet$logprec)
+class(aemet)<-c("ldata","list") # ldata object
+lat <- ifelse(aemet$df$latitude<31,"red","blue")
+plot(aemet,col=lat)
 }
 }
 \author{
 Manuel Febrero Bande, Manuel Oviedo de la Fuente
-\email{manuel.oviedo@usc.es}
+\email{manuel.oviedo@udc.es}
 }
 \keyword{datasets}

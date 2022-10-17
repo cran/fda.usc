@@ -42,7 +42,7 @@ The Kullback--Leibler distance is asymmetric,
 If \eqn{\left(f_i(t)=0\ \& \ g_j(t)=0\right) \Longrightarrow
 metric.kl(f(t),g(t))=0}{(f(t)=0 and g(t)=0), then metric.kl(f(t),g(t))=0}.
 
-If \eqn{\left|f_i(t)\-g_i(t) \right|\leq \epsilon \Longrightarrow
+If \eqn{\left|f_i(t)-g_i(t) \right|\leq \epsilon \Longrightarrow
 f_i(t)=f_i(t)+\epsilon}{abs(f(t)-g(t))<\epsilon, then f(t)=f(t)+\epsilon},
 where \eqn{\epsilon} is the tolerance value (by default \code{eps=1e-10}).
 
@@ -84,6 +84,6 @@ See also \code{\link{metric.lp}} and \code{\link{fdata}}
 }
 \author{
 Manuel Febrero-Bande, Manuel Oviedo de la Fuente
-\email{manuel.oviedo@usc.es}
+\email{manuel.oviedo@udc.es}
 }
 \keyword{cluster}

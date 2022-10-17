@@ -120,14 +120,14 @@ localMaxima <- function(x) {
 #' \item{edf}{ Effective Degrees of Freedom.} 
 #' \item{nvar}{Number of selected variables (impact points).}
 #' }
-#' @author Manuel Oviedo de la Fuente \email{manuel.oviedo@@usc.es}
+#' @author Manuel Oviedo de la Fuente \email{manuel.oviedo@@udc.es}
 #' @seealso See Also as: \code{\link{lm}}, \code{\link{gam}},
 #' \code{\link{dcor.xy}}.
 #' @references Ordonez, C., Oviedo de la Fuente, M., Roca-Pardinas, J.,
 #' Rodriguez-Perez, J. R. (2018). Determining optimum wavelengths for leaf
 #' water content estimation from reflectance: A distance correlation approach.
 #' \emph{Chemometrics and Intelligent Laboratory Systems}. 173,41-50
-#' \url{https://doi.org/10.1016/j.chemolab.2017.12.001}.
+#' \doi{10.1016/j.chemolab.2017.12.001}.
 #' @keywords regression
 #' @examples
 #' \dontrun{

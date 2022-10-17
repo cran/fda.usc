@@ -118,7 +118,7 @@ rdir.pc <- function(n, X.fdata, ncomp = 0.95, fdata2pc.obj =
                     sd = 0, zero.mean = TRUE, norm = FALSE) {
   
   # Check fdata
-  if (class(X.fdata) != "fdata") {
+  if (!inherits(X.fdata, "fdata")) {
     
     stop("X.fdata must be of class fdata")
     
@@ -137,9 +137,9 @@ rdir.pc <- function(n, X.fdata, ncomp = 0.95, fdata2pc.obj =
   
   # Compute PCs with fdata2pc if ej contains less eigenvectors than m
   # The problem is that fdata2pc computes all the PCs and then returns 
-  # the eigenvalues (d) for all the components but only the eigenvectors (rotation)
+  # the eigenvalues (d) for all the components but only the eigenvectors (rotation/basis)
   # for the ncomp components.
-  if (nrow(ej$rotation) < m) {
+  if (nrow(ej$basis) < m) {
     
     ej <- fdata2pc(X.fdata, ncomp = m)
     
@@ -159,7 +159,7 @@ rdir.pc <- function(n, X.fdata, ncomp = 0.95, fdata2pc.obj =
   }
 
   # Eigenvectors
-  eigv <- ej$rotation[ncomp]
+  eigv <- ej$basis[ncomp]
   
   # Compute linear combinations of the eigenvectors with coefficients sampled 
   # from a centred normal with standard deviations sdarg
@@ -171,7 +171,7 @@ rdir.pc <- function(n, X.fdata, ncomp = 0.95, fdata2pc.obj =
   # Normalize
   if (norm) {
 
-    rprojs$data <- rprojs$data / drop(fda.usc::norm.fdata(rprojs))
+    rprojs$data <- rprojs$data / fda.usc::norm.fdata(rprojs)
 
   }
   
@@ -435,7 +435,7 @@ rp.flm.statistic <- function(proj.X, residuals, proj.X.ord = NULL, F.code = TRUE
 #' Garcia-Portugues, E., Gonzalez-Manteiga, W. and Febrero-Bande, M. (2014). A
 #' goodness-of-fit test for the functional linear model with scalar response.
 #' Journal of Computational and Graphical Statistics, 23(3), 761--778.
-#' \url{http://dx.doi.org/10.1080/10618600.2013.812519}
+#' \doi{10.1080/10618600.2013.812519}
 #' 
 #' @examples
 #' \dontrun{
@@ -453,7 +453,7 @@ rp.flm.statistic <- function(proj.X, residuals, proj.X.ord = NULL, F.code = TRUE
 #' rp.flm.test(X.fdata = X, Y = Y, est.method = "pc")
 #' rp.flm.test(X.fdata = X, Y = Y, est.method = "pls")
 #' rp.flm.test(X.fdata = X, Y = Y, est.method = "basis", 
-#'             p.criterion = fda.usc::GCV.S)
+#'             p.criterion = fda.usc.devel::GCV.S)
 #' rp.flm.test(X.fdata = X, Y = Y, est.method = "pc", p = 5)
 #' rp.flm.test(X.fdata = X, Y = Y, est.method = "pls", p = 5)
 #' rp.flm.test(X.fdata = X, Y = Y, est.method = "basis", p = 5)

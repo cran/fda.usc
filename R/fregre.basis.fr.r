@@ -78,7 +78,7 @@
 #' \item \code{weights}{ Weights.} 
 #' }
 #' @author Manuel Febrero-Bande, Manuel Oviedo de la Fuente
-#' \email{manuel.oviedo@@usc.es}
+#' \email{manuel.oviedo@@udc.es}
 #' @seealso See Also as: \code{\link{predict.fregre.fr}}.
 #' Alternative method: \code{\link{linmod}}.
 #' @references Ramsay, James O., and Silverman, Bernard W. (2006), \emph{
@@ -127,7 +127,7 @@
 #' }
 #' @aliases fregre.basis.fr
 #' @export
-fregre.basis.fr<- function(x,y,basis.s=NULL,basis.t=NULL,
+fregre.basis.fr <- function(x,y,basis.s=NULL,basis.t=NULL,
 lambda.s=0,lambda.t=0,Lfdobj.s=vec2Lfd(c(0,0),range.s),
 Lfdobj.t=vec2Lfd(c(0,0),range.t),weights=NULL,...){
 call<-match.call()
@@ -290,7 +290,11 @@ if (isfdy) {
 else {
    yhatmat = eval.fd(y$argvals, alphafd) %*% matrix(1, 1, ncurves)+   eval.fd(y$argvals,  xbetafd)
    fitted.values<-fdata(t(yhatmat),y$argvals,y$rangeval,y$names)
- }
+   #betafd = fdata(eval.bifd(t(beta.est), basis.s, basis.t, betafdnames)
+   #      betafd = fdata(xbetafd,fdata2d)
+   #plot(fdata(eval.bifd(argvals.s,argvals.t,x),tt,rtt,fdata2d=TRUE),... )
+}
+
 residuals<-y-fitted.values
 out = list(call = call, alpha.est = alphafd, coefficients = beta.est, 
              beta.estbifd = betafd, fitted.values = fitted.values, 

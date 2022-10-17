@@ -11,7 +11,7 @@
 #' covariate \eqn{X} and a multivariate non functional covariate \eqn{Z} are
 #' considered.
 #' 
-#' \deqn{y =\emph{r(X)}+\sum_{j=1}^{p}{Z_j\beta_j}+\epsilon}{y =
+#' \deqn{y =r(X)+\sum_{j=1}^{p}{Z_j\beta_j}+\epsilon}{y =
 #' r(X)+\sum_(j=1:p) Z_j \beta_j+\epsilon}
 #' 
 #' The unknown smooth real function \eqn{r} is estimated by means of
@@ -71,7 +71,7 @@
 #' \item \code{call}{ The matched call.} 
 #' \item \code{fitted.values}{ Estimated scalar response.} 
 #' \item \code{residuals}{ \code{y} minus \code{fitted values}.}
-#' \item \code{df}{ The residual degrees of freedom.} 
+#' \item \code{df.residual}{ The residual degrees of freedom.} 
 #' \item \code{H}{ Hat matrix.}
 #' \item \code{r2}{ Coefficient of determination.} 
 #' \item \code{sr2}{ Residual variance.}
@@ -90,7 +90,7 @@
 #' \item \code{formula}{ formula.}
 #' }
 #' @author Manuel Febrero-Bande, Manuel Oviedo de la Fuente
-#' \email{manuel.oviedo@@usc.es}
+#' \email{manuel.oviedo@@udc.es}
 #' @seealso See Also as: \code{\link{predict.fregre.plm}} and
 #' \code{\link{summary.fregre.fd}}\cr Alternative methods:
 #' \code{\link{fregre.lm}}, \code{\link{fregre.np}} and
@@ -106,7 +106,7 @@
 #' 
 #' Febrero-Bande, M., Oviedo de la Fuente, M. (2012).  \emph{Statistical
 #' Computing in Functional Data Analysis: The R Package fda.usc.} Journal of
-#' Statistical Software, 51(4), 1-28. \url{http://www.jstatsoft.org/v51/i04/}
+#' Statistical Software, 51(4), 1-28. \url{https://www.jstatsoft.org/v51/i04/}
 #' @keywords regression
 #' @examples
 #' \dontrun{
@@ -151,6 +151,7 @@ type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),par.S=list(w=1),...){
  z=list()
  lenvnf=length(vnf)
  ty<-deparse(substitute(type.S))
+ if (!is.function(Ker)) Ker<-get(Ker)
  ke<-deparse(substitute(Ker))
  if (lenvnf>0) {
 # cat(" Non functional variables: ",vnf,"\n")
@@ -169,9 +170,12 @@ type.CV = GCV.S,type.S=S.NW,par.CV=list(trim=0,draw=FALSE),par.S=list(w=1),...){
   tt<-fdataobj[["argvals"]]
   rtt<-fdataobj[["rangeval"]]
   mdist=metric(fdataobj,fdataobj,...)
-  if (is.null(h))  h<-h.default(data[[vfunc[1]]],type.S=ty,metric=mdist,Ker=ke)
+  if (is.null(h))  {
+    nker=get(paste0("Ker.",unlist(strsplit(deparse(substitute(Ker)),"[.]"))[2]))
+    h<-do.call(h.default,c(list(fdataobj=data[[vfunc[1]]],type.S=ty,metric=mdist,Ker=nker),...))
+  }
   lenh <- length(h)
-  df=gcv<- array(NA, dim = c(lenh))
+  df <- gcv<- array(NA, dim = c(lenh))
   yph <- array(NA, dim = c(nrow(y),lenh))
   H <- array(NA, dim = c(nrow(yph),nrow(y),lenh))
   I=diag(1,ncol=nrow(x.fd),nrow=nrow(x.fd))
@@ -226,12 +230,15 @@ p.value= 2 * pt(abs(t.value),df, lower.tail = FALSE)
 result<-cbind(betah,std.error,t.value,p.value)
 colnames(result) <- c("Estimate", "Std. Error", "t value", "Pr(>|t|)")
 if (lenh>1) {
-  if (h.opt==min(h))  cat(" Warning: h.opt is the minimum value of bandwidths
+  if (h.opt == min(h))  cat(" Warning: h.opt is the minimum value of bandwidths
    provided, range(h)=",range(h),"\n")
   else if (h.opt==max(h)) cat(" Warning: h.opt is the maximum value of bandwidths
    provided, range(h)=",range(h),"\n")}
-z=list(coefficients=result,vcov=vcov2,r2=r2,residuals=e,sr2=sr2,
-formula=formula,h.opt=h.opt,h=h,fdataobj=fdataobj,XX=XX,xh=xh,yh=yh,wh=wh,mdist=mdist,y=y,betah=betah,H=HH,data=data,call=C,fitted.values=yph,gcv=gcv,df=df,m=m,metric=metric,Ker=Ker,type.S=type.S)
+z <- list(coefficients=result, vcov=vcov2, r2=r2, residuals=e, sr2=sr2,
+       formula=formula, h.opt=h.opt, h=h, fdataobj=fdataobj, XX=XX,
+       xh=xh, yh=yh, wh=wh, mdist=mdist, y=y, betah=betah, H=HH, data=data,
+       call=C, fitted.values=yph, gcv=gcv, df.residual=df, m=m, metric=metric,
+       Ker=Ker, type.S=type.S)
 class(z)="fregre.plm"
 }
 else {

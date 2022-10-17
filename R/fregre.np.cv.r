@@ -47,7 +47,7 @@
 #' \item \code{call}{ The matched call.} 
 #' \item \code{residuals}{ \code{y} minus \code{fitted values}.} 
 #' \item \code{fitted.values}{ Estimated scalar response.} 
-#' \item \code{df}{ The residual degrees of freedom.} 
+#' \item \code{df.residual}{ The residual degrees of freedom.} 
 #' \item \code{r2}{ Coefficient of determination.} 
 #' \item \code{sr2}{ Residual variance.} 
 #' \item \code{H}{ Hat matrix.} 
@@ -61,7 +61,7 @@
 #' \item \code{cv}{ List with the fitted values and residuals estimated by CV, without the same curve.}
 #' }
 #' @author Manuel Febrero-Bande, Manuel Oviedo de la Fuente
-#' \email{manuel.oviedo@@usc.es}
+#' \email{manuel.oviedo@@udc.es}
 #' @seealso See Also as: \code{\link{fregre.np}},
 #' \code{\link{summary.fregre.fd}} and \code{\link{predict.fregre.fd}} .\cr
 #' Alternative method: \code{\link{fregre.basis.cv}} and
@@ -74,7 +74,7 @@
 #' 
 #' Febrero-Bande, M., Oviedo de la Fuente, M. (2012).  \emph{Statistical
 #' Computing in Functional Data Analysis: The R Package fda.usc.} Journal of
-#' Statistical Software, 51(4), 1-28. \url{http://www.jstatsoft.org/v51/i04/}
+#' Statistical Software, 51(4), 1-28. \url{https://www.jstatsoft.org/v51/i04/}
 #' @keywords regression
 #' @examples 
 #' \dontrun{
@@ -117,7 +117,7 @@ if (!is.fdata(fdataobj)) fdataobj=fdata(fdataobj)
 isfdata<-is.fdata(y)
 nas<-is.na.fdata(fdataobj)
 nas.g<-is.na(y)
-if (is.null(names(y))) names(y)<-1:length(y)
+if (is.null(names(y))) names(y) <- seq_len(length(y))
 if (any(nas) & !any(nas.g)) {
    bb<-!nas
    if (ops.fda.usc()$warning)
@@ -148,7 +148,7 @@ rtt<-fdataobj[["rangeval"]]
    C<-match.call()
    mf <- match.call(expand.dots = FALSE)
    m<-match(c("x", "y","h","Ker","metric","type.CV","type.S","par.CV","par.S"),names(mf),0L)
-#   if (is.vector(x))         x <- t(as.matrix(x))
+#   if (is.vector(x))         x <- t(data.matrix(x))
    n = nrow(x)
    np <- ncol(x)
    if (!isfdata) {
@@ -172,14 +172,24 @@ types=FALSE
 if (is.matrix(metric)) mdist<-metric
 else mdist=metric(fdataobj,fdataobj,...)
 
-ke<-deparse(substitute(Ker))
-#ty<-deparse(substitute(type.S))
-#tcv<-deparse(substitute(type.CV))
 attr(par.S, "call") <- ty
+#if (!is.function(Ker)) Ker<-get(Ker)
 
-if (is.null(h)) h=h.default(fdataobj,probs=c(0.025,0.25),len=25,metric = mdist,Ker =ke,
- type.S =ty,...)
+
+# if (is.character(Ker)){  nker <- function(u,mik=Ker){get(mik)(u)}
+# } else {  nker <- function(u,mik=Ker){mik(u)} }
+
+if (is.null(h)) {
+  #aa <- strsplit(deparse(substitute(Ker)),"[.]")
+#  print(aa)
+  #print(deparse(substitute(Ker)))
+#nker=get(paste0("Ker.",unlist(aa)[2]))
+  h = do.call(h.default,c(list(fdataobj=fdataobj,metric=mdist,
+                             prob=c(0.025,0.25),type.S=ty,Ker=Ker),...))
+}
 else {if   (any(h<=0)) stop("Error: Invalid range for h")}
+
+
 lenh <- length(h)
 cv=gcv1=gcv=cv.error <- array(NA, dim = c(lenh))
 par.S2<-par.S
@@ -264,13 +274,13 @@ if (all(is.infinite(gcv)) & ops.fda.usc()$warning
    	rownames(ypcv$data)<-rownames(y$data)
     ecv<-y-ypcv
                                                                   
-    norm.e<-drop(norm.fdata(e,metric=metric,...)[,1]^2)
+    norm.e<-norm.fdata(e,metric=metric,...)^2
     sr2=sum(norm.e)/(n-df)
     ycen=fdata.cen(y)$Xcen
 #	  r2=1-sum(e^2)/sum(ycen^2)
 	  r2=1-sum(norm.e)/sum(ycen^2)
     yp2<-Hcv%*%y.mat^2-(Hcv%*%y.mat)^2
-    out<-list("call"=C,"fitted.values"=yp,"H"=H,"residuals"=e,"df"=df,"r2"=r2,
+    out<-list("call"=C,"fitted.values"=yp,"H"=H,"residuals"=e,"df.residual"=df,"r2"=r2,
 "sr2"=sr2,"var.y"=yp2,"y"=y,"fdataobj"=fdataobj,"mdist"=mdist,"Ker"=Ker,
 "metric"=metric,"type.S"=type.S,"par.S"=par.S,"gcv"=gcv,"h.opt"=h.opt,"h"=h,"m"=m,
 "fit.CV"=list("fitted.values"=ypcv,"residuals"=ecv))
@@ -284,7 +294,7 @@ else {
     ycen=y-mean(y)
 	  r2=1-sum(e^2)/sum(ycen^2)      	  
     yp2<-Hcv%*%y.mat[,1]^2-(Hcv%*%y.mat[,1])^2
-	  out<-list("call"=C,"fitted.values"=yp,"H"=H,"residuals"=e,"df"=df,"r2"=r2,
+	  out<-list("call"=C,"fitted.values"=yp,"H"=H,"residuals"=e,"df.residual"=df,"r2"=r2,
 "sr2"=sr2,"var.y"=yp2,"y"=y,"fdataobj"=fdataobj,"mdist"=mdist,"Ker"=Ker,
 "metric"=metric,"type.S"=type.S,"par.S"=par.S,"gcv"=gcv,"h.opt"=h.opt,"h"=h,"m"=m,
 "fit.CV"=list("fitted.values"=ypcv,"residuals"=ecv))

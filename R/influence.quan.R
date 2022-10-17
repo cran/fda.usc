@@ -32,7 +32,7 @@
 #' \item \code{beta.boot}{ Functional beta estimated by bootstrap method.}
 #' }
 #' @author Manuel Febrero-Bande, Manuel Oviedo de la Fuente
-#' \email{manuel.oviedo@@usc.es}
+#' \email{manuel.oviedo@@udc.es}
 #' @seealso See Also as: \code{\link{influence.fregre.fd}},
 #' \code{\link{fregre.basis}}, \code{\link{fregre.pc}}.
 #' @references Febrero-Bande, M., Galeano, P. and Gonzalez-Manteiga, W. (2010).
@@ -163,11 +163,7 @@ for (j in 1:n){
     quan.cook.for[j] <- sum(IDCP<=DCP[j])/(n * mue.boot)
     quan.cook.est[j] <- sum(IDCE<=DCE[j])/(n * mue.boot)
     quan.pena[j] <- sum(IDP<=DP[j])/(n * mue.boot)}
-#if (pc)   {
-#print(betas.boot)
-#              aa<-model$beta.est$data-t(betas.boot)
-#              norm.boot<-norm.fdata(fdata(t(aa),tt,rtt))[,1] }
-#betas.boot<- fdata(betas.boot[order(norm.boot)[1:cb.num],],tt,rtt,nam)
+
 betas.boot<- fdata(betas.boot,tt,rtt,nam)
 betas.boot$names$main<-"beta.est bootstrap"
 return(list("quan.cook.for"=quan.cook.for,"quan.cook.est"=quan.cook.est,
