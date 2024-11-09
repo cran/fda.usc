@@ -42,7 +42,6 @@
 #' data(aemet)
 #' names(aemet)
 #' names(aemet$df)
-#' class(aemet)<-c("ldata","list") # ldata object
 #' lat <- ifelse(aemet$df$latitude<31,"red","blue")
 #' plot(aemet,col=lat)
 #' }
@@ -62,10 +61,10 @@ NULL
 #' \code{fdata} class object with: \cr \itemize{ \item \code{"data"}: Matrix of
 #' class \code{fdata} with 215 curves (rows) discretized in 100 points or
 #' argvals (columns).\cr \item \code{"argvals"}: 100 discretization points from
-#' 850 to 1050mm \cr \item \code{"rangeval"}=(850,1050):
+#' 850 to 1050nm \cr \item \code{"rangeval"}=(850,1050):
 #' range(\code{"argvals"}) \item \code{"names"} list with: \code{main} an
 #' overall title "Tecator data set", \code{xlab} title for \code{x} axis
-#' "Wavelength (mm)" and \code{ylab} title for \code{y} axis "Absorbances". }
+#' "Wavelength (nm)" and \code{ylab} title for \code{y} axis "Absorbances". }
 #' \code{..$y}: the percentages of Fat, Water and Protein.  The three contents
 #' are determined by analytic chemistry.\cr
 #' @author Manuel Febrero-Bande and Manuel Oviedo de la Fuente \email{manuel.oviedo@@udc.es}
@@ -110,7 +109,7 @@ NULL
 #' @references Febrero-Bande, M., Galeano, P., and Gonzalez-Manteiga, W.
 #' (2008).  \emph{Outlier detection in functional data by depth measures with
 #' application to identify abnormal NOx levels}. Environmetrics 19, 4, 331-345.
-#' @source \url{https://mediambient.gencat.cat/ca/inici}
+#' @source \url{https://mediambient.gencat.cat/ca/05_ambits_dactuacio/}
 #' @keywords datasets
 #' @examples
 #' 
@@ -214,13 +213,12 @@ NULL
 #' in cardiomyocytes during ischemic conditions. \emph{American Journal
 #' Physiology Heart Circulatori Physiology}. 2003 Sep;285(3):H999--1006.
 #' @keywords datasets
-#' @examples
-#' 
+#' @examples 
 #' data(MCO)
 #' names(MCO)
 #' par(mfrow=c(1,2))
-#' plot(MCO$intact,col=MCO$classintact)
-#' plot(MCO$permea,col=MCO$classpermea)
+#' plot.fdata(MCO$intact, col=MCO$classintact)
+#' plot.fdata(MCO$permea, col=MCO$classintact)
 #' 
 NULL
 

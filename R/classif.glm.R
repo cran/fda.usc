@@ -10,12 +10,12 @@
 #' Functional covariates of class \code{fdata} or \code{fd} are introduced in
 #' the following items in the \code{data} list.\cr \code{basis.x} is a list of
 #' basis for represent each functional covariate. The basis object can be
-#' created by the function: \code{\link{create.pc.basis}}, \code{\link{pca.fd}}
+#' created by the function: \code{\link{create.pc.basis}}, \link[fda]{pca.fd}
 #' \code{\link{create.pc.basis}}, \code{\link{create.fdata.basis}} o
-#' \code{\link{create.basis}}.\cr \code{basis.b} is a list of basis for
+#' \link[fda]{create.basis}.\cr \code{basis.b} is a list of basis for
 #' represent each functional beta parameter. If \code{basis.x} is a list of
 #' functional principal components basis (see \code{\link{create.pc.basis}} or
-#' \code{\link{pca.fd}}) the argument \code{basis.b} is ignored.
+#' \link[fda]{pca.fd}) the argument \code{basis.b} is ignored.
 #' 
 #' @param formula an object of class \code{formula} (or one that can be coerced
 #' to that class): a symbolic description of the model to be fitted. The
@@ -42,14 +42,14 @@
 #' @param \dots Further arguments passed to or from other methods.
 #' @return Return \code{glm} object plus:
 #' \itemize{
-#' \item \code{formula}{ formula.}
-#' \item \code{data}{ List that containing the variables in the model.} 
-#' \item \code{group}{ Factor of length \emph{n}} 
-#' \item \code{group.est}{ Estimated vector groups}
-#' \item \code{prob.classification}{ Probability of correct classification by group.}
-#' \item \code{prob.group}{ Matrix of predicted class probabilities. For each
+#' \item{\code{formula}: formula.}
+#' \item{\code{data}: List that containing the variables in the model.} 
+#' \item{\code{group}: Factor of length \emph{n}.} 
+#' \item{\code{group.est}: Estimated vector groups.}
+#' \item{\code{prob.classification}: Probability of correct classification by group.}
+#' \item{\code{prob.group}: Matrix of predicted class probabilities. For each
 #' functional point shows the probability of each possible group membership.}
-#' \item \code{max.prob}{ Highest probability of correct classification.}
+#' \item{\code{max.prob}: Highest probability of correct classification.}
 #' }
 #' @note If the formula only contains a non functional explanatory variables
 #' (multivariate covariates), the function compute a standard \code{\link{glm}}
@@ -113,7 +113,7 @@ classif.glm <- function (formula, data, family = binomial(), weights = "equal",
   }
   newdata <- data
   ny <- levels(y)
-  prob2<-prob1 <- ngroup <- nlevels(y)
+  prob1 <- ngroup <- nlevels(y)
   w <- weights
   
   if (ngroup == 2) {
@@ -134,7 +134,7 @@ classif.glm <- function (formula, data, family = binomial(), weights = "equal",
       nvot<-ncol(cvot)
       votos<-matrix(0,n,ngroup)
       colnames(votos) <- ny
-      b0<-list()
+#      b0<-list()
       for (ivot in 1:nvot) {  
         ind1 <- y==ny[cvot[1,ivot]]
         ind2 <- y==ny[cvot[2,ivot]] 
@@ -143,14 +143,14 @@ classif.glm <- function (formula, data, family = binomial(), weights = "equal",
         newy[ind1 ]<- 1
         newy[ind2 ]<- 0
         newdata$df[response] <- newy
-        print(formula)
-        print(names(newdata$df))
-        print(names(basis.x))
+#        print(formula)
+#        print(names(newdata$df))
+#        print(names(basis.x))
         a[[ivot]]<-suppressWarnings(fregre.glm(formula,data=newdata,family=family, weights =  w
                               ,basis.x=basis.x,basis.b=basis.b,CV=CV,subset = i2a2)
                               #,...)
                               )
-        print("SS")
+#        print("SS")
         prob.log <- a[[ivot]]$fitted.values  > prob
         votos[i2a2, cvot[1,ivot]] <- votos[i2a2, cvot[1,ivot]] + as.numeric(prob.log)
         votos[i2a2, cvot[2,ivot]] <- votos[i2a2, cvot[2,ivot]] + as.numeric(!prob.log)

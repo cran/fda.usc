@@ -1,24 +1,26 @@
 Package: fda.usc
 Type: Package
 Title: Functional Data Analysis and Utilities for Statistical Computing
-Version: 2.1.0
-Date: 2022-10-04
-Authors@R: c(person("Manuel Febrero Bande",role="aut", email = "manuel.febrero@usc.es"), person("Manuel Oviedo de la Fuente",role=c("aut","cre"), email="manuel.oviedo@udc.es"),
+Version: 2.2.0
+Date: 2024-11-04
+Authors@R: c(person("Manuel Febrero Bande",role="aut", email = "manuel.febrero@usc.es", comment = c(ORCID = "0000-0002-9536-2973")), person("Manuel Oviedo de la Fuente",role=c("aut","cre"), email="manuel.oviedo@udc.es", comment = c(ORCID = "0000-0001-7360-3249")),
              person("Pedro Galeano",role="ctb"),
-             person("Alicia Nieto",role="ctb"),
+             person("Alicia Nieto",role="ctb"), 
              person("Eduardo Garcia-Portugues",role="ctb"))
-Depends: R (>= 2.10), fda, splines, MASS, mgcv
+Depends: R (>= 3.5.0), fda, splines, MASS, mgcv, knitr
 Imports: methods, grDevices, graphics, utils, stats, nlme, doParallel,
         parallel, iterators, foreach, kSamples
 Suggests: rmarkdown
 Description: Routines for exploratory and descriptive analysis of functional data such as depth measurements, atypical curves detection, regression models, supervised classification, unsupervised classification and functional analysis of variance.
 License: GPL-2
 URL: https://github.com/moviedo5/fda.usc,
+        https://moviedo5.github.io/fda.usc/,
         https://www.jstatsoft.org/v51/i04/
-BugReports: https://github.com/moviedo5/fda.usc
+BugReports: https://github.com/moviedo5/fda.usc/issues
 LazyLoad: yes
-Author: Manuel Febrero Bande [aut],
-  Manuel Oviedo de la Fuente [aut, cre],
+Author: Manuel Febrero Bande [aut] (<https://orcid.org/0000-0002-9536-2973>),
+  Manuel Oviedo de la Fuente [aut, cre]
+    (<https://orcid.org/0000-0001-7360-3249>),
   Pedro Galeano [ctb],
   Alicia Nieto [ctb],
   Eduardo Garcia-Portugues [ctb]
@@ -26,6 +28,6 @@ Maintainer: Manuel Oviedo de la Fuente <manuel.oviedo@udc.es>
 NeedsCompilation: yes
 Repository: CRAN
 Encoding: UTF-8
-RoxygenNote: 7.2.1
-Packaged: 2022-10-13 11:19:18 UTC; moviedo
-Date/Publication: 2022-10-17 07:12:38 UTC
+RoxygenNote: 7.3.2
+Packaged: 2024-11-09 18:10:53 UTC; Manuel Oviedo
+Date/Publication: 2024-11-09 18:40:02 UTC

@@ -22,12 +22,12 @@
 #' Functional covariates of class \code{fdata} or \code{fd} are introduced in
 #' the following items in the \code{data} list.\cr \code{basis.x} is a list of
 #' basis for represent each functional covariate. The basis object can be
-#' created by the function: \code{\link{create.pc.basis}}, \code{\link{pca.fd}}
+#' created by the function: \code{\link{create.pc.basis}}, \link[fda]{pca.fd}
 #' \code{\link{create.pc.basis}}, \code{\link{create.fdata.basis}} o
-#' \code{\link{create.basis}}.\cr \code{basis.b} is a list of basis for
+#' \link[fda]{create.basis}.\cr \code{basis.b} is a list of basis for
 #' represent each \eqn{\beta(t)} parameter. If \code{basis.x} is a list of
 #' functional principal components basis (see \code{\link{create.pc.basis}} or
-#' \code{\link{pca.fd}}) the argument \code{basis.b} is ignored.
+#'\link[fda]{pca.fd}) the argument \code{basis.b} is ignored.
 #' 
 #' %When using functional data derived recommend using a number of basis to
 #' represent beta lower than the number of basis used to represent the
@@ -48,13 +48,14 @@
 #' used in the fitting process.
 #' @param weights weights
 #' @param \dots Further arguments passed to or from other methods.
-#' @return Return \code{glm} object plus:
+#' @return 
+#' Return \code{glm} object plus:
 #' \itemize{ 
-#' \item \code{basis.x}{ Basis used for \code{fdata} or \code{fd} covariates.} 
-#' \item \code{basis.b}{ Basis used for beta parameter estimation.} 
-#' \item \code{beta.l}{ List of estimated beta parameter of functional covariates.} 
-#' \item \code{data}{ List that containing the variables in the model.} 
-#' \item \code{formula}{ formula.} 
+#' \item \code{basis.x}: Basis used for \code{fdata} or \code{fd} covariates. 
+#' \item \code{basis.b}: Basis used for beta parameter estimation. 
+#' \item \code{beta.l}: List of estimated beta parameter of functional covariates. 
+#' \item \code{data}: List that contains the variables in the model. 
+#' \item \code{formula}: Formula. 
 # \item \code{CV}{ predicted response by cross-validation.}
 #' }
 #' @note If the formula only contains a non functional explanatory variables
@@ -116,7 +117,7 @@ fregre.glm=function(formula,family = gaussian(), data,
     vint <- setdiff(terms,vtab)
     vfunc <- setdiff(vfunc2,vint)
     off <- attr(tf,"offset")
-    name.coef <-  nam  <-  par.fregre <- beta.l <- list()
+    par.fregre <- list()
     kterms <- 1
     n <- length(data[["df"]][,response])
     # XX <- data.frame(data[["df"]][,c(response)],weights)
@@ -135,11 +136,12 @@ fregre.glm=function(formula,family = gaussian(), data,
                                pf=pf, tf=tf)
     mean.list <- out$mean.list
     name.coef <- out$name.coef
+    basis.x <- out$basis.x
+    basis.b <- out$basis.b
 #    bsp1<-out$bsp1
     pf <- out$pf
     XX <- out$XX
-    basis.x <- out$basis.x
-    basis.b <- out$basis.b
+
     par.fregre$formula=pf
     par.fregre$data=XX
     y <- XX[,1] 
@@ -182,7 +184,9 @@ fregre.glm=function(formula,family = gaussian(), data,
     #} 
     # if (missing(weights)) weights <- rep(1,len=n)
     # W <- diag(weights)  
-      
+  if (length(vfunc)>0){ 
+
+    beta.l<-list()
   for (i in 1:length(vfunc)) {
      z$coefficients[is.na(z$coefficients)]<-0
      if (inherits(basis.b[[vfunc[i]]],"basisfd")) 
@@ -218,7 +222,7 @@ fregre.glm=function(formula,family = gaussian(), data,
       }
     }
   }
-
+  } 
     #  z$H <- design2hat(Z,W)  # usarla en fdata2model
     # z$yp <- z$H %*% y
     #    z$coefficients <- design2coefs(Z,W,y)  # usarla en fdata2model
@@ -228,12 +232,14 @@ fregre.glm=function(formula,family = gaussian(), data,
     z$sr2 <- sum(e^2)/z$df.residual
     ###################### z$Vp <- z$sr2*S
     z$Vp <- z$sr2 * z$H  # 20210321
-    z$beta.l <- beta.l
-    z$formula <- pf
     z$mean <- mean.list
+    z$formula <- pf
     z$formula.ini <- formula
-    z$basis.x <- basis.x
-    z$basis.b <- basis.b
+    if (length(vfunc)>0){
+    z$beta.l <- beta.l } else {
+    z$beta.l <- NULL
+    }
+    z$basis.x=basis.x
     z$vs.list <- out$vs.list
     z$data <- z$data
     z$XX <- XX

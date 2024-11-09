@@ -165,46 +165,49 @@ predict.classif <- function (object, new.fdataobj = NULL,
 
 #############################################################################
 pred2glm2boost <- function(object, new.fdataobj = NULL,  ...) {
-  isfdata <- FALSE
-  if (is.fdata(new.fdataobj))  isfdata<-TRUE
-  newdata <- object$data 
-  if (isfdata)     newfdata <- list(X = new.fdataobj)
-  else newfdata <- new.fdataobj
-
   lev <- levels(object$group)
+  if (is.null(object$type)) object$type="1vsall"
   prob <- ngroup <- length(lev)
   nn <- nrow(new.fdataobj[[1]])
   prob.group <- array(NA, dim = c(nn,ngroup))
   colnames(prob.group) <- lev
+
   if (is.null(object$prob)) object$prob<- .5
   if (ngroup == 2) {
-    probs <- predict.fregre.glm(object$fit[[1]], newx = newfdata, ...)
+    probs <- predict.fregre.glm(object$fit[[1]], newx = new.fdataobj, ...)
     yest <- ifelse(probs > object$prob, lev[2], lev[1])  
     prob.group[, 1] <- 1-probs
     prob.group[, 2] <-  probs
     group.pred <- factor(yest, levels = lev)
     return(list("group.pred"=group.pred,"prob.group"=prob.group))
   }  else {
-#print("mas de un grupo1")    
-#    print(dim(newfdata[[1]]))
-#    print(class(object))
-#    group.pred<- predict(object, newx = newfdata,...)
-#print("mas de un grupo2")        
-#print(group.pred)  
-    #return(list("group.pred"=group.pred))
+	if (object$type=="majority"){
+	if (ngroup>2) {
+	cvot <- combn(ngroup,2)
+	nvot<-nrow(new.fdataobj[[1]])
+	pvotos<-votos<-matrix(0,nn,ngroup)
+	for (ivot in 1:nvot){
+	pred<-predict.fregre.glm(object$fit[[ivot]],new.fdataobj,...)
+    group.log<- (pred>object$prob)
+	pvotos[,cvot[1,ivot]]<-pvotos[,cvot[1,ivot]]+pred
+	pvotos[,cvot[2,ivot]]<-pvotos[,cvot[2,ivot]]+(1-pred)
+     votos[,cvot[1,ivot]]<-votos[,cvot[1,ivot]]+as.numeric(group.log)
+     votos[,cvot[2,ivot]]<-votos[,cvot[2,ivot]]+as.numeric(!group.log)
+	}
+    maj.voto<-apply(votos,1,which.max)
+    group.pred<-factor(lev[maj.voto],levels=lev)
+    prob.grup<-pvotos
+	}
+	} else {
      for (i in 1:ngroup) {
-       obj <- object$fit[[i]]
-
- #      print(obj$formula)
-       #prob.group[, i] <- predict.fregre.glm(obj, newx = newfdata, ...)
-       pr<-predict.glm(obj,  newfdata$df,type="response")
-       #pr <- predict.classif(obj, newx = newfdata, ...)
-       prob.group[, i] <- pr
-     }
-     yest <- apply(prob.group, 1, which.min)
-     group.pred <- factor(lev[yest], levels = lev)
-  }
+	  prob.group[,i]<-predict.fregre.glm(object$fit[[i]],
+			newx=new.fdataobj,...)
+						}
+     group.pred <- factor(lev[apply(prob.group,1,which.min)], levels = lev)
+	}
+}
   return(list("group.pred"=group.pred,"prob.group"=prob.group))
+
 }
 
 ##########################################
@@ -262,7 +265,7 @@ pred2lda <- function(object, new.fdataobj = NULL,  ...) {
   prob.group <- array(NA, dim = c(nn, ngroup))
   colnames(prob.group) <- lev								  
   #new.fdataobj <- as.matrix(new.fdataobj)
-  if (ngroup == 2 | object$type != "majority") {
+  if (ngroup == 2 || object$type != "majority") {
     #print("2 grupos o 1vsAll")
     #print(class(object$fit[[1]]))
     probs=predict(object$fit[[1]], new.fdataobj,...)
@@ -871,13 +874,13 @@ pred2ML <- function(object, new.fdataobj = NULL, ...) {
         dat <- fdataobj$data
         tt <- fdataobj[["argvals"]]
         if (is.null(rownames(dat))) 
-          rownames(dat) <- 1:nrow(dat)
+          rownames(dat) <- seq_len(nrow(dat))
         fdnames = list(time = tt, reps = rownames(dat), 
                        values = "values")
         x.fd <- fdataobj[["data"]]
         tt <- fdataobj[["argvals"]]
         rtt <- fdataobj[["rangeval"]]
-        if (object$basis.x[[vfunc[i]]]$type != "pc" & 
+        if (object$basis.x[[vfunc[i]]]$type != "pc" && 
             object$basis.x[[vfunc[i]]]$type != "pls") {
  # print("basiss")
           x.fd = Data2fd(argvals = tt, y = t(fdata.cen(fdataobj, 
@@ -904,7 +907,7 @@ pred2ML <- function(object, new.fdataobj = NULL, ...) {
               newXcen$data <- newXcen$data/(rep(1,nrow(newXcen)) %*% t(sd.X))
             }
           }
-          Z <- inprod.fdata(newXcen, object$basis.list[[vfunc[i]]])
+          Z <- inprod.fdata(newXcen, object$basis.x[[vfunc[i]]]$basis)
           colnames(Z) <- name.coef
           Z <- data.frame(Z)
           

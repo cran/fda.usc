@@ -2,11 +2,15 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 
-# fda.usc: Functional Data Analysis and Utilities for Statistical Computing <img src="inst/figures/fda.usc.png" align="right" width="140" />
+# fda.usc: Functional Data Analysis and Utilities for Statistical Computing 
+
+<!-- ![](inst/figures/fda.usc.png)
+pkgdown::build_site()
+-->
 
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/fda.usc)](https://cran.r-project.org/package=fda.usc)
 [![Licence](https://img.shields.io/badge/licence-GPL--2-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.en.html)
-[![](https://cranlogs.r-pkg.org/badges/fda.usc)](https://cran.r-project.org/package=fda.usc)
+[![cranlogs](https://cranlogs.r-pkg.org/badges/fda.usc)](https://cran.r-project.org/package=fda.usc)
 
 ## Package overview
 
@@ -47,7 +51,7 @@ A hands on introduction to  can be found in the reference
 [vignette](https://www.jstatsoft.org/article/view/v051i04/).
 
 Details on specific functions are in the [reference
-manual](https://cran.r-project.org/package=fda.usc/fda.usc.pdf).
+manual](https://github.com/moviedo5/fda.usc/blob/master/docs/fda.usc-manual.pdf).
 
 Cheatsheet [fda.usc reference
 card](https://zenodo.org/record/3386752/files/RefCard_fda.usc_v1.pdf?download=1).
@@ -56,27 +60,39 @@ card](https://zenodo.org/record/3386752/files/RefCard_fda.usc_v1.pdf?download=1)
 
 Febrero-Bande, M. and Oviedo de la Fuente, M. (2012). Statistical
 Computing in Functional Data Analysis: The R Package fda.usc. *Journal
-of Statistical Software*, 51(4):1-28.
-<https://dx.doi.org/10.18637/jss.v051.i04>
-
+of Statistical Software*, 51(4):1-28. [DOI:10.18637/jss.v051.i04](https://dx.doi.org/10.18637/jss.v051.i04)
 <!-- 
 <https://www.jstatsoft.org/v51/i04/>
 library(roxygen2)
-setwd("C:/Users/moviedo/github/fda.usc/")
+# setwd("D:/Users/moviedo/github/fda.usc/")
 getwd()
 pkgbuild::compile_dll()
 roxygenize()
-devtools::document()
+devtools::document() 
+
+tools::checkRd("man/classif.ML.Rd")
+tools::checkRd("man/flm.test.Rd")
 
 library(devtools)
+devtools::build()
+devtools::check(manual = TRUE) 
+devtools::install()
+devtools::build_win()
+
+devtools::install_github("moviedo5/fda.usc",auth_user="moviedo5")
 
 # devtools::install_github("moviedo5/fda.usc",auth_user="moviedo5")
 
 R CMD build fda.usc
-R CMD check fda.usc_2.1.0.tar.gz --as-cran
-R CMD INSTALL fda.usc_2.1.0.tar.gz --build
+R CMD check fda.usc_2.2.0.tar.gz --as-cran
+R CMD INSTALL fda.usc_2.2.0.tar.gz --build
+R-wind-builder fda.usc_2.2.0.tar.gz --as-cran
 
-Manuel Oviedo PhD thesis [Advances in functional regression and classification models](https://hdl.handle.net/10347/18236)
+library(pkgdown)
+# usethis::use_pkgdown()
+# Build website:
+#pkgdown::build_site()
+build_site(new_process = TRUE)
 
 -->
 

@@ -82,13 +82,13 @@
 #' @param \dots Further arguments passed to or from other methods.
 #' @return
 #' \itemize{
-#' \item {lmed}{ Index deepest element \code{median}.} 
-#' \item {ltrim}{ Index of curves with trimmed mean \code{mtrim}.}
-#' \item {dep} { Depth of each curve of fdataobj w.r.t. fdataori.} 
-#' \item {dfunc} { second depth function used as multivariate depth, see details section.} 
-#' \item {par.dfunc} {list of parameters for the dfunc depth function.} 
-#' \item {proj} { The projection value of each point on the curves. }
-#' \item {dist} { Distance matrix between curves or functional data.}
+#' \item \code{lmed}: Index deepest element \code{median}.
+#' \item \code{ltrim}: Index of curves with trimmed mean \code{mtrim}.
+#' \item \code{dep}: Depth of each curve of \code{fdataobj} w.r.t. \code{fdataori}.
+#' \item \code{dfunc}: Second depth function used as multivariate depth, see details section.
+#' \item \code{par.dfunc}: List of parameters for the \code{dfunc} depth function.
+#' \item \code{proj}: The projection value of each point on the curves.
+#' \item \code{dist}: Distance matrix between curves or functional data.
 #' }
 #' @author Manuel Febrero-Bande, Manuel Oviedo de la Fuente
 #' \email{manuel.oviedo@@udc.es}
@@ -96,11 +96,7 @@
 #' @references Cuevas, A., Febrero-Bande, M. and Fraiman, R. (2007).
 #' \emph{Robust estimation and classification for functional data via
 #' projection-based depth notions.} Computational Statistics 22, 3, 481-496.
-#' %Fraiman R, Muniz G. 2001.  \emph{Trimmed means for functional data.} Test
-#' 10: 419{-}440. %Febrero-Bande, M., Oviedo de la Fuente, M. (2012).
-#' \emph{Statistical Computing in Functional Data Analysis: The R Package
-#' fda.usc.}Journal of Statistical Software, 51(4), 1-28.
-#' \url{https://www.jstatsoft.org/v51/i04/}
+#' 
 #' @keywords descriptive
 #' @examples
 #' \dontrun{
@@ -144,6 +140,7 @@ depth.modep=function(mfdata,mfdataref=mfdata,h=NULL,metric,
   if (inherits(mfdata,"list")){
     lenl <- length(mfdata)
     lenl2 <- length(mfdataref)
+    if (lenl!=lenl2) stop("Length of mfdata!= length of mfdataref")
     m0 <- nrow(mfdata[[1]])
     if (is.null(rownames(mfdata[[1]]$data))) 
       rownames(mfdata[[1]]$data) <- 1:m0
@@ -189,7 +186,7 @@ depth.modep=function(mfdata,mfdataref=mfdata,h=NULL,metric,
   if (scale)   {
     dep2<-Ker.norm(mdist/hq2)
     dep2<-apply(dep2,1,sum,na.rm=TRUE)
-    mn<-min(dep2,na.rm=TRUE)
+    # mn<-min(dep2,na.rm=TRUE)
     mx<-max(dep2,na.rm=TRUE)
     #   scl<-mx-mn
     #   ans=as.vector(scale(ans,center=mn,scale=scl))
@@ -270,9 +267,9 @@ if (!is(mfdataref,"list")) stop("mfdataref input must be a list of fdata objects
  lenl2 <- length(mfdataref)
  n <- nrow(mfdata[[1]])
  m <- nrow(mfdataref[[1]]) 
- mdist2 <- matrix(0,n,n)
- amdist <- array(NA,dim=c(n,m,lenl))
- mdist <- list()
+ # mdist2 <- matrix(0,n,n)
+ # amdist <- array(NA,dim=c(n,m,lenl))
+ # mdist <- list()
  nam1 <- names(mfdata)
  nam2 <- names(mfdataref) 
  if (is.null(nam1)) {names(mfdata)<-nam1<-paste("var",1:lenl,sep="")}
@@ -294,7 +291,6 @@ if (!is(mfdataref,"list")) stop("mfdataref input must be a list of fdata objects
   m2 <- ncol(data2)
   n2 <- nrow(data2) 
   if (is.null(m) && is.null(m2)) stop("ERROR IN THE DATA DIMENSIONS")
-  modulo = function(z) {        sqrt(sum(z^2))    }
   if (is.null(n) || is.null(m))       stop("Input must be a matrix")
   tt = fdataobj[["argvals"]]
   rtt <- fdataobj[["rangeval"]]
@@ -306,15 +302,15 @@ if (!is(mfdataref,"list")) stop("mfdataref input must be a list of fdata objects
           newfunc2[, , ider] = mfdataref[[nam1[ider]]]$data 
   }
   dep = rep(0, n)
-  dep2 = rep(0, n2)    
+#  dep2 = rep(0, n2)    
   vproject = matrix(0, nrow = n, ncol = lenl)
-  vproject2 = matrix(0, nrow = n2, ncol = lenl)   
-    
+  vproject2 = matrix(0, nrow = n2, ncol = lenl)
+#   modulo = function(z) {        sqrt(sum(z^2))    }
 #  z = matrix(rnorm(m * nproj), nrow = nproj, ncol = m)
 #  modu = apply(z, 1, modulo)
 #  z = z/modu
   if (is.fdata(proj)) {
-     if (fdataobj$argvals!=proj$argvals || ncol(fdataobj)!=ncol(proj)) stop("Error en proj dimension")
+     if (any(fdataobj$argvals!=proj$argvals) || ncol(fdataobj)!=ncol(proj)) stop("Error en proj dimension")
      z<-proj
      nproj<-nrow(z)
     }
@@ -340,7 +336,7 @@ if (!is(mfdataref,"list")) stop("mfdataref input must be a list of fdata objects
         }
 #        par.dfunc$scale<-TRUE
         resul = do.call(dfunc, par.dfunc)
-        if (dfunc=="depth.RP" | dfunc=="mdepth.HS" | dfunc=="mdepth.RP") par.dfunc$proj<-resul$proj        
+        if (dfunc=="depth.RP" || dfunc=="mdepth.HS" || dfunc=="mdepth.RP") par.dfunc$proj<-resul$proj        
         dep = dep + resul$dep
      if (verbose)         setTxtProgressBar(pb, j)
   }                                                               
@@ -406,7 +402,8 @@ depth.FMp=function(mfdata,mfdataref=mfdata,trim=0.25,dfunc="mdepth.MhD",
   nam1<-names(mfdata)
   nam2<-names(mfdata)
   len1<-length(mfdata)
-  len2<-length(mfdataref)   
+  len2<-length(mfdataref) 
+  if (len1!=len2) stop("mfdata and mfdataref have no the same length")
   m0<-nrow(mfdata[[1]])
   if (is.null(rownames(mfdata[[1]]$data)))  rownames(mfdata[[1]]$data)<-1:m0
   nms<-rownames(mfdata[[1]]$data)
@@ -415,17 +412,17 @@ depth.FMp=function(mfdata,mfdataref=mfdata,trim=0.25,dfunc="mdepth.MhD",
     nas<-c(nas,na.action(na.omit(mfdata[[i]])))
   } 
   nas<-  (nas)
-  nullans<-!is.null(nas) 
-  for (i in 1:len1) {
+  #nullans<-!is.null(nas) 
+  #for (i in 1:len1) {
     #  if (nullans) mfdata[[i]]<-mfdata[[i]][-nas]
     #  if (nullans)  mfdataref[[i]]<-mfdataref[[i]][-nas]  
-  }
+  #}
   #comprobar is.fdatalist
   if (is.null(nam1)) nam1<-paste("var",1:len1,sep="")
   if (is.null(nam2)) nam2<-nam1
   fdataobj<-mfdata[[1]]
   fdataori<-mfdataref[[1]] 
-  if (is.null(rownames(fdataobj$data)))  rownames(fdataobj$data)<-1:nrow(fdataobj$data)
+  if (is.null(rownames(fdataobj$data)))  rownames(fdataobj$data)<-seq_len(nrow(fdataobj$data))
   nms<-rownames(fdataobj$data)
   n<-nrow(fdataobj)
   m<-nrow(fdataori)
@@ -465,10 +462,11 @@ depth.FMp=function(mfdata,mfdataref=mfdata,trim=0.25,dfunc="mdepth.MhD",
   eps <- as.double(.Machine[[1]] * 100)
   inf <- dtt - eps
   sup <- dtt + eps
-  if (all(dtt > inf) & all(dtt < sup)) {
-    equi = TRUE
-  }
-  else equi = FALSE
+# Creo que no se usa equi
+#  if (all(dtt > inf) && all(dtt < sup)) {
+#    equi = TRUE
+#  }
+#  else equi = FALSE
   #d2<-int.simpson(fdata(d,tt,rtt),equi=equi)/n
   ans<-apply(d,1,mean)[1:n]
   #if (nullans) {
@@ -504,7 +502,8 @@ depth.FMp=function(mfdata,mfdataref=mfdata,trim=0.25,dfunc="mdepth.MhD",
       ind1<-!is.nan(ans)
       ans[is.nan(ans)]=NA
       cgray=1-(ans-min(ans,na.rm=TRUE))/(max(ans,na.rm=TRUE)-min(ans,na.rm=TRUE))
-      plot(mfdata[[idat]][ind1, ], col =  gray(cgray[ind1]),lty=1, main = paste(nam1[idat]," FMp Depth",sep=""))
+      plot(mfdata[[idat]][ind1, ], col =  gray(cgray[ind1]),lty=1, 
+                        main = paste(nam1[idat]," FMp Depth",sep=""))
       lines(mtrim,lwd=2,col="yellow")
       lines(med,col="red",lwd=2)
       legend("topleft",legend=c(tr,"Median"),lwd=2,col=c("yellow","red"),box.col=0)

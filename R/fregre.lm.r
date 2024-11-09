@@ -24,12 +24,12 @@
 #' 
 #' \code{basis.x} is a list of basis for represent each functional covariate.
 #' The basis object can be created by the function:
-#' \code{\link{create.pc.basis}}, \code{\link{pca.fd}}
+#' \code{\link{create.pc.basis}}, \link[fda]{pca.fd}
 #' \code{\link{create.pc.basis}}, \code{\link{create.fdata.basis}} or
-#' \code{\link{create.basis}}.\cr \code{basis.b} is a list of basis for
+#' \link[fda]{create.basis}.\cr \code{basis.b} is a list of basis for
 #' represent each functional \eqn{\beta_k} parameter. If \code{basis.x} is a
 #' list of functional principal components basis (see
-#' \code{\link{create.pc.basis}} or \code{\link{pca.fd}}) the argument
+#' \code{\link{create.pc.basis}} or \link[fda]{pca.fd}) the argument
 #' \code{basis.b} \emph{(is unnecessary and)} is ignored.\cr
 #' 
 #' Penalty options are under development, not guaranteed to work properly.
@@ -52,14 +52,14 @@
 #' @param \dots Further arguments passed to or from other methods.
 #' @return Return \code{lm} object plus:
 #' \itemize{
-#' \item \code{sr2}{ Residual variance.}
-#' \item \code{Vp}{ Estimated covariance matrix for the parameters.} 
-#' \item \code{lambda}{ A roughness penalty.} 
-#' \item \code{basis.x}{ Basis used for \code{fdata} or \code{fd} covariates.} 
-#' \item \code{basis.b}{ Basis used for beta parameter estimation.}
-#' \item \code{beta.l}{ List of estimated beta parameter of functional covariates.}
-#' \item \code{data}{ List that containing the variables in the model.}
-#' \item \code{formula}{ formula.}
+#' \item \code{sr2}: Residual variance.
+#' \item \code{Vp}: Estimated covariance matrix for the parameters. 
+#' \item \code{lambda}: A roughness penalty. 
+#' \item \code{basis.x}: Basis used for \code{fdata} or \code{fd} covariates. 
+#' \item \code{basis.b}: Basis used for beta parameter estimation.
+#' \item \code{beta.l}: List of estimated beta parameter of functional covariates.
+#' \item \code{data}: List containing the variables in the model.
+#' \item \code{formula}: Formula used in the model.
 #' }
 #' @author Manuel Febrero-Bande, Manuel Oviedo de la Fuente
 #' \email{manuel.oviedo@@usc.es}
@@ -88,7 +88,7 @@
 #' basis.b <- list("x"=basis2)
 #' f <- Fat ~ Protein + x
 #' ldat <- ldata("df"=dataf,"x"=x)
-#' res  fregre.lm(f,ldat,  basis.b=basis.b)
+#' res <- fregre.lm(f,ldat,  basis.b=basis.b)
 #' summary(res)
 #' f2 <- Fat ~ Protein + xd +xd2
 #' xd <- fdata.deriv(x,nderiv=1,class.out='fdata', nbasis=nbasis.x)
@@ -177,9 +177,7 @@ fregre.lm <- function(formula, data, basis.x = NULL, basis.b = NULL
   #Z <- as.matrix(XX[,-1])     
   W <- diag(weights)  
   if (!penalty) {
-   print("no rn0 no lambda0")
-   print(colnames(XX))      
-    if (lenvfunc==0 & length(vnf)==0)      {
+   if (lenvfunc==0 & length(vnf)==0)      {
       z=lm(formula=pf,data=XX,x=TRUE,...)   
       class(z)<-c("lm","fregre.lm")
       return(z)
@@ -212,7 +210,7 @@ fregre.lm <- function(formula, data, basis.x = NULL, basis.b = NULL
     # z$fitted.values-XX[,1]
   }       
   #    z$call<-z$call[1:2]
-  
+  if (length(vfunc)>0){
   for (i in 1:length(vfunc)) {
     z$coefficients[is.na(z$coefficients)]<-0
      if (inherits(basis.b[[vfunc[i]]],"basisfd")) 
@@ -248,7 +246,7 @@ fregre.lm <- function(formula, data, basis.x = NULL, basis.b = NULL
       }
     }
   }
-  
+  }
   # z$H <- design2hat(Z,W)  # usarla en fdata2model
   # print("design2hat")
   # print(names(z))
@@ -260,12 +258,18 @@ fregre.lm <- function(formula, data, basis.x = NULL, basis.b = NULL
   z$sr2 <- sum(e^2)/z$df.residual
   ###################### z$Vp <- z$sr2*S
   z$Vp <- z$sr2 * z$H  # 20210321
-  z$beta.l <- beta.l
+
   z$formula <- pf
-  z$mean <- mean.list
   z$formula.ini <- formula
   z$basis.x <- basis.x
   z$basis.b <- basis.b
+  z$mean <- mean.list
+  if (length(vfunc)>0){
+      z$beta.l <- beta.l
+  } else {
+  z$beta.l=NULL
+  }
+  z$vs.list <- out$vs.list 
   #
   #z$data <- z$data
   z$XX <- XX
@@ -275,7 +279,7 @@ fregre.lm <- function(formula, data, basis.x = NULL, basis.b = NULL
   #z$rn <- rn0
   if (is.list(z$lambda.opt)) z$lambda <- TRUE
   #z$JJ <- vs.list   
-  z$vs.list <- out$vs.list   
+  
   class(z) <- c("fregre.lm","lm")
   # class(z$beta.l) <- c("mfdata","list")
   z

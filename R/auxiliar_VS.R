@@ -11,12 +11,12 @@ dcor.y<-function(ldist,response,n,bcdcor=TRUE){
   lenldist<-length(ldist)
   namldist<-names(ldist)
   if (missing(n)) {
-    if (is.fdata(ldist[[1]]) | is.matrix(ldist[[1]]|is.data.frame(ldist[[1]])) )
+    if (is.fdata(ldist[[1]]) || is.matrix(ldist[[1]]) || is.data.frame(ldist[[1]]))
       n<-nrow(ldist[[1]])
     if (is.vector(ldist[[1]]))    n <- length(response)
   }
   
-  if (missing(response)) {print("se calculan todas las distancias")
+  if (missing(response)) {print("All DC are computed")
     dst<-diag(lenldist)
     for (i in 1:(lenldist-1)) {
       for (j in i:(lenldist)) {
@@ -30,7 +30,7 @@ dcor.y<-function(ldist,response,n,bcdcor=TRUE){
     if (length(response)>1) stop("Incorrect response label")
     ii<-response==namldist
     if (sum(ii)==0) stop("Incorrect response label")
-    iresponse<-which(ii)
+#    iresponse<-which(ii) # No se usa
     dst<-numeric(lenldist-1)
     predictors<-setdiff(namldist,response)
     
@@ -118,7 +118,7 @@ GCV<-function(model){
 }
 #################################################
 
-print.select.glm <- function(x,...){
+print_select_glm <- function(x,...){
   cat("\n Model selected:\n")
   print(x$model)
   cat("\n Stepwise GoF:\n")
@@ -128,7 +128,7 @@ print.select.glm <- function(x,...){
 }
 
 
-print.select.gsam <- function(x,...){
+print_select_gsam <- function(x,...){
   cat("\n Model selected:\n")
   print(x$model)
   cat("\n Stepwise GoF:\n")
@@ -150,7 +150,7 @@ print.select.gsam <- function(x,...){
 
 #################################################
 
-print.fregre.glm.vs<- function(x,...){
+print_fregre_glm_vs<- function(x,...){
   cat("\n Model selected:\n")
   print(x$model)
   cat("\n Stepwise GoF:\n")
@@ -159,7 +159,7 @@ print.fregre.glm.vs<- function(x,...){
   print(x$i.predictor)  
 }
 
-print.fregre.gsam.vs <- function(x,...){
+print_fregre_gsam_vs <- function(x,...){
   cat("\n Model selected:\n")
   print(x$model)
   cat("\n Stepwise GoF:\n")

@@ -25,7 +25,7 @@ classif.gsam2boost=function(group,fdataobj,family=binomial(),
   }   else {   
       if (is.null(par.gsam$func)) par.gsam$func<-"s"
       if (is.null(par.gsam$k)) par.gsam$k<--1        
-    dataf<-data.frame("y"=group,fdataobj)
+      dataf<-data.frame("y"=group,fdataobj)
       ldata<-list("df"=dataf)
       if (is.matrix(fdataobj)) nms<-colnames(fdataobj)
       else nms<-names(fdataobj)               
@@ -98,7 +98,7 @@ classif.glm2boost=function(group,fdataobj,family=binomial(),basis.x=NULL,
   if (is.fdata(fdataobj))   {
     dataf<-data.frame("y"=group)
     ldata<-list("df"=dataf,"X"=fdataobj)
-    formula<-formula(y~X)       
+    formula<-as.formula("y~X")       
   }
   else {
     if (is.matrix(fdataobj)) nms<-colnames(fdataobj)
@@ -109,7 +109,7 @@ classif.glm2boost=function(group,fdataobj,family=binomial(),basis.x=NULL,
     dataf<-data.frame("y"=group,fdataobj)
     ldata<-list("df"=dataf)
     aaa<-paste(nms,collapse="+")
-    formula<-formula(paste("y~",aaa,sep=""))      
+    formula<-as.formula(paste("y~",aaa,sep=""))      
   }
   newy<-y<-ldata$df$y
   if (!is.factor(y)) y<-as.factor(y)
@@ -126,8 +126,11 @@ classif.glm2boost=function(group,fdataobj,family=binomial(),basis.x=NULL,
     #      lev<-as.numeric(names(table(y)))
     newy<-ifelse(y==lev[1],0,1)
     newdata$df$y<-newy
-     a[[1]]<-fregre.gsam(formula,data=newdata,family=binomial,basis.x=basis.x,
+     a[[1]]<-fregre.glm(formula,data=newdata,family=binomial,basis.x=basis.x,
                        basis.b=basis.b,CV=CV)                
+
+#    a[[1]]<-fregre.gsam(formula,data=newdata,family=binomial,basis.x=basis.x,
+#                       basis.b=basis.b,CV=CV)                
     yest<-ifelse(a[[1]]$fitted.values<.5,lev[1],lev[2])
     tab<-table(yest,y)
     prob[1]=tab[1,1]/sum(tab[,1])
@@ -147,8 +150,10 @@ classif.glm2boost=function(group,fdataobj,family=binomial(),basis.x=NULL,
     for (i in 1:ngroup) {
       newy<-ifelse(y==lev[i],0,1)
       newdata$df$y<-newy
-      a[[i]]<-fregre.gsam(formula,data=newdata,family=family,basis.x=basis.x,
+      a[[i]]<-fregre.glm(formula,data=newdata,family=family,basis.x=basis.x,
                          basis.b=basis.b)
+#      a[[i]]<-fregre.gsam(formula,data=newdata,family=family,basis.x=basis.x,
+#                         basis.b=basis.b)
       prob.group[,i]<-a[[i]]$fitted.values
     }
     yest<-lev[apply(prob.group,1,which.min)]
